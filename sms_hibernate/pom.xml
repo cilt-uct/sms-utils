@@ -1,0 +1,207 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.sakaiproject.sms.hibernate</groupId>
+	<artifactId>sms_hibernate</artifactId>
+	<name>sms_hibernate</name>
+	<packaging>jar</packaging>
+	<version>1.0</version>
+	<parent>
+		<groupId>uk.org.ponder.pure-poms</groupId>
+		<artifactId>standard-jar</artifactId>
+		<version>POM-3</version>
+	</parent>
+	<description>SMS Hibernate. Provided the libraries and data access objects for the sms project</description>
+
+	<repositories>
+		<repository>
+			<id>Codehaus Snapshots</id>
+			<url>http://snapshots.repository.codehaus.org/</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+		</repository>
+	</repositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>Codehaus Snapshots</id>
+			<url>http://snapshots.repository.codehaus.org/</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+		</pluginRepository>
+	</pluginRepositories>
+
+
+	<properties>
+		<deploy.target />
+	</properties>
+
+
+
+
+	<dependencies>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.14</version>
+		</dependency>
+
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.sakaiproject</groupId>
+			<artifactId>generic-dao</artifactId>
+			<version>0.9.11</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate</artifactId>
+			<version>3.2.5.ga</version>
+		</dependency>
+
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.5</version>
+		</dependency>
+		<dependency>
+			<groupId>quartz</groupId>
+			<artifactId>quartz</artifactId>
+			<version>1.5.2</version>
+		</dependency>
+	</dependencies>
+	<reports />
+	<build>
+		<sourceDirectory>${basedir}/src/java</sourceDirectory>
+		<finalName>sms_hibernate</finalName>
+		<resources>
+			<resource>
+				<directory>src/java</directory>
+				<includes>
+					<include>**/*.xml</include>
+					<include>**/*.hbm.xml</include>
+				</includes>
+			</resource>
+			<resource>
+				<directory>src/sql</directory>
+				<includes>
+					<include>**/*.sql</include>
+				</includes>
+			</resource>
+		</resources>
+		<!--
+			<testResources> <testResource>
+			<directory>${basedir}/src/test</directory> <includes>
+			<include>log4j.properties</include>
+			<include>hibernate.test.properties</include>
+			<include>hibernate.dataload.properties</include>
+			<include>spring-test.xml</include>
+			<include>spring-config-test.xml</include>
+			<include>spring-config-dataload.xml</include> </includes>
+			</testResource> </testResources>
+		-->
+
+<!--
+		<extensions>
+			<extension>
+				<groupId>jdbc.artifact.groupid</groupId>
+				<artifactId>jdbc-driver</artifactId>
+				<version>1.0</version>
+			</extension>
+		</extensions>
+-->
+		<plugins>	
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>hibernate3-maven-plugin</artifactId>
+				<version>1.0-SNAPSHOT</version>
+				<!--
+				<executions>
+		        <execution>
+		          <phase>process-classes</phase>
+		          <goals>
+		            <goal>hbm2ddl</goal>
+		             <goal>hbm2java</goal> 
+		          </goals>
+		        </execution>
+		        
+		      </executions>-->
+				 <configuration>
+				 	<propertyfile>/src/java/resources/database.properties</propertyfile>
+					<hibernate>
+						<configurationFile>/src/java/resources/hibernate.cfg.xml</configurationFile>
+					</hibernate>
+					<outputDirectory>
+						<!-- <hbm2cfgxml>/src/java/resources</hbm2cfgxml> -->
+						<hbm2java>/src/java/org/sakaiproject/sms/hibernate/model</hbm2java>
+					</outputDirectory>
+					<componentProperties>
+			          <implementation>jpaconfiguration</implementation>
+			          <persistenceunit>Default</persistenceunit>
+			          <outputfilename>schema.ddl</outputfilename>
+			          <drop>true</drop>
+			          <create>false</create>
+			          <export>false</export>
+			          <format>true</format>
+			        </componentProperties>
+				</configuration> 
+			</plugin>
+			
+		<!-- 
+			<plugin>
+      <groupId>org.codehaus.mojo</groupId>
+      <artifactId>hibernate3-maven-plugin</artifactId>
+      <version>2.0-alpha-2</version>
+      <executions>
+        <execution>
+          <phase>process-classes</phase>
+          <goals>
+            <goal>hbm2ddl</goal>
+          </goals>
+        </execution>
+      </executions>
+      <configuration>
+        <components>
+          <component>
+            <name>hbm2ddl</name>
+            <implementation>annotationconfiguration</implementation>
+          </component>
+        </components>
+        <componentProperties>
+          <implementation>jpaconfiguration</implementation>
+          <persistenceunit>Default</persistenceunit>
+          <outputfilename>schema.ddl</outputfilename>
+          <drop>false</drop>
+          <create>true</create>
+          <export>false</export>
+          <format>true</format>
+        </componentProperties>
+      </configuration>
+    </plugin>-->
+			
+			
+			
+		</plugins>
+		<extensions>
+      <extension>
+      	<groupId>mysql</groupId>
+		<artifactId>mysql-connector-java</artifactId>
+		<version>5.1.5</version>
+		</extension>
+    </extensions>
+		
+	</build>
+</project>
