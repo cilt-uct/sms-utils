@@ -4,8 +4,6 @@
 
 <beans>
   
-  <bean id="SmsTestBean" class="org.sakaiproject.sms.beans.SmsTestBean" />
-
   <bean id="SmsTestActionBean" class="org.sakaiproject.sms.beans.SmsTestActionBean">
   	<property name="smsSmpp" ref="org.sakaiproject.sms.api.SmsSmpp" />
   	<property name="smsMessageLocator" ref="SmsMessageLocator" />
