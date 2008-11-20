@@ -25,9 +25,9 @@
 			<version>5</version>
 		</dependency>
 		<dependency>
-			<groupId>org.sakaiproject.sms.hibernate</groupId>
+			<groupId>${project.groupId}</groupId>
 			<artifactId>sms_hibernate</artifactId>
-			<version>1.0</version>
+			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.code</groupId>
