@@ -1,0 +1,6 @@
+org.sakaiproject.sms.api
+org.sakaiproject.sms.beans
+org.sakaiproject.sms.impl
+org.sakaiproject.sms.model
+org.sakaiproject.sms.producers
+test
