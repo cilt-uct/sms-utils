@@ -18,6 +18,9 @@
 package org.sakaiproject.sms.producers;
 
 import static org.sakaiproject.sms.constants.SMSConstants.MAX_SMS_LENGTH;
+
+import org.sakaiproject.sms.otp.SmsMessageLocator;
+
 import uk.org.ponder.rsf.components.UICommand;
 import uk.org.ponder.rsf.components.UIContainer;
 import uk.org.ponder.rsf.components.UIForm;
@@ -34,37 +37,50 @@ import uk.org.ponder.rsf.viewstate.ViewParameters;
 public class SmsTestProducer implements ViewComponentProducer, DefaultView {
 	public static final String VIEW_ID = "sms_test";
 
-	public String getViewID() {
-		return VIEW_ID;
+	/**
+	 * @see ComponentProducer#fillComponents(UIContainer, ViewParameters,
+	 *      ComponentChecker)
+	 */
+	public void fillComponents(UIContainer tofill, ViewParameters viewparams,
+			ComponentChecker checker) {
+
+		String smsMessage = SmsMessageLocator.LOCATOR_NAME + "."
+				+ SmsMessageLocator.NEW_1;
+
+		UIMessage.make(tofill, "page-title", "sms.test.title");
+		UIForm form = UIForm.make(tofill, "test-form");
+
+		UIMessage.make(form, "mobile-nr-label", "sms.test.mobile-number");
+		UIInput.make(form, "mobile-nr", smsMessage + ".mobileNumber");
+
+		UIMessage.make(form, "message-body-label", "sms.test.message-body");
+		UIInput messageBody = UIInput.make(form, "message-body", smsMessage
+				+ ".messageBody");
+
+		UIMessage.make(form, "chars-remaining-label",
+				"sms.test.chars-remaining");
+		UIInput charsRemaining = UIInput.make(form, "chars-remaining", null,
+				Integer.toString(MAX_SMS_LENGTH));
+		// Disables the characters remaining input
+		charsRemaining.decorate(new UIDisabledDecorator());
+
+		UICommand.make(form, "ok-button", UIMessage.make("sms.general.ok"),
+				"SmsTestActionBean.send");
+		UICommand.make(form, "cancel-button", UIMessage
+				.make("sms.general.cancel"), null);
+
+		UIMessage.make(form, "smpp-debug-label", "sms.test.smpp-debug");
+		UIInput debug = UIInput.make(form, "smpp-debug", smsMessage
+				+ ".debugInfo");
+		debug.decorate(new UIDisabledDecorator());
+
+		UIInitBlock.make(tofill, "init-msg-body-change", "initMsgBodyChange",
+				new Object[] { messageBody, charsRemaining,
+						Integer.toString(MAX_SMS_LENGTH) });
 	}
 
-    /**
-     * @see ComponentProducer#fillComponents(UIContainer, ViewParameters, ComponentChecker)
-     */
-	public void fillComponents(UIContainer tofill, ViewParameters viewparams, ComponentChecker checker) {
-			String smsTestBean = "SmsTestBean";	
-			
-			UIMessage.make(tofill, "page-title", "sms.test.title");
-			UIForm form = UIForm.make(tofill, "test-form");
-			
-			UIMessage.make(form,"mobile-nr-label", "sms.test.mobile-number");
-			UIInput.make(form, "mobile-nr", smsTestBean + ".mobileNumber");
-			
-			UIMessage.make(form,"message-body-label", "sms.test.message-body");
-			UIInput messageBody = UIInput.make(form, "message-body", smsTestBean + ".messageBody");
-			
-			UIMessage.make(form,"chars-remaining-label" , "sms.test.chars-remaining");
-			UIInput charsRemaining = UIInput.make(form, "chars-remaining", null, Integer.toString(MAX_SMS_LENGTH));
-			// Disables the characters remaining input
-			charsRemaining.decorate(new UIDisabledDecorator());
-			
-			UICommand.make(form,"ok-button", UIMessage.make("sms.general.ok"), "SmsTestActionBean.send");
-			UICommand.make(form,"cancel-button", UIMessage.make("sms.general.cancel"), null);
-			
-			UIMessage.make(form,"smpp-debug-label", "sms.test.smpp-debug");
-			UIInput.make(form, "smpp-debug", null);
-			
-			UIInitBlock.make(tofill, "init-msg-body-change", "initMsgBodyChange", new Object[] { messageBody, charsRemaining,  Integer.toString(MAX_SMS_LENGTH)});
+	public String getViewID() {
+		return VIEW_ID;
 	}
 
 }

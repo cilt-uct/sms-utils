@@ -8,7 +8,7 @@
 
   <bean id="SmsTestActionBean" class="org.sakaiproject.sms.beans.SmsTestActionBean">
   	<property name="smsSmpp" ref="org.sakaiproject.sms.api.SmsSmpp" />
-  	<property name="smsTestBean" ref="SmsTestBean" />
+  	<property name="smsMessageLocator" ref="SmsMessageLocator" />
   </bean>
   
   <bean class="org.sakaiproject.sms.producers.SmsTestProducer" />
@@ -20,5 +20,9 @@
   </bean>
   
   <bean id="aMSConfigProducer" class="org.sakaiproject.sms.producers.SMSConfigProducer"/>
+  
+  
+  <!-- Locators -->
+  <bean id="SmsMessageLocator" class="org.sakaiproject.sms.otp.SmsMessageLocator" />
   
 </beans>

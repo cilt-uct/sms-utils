@@ -26,7 +26,7 @@
   <!-- Define the bean roots from the request scope file that are accessible 
     via incoming request URL -->
   <bean parent="requestAddressibleParent">
-    <property name="value" value="sMSConfigBean, sMSConfigActionBean, SmsTestActionBean, SmsTestBean"/>
+    <property name="value" value="sMSConfigBean, sMSConfigActionBean, SmsTestActionBean, SmsMessageLocator"/>
   </bean>
 
 <!--   Create a scope to preserve the logon bean (in the HTTP session for a-->
