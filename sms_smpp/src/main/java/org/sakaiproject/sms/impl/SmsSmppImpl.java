@@ -142,36 +142,26 @@ public class SmsSmppImpl implements SmsSmpp {
 	private static TimeFormatter timeFormatter = new AbsoluteTimeFormatter();
 	private BindThread bindTest;
 	private byte dataCoding;
-	private ArrayList<SmsDeliveryReport> delReports = new ArrayList();
-
-	private String destAddress;
+	private ArrayList<SmsDeliveryReport> delReports = new ArrayList<SmsDeliveryReport>();
 	private byte destAddressNPI;
 	private byte destAddressTON;
 	private long enquireLinkTimeOut;
-	private byte esmClass;
 	private String gatewayAdress;
 	private boolean gatewayBound = false;
-	private String messageId = "";
-	private int numberOfDestination;
 	private String password;
 	private int port;
 	private byte priorityFlag;
 	private Properties properties = new Properties();
 	private byte protocolId;
-	private byte registeredDelivery;
 	private byte replaceIfPresentFlag;
-	private String scheduleDeliveryTime;
 	private String serviceType;
 	private SMPPSession session = new SMPPSession();
-	private String shortMessage;
 	private byte smDefaultMsgId;
 	private String sourceAddress;
 	private byte sourceAddressNPI;
 	private byte sourceAddressTON;
 	private String systemType;
 	private String userName;
-
-	private String validityPeriod;
 
 	public boolean bind() {
 
@@ -281,24 +271,15 @@ public class SmsSmppImpl implements SmsSmpp {
 					.getProperty("sourceAddressNPI")));
 			sourceAddressTON = (Byte.parseByte(properties
 					.getProperty("sourceAddressTON")));
-			destAddress = (properties.getProperty("destAddress"));
+
 			destAddressNPI = (Byte.parseByte(properties
 					.getProperty("destAddressNPI")));
 			destAddressTON = (Byte.parseByte(properties
 					.getProperty("destAddressTON")));
-			scheduleDeliveryTime = properties
-					.getProperty("scheduleDeliveryTime");
-			validityPeriod = properties.getProperty("validityPeriod");
-			shortMessage = properties.getProperty("shortMessage");
-			numberOfDestination = Integer.parseInt(properties
-					.getProperty("numberOfDestination"));
-			messageId = properties.getProperty("messageId");
-			esmClass = Byte.parseByte(properties.getProperty("esmClass"));
+
 			protocolId = Byte.parseByte(properties.getProperty("protocolId"));
 			priorityFlag = Byte.parseByte(properties
 					.getProperty("priorityFlag"));
-			registeredDelivery = Byte.parseByte(properties
-					.getProperty("registeredDelivery"));
 			replaceIfPresentFlag = Byte.parseByte(properties
 					.getProperty("replaceIfPresentFlag"));
 			dataCoding = Byte.parseByte(properties.getProperty("dataCoding"));
