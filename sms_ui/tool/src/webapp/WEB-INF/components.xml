@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+	"http://www.springframework.org/dtd/spring-beans.dtd">
+
+<!--  TODO: MOVE ALL OF THIS TO USE SAKAI PACKAGING!!!! -->
+<beans>
+
+	<!-- add sakai application scope bean definitions here -->
+
+	<bean id="org.sakaiproject.sms.api.SmsSmpp" class="org.sakaiproject.sms.impl.SmsSmppImpl" init-method="init">	
+	</bean>
+
+</beans>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN"
+  "http://www.springframework.org/dtd/spring-beans.dtd">
+
+<beans>
+
+	<!-- add sakai application scope bean definitions -->
+   <!-- TODO: Change to use Sakai packaging method  -->
+   <import resource="components.xml" />
+
+	<!-- handles configuration of internationalization messages -->
+   <bean id="messageLocator" class="uk.org.ponder.springutil.SpringMessageLocator">
+      <property name="messageSource">
+         <bean class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+            <property name="basename">
+               <value>WEB-INF/bundle/messages</value>
+            </property>
+            <property name="cacheSeconds">
+               <value>10</value>
+            </property>
+         </bean>
+      </property>
+      <property name="localeGetter" ref="requestLocaleProxy" />
+   </bean>
+
+  <!-- Define the bean roots from the request scope file that are accessible 
+    via incoming request URL -->
+  <bean parent="requestAddressibleParent">
+    <property name="value" value="sMSConfigBean, sMSConfigActionBean, SmsTestActionBean, SmsTestBean"/>
+  </bean>
+
+<!--   Create a scope to preserve the logon bean (in the HTTP session for a-->
+<!--    standalone app -->
+<!--  <bean id="logonScope" parent="beanScopeParent">-->
+<!--    <property name="copyPreservingBeans" value="smsObject" />-->
+<!--    <property name="exclusive" value="true" />-->
+<!--  </bean>-->
+
+
+
+</beans>
