@@ -1,139 +1,442 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.sakaiproject.sms</groupId>
-  <artifactId>sms_ui</artifactId>
-  <name>sms_ui</name>
-  <packaging>war</packaging>
+  <artifactId>sms-parent</artifactId>
+  <packaging>pom</packaging>
   <version>1.0</version>
-  <parent>
-		<artifactId>sms-parent</artifactId>
-		<groupId>org.sakaiproject.sms</groupId>
-		<version>1.0</version>
-  </parent>
-  <description>SMS UI webapp</description>
-  
-  <repositories>
-    <repository>
-      <id>CARET</id>
-      <name>CARET Maven Repository</name>
-      <url>http://www2.caret.cam.ac.uk/maven2</url>
-    </repository>
-  </repositories>
-  
+  <name>SMS</name>
+  <url>http://maven.apache.org</url>
+  <description>SMS</description>
+
+  <prerequisites>
+    <maven>2.0.8</maven>
+  </prerequisites>
+
+  <licenses>
+    <license>
+      <name></name>
+      <url></url>
+    </license>
+  </licenses>
+
+  <scm>
+    <connection>scm:svn:https://source.sakaiproject.org/contrib/sms/trunk
+    </connection>
+    <developerConnection>scm:svn:https://source.sakaiproject.org/contrib/sms/trunk
+    </developerConnection>
+    <tag/>
+    <url/>
+  </scm>
+
+  <!--<distributionManagement>
+    <site>
+      <id>website</id>
+      <url>file:///c:/inetpub/wwwroot/\</url>
+    </site>
+  </distributionManagement>-->
+
+  <issueManagement>
+    <system>Confluence JIRA</system>
+    <url></url>
+  </issueManagement>
+
+  <!-- TODO:
+  <ciManagement>
+    <system>Hudson</system>
+    <url>http://psybergate.dyndns.org/hundson/sms</url>
+    <notifiers>
+      <notifier>
+        <type>mail</type>
+        <sendOnError>true</sendOnError>
+        <sendOnFailure>true</sendOnFailure>
+        <sendOnSuccess>false</sendOnSuccess>
+        <sendOnWarning>false</sendOnWarning>
+        <configuration>
+          <address>grant@psybergate.co.za</address>
+        </configuration>
+      </notifier>
+    </notifiers>
+  </ciManagement>
+  -->
+
+  <developers>
+    <developer>
+      <id>louis</id>
+      <name>Louis Botha</name>
+      <email>louis@psybergate.co.za</email>
+      <timezone></timezone>
+    </developer>
+    <developer>
+      <id>grant</id>
+      <name>Grant Marais</name>
+      <email>grant@psybergate.co.za</email>
+      <timezone></timezone>
+    </developer>
+    <developer>
+      <id>etienne</id>
+      <name>Etienne Swanepoel</name>
+      <email>etienne@psybergate.co.za</email>
+      <timezone></timezone>
+    </developer>
+    <developer>
+      <id>wilhelm</id>
+      <name>Wilhelm Kleu</name>
+      <email>wilhelm@psybergate.co.za</email>
+      <timezone></timezone>
+    </developer>
+    <developer>
+      <id>julian</id>
+      <name>Julian Wyngaard</name>
+      <email>julian@psybergate.co.za</email>
+      <timezone></timezone>
+    </developer>
+  </developers>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>${log4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.sakaiproject</groupId>
+			<artifactId>generic-dao</artifactId>
+			<version>${generic-dao.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate</artifactId>
+			<version>${hibernate.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>${mysql.connector.java.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>quartz</groupId>
+			<artifactId>quartz</artifactId>
+			<version>${quartz.version}</version>
+		</dependency>
+	   <dependency>
+			<groupId>uk.org.ponder.rsfutil</groupId>
+			<artifactId>rsfutil</artifactId>
+			<version>${rsfutil.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sourceforge.groboutils</groupId>
+			<artifactId>groboutils-core</artifactId>
+			<version>${groboutils.core.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code</groupId>
+			<artifactId>jsmpp</artifactId>
+			<version>${jsmpp.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>${slf4j.log4j12.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.api.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>uk.org.ponder.rsfutil</groupId>
+			<artifactId>rsfutil</artifactId>
+			<version>${rsfutil.version}</version>
+		</dependency>    
+		<dependency>
+		<groupId>${project.groupId}</groupId>
+			<artifactId>sms_hibernate</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+		<groupId>${project.groupId}</groupId>
+			<artifactId>smpp</artifactId>
+			<version>${project.version}</version>
+		</dependency> 
+    </dependencies>
+  </dependencyManagement>
+
   <dependencies>
-	<dependency>
-		<groupId>${project.groupId}</groupId>
-		<artifactId>sms_hibernate</artifactId>
-		<version>${project.version}</version>
-	</dependency>
-	<dependency>
-		<groupId>${project.groupId}</groupId>
-		<artifactId>smpp</artifactId>
-		<version>${project.version}</version>
-	</dependency>
-	<dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>uk.org.ponder.rsfutil</groupId>
-      <artifactId>rsfutil</artifactId>
-    </dependency>    
-	<dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-    </dependency>
+		
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.sakaiproject</groupId>
+			<artifactId>generic-dao</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>quartz</groupId>
+			<artifactId>quartz</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>uk.org.ponder.rsfutil</groupId>
+			<artifactId>rsfutil</artifactId>
+			<version>${rsfutil.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sourceforge.groboutils</groupId>
+			<artifactId>groboutils-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code</groupId>
+			<artifactId>jsmpp</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>uk.org.ponder.rsfutil</groupId>
+			<artifactId>rsfutil</artifactId>
+		</dependency>    
+
+
   </dependencies>
-  
- <build>
-    <finalName>sms_ui</finalName> 
-    <sourceDirectory>${basedir}/tool/src/java</sourceDirectory>
+
+  <modules>
+  <!--  <module>sms_hibernate</module>
+	<module>smpp</module>-->
+    <module>sms_ui</module>
+  </modules>
+
+  <repositories>
+  </repositories>
+
+  <pluginRepositories>
+  	
+  </pluginRepositories>
+
+  <build>
+    <defaultGoal>install</defaultGoal>
+
     <plugins>
-  		<plugin>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <configuration>
-               <source>1.5</source>
-               <target>1.5</target>
-            </configuration>
-         </plugin>
-  		<plugin>
-			<groupId>org.apache.maven.plugins</groupId>
-			<artifactId>maven-war-plugin</artifactId>
-			<version>2.0.2</version>
-			<configuration>
-				<classifier>${build.environment}</classifier>
-				<webResources>
-					<resource>
-						<directory>${basedir}/tool/src/webapp/</directory>
-						<filtering>true</filtering>
-						<includes>
-							<include>**/*</include>				
-						</includes>
-						<excludes>
-              				<exclude>**/log4j.properties</exclude>
-            			</excludes>
-					</resource>
-					<resource>
-            			<directory>${basedir}/tool/src/webapp/WEB-INF</directory>
-            			<targetPath>WEB-INF/classes</targetPath>
-            			<filtering>true</filtering>
-            			<includes>
-							<include>**/log4j.properties</include>				
-						</includes>
-          			</resource>
-				</webResources>
-				<systemProperties>
-            		<systemProperty>
-              			<name>log4j.configuration</name>
-               			<value>${basedir}/tool/src/webapp/WEB-INF/log4j.properties</value>
-            		</systemProperty>
-				</systemProperties>
-			</configuration>
-		</plugin>
-		<plugin>
-				<groupId>org.mortbay.jetty</groupId>
-				<artifactId>maven-jetty-plugin</artifactId>
-				<version>6.1.10</version>
-				<configuration>
-					<contextPath>${project.build.finalName}</contextPath>
-					<webAppSourceDirectory>${basedir}/tool/src/webapp/</webAppSourceDirectory>
-					<webXml>
-						${project.build.directory}/${project.build.finalName}/WEB-INF/web.xml 
-					</webXml>
-					<webApp>
-						${project.build.directory}/${project.build.finalName}.war 
-					</webApp>
-					<scanIntervalSeconds>5</scanIntervalSeconds>
-					<connectors>
-						<connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
-							<port>8080</port>
-							<maxIdleTime>60000</maxIdleTime>
-						</connector>
-					</connectors>
-				</configuration>
-				<dependencies>
-					<dependency>
-          					<groupId>log4j</groupId>
-          					<artifactId>log4j</artifactId>
-          					<version>${log4j.version}</version>
-          					<type>jar</type>
-        				</dependency>
-        				<dependency>
-          					<groupId>commons-logging</groupId>
-          					<artifactId>commons-logging</artifactId>
-          					<version>${commons-logging-version}</version>
-          					<type>jar</type>
-        				</dependency>
-       			</dependencies>
-			</plugin>
-  	</plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>2.0.2</version>
+        <configuration>
+          <source>1.5</source>
+          <target>1.5</target>
+          <!-- Use this to specify where the javac compiler can be found. Defaults to using JAVA_HOME -->
+          <!--
+			<executable></executable>
+		    -->
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-clean-plugin</artifactId>
+        <configuration>
+          <filesets>
+            <fileset>
+              <directory>${basedir}/.intellij</directory>
+              <includes>
+                <include>**/**</include>
+              </includes>
+            </fileset>
+            <fileset>
+              <directory>${basedir}/.eclipse</directory>
+              <includes>
+                <include>**/**</include>
+              </includes>
+            </fileset>
+          </filesets>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <systemProperties>
+            <property>
+              <name>net.sourceforge.cobertura.datafile</name>
+              <value>target/cobertura/cobertura.ser</value>
+            </property>
+          </systemProperties>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-eclipse-plugin</artifactId>
+        <version>2.4</version>
+        <configuration>
+          <additionalProjectnatures>
+            <projectnature>org.springframework.ide.eclipse.core.springnature</projectnature>
+          </additionalProjectnatures>
+          <additionalBuildcommands>
+            <buildcommand>org.springframework.ide.eclipse.core.springbuilder</buildcommand>
+          </additionalBuildcommands>
+          <downloadSources>true</downloadSources>
+          <downloadJavadocs>true</downloadJavadocs>
+          <wtpversion>1.5</wtpversion>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-idea-plugin</artifactId>
+        <version>2.1</version>
+        <configuration>
+          <downloadSources>true</downloadSources>
+          <downloadJavadocs>true</downloadJavadocs>
+          <dependenciesAsLibraries>true</dependenciesAsLibraries>
+          <useFullNames>false</useFullNames>
+        </configuration>
+      </plugin>
+
+    </plugins>
+
   </build>
 
-  <properties>
-    <deploy.webappname>sms_ui</deploy.webappname>
-  </properties>
+  <reporting>
+    <plugins>
+	 		  
+    </plugins>
+  </reporting>
 
+  <profiles>
+    <!-- =================== Development Settings Profile =================== -->
+    <!-- Use "-P dev" when you want to use the settings in this profile -->
+    <!-- ================================================================ -->
+    <profile>
+      <id>dev</id>
+      <build>
+      </build>
+    </profile>
+
+    <!-- ====================== Test Settings Profile ====================== -->
+    <!-- Use "-P test" when you want to use the settings in this profile -->
+    <!-- =============================================================== -->
+    <profile>
+      <id>test</id>
+      <build>
+      </build>
+    </profile>
+
+
+    <!-- =================== Production Settings Profile =================== -->
+    <!-- Use "-P prod" when you want to use the settings in this profile -->
+    <!-- ============================================================== -->
+    <profile>
+      <id>prod</id>
+      <build>
+      </build>
+    </profile>
+
+    <!-- ================= Database Profiles ================= -->
+	<!--
+    <profile>
+      <id>mysql</id>
+      <properties>
+        <dbunit.dataTypeFactoryName>org.dbunit.dataset.datatype.DefaultDataTypeFactory</dbunit.dataTypeFactoryName>
+        <hibernate.dialect>org.hibernate.dialect.MySQLDialect</hibernate.dialect>
+        <jdbc.groupId>postgresql</jdbc.groupId>
+        <jdbc.artifactId>postgresql</jdbc.artifactId>
+        <jdbc.version>8.1-408.jdbc3</jdbc.version>
+        <jdbc.driverClassName>org.postgresql.Driver</jdbc.driverClassName>
+        <jdbc.url><![CDATA[jdbc:postgresql://localhost/pruhealth-quote]]></jdbc.url>
+        <jdbc.username>postgres</jdbc.username>
+        <jdbc.password>password</jdbc.password>
+      </properties>
+    </profile>
+	-->
+	
+    <!-- ================= Container Profiles ================= -->
+    <profile>
+      <id>jboss</id>
+      <properties>
+        <cargo.container>jboss4x</cargo.container>
+        <cargo.container.home>${env.JBOSS_HOME}</cargo.container.home>
+        <cargo.jboss.configuration>default</cargo.jboss.configuration>
+        <cargo.configuration.home>${cargo.container.home}/server/${cargo.jboss.configuration}</cargo.configuration.home>
+        <cargo.container.url>http://dev/software/jboss-4.0.5.GA.zip</cargo.container.url>
+        <!--
+        <cargo.container.url>http://surfnet.dl.sourceforge.net/sourceforge/jboss/jboss-4.2.1.GA.zip</cargo.container.url>
+        -->
+      </properties>
+    </profile>
+
+    <profile>
+      <id>tomcat</id>
+      <properties>
+        <cargo.container>tomcat5x</cargo.container>
+        <cargo.container.home>${env.TOMCAT_HOME}</cargo.container.home>
+        <cargo.configuration.home>${cargo.container.home}</cargo.configuration.home>
+        <cargo.container.url>http://dev/software/apache-tomcat-6.0.14.zip</cargo.container.url>
+        <!--
+        <cargo.container.url>http://archive.apache.org/dist/tomcat/tomcat-6/v6.0.14/bin/apache-tomcat-6.0.14.zip</cargo.container.url>
+        -->
+      </properties>
+    </profile>
+
+  </profiles>
+
+  <properties>
+    <!-- Application settings -->
+    <copyright.year>2008</copyright.year>
+    <dao.framework>hibernate</dao.framework>
+    <web.framework>spring</web.framework>
+
+    <!-- Framework dependency versions -->
+	<log4j.version>1.2.14</log4j.version>
+	<junit.version>3.8.1</junit.version>
+	<generic-dao.version>0.9.11</generic-dao.version>
+	<hibernate.version>3.2.5.ga</hibernate.version>
+	<quartz.version>1.5.2</quartz.version>
+	<mysql.connector.java.version>5.1.5</mysql.connector.java.version>
+	<rsfutil.version>0.7.2</rsfutil.version>
+	<groboutils.core.version>5</groboutils.core.version>
+	<jsmpp.version>2.0</jsmpp.version>
+	<slf4j.log4j12.version>1.4.3</slf4j.log4j12.version>
+	<slf4j.api.version>1.4.3</slf4j.api.version>
+	<rsfutil.version>0.7.4</rsfutil.version>
+	<commons-logging-version>1.1</commons-logging-version>
+
+
+    <!-- Database settings -->
+	<dbunit.dataTypeFactoryName>org.dbunit.dataset.datatype.DefaultDataTypeFactory</dbunit.dataTypeFactoryName>
+	<dbunit.operation.type>CLEAN_INSERT</dbunit.operation.type>
+	<dbunit.format>flat</dbunit.format>
+    <hibernate.dialect>org.hibernate.dialect.PostgreSQLDialect</hibernate.dialect>
+    <jdbc.groupId>postgresql</jdbc.groupId>
+	<jdbc.artifactId>postgresql</jdbc.artifactId>
+    <jdbc.version>8.1-408.jdbc3</jdbc.version>
+    <jdbc.driverClassName>org.postgresql.Driver</jdbc.driverClassName>
+    <jdbc.url><![CDATA[jdbc:postgresql://localhost/pruhealth-quote]]></jdbc.url>
+    <jdbc.username>postgres</jdbc.username>
+    <jdbc.password>password</jdbc.password>
+
+  </properties>
 </project>
