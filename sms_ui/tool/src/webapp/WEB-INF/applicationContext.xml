@@ -29,12 +29,11 @@
     <property name="value" value="sMSConfigBean, sMSConfigActionBean, SmsTestActionBean, SmsMessageLocator"/>
   </bean>
 
-<!--   Create a scope to preserve the logon bean (in the HTTP session for a-->
-<!--    standalone app -->
-<!--  <bean id="logonScope" parent="beanScopeParent">-->
-<!--    <property name="copyPreservingBeans" value="smsObject" />-->
-<!--    <property name="exclusive" value="true" />-->
-<!--  </bean>-->
+  <!-- The beans which will be preserved across a flow via simple instance
+    copying -->
+  <bean parent="copyPreservingParent">
+    <property name="value" value="SmsMessageLocator"/>
+  </bean>
 
 
 

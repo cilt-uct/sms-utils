@@ -27,10 +27,11 @@ public class SmsTestActionBean {
 	private SmsMessageLocator smsMessageLocator;
 	private SmsSmpp smsSmpp;
 
-	public void send() {
+	public String send() {
 		SmsMessage msg = (SmsMessage) smsMessageLocator
 				.locateBean(SmsMessageLocator.NEW_1);
 		smsSmpp.sendMessageToGateway(msg);
+		return ActionResults.SUCCESS;
 	}
 
 	public void setSmsMessageLocator(SmsMessageLocator smsMessageLocator) {
