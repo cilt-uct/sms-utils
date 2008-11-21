@@ -5,7 +5,6 @@
 <beans>
   
   <!-- Binding  Beans -->
-  <bean id="SmsTestBean" class="org.sakaiproject.sms.beans.SmsTestBean" />
   <bean id="sMSConfigBean" class="org.sakaiproject.sms.beans.SMSConfigBean"/>
   <bean id="searchFilterBean" class="org.sakaiproject.sms.beans.SearchFilterBean"/>	
 
