@@ -4,21 +4,25 @@
 
 <beans>
   
+  <!-- Binding  Beans -->
+  <bean id="SmsTestBean" class="org.sakaiproject.sms.beans.SmsTestBean" />
+  <bean id="sMSConfigBean" class="org.sakaiproject.sms.beans.SMSConfigBean"/>
+  <bean id="searchFilterBean" class="org.sakaiproject.sms.beans.SearchFilterBean"/>	
+
+  <!--  Producers -->
+  <bean class="org.sakaiproject.sms.producers.SmsTestProducer" />
+  <bean id="sMSConfigProducer" class="org.sakaiproject.sms.producers.SMSConfigProducer"/>
+  <bean id="sMSTaskListProducer"  class="org.sakaiproject.sms.producers.SMSTaksListProducer"/>  
+
+  <!--  Action Beans -->  
   <bean id="SmsTestActionBean" class="org.sakaiproject.sms.beans.SmsTestActionBean">
   	<property name="smsSmpp" ref="org.sakaiproject.sms.api.SmsSmpp" />
   	<property name="smsMessageLocator" ref="SmsMessageLocator" />
   </bean>
-  
-  <bean class="org.sakaiproject.sms.producers.SmsTestProducer" />
 
-  <bean id="sMSConfigBean" class="org.sakaiproject.sms.beans.SMSConfigBean"/>
-  
   <bean id="sMSConfigActionBean" class="org.sakaiproject.sms.beans.SMSConfigActionBean">
   	 <property name="smsConfigBean" ref="sMSConfigBean"/>
   </bean>
-  
-  <bean id="aMSConfigProducer" class="org.sakaiproject.sms.producers.SMSConfigProducer"/>
-  
   
   <!-- Locators -->
   <bean id="SmsMessageLocator" class="org.sakaiproject.sms.otp.SmsMessageLocator" />

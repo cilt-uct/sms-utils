@@ -1,5 +1,5 @@
 /***********************************************************************************
- * SMSConfigProducer.js
+ * SMSConfigProducer.java
  * Copyright (c) 2008 Sakai Project/Sakai Foundation
  * 
  * Licensed under the Educational Community License, Version 2.0 (the "License"); 
