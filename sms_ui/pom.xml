@@ -23,6 +23,11 @@
       <name>CARET Maven Repository</name>
       <url>http://www2.caret.cam.ac.uk/maven2</url>
     </repository>
+    <repository>
+      <id>honestyworks</id>
+      <name>honestyworks Maven Repository</name>
+      <url>http://my.honestyworks.jp/maven2/</url>
+    </repository>
   </repositories>
   
   <dependencies>
@@ -67,9 +72,6 @@
   	    <artifactId>supercsv</artifactId>
   		<version>${supercsv.version}</version>
     </dependency>
-	
-	
-	
   </dependencies>
   
  <build>
