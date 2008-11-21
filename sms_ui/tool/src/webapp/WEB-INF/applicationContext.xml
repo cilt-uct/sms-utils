@@ -35,11 +35,4 @@
     <property name="value" value="SmsMessageLocator"/>
   </bean>
  
- <!-- While the beans are not persisted yet this might be necessary -->
- <bean id="ignoreFossilizedValues" class="uk.org.ponder.springutil.BooleanFactory">
-	<property name="value" value="true" />
- </bean>
-
-
-
 </beans>

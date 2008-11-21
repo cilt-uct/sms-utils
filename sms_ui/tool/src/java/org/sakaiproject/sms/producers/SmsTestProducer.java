@@ -60,11 +60,14 @@ public class SmsTestProducer implements ViewComponentProducer, DefaultView,
 		UIForm form = UIForm.make(tofill, "test-form");
 
 		UIMessage.make(form, "mobile-nr-label", "sms.test.mobile-number");
-		UIInput.make(form, "mobile-nr", smsMessage + ".mobileNumber");
+		UIInput mobileNr = UIInput.make(form, "mobile-nr", smsMessage
+				+ ".mobileNumber");
+		mobileNr.mustapply = true; // Force to apply
 
 		UIMessage.make(form, "message-body-label", "sms.test.message-body");
 		UIInput messageBody = UIInput.make(form, "message-body", smsMessage
 				+ ".messageBody");
+		messageBody.mustapply = true; // Force to apply
 
 		UIMessage.make(form, "chars-remaining-label",
 				"sms.test.chars-remaining");
