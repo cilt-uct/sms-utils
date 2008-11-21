@@ -129,7 +129,7 @@
         				<dependency>
           					<groupId>commons-logging</groupId>
           					<artifactId>commons-logging</artifactId>
-          					<version>${commons-logging-version}</version>
+          					<version>${commons.logging.version}</version>
           					<type>jar</type>
         				</dependency>
        			</dependencies>
@@ -142,6 +142,7 @@
 	<log4j.version>1.2.14</log4j.version>
 	<junit.version>3.8.1</junit.version>
 	<rsfutil.version>0.7.4</rsfutil.version>
+	<commons.logging.version>1.1</commons.logging.version>
   </properties>
 
 </project>
