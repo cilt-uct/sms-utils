@@ -57,7 +57,6 @@ import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.model.SmsDeliveryReport;
 
 public class SmsSmppImpl implements SmsSmpp {
-
 	class BindThread implements Runnable {
 
 		boolean allDone = false;
@@ -116,12 +115,17 @@ public class SmsSmppImpl implements SmsSmpp {
 							.getFinalStatus().value());
 					delReports.add(receivedDelReport);
 
-					System.out
-							.println("Receiving delivery receipt for message '"
-									+ messageId + " ' from "
-									+ deliverSm.getSourceAddr() + " to "
-									+ deliverSm.getDestAddress() + " : "
-									+ delReceipt);
+					if (showDebug) {
+						System.out
+								.println("Receiving delivery receipt for message '"
+										+ messageId
+										+ " ' from "
+										+ deliverSm.getSourceAddr()
+										+ " to "
+										+ deliverSm.getDestAddress()
+										+ " : "
+										+ delReceipt);
+					}
 				} catch (InvalidDeliveryReceiptException e) {
 					System.err.println("Failed getting delivery receipt");
 					e.printStackTrace();
@@ -132,14 +136,16 @@ public class SmsSmppImpl implements SmsSmpp {
 				/*
 				 * you can save the incoming message to database.
 				 */
-
-				System.out.println("Receiving message : "
-						+ new String(deliverSm.getShortMessage()));
+				if (showDebug) {
+					System.out.println("Receiving message : "
+							+ new String(deliverSm.getShortMessage()));
+				}
 			}
 		}
 	}
 
 	private static TimeFormatter timeFormatter = new AbsoluteTimeFormatter();
+
 	private BindThread bindTest;
 	private byte dataCoding;
 	private ArrayList<SmsDeliveryReport> delReports = new ArrayList<SmsDeliveryReport>();
@@ -156,6 +162,7 @@ public class SmsSmppImpl implements SmsSmpp {
 	private byte replaceIfPresentFlag;
 	private String serviceType;
 	private SMPPSession session = new SMPPSession();
+	public boolean showDebug = true;
 	private byte smDefaultMsgId;
 	private String sourceAddress;
 	private byte sourceAddressNPI;
@@ -223,14 +230,17 @@ public class SmsSmppImpl implements SmsSmpp {
 
 	}
 
-	public int getConnectionStatus() {
-		if (gatewayBound) {
-			System.out.println("The server is currently binded to "
-					+ gatewayAdress + "  " + String.valueOf(port));
-		} else {
-			System.out.println("The server is not currently binded");
+	public boolean getConnectionStatus() {
+
+		if (showDebug) {
+			if (gatewayBound) {
+				System.out.println("The server is currently binded to "
+						+ gatewayAdress + "  " + String.valueOf(port));
+			} else {
+				System.out.println("The server is not currently binded");
+			}
 		}
-		return 0;
+		return gatewayBound;
 	}
 
 	public List<SmsDeliveryReport> getDeliveryNotifications() {

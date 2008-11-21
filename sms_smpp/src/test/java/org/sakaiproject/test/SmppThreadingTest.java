@@ -1,4 +1,5 @@
 package org.sakaiproject.test;
+
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -9,7 +10,6 @@ import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.impl.SmsSmppImpl;
 
 public class SmppThreadingTest extends TestCase {
-
 	private class SmppSession extends TestRunnable {
 
 		private int delivery_count, success_count, batch_count;
@@ -28,7 +28,7 @@ public class SmppThreadingTest extends TestCase {
 			System.out.println("Thread starting: " + sessionName);
 			for (int i = 0; i < batch_count; i++) {
 				SmsMessage smsMessage = new SmsMessage("+270731876135",
-						"Jnit tesing forloop num:" + i);
+						"Junit tesing forloop num:" + i);
 				System.out.println(sessionName + " send message " + i);
 				smsMessage.setId(i);
 
@@ -42,6 +42,7 @@ public class SmppThreadingTest extends TestCase {
 
 			// waiting for async delivery reports to arrive.
 			while (waitForDeliveries) {
+				System.out.println("Waiting for delivery reports");
 				delivery_count = smsSmppImpl.getDeliveryNotifications().size();
 				Thread.sleep(5000);
 				if (delivery_count == smsSmppImpl.getDeliveryNotifications()
@@ -67,9 +68,9 @@ public class SmppThreadingTest extends TestCase {
 		return new TestSuite(SmppThreadingTest.class);
 	}
 
-	private int session1_batch_count = 5;
+	private int session1_batch_count = 50;
 
-	private int session2_batch_count = 10;
+	private int session2_batch_count = 100;
 
 	/**
 	 * You use the MultiThreadedTestRunner in your test cases. The MTTR takes an

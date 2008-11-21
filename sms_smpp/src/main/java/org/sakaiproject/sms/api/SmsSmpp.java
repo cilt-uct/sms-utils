@@ -33,7 +33,7 @@ public interface SmsSmpp {
 	/**
 	 * Return the status of this connection to the gateway.
 	 */
-	public int getConnectionStatus();
+	public boolean getConnectionStatus();
 
 	/**
 	 * Return the buffered list of notifications and clear the buffer.
