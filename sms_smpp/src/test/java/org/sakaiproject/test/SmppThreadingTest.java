@@ -70,8 +70,6 @@ public class SmppThreadingTest extends TestCase {
 		int delivery_count = smsThread1.delivery_count
 				+ smsThread2.delivery_count;
 		int message_count = session1_message_count + session2_message_count;
-		// System.out.println(session1.sent_count);
-		// System.out.println(session2.sent_count);
 		System.out.println(delivery_count);
 
 		assertEquals(true, smsThread1.sent_count == session1_message_count);

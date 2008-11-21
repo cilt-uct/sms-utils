@@ -90,7 +90,10 @@ public class SmsSmppImpl implements SmsSmpp {
 		}
 	}
 
-	public class MessageReceiverListenerImpl implements MessageReceiverListener {
+	// This listener will receive delivery reports as well as incoming
+	// messages!
+	private class MessageReceiverListenerImpl implements
+			MessageReceiverListener {
 		public void onAcceptAlertNotification(
 				AlertNotification alertNotification) {
 		}
@@ -258,11 +261,11 @@ public class SmsSmppImpl implements SmsSmpp {
 	}
 
 	public String getGatewayInfo() {
-		String gatewayInfo = "Session bound as :=" + session.getSessionState()
+		String gatewayInfo = "Session bound as = " + session.getSessionState()
 				+ "\n";
-		gatewayInfo += "EnquireLinkTimer :=" + session.getEnquireLinkTimer()
-				/ 1000 + "seconds \n";
-		gatewayInfo += "SessionID is 	 :=" + session.getSessionId() + "\n";
+		gatewayInfo += "EnquireLinkTimer = " + session.getEnquireLinkTimer()
+				/ 1000 + " seconds \n";
+		gatewayInfo += "SessionID is 	 = " + session.getSessionId() + "\n";
 		return gatewayInfo;
 	}
 
@@ -275,12 +278,7 @@ public class SmsSmppImpl implements SmsSmpp {
 		LOG.info("SmsSmpp implementation is started");
 	}
 
-	public void insertIntoLog() {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void loadProperties() {
+	private void loadProperties() {
 
 		try {
 
@@ -320,7 +318,7 @@ public class SmsSmppImpl implements SmsSmpp {
 
 	}
 
-	public void loadPropertiesFile() {
+	private void loadPropertiesFile() {
 
 		try {
 			InputStream is = this.getClass().getResourceAsStream(
@@ -399,5 +397,10 @@ public class SmsSmppImpl implements SmsSmpp {
 
 		}
 		return message;
+	}
+
+	public void setLogLevel(Level level) {
+		LOG.setLevel(level);
+
 	}
 }
