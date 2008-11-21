@@ -26,6 +26,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.log4j.Level;
 import org.jsmpp.InvalidResponseException;
 import org.jsmpp.PDUException;
 import org.jsmpp.bean.AlertNotification;
@@ -76,12 +77,12 @@ public class SmsSmppImpl implements SmsSmpp {
 					return;
 				}
 				try {
-					Thread.sleep(enquireLinkTimeOut);
+					Thread.sleep(bindThreadTimer);
 				} catch (InterruptedException e) {
 
 					e.printStackTrace();
 				}
-				System.out.println("Trying to rebind");
+				LOG.info("Trying to rebind");
 				connectToGateway();
 
 			}
@@ -115,17 +116,11 @@ public class SmsSmppImpl implements SmsSmpp {
 							.getFinalStatus().value());
 					delReports.add(receivedDelReport);
 
-					if (showDebug) {
-						System.out
-								.println("Receiving delivery receipt for message '"
-										+ messageId
-										+ " ' from "
-										+ deliverSm.getSourceAddr()
-										+ " to "
-										+ deliverSm.getDestAddress()
-										+ " : "
-										+ delReceipt);
-					}
+					LOG.info("Receiving delivery receipt for message '"
+							+ messageId + " ' from "
+							+ deliverSm.getSourceAddr() + " to "
+							+ deliverSm.getDestAddress() + " : " + delReceipt);
+
 				} catch (InvalidDeliveryReceiptException e) {
 					System.err.println("Failed getting delivery receipt");
 					e.printStackTrace();
@@ -136,22 +131,27 @@ public class SmsSmppImpl implements SmsSmpp {
 				/*
 				 * you can save the incoming message to database.
 				 */
-				if (showDebug) {
-					System.out.println("Receiving message : "
-							+ new String(deliverSm.getShortMessage()));
-				}
+
+				LOG.info("Receiving message : "
+						+ new String(deliverSm.getShortMessage()));
+
 			}
 		}
 	}
 
+	private final static org.apache.log4j.Logger LOG = org.apache.log4j.Logger
+			.getLogger(SmsSmppImpl.class);
+
 	private static TimeFormatter timeFormatter = new AbsoluteTimeFormatter();
 
 	private BindThread bindTest;
+	private int bindThreadTimer;
 	private byte dataCoding;
 	private ArrayList<SmsDeliveryReport> delReports = new ArrayList<SmsDeliveryReport>();
 	private byte destAddressNPI;
 	private byte destAddressTON;
-	private long enquireLinkTimeOut;
+	private boolean disconnectGateWayCalled;
+	private int enquireLinkTimeOut;
 	private String gatewayAdress;
 	private boolean gatewayBound = false;
 	private String password;
@@ -162,7 +162,6 @@ public class SmsSmppImpl implements SmsSmpp {
 	private byte replaceIfPresentFlag;
 	private String serviceType;
 	private SMPPSession session = new SMPPSession();
-	public boolean showDebug = true;
 	private byte smDefaultMsgId;
 	private String sourceAddress;
 	private byte sourceAddressNPI;
@@ -173,9 +172,10 @@ public class SmsSmppImpl implements SmsSmpp {
 	public boolean bind() {
 
 		if (!gatewayBound) {
-			System.out.println("Binding to "
-					+ properties.getProperty("SMSCadress") + " on port "
-					+ properties.getProperty("SMSCport") + " with Username "
+
+			LOG.info("Binding to " + properties.getProperty("SMSCadress")
+					+ " on port " + properties.getProperty("SMSCport")
+					+ " with Username "
 					+ properties.getProperty("SMSCUsername"));
 			try {
 				session = new SMPPSession();
@@ -187,31 +187,31 @@ public class SmsSmppImpl implements SmsSmpp {
 					bindTest.allDone = true;
 				}
 				gatewayBound = true;
-				session.setEnquireLinkTimer(5000);
+				session.setEnquireLinkTimer(enquireLinkTimeOut);
 				session
 						.setMessageReceiverListener(new MessageReceiverListenerImpl());
 				session.addSessionStateListener(new SessionStateListener() {
 
 					public void onStateChange(SessionState arg0,
 							SessionState arg1, Object arg2) {
-						if (arg0.equals(SessionState.CLOSED)
-								|| arg0.equals(SessionState.UNBOUND))
-							System.out
-									.println("SMSC session lost Starting BindThread");
+						if ((arg0.equals(SessionState.CLOSED) || arg0
+								.equals(SessionState.UNBOUND))
+								&& (!disconnectGateWayCalled))
+							LOG.warn("SMSC session lost Starting BindThread");
 						session.unbindAndClose();
 						gatewayBound = false;
 						bindTest = new BindThread();
 
 					}
 				});
-
+				LOG.info("Bind successfull");
 			} catch (Exception e) {
 
-				System.out.println("Bind operation failed. " + e);
+				LOG.error("Bind operation failed. " + e);
 				gatewayBound = false;
 				session.unbindAndClose();
 				if (bindTest == null) {
-					System.out.println("Starting Binding thread");
+					LOG.info("Starting Binding thread");
 					bindTest = new BindThread();
 				}
 
@@ -221,25 +221,34 @@ public class SmsSmppImpl implements SmsSmpp {
 	}
 
 	public boolean connectToGateway() {
+		disconnectGateWayCalled = false;
 		return bind();
 
 	}
 
 	public void disconnectGateWay() {
+		disconnectGateWayCalled = true;
 		session.unbindAndClose();
 
 	}
 
+	public void enableDebugInformation(boolean debug) {
+		if (debug) {
+			LOG.setLevel(Level.ALL);
+		} else {
+			LOG.setLevel(Level.OFF);
+		}
+	}
+
 	public boolean getConnectionStatus() {
 
-		if (showDebug) {
-			if (gatewayBound) {
-				System.out.println("The server is currently binded to "
-						+ gatewayAdress + "  " + String.valueOf(port));
-			} else {
-				System.out.println("The server is not currently binded");
-			}
+		if (gatewayBound) {
+			LOG.info("The server is currently binded to " + gatewayAdress
+					+ "  " + String.valueOf(port));
+		} else {
+			LOG.info("The server is not currently binded");
 		}
+
 		return gatewayBound;
 	}
 
@@ -249,16 +258,21 @@ public class SmsSmppImpl implements SmsSmpp {
 	}
 
 	public String getGatewayInfo() {
-		// TODO Auto-generated method stub
-		return null;
+		String gatewayInfo = "Session bound as :=" + session.getSessionState()
+				+ "\n";
+		gatewayInfo += "EnquireLinkTimer :=" + session.getEnquireLinkTimer()
+				/ 1000 + "seconds \n";
+		gatewayInfo += "SessionID is 	 :=" + session.getSessionId() + "\n";
+		return gatewayInfo;
 	}
 
 	public void init() {
-		System.out.println("SmsSmpp implementation is starting up");
+		LOG.setLevel(Level.ALL);
+		LOG.info("SmsSmpp implementation is starting up");
 		loadPropertiesFile();
 		loadProperties();
 		connectToGateway();
-		System.out.println("SmsSmpp implementation is started");
+		LOG.info("SmsSmpp implementation is started");
 	}
 
 	public void insertIntoLog() {
@@ -297,9 +311,11 @@ public class SmsSmppImpl implements SmsSmpp {
 					.getProperty("smDefaultMsgId"));
 			enquireLinkTimeOut = Integer.parseInt(properties
 					.getProperty("enquireLinkTimeOutSecondes")) * 1000;
+			bindThreadTimer = Integer.parseInt(properties
+					.getProperty("bindThreadTimerSecondes")) * 1000;
 
 		} catch (Exception e) {
-
+			LOG.error("Properies faild to load" + e);
 		}
 
 	}
@@ -323,15 +339,6 @@ public class SmsSmppImpl implements SmsSmpp {
 
 	public void processMessageRemotely() {
 		// TODO Auto-generated method stub
-
-	}
-
-	public void receiveDeliveryReport() {
-		// TODO Auto-generated method stub
-
-	}
-
-	public void receiveMessage() {
 
 	}
 
@@ -365,31 +372,31 @@ public class SmsSmppImpl implements SmsSmpp {
 			message.setDebugInfo("Message submitted, message_id is "
 					+ messageId);
 			message.setSubmitResult(true);
-			System.out.println("Message submitted, message_id is " + messageId);
+			LOG.info("Message submitted, message_id is " + messageId);
 		} catch (PDUException e) {
 			// Invalid PDU parameter
 			message.setDebugInfo("Invalid PDU parameter Message failed");
-			System.err.println("Invalid PDU parameter");
-			e.printStackTrace();
+			LOG.error(e);
+
 		} catch (ResponseTimeoutException e) {
 			// Response timeout
 			message.setDebugInfo("Response timeout Message failed");
-			System.err.println("Response timeout");
-			e.printStackTrace();
+			LOG.error(e);
+
 		} catch (InvalidResponseException e) {
 			// Invalid response
 			message.setDebugInfo("Receive invalid respose Message failed");
-			System.err.println("Receive invalid respose");
-			e.printStackTrace();
+			LOG.error(e);
+
 		} catch (NegativeResponseException e) {
 			// Receiving negative response (non-zero command_status)
 			message.setDebugInfo("Receive negative response Message failed");
-			System.err.println("Receive negative response");
-			e.printStackTrace();
+			LOG.error(e);
+
 		} catch (IOException e) {
 			message.setDebugInfo("IO error occur Message failed");
-			System.err.println("IO error occur");
-			e.printStackTrace();
+			LOG.error(e);
+
 		}
 		return message;
 	}
