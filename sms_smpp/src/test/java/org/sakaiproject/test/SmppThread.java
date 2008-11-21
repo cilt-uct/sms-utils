@@ -11,9 +11,9 @@ import org.sakaiproject.sms.impl.SmsSmppImpl;
  */
 class SmppThread extends TestRunnable {
 
+	private int delay_between_messages;
 	/** some private stuff for each thread. */
 	public int delivery_count, sent_count, message_count;
-	private int delay_between_messages;
 
 	/** The session name. */
 	private String sessionName;
@@ -69,14 +69,17 @@ class SmppThread extends TestRunnable {
 			int reportsReceived = smsSmppImpl.getDeliveryNotifications().size();
 			System.out.println(sessionName + ": waiting for delivery reports ("
 					+ reportsReceived + " of " + message_count + ")");
+
+			Thread.sleep(5000);
+
 			delivery_count = smsSmppImpl.getDeliveryNotifications().size();
-			Thread.sleep(20000);
 			if (delivery_count == reportsReceived) {
+				delivery_count = smsSmppImpl.getDeliveryNotifications().size();
 				waitForDeliveries = false;
 
 			}
 		}
-		// smsSmppImpl.disconnectGateWay();
+
 		System.out.println(sessionName + " ended, received " + delivery_count
 				+ " reports");
 	}
