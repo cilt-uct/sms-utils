@@ -53,19 +53,19 @@ public class SmsTestProducer implements ViewComponentProducer, DefaultView,
 	public void fillComponents(UIContainer tofill, ViewParameters viewparams,
 			ComponentChecker checker) {
 
-		String smsMessage = SmsMessageLocator.LOCATOR_NAME + "."
+		String smsMessageOTP = SmsMessageLocator.LOCATOR_NAME + "."
 				+ SmsMessageLocator.NEW_1;
 
 		UIMessage.make(tofill, "page-title", "sms.test.title");
 		UIForm form = UIForm.make(tofill, "test-form");
 
 		UIMessage.make(form, "mobile-nr-label", "sms.test.mobile-number");
-		UIInput mobileNr = UIInput.make(form, "mobile-nr", smsMessage
+		UIInput mobileNr = UIInput.make(form, "mobile-nr", smsMessageOTP
 				+ ".mobileNumber");
 		mobileNr.mustapply = true; // Force to apply
 
 		UIMessage.make(form, "message-body-label", "sms.test.message-body");
-		UIInput messageBody = UIInput.make(form, "message-body", smsMessage
+		UIInput messageBody = UIInput.make(form, "message-body", smsMessageOTP
 				+ ".messageBody");
 		messageBody.mustapply = true; // Force to apply
 
@@ -83,7 +83,7 @@ public class SmsTestProducer implements ViewComponentProducer, DefaultView,
 				ActionResults.CANCEL);
 
 		UIMessage.make(form, "smpp-debug-label", "sms.test.smpp-debug");
-		UIInput debug = UIInput.make(form, "smpp-debug", smsMessage
+		UIInput debug = UIInput.make(form, "smpp-debug", smsMessageOTP
 				+ ".debugInfo");
 		debug.decorate(new UIDisabledDecorator());
 
@@ -106,4 +106,5 @@ public class SmsTestProducer implements ViewComponentProducer, DefaultView,
 				ARIResult.FLOW_ONESTEP));
 		return list;
 	}
+
 }

@@ -23,6 +23,11 @@
       <property name="localeGetter" ref="requestLocaleProxy" />
    </bean>
 
+  <bean id="messageTemplateContributor" parent="templateContributorParent">
+  	<property name="baseDirectory" value="content/component-templates/" />
+  	<property name="templateNames" value="Messages" />
+  </bean>
+
   <!-- Define the bean roots from the request scope file that are accessible 
     via incoming request URL -->
   <bean parent="requestAddressibleParent">
@@ -34,5 +39,10 @@
   <bean parent="copyPreservingParent">
     <property name="value" value="SmsMessageLocator"/>
   </bean>
- 
+  
+  <bean id="smsMessageGuard" parent="writeGuardParent">
+     <property name="guardedPath" value="SmsMessageLocator.*"/>
+	 <property name="guard"> <bean class="org.sakaiproject.sms.validators.SmsMessageValidator" /></property>
+  </bean>
+  
 </beans>

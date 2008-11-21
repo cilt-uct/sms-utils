@@ -4,6 +4,15 @@
 
 <beans>
   
+<!--   Renderers -->
+<!--  <bean id="messageRenderer"-->
+<!--     class="uk.org.ponder.rsf.renderer.MessageRenderer">-->
+<!--     <property name="messageLocator">-->
+<!--       <ref bean="messageLocator" />-->
+<!--     </property>-->
+<!--  </bean>-->
+  
+  
   <!-- Binding  Beans -->
   <bean id="sMSConfigBean" class="org.sakaiproject.sms.beans.SMSConfigBean"/>
   <bean id="searchFilterBean" class="org.sakaiproject.sms.beans.SearchFilterBean"/>	
