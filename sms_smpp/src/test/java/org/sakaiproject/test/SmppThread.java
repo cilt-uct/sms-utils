@@ -2,6 +2,7 @@ package org.sakaiproject.test;
 
 import net.sourceforge.groboutils.junit.v1.TestRunnable;
 
+import org.apache.log4j.Level;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.impl.SmsSmppImpl;
 
@@ -32,6 +33,7 @@ class SmppThread extends TestRunnable {
 		this.sessionName = sessionName;
 		smsSmppImpl = new SmsSmppImpl();
 		smsSmppImpl.init();
+		smsSmppImpl.setLogLevel(Level.ERROR);
 		// smsSmppImpl.showDebug = false;
 		this.message_count = messageCount;
 		this.delay_between_messages = messageDelay;
@@ -42,11 +44,11 @@ class SmppThread extends TestRunnable {
 	 */
 	@Override
 	public void runTest() throws Throwable {
-		System.out.println("Thread starting: " + sessionName);
+		System.out.println(sessionName + ": sending " + message_count
+				+ " to gateway...");
 		for (int i = 0; i < message_count; i++) {
 			SmsMessage smsMessage = new SmsMessage("+270731876135",
 					"Junit tesing forloop num:" + i);
-			System.out.println(sessionName + " send message " + i);
 			smsMessage.setId(i);
 			smsMessage = smsSmppImpl.sendMessageToGateway(smsMessage);
 			if (smsMessage.isSubmitResult()) {
@@ -54,6 +56,9 @@ class SmppThread extends TestRunnable {
 			}
 			Thread.sleep(delay_between_messages);
 		}
+		System.out
+				.println(sessionName + ": sent " + sent_count + " to gateway");
+
 		boolean waitForDeliveries = true;
 
 		// waiting for a-synchronise delivery reports to arrive. If no
@@ -62,8 +67,8 @@ class SmppThread extends TestRunnable {
 		// received from the simulator.
 		while (waitForDeliveries) {
 			int reportsReceived = smsSmppImpl.getDeliveryNotifications().size();
-			System.out.println("Waiting for delivery reports in " + sessionName
-					+ ":" + reportsReceived);
+			System.out.println(sessionName + ": waiting for delivery reports ("
+					+ reportsReceived + " of " + message_count + ")");
 			delivery_count = smsSmppImpl.getDeliveryNotifications().size();
 			Thread.sleep(20000);
 			if (delivery_count == reportsReceived) {
@@ -72,7 +77,7 @@ class SmppThread extends TestRunnable {
 			}
 		}
 		// smsSmppImpl.disconnectGateWay();
-		System.out.println("Thread ended: " + sessionName + ", reports="
-				+ delivery_count);
+		System.out.println(sessionName + " ended, received " + delivery_count
+				+ " reports");
 	}
 }

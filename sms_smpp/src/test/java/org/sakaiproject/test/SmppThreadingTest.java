@@ -56,9 +56,9 @@ public class SmppThreadingTest extends TestCase {
 		// instantiate the TestRunnable classes
 		SmppThread smsThread1, smsThread2;
 
-		smsThread1 = new SmppThread("SMSC Session 1", session1_message_count,
+		smsThread1 = new SmppThread("session 1", session1_message_count,
 				delay_between_messages);
-		smsThread2 = new SmppThread("SMSC Session 2", session2_message_count,
+		smsThread2 = new SmppThread("session 2", session2_message_count,
 				delay_between_messages);
 
 		// pass that instance to the MTTR
