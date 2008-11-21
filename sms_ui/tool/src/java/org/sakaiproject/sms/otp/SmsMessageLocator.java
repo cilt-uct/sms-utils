@@ -15,7 +15,6 @@ public class SmsMessageLocator implements BeanLocator {
 
 	private final Map<String, SmsMessage> delivered = new HashMap<String, SmsMessage>();
 
-	@Override
 	public Object locateBean(String name) {
 		SmsMessage togo = delivered.get(name);
 		if (togo == null) {
