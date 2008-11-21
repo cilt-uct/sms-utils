@@ -1,13 +1,13 @@
 package org.sakaiproject.sms.beans;
 
-import java.util.Date;
+import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 
 public class SearchFilterBean {
 
-	private String mobileNumber;
+	private String id;
 	private String taskStatus;
-	private Date dateFrom;
-	private Date dateTo;
+	private String dateFrom;
+	private String dateTo;
 	private String toolName;
 	private String sender;
 	
@@ -15,10 +15,10 @@ public class SearchFilterBean {
 		super();
 	}
 	
-	public SearchFilterBean(String mobileNumber, String taskStatus,
-			Date dateFrom, Date dateTo, String toolName, String sender) {
+	public SearchFilterBean(String id, String taskStatus,
+			String dateFrom, String dateTo, String toolName, String sender) {
 		super();
-		this.mobileNumber = mobileNumber;
+		this.id = id;
 		this.taskStatus = taskStatus;
 		this.dateFrom = dateFrom;
 		this.dateTo = dateTo;
@@ -26,12 +26,12 @@ public class SearchFilterBean {
 		this.sender = sender;
 	}
 	
-	public String getMobileNumber() {
-		return mobileNumber;
+	public String getId() {
+		return id;
 	}
 	
-	public void setMobileNumber(String mobileNumber) {
-		this.mobileNumber = mobileNumber;
+	public void setId(String id) {
+		this.id = id;
 	}
 	
 	public String getTaskStatus() {
@@ -42,17 +42,17 @@ public class SearchFilterBean {
 		this.taskStatus = taskStatus;
 	}
 	
-	public Date getDateFrom() {
+	public String getDateFrom() {
 		return dateFrom;
 	}
-	public void setDateFrom(Date dateFrom) {
+	public void setDateFrom(String dateFrom) {
 		this.dateFrom = dateFrom;
 	}
 	
-	public Date getDateTo() {
+	public String getDateTo() {
 		return dateTo;
 	}
-	public void setDateTo(Date dateTo) {
+	public void setDateTo(String dateTo) {
 		this.dateTo = dateTo;
 	}
 	
@@ -71,6 +71,7 @@ public class SearchFilterBean {
 	}
 	
 	public void fireAction(){
-		System.err.println("Action fired");
+		System.err.println(ReflectionToStringBuilder.toString(this));
+		
 	}	
 }

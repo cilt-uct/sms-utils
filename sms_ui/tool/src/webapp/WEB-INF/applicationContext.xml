@@ -26,7 +26,7 @@
   <!-- Define the bean roots from the request scope file that are accessible 
     via incoming request URL -->
   <bean parent="requestAddressibleParent">
-    <property name="value" value="sMSConfigBean, sMSConfigActionBean, SmsTestActionBean, SmsMessageLocator"/>
+    <property name="value" value="searchFilterBean, sMSConfigBean, sMSConfigActionBean, SmsTestActionBean, SmsMessageLocator"/>
   </bean>
 
   <!-- The beans which will be preserved across a flow via simple instance

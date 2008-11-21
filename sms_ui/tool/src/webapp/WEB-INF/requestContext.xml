@@ -10,8 +10,8 @@
 
   <!--  Producers -->
   <bean class="org.sakaiproject.sms.producers.SmsTestProducer" />
-  <bean id="sMSConfigProducer" class="org.sakaiproject.sms.producers.SMSConfigProducer"/>
-  <bean id="sMSTaskListProducer"  class="org.sakaiproject.sms.producers.SMSTaksListProducer"/>  
+  <bean class="org.sakaiproject.sms.producers.SMSConfigProducer"/>
+  <bean class="org.sakaiproject.sms.producers.SearchListProducer"/>  
 
   <!--  Action Beans -->  
   <bean id="SmsTestActionBean" class="org.sakaiproject.sms.beans.SmsTestActionBean">

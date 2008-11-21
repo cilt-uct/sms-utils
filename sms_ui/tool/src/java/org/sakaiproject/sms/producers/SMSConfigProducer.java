@@ -58,6 +58,4 @@ public class SMSConfigProducer implements ViewComponentProducer{
 		 UICommand.make(smsConfigform, "save", "#{sMSConfigActionBean.save}");
 		 
 	}
-
-
 }
