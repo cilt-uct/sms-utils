@@ -1,12 +1,19 @@
 package org.sakaiproject.sms.producers;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  *	Temp object to test table generation
  */
 public class TestDataResultSet {
 
+	public enum SortDirection{
+		ASC,
+		DESC;
+	}
+	
 	public static ArrayList<TestDataRow> testDataSet() {
 
 		TestDataRow row1 = new TestDataRow("Bob", "12", "Abbey");
@@ -26,11 +33,28 @@ public class TestDataResultSet {
 		
 		return resultSet;
 	}
+	
+	public static ArrayList<TestDataRow> sortByName(ArrayList<TestDataRow> list, final SortDirection sortDirection){
+		
+		Collections.sort(list, new Comparator<TestDataRow>(){
 
+			public int compare(TestDataRow o1, TestDataRow o2) {
+				if(sortDirection == SortDirection.ASC)
+					return o1.getName().compareTo(o2.getName());
+				else
+					return o2.getName().compareTo(o1.getName());
+			}
+		});
+		
+		return list;
+	}
+	
 	public static class TestDataRow {
+		
 		private String name;
 		private String house;
 		private String street;
+		
 
 		public TestDataRow() {
 			super();

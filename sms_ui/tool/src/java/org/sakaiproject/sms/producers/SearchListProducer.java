@@ -48,10 +48,10 @@ public class SearchListProducer implements ViewComponentProducer, ViewParamsRepo
 		SortPagerViewParams sortParams = (SortPagerViewParams) viewparams;		
 	
 		if (sortParams.sortBy == null) {
-			sortParams.sortBy = "Name"; // default
+			sortParams.sortBy = SMSConstants.SORT_BY_NAME; // default
 		}
 		if (sortParams.sortDir == null) {
-			sortParams.sortDir = SMSConstants.SORT_ASC; // default
+			sortParams.sortDir = SMSConstants.SORT_DESC; // default
 		}
 		
 		searchCriteriaRenderer.fillComponents(tofill, "searchCriteria:", VIEW_ID);
