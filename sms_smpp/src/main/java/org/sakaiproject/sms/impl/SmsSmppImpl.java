@@ -29,6 +29,7 @@ import java.util.Properties;
 import org.apache.log4j.Level;
 import org.jsmpp.InvalidResponseException;
 import org.jsmpp.PDUException;
+import org.jsmpp.bean.Address;
 import org.jsmpp.bean.AlertNotification;
 import org.jsmpp.bean.Alphabet;
 import org.jsmpp.bean.BindType;
@@ -40,7 +41,9 @@ import org.jsmpp.bean.MessageClass;
 import org.jsmpp.bean.MessageType;
 import org.jsmpp.bean.NumberingPlanIndicator;
 import org.jsmpp.bean.RegisteredDelivery;
+import org.jsmpp.bean.ReplaceIfPresentFlag;
 import org.jsmpp.bean.SMSCDeliveryReceipt;
+import org.jsmpp.bean.SubmitMultiResult;
 import org.jsmpp.bean.TypeOfNumber;
 import org.jsmpp.extra.NegativeResponseException;
 import org.jsmpp.extra.ProcessRequestException;
@@ -222,18 +225,34 @@ public class SmsSmppImpl implements SmsSmpp {
 		return gatewayBound;
 	}
 
+	/**
+	 * Establish a connection the the gateway (bind). The connection will be
+	 * kept open for the lifetime of the session. Concurrent connections will be
+	 * possible from other smpp services. The status of the connection will be
+	 * checked before sending a message, and a auto-bind will be made if
+	 * possible.
+	 */
 	public boolean connectToGateway() {
 		disconnectGateWayCalled = false;
 		return bind();
 
 	}
 
+	/**
+	 * Unbind from the gateway. If disconnected, no message sending will be
+	 * possible. For unit testing purposes.
+	 */
 	public void disconnectGateWay() {
 		disconnectGateWayCalled = true;
 		session.unbindAndClose();
 
 	}
 
+	/**
+	 * Enables or disables the debug Information
+	 * 
+	 * @param debug
+	 */
 	public void enableDebugInformation(boolean debug) {
 		if (debug) {
 			LOG.setLevel(Level.ALL);
@@ -242,6 +261,9 @@ public class SmsSmppImpl implements SmsSmpp {
 		}
 	}
 
+	/**
+	 * Return the status of this connection to the gateway.
+	 */
 	public boolean getConnectionStatus() {
 
 		if (gatewayBound) {
@@ -254,11 +276,17 @@ public class SmsSmppImpl implements SmsSmpp {
 		return gatewayBound;
 	}
 
+	/**
+	 * Return the buffered list of notifications and clear the buffer.
+	 */
 	public List<SmsDeliveryReport> getDeliveryNotifications() {
 		return delReports;
 
 	}
 
+	/**
+	 * Get some info about the remote gateway.
+	 */
 	public String getGatewayInfo() {
 		String gatewayInfo = "Session bound as = " + session.getSessionState()
 				+ "\n";
@@ -334,21 +362,81 @@ public class SmsSmppImpl implements SmsSmpp {
 		}
 	}
 
+	/**
+	 * Call an external service to handle the processing of an outgoing message.
+	 * This could be a simple php script or another Java service.
+	 */
 	public void processMessageRemotely() {
 		// TODO Auto-generated method stub
 
 	}
 
-	public SmsMessage[] sendMessagesToGateway(SmsMessage[] messages) {
+	/**
+	 * Send a list of Bulk messages to the gateway. This method is not
+	 * implemented because it does not return a list of message id's.The
+	 * optional parameters are causing an exception.
+	 */
+	public SmsMessage[] sendBulkMessagesToGateway(SmsMessage[] messages) {
+
+		String messageBody = "";
+		Address addresses[] = new Address[messages.length];
+		String[] mobileNumbers = new String[messages.length];
 		for (int i = 0; i < messages.length; i++) {
-			sendMessageToGateway(messages[i]);
+			messageBody = messages[i].getMessageBody();
+			mobileNumbers[i] = messages[i].getMobileNumber();
+			addresses[i] = new Address(TypeOfNumber.valueOf(destAddressTON),
+					NumberingPlanIndicator.valueOf(destAddressNPI), messages[i]
+							.getMobileNumber());
+		}
+		try {
+			SubmitMultiResult submitMultiResult = session
+					.submitMultiple(
+							serviceType,
+							TypeOfNumber.valueOf(sourceAddressTON),
+							NumberingPlanIndicator.valueOf(sourceAddressNPI),
+							sourceAddress,
+							addresses,
+							new ESMClass(),
+							protocolId,
+							priorityFlag,
+							timeFormatter.format(new Date()),
+							null,
+							new RegisteredDelivery(
+									SMSCDeliveryReceipt.SUCCESS_FAILURE),
+							new ReplaceIfPresentFlag(replaceIfPresentFlag),
+							new GeneralDataCoding(false, true,
+									MessageClass.CLASS1, Alphabet.ALPHA_DEFAULT),
+							smDefaultMsgId, messageBody.getBytes(), null);
+
+		} catch (PDUException e) {
+			LOG.error(e);
+
+		} catch (ResponseTimeoutException e) {
+			LOG.error(e);
+
+		} catch (InvalidResponseException e) {
+			LOG.error(e);
+
+		} catch (NegativeResponseException e) {
+			LOG.error(e);
+
+		} catch (IOException e) {
+			LOG.error(e);
+
+		} catch (NullPointerException e) {
+			e.printStackTrace();
+			LOG.error(e);
 		}
 		return messages;
 	}
 
+	/**
+	 * Send one message to the SMS gateway. Return result code to caller.
+	 */
 	public SmsMessage sendMessageToGateway(SmsMessage message) {
 
 		try {
+
 			String messageId = session
 					.submitShortMessage(serviceType, TypeOfNumber
 							.valueOf(sourceAddressTON), NumberingPlanIndicator
@@ -401,5 +489,17 @@ public class SmsSmppImpl implements SmsSmpp {
 	public void setLogLevel(Level level) {
 		LOG.setLevel(level);
 
+	}
+
+	/**
+	 * Send a list of messages to the gateway. Abort if the gateway connection
+	 * is down or gateway returns an error and mark relevant messages as failed.
+	 * Return message statuses back to caller.
+	 */
+	public SmsMessage[] sendMessagesToGateway(SmsMessage[] messages) {
+		for (int i = 0; i < messages.length; i++) {
+			sendMessageToGateway(messages[i]);
+		}
+		return messages;
 	}
 }
