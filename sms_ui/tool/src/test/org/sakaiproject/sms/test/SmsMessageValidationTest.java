@@ -25,7 +25,8 @@ import org.sakaiproject.sms.validators.SmsMessageValidator;
 import org.springframework.validation.BindException;
 
 /**
- * The Class SmsMessageValidationTest. Runs tests for SmsMessage validation
+ * The Class SmsMessageValidationTest. Runs tests for {@link SmsMessage}
+ * validation that is run by {@link SmsMessageValidator}
  */
 public class SmsMessageValidationTest extends TestCase {
 
@@ -47,7 +48,8 @@ public class SmsMessageValidationTest extends TestCase {
 	@Override
 	public void setUp() {
 		validator = new SmsMessageValidator();
-		msg = new SmsMessage("", ""); // Should be default constructor
+		msg = new SmsMessage("", ""); // Should be default constructor, but is
+										// giving NPE's at the moment
 		errors = new BindException(msg, "SmsMessage");
 	}
 
