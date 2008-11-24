@@ -13,9 +13,15 @@
 <!--     </property>-->
 <!--  </bean>-->
 
-  <bean id="sortHeaderRenderer" class="org.sakaiproject.sms.renderers.SortHeaderRenderer" />	
-  <bean id="searchCriteriaRender" class="org.sakaiproject.sms.renderers.SearchCriteriaRender"/>
-  
+<!--    <bean id="sortHeaderRenderer" class="org.sakaiproject.sms.renderers.SortHeaderRenderer" />	-->
+
+  <bean id="searchCriteriaRenderer" class="org.sakaiproject.sms.renderers.SearchCriteriaRenderer"/>
+  <bean id="sortHeaderRenderer" class="org.sakaiproject.sms.renderers.SortHeaderRenderer"/>  
+
+  <bean id="searchResultsRenderer" class="org.sakaiproject.sms.renderers.SearchResultsRendererImpl">
+   <property name="sortHeaderRenderer" ref="sortHeaderRenderer"/>
+  </bean>
+
   <!-- Binding  Beans -->
   <bean id="sMSConfigBean" class="org.sakaiproject.sms.beans.SMSConfigBean"/>
   <bean id="searchFilterBean" class="org.sakaiproject.sms.beans.SearchFilterBean"/>	
@@ -25,8 +31,8 @@
   <bean class="org.sakaiproject.sms.producers.SMSConfigProducer"/>
   
   <bean id="searchListProducer" class="org.sakaiproject.sms.producers.SearchListProducer">
-  	<property name="sortHeaderRenderer" ref="sortHeaderRenderer"/>  
-  	<property name="searchCriteriaRender" ref="searchCriteriaRender"/>
+  	<property name="searchCriteriaRenderer" ref="searchCriteriaRenderer"/>  
+  	<property name="searchResultsRenderer" ref="searchResultsRenderer"/>
   </bean>
 
   <!--  Action Beans -->  

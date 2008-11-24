@@ -33,4 +33,16 @@ public class SMSConstants {
 	//default paging
 	public static final int DEFAULT_START_COUNT = 20;
 
+	//Table Sort Directions
+	public static final String SORT_ASC ="asc";
+	public static final String SORT_DESC ="desc";	
+	
+	//Table Sort by Columns
+	public static final String  SORT_BY_NAME = "Name";
+	public static final String  SORT_BY_HOUSE = "House";
+	public static final String  SORT_BY_STREET = "Street";
+	
+	
+	
+	
 }

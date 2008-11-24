@@ -1,4 +1,3 @@
-package org.sakaiproject.sms.renderers;
 
 /***********************************************************************************
  * SortHeaderRenderer.java
@@ -18,6 +17,8 @@ package org.sakaiproject.sms.renderers;
  *
  **********************************************************************************/
 
+package org.sakaiproject.sms.renderers;
+
 import org.sakaiproject.sms.constants.SMSConstants;
 
 import uk.org.ponder.rsf.components.UIContainer;
@@ -31,8 +32,8 @@ import uk.org.ponder.rsf.viewstate.ViewParameters;
 
 public class SortHeaderRenderer {
 	
-	public static final String BULLET_UP_IMG_SRC = "/library/image/sakai/sortascending.gif";
-    public static final String BULLET_DOWN_IMG_SRC = "/library/image/sakai/sortdescending.gif";
+	public static final String BULLET_UP_IMG_SRC = "../images/sortascending.gif";
+    public static final String BULLET_DOWN_IMG_SRC = "../images/sortdescending.gif";
     
     /**
      * Creates linked sorting header
@@ -44,21 +45,20 @@ public class SortHeaderRenderer {
      * @param link_text		Text of link 
      */
     public void makeSortingLink (UIContainer tofill, String divID, ViewParameters viewparams, String sort_by, String link_text){
-    	
-    	
+	    	
     	SortPagerViewParams params = (SortPagerViewParams) viewparams;
     	UIJointContainer joint = new UIJointContainer(tofill, divID, "sortHeader:", ""+1);
 
     	//Link Text
     	UIMessage.make(joint, "text", link_text);
-    	//if (params.sortBy.equals(sort_by)){
-    		UILink.make(joint, "arrow", (/*params.sortDir.equals(SMSConstants.SORT_DIR_ASC) ? BULLET_UP_IMG_SRC :*/ BULLET_DOWN_IMG_SRC));
-    	//}
+    	if (params.sortBy.equals(sort_by)){
+    		UILink.make(joint, "arrow", (params.sortDir.equals(SMSConstants.SORT_ASC) ? BULLET_UP_IMG_SRC : BULLET_DOWN_IMG_SRC));
+    	}
 
     	//Add Link and modify params
-    	String newSortDir = SMSConstants.SORT_DIR_ASC;/*(params.sortBy.equals(sort_by) ? (params.sortDir.equals(SMSConstants.SORT_DIR_ASC) 
-    			? SMSConstants.SORT_DIR_DESC 
-    			: SMSConstants.SORT_DIR_ASC) : SMSConstants.SORT_DIR_ASC);*/
+    	String newSortDir = (params.sortBy.equals(sort_by) ? (params.sortDir.equals(SMSConstants.SORT_ASC) 
+    			? SMSConstants.SORT_DESC
+    			: SMSConstants.SORT_ASC) : SMSConstants.SORT_ASC);
     	
     	ViewParameters new_params = viewparams.copyBase();
     	((SortPagerViewParams)new_params).sortBy = sort_by;

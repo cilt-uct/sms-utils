@@ -9,7 +9,7 @@ import uk.org.ponder.rsf.components.UIInput;
 import uk.org.ponder.rsf.components.UIJointContainer;
 import uk.org.ponder.rsf.components.UISelect;
 
-public class SearchCriteriaRender {
+public class SearchCriteriaRenderer {
 
 
 	public void fillComponents(UIContainer tofill, String divID, String viewID) {

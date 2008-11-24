@@ -1,22 +1,15 @@
 package org.sakaiproject.sms.producers;
 
-import java.util.ArrayList;
-
-import org.sakaiproject.sms.renderers.SearchCriteriaRender;
-import org.sakaiproject.sms.renderers.SortHeaderRenderer;
+import org.sakaiproject.sms.constants.SMSConstants;
+import org.sakaiproject.sms.renderers.SearchCriteriaRenderer;
+import org.sakaiproject.sms.renderers.SearchResultsRenderer;
 import org.sakaiproject.sms.renderers.SortPagerViewParams;
 import org.springframework.util.Assert;
 
-import uk.org.ponder.rsf.components.ELReference;
-import uk.org.ponder.rsf.components.UIBoundList;
 import uk.org.ponder.rsf.components.UIBranchContainer;
-import uk.org.ponder.rsf.components.UICommand;
 import uk.org.ponder.rsf.components.UIContainer;
-import uk.org.ponder.rsf.components.UIForm;
 import uk.org.ponder.rsf.components.UIInput;
 import uk.org.ponder.rsf.components.UIJointContainer;
-import uk.org.ponder.rsf.components.UIOutput;
-import uk.org.ponder.rsf.components.UISelect;
 import uk.org.ponder.rsf.view.ComponentChecker;
 import uk.org.ponder.rsf.view.ViewComponentProducer;
 import uk.org.ponder.rsf.viewstate.ViewParameters;
@@ -26,15 +19,16 @@ public class SearchListProducer implements ViewComponentProducer, ViewParamsRepo
 
 	public static final String VIEW_ID = "SearchList";
 	
-	private SortHeaderRenderer sortHeaderRenderer;
-	private SearchCriteriaRender searchCriteriaRender;
+
+	private SearchCriteriaRenderer searchCriteriaRenderer;
+	private SearchResultsRenderer searchResultsRenderer;
 	
-	public void setSearchCriteriaRender(SearchCriteriaRender searchCriteriaRender) {
-		this.searchCriteriaRender = searchCriteriaRender;
+	public void setSearchResultsRenderer(SearchResultsRenderer searchResultsRenderer) {
+		this.searchResultsRenderer = searchResultsRenderer;
 	}
 
-	public void setSortHeaderRenderer(SortHeaderRenderer sortHeaderRenderer) {
-		this.sortHeaderRenderer = sortHeaderRenderer;
+	public void setSearchCriteriaRenderer(SearchCriteriaRenderer searchCriteriaRender) {
+		this.searchCriteriaRenderer = searchCriteriaRender;
 	}
 
 	public String getViewID() {
@@ -42,8 +36,8 @@ public class SearchListProducer implements ViewComponentProducer, ViewParamsRepo
 	}
 
 	public void init(){		
-		Assert.notNull(sortHeaderRenderer);
-		Assert.notNull(searchCriteriaRender);
+		Assert.notNull(searchCriteriaRenderer);
+		Assert.notNull(searchResultsRenderer);
 	}
 	
 	public void fillComponents(UIContainer tofill, ViewParameters viewparams,
@@ -53,8 +47,15 @@ public class SearchListProducer implements ViewComponentProducer, ViewParamsRepo
 		
 		SortPagerViewParams sortParams = (SortPagerViewParams) viewparams;		
 	
-		searchCriteriaRender.fillComponents(tofill, "searchCriteria:", VIEW_ID);
-		createTable(tofill, sortParams);
+		if (sortParams.sortBy == null) {
+			sortParams.sortBy = "Name"; // default
+		}
+		if (sortParams.sortDir == null) {
+			sortParams.sortDir = SMSConstants.SORT_ASC; // default
+		}
+		
+		searchCriteriaRenderer.fillComponents(tofill, "searchCriteria:", VIEW_ID);
+		searchResultsRenderer.createTable(tofill, "searchResults:", sortParams, VIEW_ID);
 		exportToCSV(tofill);
 	}
 
@@ -64,28 +65,6 @@ public class SearchListProducer implements ViewComponentProducer, ViewParamsRepo
 	}
 
 	
-	private void createTable(UIContainer tofill, SortPagerViewParams sortViewParams) {
-		ArrayList<TestDataResultSet.TestDataRow> resultSet = TestDataResultSet.testDataSet();
-		
-		UIBranchContainer searchResultsTable = UIJointContainer.make(tofill, "search-results:",  "search-results:");
-//		
-//		sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-name:", sortViewParams,
-//        		"name"/*SortByConstants.QUESTIONS*/, "sms.view-search-list.name");
-//        sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-house:", sortViewParams,
-//        		"house"/*SortByConstants.VIEWS*/, "sms.view-search-list.house");
-//        sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-street:", sortViewParams,
-//        		"street"/*SortByConstants.ANSWERS*/, "sms.view-search-list.street");
-		
-		
-		for (TestDataResultSet.TestDataRow testDataRow : resultSet) {
-			
-			UIBranchContainer row = UIBranchContainer.make(searchResultsTable, "dataset:");
-			
-			UIOutput.make(row, "row-data-name", testDataRow.getName());
-			UIOutput.make(row, "row-data-house", testDataRow.getHouse());
-			UIOutput.make(row, "row-data-street", testDataRow.getStreet());
-		}
-	}
 
 	public ViewParameters getViewParameters() {
 		return new SortPagerViewParams();
