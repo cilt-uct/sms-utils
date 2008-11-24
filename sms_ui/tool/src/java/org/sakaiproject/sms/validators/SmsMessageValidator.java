@@ -9,7 +9,6 @@ import org.springframework.validation.Validator;
  * The Class SmsMessageValidator.
  */
 public class SmsMessageValidator implements Validator {
-	@Override
 	public boolean supports(Class clazz) {
 		if (clazz.getClass().equals(SmsMessage.class)) {
 			return true;
@@ -17,7 +16,6 @@ public class SmsMessageValidator implements Validator {
 		return false;
 	}
 
-	@Override
 	public void validate(Object arg0, Errors arg1) {
 		// SmsMessage msg = (SmsMessage) arg0;
 		// arg1.reject("sms.error.test");
