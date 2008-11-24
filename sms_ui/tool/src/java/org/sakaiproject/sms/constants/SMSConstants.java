@@ -25,4 +25,12 @@ public class SMSConstants {
 	// This should probably defined by SMS API
 	public static final int MAX_SMS_LENGTH = 160;
 	public static final int MAX_MOBILE_NR_LENGTH = 20; // Just arbitary
+	
+	//sort table constants
+	public static final String SORT_DIR_ASC = "asc";
+	public static final String SORT_DIR_DESC = "desc";
+
+	//default paging
+	public static final int DEFAULT_START_COUNT = 20;
+
 }

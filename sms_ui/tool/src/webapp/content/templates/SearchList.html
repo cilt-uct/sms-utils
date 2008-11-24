@@ -4,91 +4,25 @@
 <head>
 <title>SMS Task List</title>
 <script type="text/javascript" language="JavaScript" src="../js/datePicker.js"></script>
+<script type="text/javascript" language="JavaScript" src="../js/searchCriteria.js"></script>
 <link rel="stylesheet" href="../css/style.css" type="text/css" media="all" />
 <link rel="stylesheet" href="../css/datePicker.css" type="text/css" media="all" />
-
-<script type="text/javascript">
-
-	function clearSearchCriteria(){
-		document.getElementById('mobileNumber').value = '';
-		document.getElementById('toolName').value = '';
-		document.getElementById('sender').value = '';
-		document.getElementById('taskStatus').value = 'All';
-		resetDates();
-	}
-
-	function resetDates(){
-		var dateString = getToday();
-		document.getElementById('dateFrom').value = dateString;
-		document.getElementById('dateTo').value = dateString;
-	}
-
-	function getToday(){
-		var now = new Date();
-		var y = now.getFullYear();
-		var m = now.getMonth() + 1;
-		var d = now.getDate();
-		var dateString = m + '/' + d + '/' + y; 
-		return dateString;
-	}
-
-</script>
 </head>
 <body onload="resetDates()">
-
 <p>&nbsp;</p>
 <p>&nbsp;</p>
 <p>&nbsp;</p>
 
-<div>
-<fieldset><legend>Search / Filter</legend>
-<form action="#" rsf:id="search-criteria">
-<table border="0">
-	<tr>
-		<td>Mobile Number:</td>
-		<td><input id="mobileNumber" type="text" rsf:id="id"></input></td>
-		<td>Date From:</td>
-		<td>
-			<input readonly="readonly" rsf:id="date-from" id="dat-from" type="text" value="" />
-		<td>	
-			<img src="../images/calendar.gif" onclick="GetDate(document.getElementById('date-from'));"/>
-		</td>
-		</td>
-		<td>Tool Name:</td>
-		<td><input id="toolName" type="text" rsf:id="tool-name"/></td>
-	</tr>
-	<tr>
-		<td>Task Status:</td>
-		<td>
-			<select rsf:id="task-status">
-				<option>All</option>
-			</select> 
-		</td>
-		<td>Date To:</td>
-		<td>
-			<input readonly="readonly" rsf:id="date-to" id="date-to" type="text" value="" />
-		</td>
-		<td>	
-			<img src="../images/calendar.gif" onclick="GetDate(document.getElementById('date-to'))"/>
-		</td>
-		<td>Sender:</td>
-		<td><input id="sender" type="text" rsf:id="sender"/></td>
-	</tr>
-</table>
-	<input rsf:id="search" type="submit" value="Search"/>
-	<input type="button" value="Reset" onclick="clearSearchCriteria()"/>
-</form>	
-</fieldset>
-</div>
+<div rsf:id="searchCriteria:"/>
 
 <div rsf:id="search-results:">
 	<fieldset><legend>Task List</legend> 
 
 		<table style="width: 75%;" border="1">
 		<thead>
-			<th class="tableviews"><a rsf:id="tableheader.views:" >Name</a></th>
-			<th class="tableanswers"><a rsf:id="tableheader.answers:" >House</a></th>
-			<th class="tablecreated"><a rsf:id="tableheader.created:" >Street</a></th>
+			<th><a rsf:id="tableheader-name:" >Name</a></th>
+			<th><a rsf:id="tableheader-house:" >House</a></th>
+			<th><a rsf:id="tableheader-street:" >Street</a></th>
 		</thead>
 		<tbody>
 			<tr rsf:id="dataset:">
@@ -100,7 +34,7 @@
 
 		</table>
 		<div style="border: 1;">
-			<a href="#" rsf:id="prev">&gt;&gt;</a><a rsf:id="pageCount">Page x of y</a> <a href="#" rsf:id="prev">&lt;&lt;</a>
+			<a href="#" rsf:id="prev">&lt;&lt;</a><a rsf:id="pageCount">Page x of y</a> <a href="#" rsf:id="prev">&gt;&gt;</a>
 		</div>
 	</fieldset>
 </div>

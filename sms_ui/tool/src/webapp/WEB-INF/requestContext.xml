@@ -4,6 +4,18 @@
 
 <beans>
   
+<!--   Renderers -->
+
+<!--  <bean id="messageRenderer"-->
+<!--     class="uk.org.ponder.rsf.renderer.MessageRenderer">-->
+<!--     <property name="messageLocator">-->
+<!--       <ref bean="messageLocator" />-->
+<!--     </property>-->
+<!--  </bean>-->
+
+  <bean id="sortHeaderRenderer" class="org.sakaiproject.sms.renderers.SortHeaderRenderer" />	
+  <bean id="searchCriteriaRender" class="org.sakaiproject.sms.renderers.SearchCriteriaRender"/>
+  
   <!-- Binding  Beans -->
   <bean id="sMSConfigBean" class="org.sakaiproject.sms.beans.SMSConfigBean"/>
   <bean id="searchFilterBean" class="org.sakaiproject.sms.beans.SearchFilterBean"/>	
@@ -11,7 +23,11 @@
   <!--  Producers -->
   <bean class="org.sakaiproject.sms.producers.SmsTestProducer" />
   <bean class="org.sakaiproject.sms.producers.SMSConfigProducer"/>
-  <bean class="org.sakaiproject.sms.producers.SearchListProducer"/>  
+  
+  <bean id="searchListProducer" class="org.sakaiproject.sms.producers.SearchListProducer">
+  	<property name="sortHeaderRenderer" ref="sortHeaderRenderer"/>  
+  	<property name="searchCriteriaRender" ref="searchCriteriaRender"/>
+  </bean>
 
   <!--  Action Beans -->  
   <bean id="SmsTestActionBean" class="org.sakaiproject.sms.beans.SmsTestActionBean">

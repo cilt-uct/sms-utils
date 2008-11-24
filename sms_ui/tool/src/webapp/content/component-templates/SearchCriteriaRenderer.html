@@ -1,0 +1,56 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:rsf="http://ponder.org.uk/rsf" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+   <title rsf:id="page-title"></title>
+   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+   <link href="tool_base.css" rsf:id="scr=portal-matter" type="text/css" rel="stylesheet" media="all" />
+   <link href="tool.css" rsf:id="scr=portal-matter" type="text/css" rel="stylesheet" media="all" />
+   <script type="text/javascript" rsf:id="scr=portal-matter" language="JavaScript" src="/library/js/headscripts.js"></script>
+   <link href="../css/qna.css" type="text/css" rel="stylesheet" media="all" />
+</head>
+
+<body>
+<!-- everything outside this div is thrown away -->
+<div rsf:id="search-component:">
+<fieldset><legend>Search / Filter</legend>
+<form action="#" rsf:id="search-criteria">
+<table border="0">
+	<tr>
+		<td>Mobile Number:</td>
+		<td><input id="mobileNumber" type="text" rsf:id="id"></input></td>
+		<td>Date From:</td>
+		<td>
+			<input readonly="readonly" rsf:id="date-from" id="date-from" type="text" value="" />
+		<td>	
+			<img src="../images/calendar.gif" onclick="GetDate(document.getElementById('searchCriteria::date-from'));"/>
+		</td>
+		</td>
+		<td>Tool Name:</td>
+		<td><input id="toolName" type="text" rsf:id="tool-name"/></td>
+	</tr>
+	<tr>
+		<td>Task Status:</td>
+		<td>
+			<select id="task-status" rsf:id="task-status">
+				<option>All</option>
+			</select> 
+		</td>
+		<td>Date To:</td>
+		<td>
+			<input readonly="readonly" rsf:id="date-to" id="date-to" type="text" value="" />
+		</td>
+		<td>	
+			<img src="../images/calendar.gif" onclick="GetDate(document.getElementById('searchCriteria::date-to'))"/>
+		</td>
+		<td>Sender:</td>
+		<td><input id="sender" type="text" rsf:id="sender"/></td>
+	</tr>
+</table>
+	<input rsf:id="search" type="submit" value="Search"/>
+	<input type="button" value="Reset" onclick="clearSearchCriteria()"/>
+</form>	
+</fieldset>
+</div>
+</body>
+</html>
