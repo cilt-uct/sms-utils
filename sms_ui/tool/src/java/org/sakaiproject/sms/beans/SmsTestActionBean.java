@@ -18,14 +18,22 @@
 
 package org.sakaiproject.sms.beans;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.sakaiproject.sms.api.SmsSmpp;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.otp.SmsMessageLocator;
 
+import uk.org.ponder.messageutil.TargettedMessage;
+import uk.org.ponder.messageutil.TargettedMessageList;
+
 /**
- * The Class SmsTestActionBean
+ * The Class SmsTestActionBean.
  */
 public class SmsTestActionBean {
+
+	/** The log. */
+	private static Log log = LogFactory.getLog(SmsTestActionBean.class);
 
 	/** The sms message locator. */
 	private SmsMessageLocator smsMessageLocator;
@@ -33,19 +41,41 @@ public class SmsTestActionBean {
 	/** The sms smpp. */
 	private SmsSmpp smsSmpp;
 
+	/** The targetted message list. */
+	private TargettedMessageList messages;
+
 	/**
 	 * Retrieve the new SmsMessage from the sms message locator Send message to
-	 * gateway
+	 * gateway.
 	 * 
-	 * @return the string
+	 * @return The ActionResult
 	 */
 	public String send() {
-		System.out.println("CALLED");
 		// Get the new bean created to send
 		SmsMessage msg = (SmsMessage) smsMessageLocator
 				.locateBean(SmsMessageLocator.NEW_1);
-		smsSmpp.sendMessageToGateway(msg);
+
+		try {
+			smsSmpp.sendMessageToGateway(msg);
+		} catch (Exception e) {
+			// If any exception caught while sending message just give a general
+			// send error
+			messages.addMessage(new TargettedMessage("sms.errors.send-error",
+					null, TargettedMessage.SEVERITY_ERROR));
+			log.error(e);
+		}
+
 		return ActionResults.SUCCESS;
+	}
+
+	/**
+	 * Sets the messages.
+	 * 
+	 * @param messages
+	 *            the new messages
+	 */
+	public void setMessages(TargettedMessageList messages) {
+		this.messages = messages;
 	}
 
 	/**

@@ -104,6 +104,8 @@ public class SmsTestProducer implements ViewComponentProducer, DefaultView,
 		list.add(new NavigationCase(ActionResults.SUCCESS,
 				new SimpleViewParameters(SmsTestProducer.VIEW_ID),
 				ARIResult.FLOW_ONESTEP));
+		list.add(new NavigationCase(ActionResults.CANCEL,
+				new SimpleViewParameters(SmsTestProducer.VIEW_ID)));
 		return list;
 	}
 

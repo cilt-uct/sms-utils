@@ -18,9 +18,11 @@
 package org.sakaiproject.sms.constants;
 
 /**
- *	TODO: merge all constant across SMS projects in relevant locations
+ * TODO: merge all constant across SMS projects in relevant locations
  */
 public class SMSConstants {
-	
-	public static final int MAX_SMS_LENGTH = 160; // This should probably defined by SMS API
+
+	// This should probably defined by SMS API
+	public static final int MAX_SMS_LENGTH = 160;
+	public static final int MAX_MOBILE_NR_LENGTH = 20; // Just arbitary
 }

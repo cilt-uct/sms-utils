@@ -4,15 +4,6 @@
 
 <beans>
   
-<!--   Renderers -->
-<!--  <bean id="messageRenderer"-->
-<!--     class="uk.org.ponder.rsf.renderer.MessageRenderer">-->
-<!--     <property name="messageLocator">-->
-<!--       <ref bean="messageLocator" />-->
-<!--     </property>-->
-<!--  </bean>-->
-  
-  
   <!-- Binding  Beans -->
   <bean id="sMSConfigBean" class="org.sakaiproject.sms.beans.SMSConfigBean"/>
   <bean id="searchFilterBean" class="org.sakaiproject.sms.beans.SearchFilterBean"/>	
@@ -26,6 +17,7 @@
   <bean id="SmsTestActionBean" class="org.sakaiproject.sms.beans.SmsTestActionBean">
   	<property name="smsSmpp" ref="org.sakaiproject.sms.api.SmsSmpp" />
   	<property name="smsMessageLocator" ref="SmsMessageLocator" />
+  	<property name="messages" ref="targettedMessageList"/>
   </bean>
 
   <bean id="sMSConfigActionBean" class="org.sakaiproject.sms.beans.SMSConfigActionBean">
