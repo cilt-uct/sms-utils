@@ -6,8 +6,6 @@ import org.sakaiproject.sms.api.SmsSmpp;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.model.SmsDeliveryReport;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 /**
  * The Class SmsSmppStub. Stub implementation of {@link SmsSmpp} with minimal
  * implementation, used for testing
@@ -30,7 +28,7 @@ public class SmsSmppStub implements SmsSmpp {
 	 * @see org.sakaiproject.sms.api.SmsSmpp#connectToGateway()
 	 */
 	public boolean connectToGateway() {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 
 	}
 
@@ -40,7 +38,7 @@ public class SmsSmppStub implements SmsSmpp {
 	 * @see org.sakaiproject.sms.api.SmsSmpp#disconnectGateWay()
 	 */
 	public void disconnectGateWay() {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	/*
@@ -49,7 +47,7 @@ public class SmsSmppStub implements SmsSmpp {
 	 * @see org.sakaiproject.sms.api.SmsSmpp#getConnectionStatus()
 	 */
 	public int getConnectionStatus() {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	/*
@@ -58,7 +56,7 @@ public class SmsSmppStub implements SmsSmpp {
 	 * @see org.sakaiproject.sms.api.SmsSmpp#getDeliveryNotifications()
 	 */
 	public List<SmsDeliveryReport> getDeliveryNotifications() {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	/*
@@ -67,7 +65,7 @@ public class SmsSmppStub implements SmsSmpp {
 	 * @see org.sakaiproject.sms.api.SmsSmpp#getGatewayInfo()
 	 */
 	public String getGatewayInfo() {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	/*
@@ -76,7 +74,7 @@ public class SmsSmppStub implements SmsSmpp {
 	 * @see org.sakaiproject.sms.api.SmsSmpp#processMessageRemotely()
 	 */
 	public void processMessageRemotely() {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	/*
@@ -87,7 +85,7 @@ public class SmsSmppStub implements SmsSmpp {
 	 * .sms.hibernate.model.SmsMessage[])
 	 */
 	public SmsMessage[] sendMessagesToGateway(SmsMessage[] arg0) {
-		throw new NotImplementedException();
+		throw new UnsupportedOperationException();
 	}
 
 	/**
