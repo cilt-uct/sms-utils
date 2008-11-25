@@ -49,7 +49,7 @@ class SmppThread extends TestRunnable {
 		for (int i = 0; i < message_count; i++) {
 			SmsMessage smsMessage = new SmsMessage("+270731876135",
 					"Junit tesing forloop num:" + i);
-			smsMessage.setId(i);
+			smsMessage.setId(new Long(i));
 			smsMessage = smsSmppImpl.sendMessageToGateway(smsMessage);
 			if (smsMessage.isSubmitResult()) {
 				sent_count++;

@@ -34,7 +34,7 @@ public class SmsSmppImplTest extends TestCase {
 		SmsMessage smsMessage = new SmsMessage("+270731876135",
 				"voidse toetsstuffesls");
 		smsMessage = smsSmppImpl.sendMessageToGateway(smsMessage);
-		String smscID = smsMessage.getSmscId();
+		String smscID = smsMessage.getSmscMessageId();
 		assertEquals(true, smscID != null);
 	}
 
@@ -43,7 +43,7 @@ public class SmsSmppImplTest extends TestCase {
 		for (int i = 0; i < smsMessages.length; i++) {
 			smsMessages[i] = new SmsMessage("+270731876135",
 					"Jnit tesing forloop num:" + i);
-			smsMessages[i].setId(i);
+			smsMessages[i].setId(new Long(i));
 
 		}
 		smsMessages = smsSmppImpl.sendMessagesToGateway(smsMessages);
@@ -56,7 +56,7 @@ public class SmsSmppImplTest extends TestCase {
 		for (int i = 0; i < smsMessages.length; i++) {
 			smsMessages[i] = new SmsMessage("+270731876135",
 					"Jnit tesing forloop num:" + i);
-			smsMessages[i].setId(i);
+			smsMessages[i].setId(new Long(i));
 
 		}
 		smsMessages = smsSmppImpl2.sendMessagesToGateway(smsMessages);

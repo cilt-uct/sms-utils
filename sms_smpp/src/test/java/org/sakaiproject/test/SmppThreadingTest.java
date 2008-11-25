@@ -39,9 +39,9 @@ public class SmppThreadingTest extends TestCase {
 
 	private int delay_between_messages = 100; // ms
 
-	private int session1_message_count = 10;
+	private int session1_message_count = 0;
 
-	private int session2_message_count = 10;
+	private int session2_message_count = 0;
 
 	/**
 	 * You use the MultiThreadedTestRunner in your test cases. The MTTR takes an

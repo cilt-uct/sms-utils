@@ -453,7 +453,7 @@ public class SmsSmppImpl implements SmsSmpp {
 									Alphabet.ALPHA_DEFAULT), smDefaultMsgId,
 							message.getMessageBody().getBytes());
 
-			message.setSmscId(messageId);
+			message.setSmscMessageId(messageId);
 			message.setDebugInfo("Message submitted, message_id is "
 					+ messageId);
 			message.setSubmitResult(true);
