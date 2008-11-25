@@ -1,5 +1,7 @@
 package org.sakaiproject.sms.hibernate.test;
 
+import java.util.List;
+
 import org.sakaiproject.sms.hibernate.logic.impl.SmsConfigLogicImpl;
 import org.sakaiproject.sms.hibernate.logic.impl.SmsDataLogicImpl;
 import org.sakaiproject.sms.hibernate.model.BaseModel;
@@ -32,11 +34,8 @@ public class SmsConfigTest extends TestCase {
 	
 	public void testInsertSmsConfig(){
 		logic.persistSmsConfig(insertSmsConfig);
-		
-		//Check the record was created on the DB
+		//Check the record was created on the DB... an id will be assigned.
 		assertTrue("Object not persisted", insertSmsConfig.exists());
-		
-		System.out.println("");
 	}
 	
 	public void testGetSmsConfigById(){
@@ -48,21 +47,23 @@ public class SmsConfigTest extends TestCase {
 	
 	
 	public void testUpdateSmsConfig(){
-		SmsConfig origionalSmsSonfig = logic.getSmsConfig(insertSmsConfig.getId());
-		insertSmsConfig.setSakaiSiteId("newSakaiSiteId");
-		logic.persistSmsConfig(insertSmsConfig);
-		if(insertSmsConfig.equals(origionalSmsSonfig)) {
-			fail("Persist not succesfull");
-		}
+		SmsConfig smsConfig = logic.getSmsConfig(insertSmsConfig.getId());
+		smsConfig.setSakaiSiteId("newSakaiSiteId");
+		logic.persistSmsConfig(smsConfig);
+		smsConfig = logic.getSmsConfig(insertSmsConfig.getId());
+		assertEquals("newSakaiSiteId", smsConfig.getSakaiSiteId());
 	}
 
+	public void testGetSmsConfigs() {
+		List<SmsConfig> confs = logic.getAllSmsConfig();
+		assertNotNull("Returend collection is null", confs);
+		assertTrue("No records returned", confs.size() > 0);
+	}
 	
 	public void testDeleteSmsConfig(){
 		logic.deleteSmsCongif(insertSmsConfig);
 		SmsConfig getSmsConfig = logic.getSmsConfig(insertSmsConfig.getId());
 		assertNull(getSmsConfig);
 	}
-	
-	
 
 }

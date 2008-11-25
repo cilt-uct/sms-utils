@@ -37,7 +37,7 @@ public interface SmsConfigLogic {
 	
 	public void persistSmsConfig(SmsConfig smsConfig);
 	
-	public Set<SmsConfig> getSmsConfigs();
+	public List<SmsConfig> getAllSmsConfig();
 	
 	public void deleteSmsCongif(SmsConfig smsConfig);
 

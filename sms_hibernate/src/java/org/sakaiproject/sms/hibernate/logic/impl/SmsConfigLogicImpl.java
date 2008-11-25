@@ -21,9 +21,11 @@ package org.sakaiproject.sms.hibernate.logic.impl;
 import java.util.List;
 import java.util.Set;
 
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.sakaiproject.sms.hibernate.dao.HibernateUtil;
 import org.sakaiproject.sms.hibernate.dao.SmsDao;
 import org.sakaiproject.sms.hibernate.logic.SmsConfigLogic;
 import org.sakaiproject.sms.hibernate.logic.SmsDataLogic;
@@ -63,10 +65,12 @@ public class SmsConfigLogicImpl extends SmsDao implements SmsConfigLogic {
 	/**
 	 * Gets all the sms configuration records
 	 * 
-	 * @return Set of SmsConfig objects
+	 * @return List of SmsConfig objects
 	 */
-	public Set<SmsConfig> getSmsConfigs() {
-		return null;
+	public List<SmsConfig> getAllSmsConfig() {
+		Session s = HibernateUtil.currentSession();
+		Query query = s.createQuery("from SmsConfig");
+		return query.list();
 	}
 
 	/**
