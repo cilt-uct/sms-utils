@@ -3,7 +3,9 @@ package org.sakaiproject.sms.hibernate.test;
 import java.sql.Timestamp;
 
 import org.sakaiproject.sms.hibernate.logic.impl.SmsDataLogicImpl;
+import org.sakaiproject.sms.hibernate.logic.impl.SmsTaskLogicImpl;
 import org.sakaiproject.sms.hibernate.model.BaseModel;
+import org.sakaiproject.sms.hibernate.model.SmsConfig;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.hibernate.model.SmsTransaction;
@@ -11,17 +13,15 @@ import org.sakaiproject.sms.hibernate.model.SmsTransaction;
 import junit.framework.TestCase;
 
 public class SmsTaskTest extends TestCase {
-	private SmsDataLogicImpl logic = null;
+	private static SmsTaskLogicImpl logic = null;
 	
-	private SmsTask insertTask;
-	private SmsMessage insertMessage1;
-	private SmsMessage insertMessage2;
+	private static SmsTask insertTask;
+	private static SmsMessage insertMessage1;
+	private static SmsMessage insertMessage2;
 	
-	{
-		logic = new SmsDataLogicImpl();
-	}
-	
-	public SmsTaskTest() {
+	static {
+		logic = new SmsTaskLogicImpl();
+		
 		insertTask = new SmsTask();
 		insertTask.setSakaiSiteId("sakaiSiteId");
 		insertTask.setSmsAccountId(1);
@@ -44,22 +44,38 @@ public class SmsTaskTest extends TestCase {
 		insertMessage2.setSakaiUserId("sakaiUserId");
 		insertMessage2.setStatusCode("SC");
 	}
+	
+	public SmsTaskTest() {
+		
+	}
 
 	public SmsTaskTest(String name) {
 		super(name);
 	}
 	
 	public void testInsertSmsTask(){
+		logic.persistSmsTask(insertTask);
+		assertTrue("Object not persisted", insertTask.exists());
+	}
+	
+	public void testUpdateSmsTask(){	
+		SmsTask smsTask = logic.getSmsTask(insertTask.getId());
+		assertFalse(smsTask.getSakaiSiteId().equals("newSakaiSiteId"));
+		smsTask.setSakaiSiteId("newSakaiSiteId");
+		logic.persistSmsTask(smsTask);
+		smsTask = logic.getSmsTask(insertTask.getId());
+		assertEquals("newSakaiSiteId", smsTask.getSakaiSiteId());
+	}
+	
+	public void testAddSmsMessagesToTask() {
 		insertTask.getSmsMessages().add(insertMessage1);
 		insertTask.getSmsMessages().add(insertMessage2);
 		insertMessage1.setSmsTask(insertTask);
 		insertMessage2.setSmsTask(insertTask);
-		//logic.persist(insertTask);
-		System.out.println("");
-	}
-	
-	public void testUpdateSmsTask(){
-		
+		logic.persistSmsTask(insertTask);
+		SmsTask getTask = logic.getSmsTask(insertTask.getId());
+		assertNotNull(insertTask);
+		assertTrue("Collection size not correct", getTask.getSmsMessages().size() == 2);
 	}
 	
 	public void testGetSmsTasks(){
@@ -70,12 +86,14 @@ public class SmsTaskTest extends TestCase {
 		
 	}
 	
-	public void testDeleteSmsTask(){
-		
-	}
 	
 	public void testGetSmsTaskMessages(){
 		
 	}
+	
+	public void testDeleteSmsTask(){
+		
+	}
+	
 
 }
