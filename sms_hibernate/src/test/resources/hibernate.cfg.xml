@@ -5,9 +5,9 @@
 
 <hibernate-configuration>
 
-    <session-factory><!--
+    <session-factory>
 
-      <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+      <!--<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
       <property name="hibernate.connection.url">jdbc:mysql://196.213.54.179/smshibernate</property>
       <property name="hibernate.connection.username">root</property>
       <property name="hibernate.connection.password">sakai2008</property>

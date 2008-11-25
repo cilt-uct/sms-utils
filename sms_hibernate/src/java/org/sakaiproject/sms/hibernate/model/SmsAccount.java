@@ -26,7 +26,7 @@ package org.sakaiproject.sms.hibernate.model;
  * @version 1.0
  * @created 19-Nov-2008
  */
-public class SmsAccount extends AbstractBaseModel {
+public class SmsAccount extends BaseModel {
 
 	/** The current account balance in currency. */
 	private Float balance;
@@ -145,6 +145,65 @@ public class SmsAccount extends AbstractBaseModel {
 	 */
 	public void setSakaiUserId(String sakaiUserId) {
 		this.sakaiUserId = sakaiUserId;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((balance == null) ? 0 : balance.hashCode());
+		result = prime * result
+				+ ((messageTypeCode == null) ? 0 : messageTypeCode.hashCode());
+		result = prime * result
+				+ ((overdraftLimit == null) ? 0 : overdraftLimit.hashCode());
+		result = prime * result
+				+ ((sakaiSiteId == null) ? 0 : sakaiSiteId.hashCode());
+		result = prime * result
+				+ ((sakaiUserId == null) ? 0 : sakaiUserId.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (!(obj instanceof SmsAccount))
+			return false;
+		SmsAccount other = (SmsAccount) obj;
+		if (balance == null) {
+			if (other.balance != null)
+				return false;
+		} else if (!balance.equals(other.balance))
+			return false;
+		if (messageTypeCode == null) {
+			if (other.messageTypeCode != null)
+				return false;
+		} else if (!messageTypeCode.equals(other.messageTypeCode))
+			return false;
+		if (overdraftLimit == null) {
+			if (other.overdraftLimit != null)
+				return false;
+		} else if (!overdraftLimit.equals(other.overdraftLimit))
+			return false;
+		if (sakaiSiteId == null) {
+			if (other.sakaiSiteId != null)
+				return false;
+		} else if (!sakaiSiteId.equals(other.sakaiSiteId))
+			return false;
+		if (sakaiUserId == null) {
+			if (other.sakaiUserId != null)
+				return false;
+		} else if (!sakaiUserId.equals(other.sakaiUserId))
+			return false;
+		return true;
 	}
 
 }

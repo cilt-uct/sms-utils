@@ -1,5 +1,5 @@
 /***********************************************************************************
- * AbstractBaseModel.java
+ * BaseModel.java
  * Copyright (c) 2008 Sakai Project/Sakai Foundation
  * 
  * Licensed under the Educational Community License, Version 2.0 (the "License"); 
@@ -18,9 +18,8 @@
 
 package org.sakaiproject.sms.hibernate.model;
 
-// TODO: Auto-generated Javadoc
 /**
- * This is the base model class from which all model class should extend.
+ * This is the base model class from which all model class should inherit.
  * 
  * It also holds the id field that should be used as the unique identifier for
  * all the model classes.
@@ -29,12 +28,12 @@ package org.sakaiproject.sms.hibernate.model;
  * @version 1.0
  * @created 19-Nov-2008
  */
-public abstract class AbstractBaseModel {
+public abstract class BaseModel {
 
 	/**
 	 * Represent the unique id for the model object.
 	 * */
-	private Integer id;
+	private Long id;
 
 	/**
 	 * Exists.
@@ -53,7 +52,7 @@ public abstract class AbstractBaseModel {
 	 * 
 	 * @return the id
 	 */
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
@@ -63,7 +62,42 @@ public abstract class AbstractBaseModel {
 	 * @param id
 	 *            the new id
 	 */
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		/*final int prime = 31;
+		int result = 1;
+		result = prime * result + ((id == null) ? 0 : id.hashCode());
+		return result;*/
+		return -1;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		/*if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof BaseModel))
+			return false;
+		BaseModel other = (BaseModel) obj;
+		if (id == null) {
+			if (other.id != null)
+				return false;
+		} else if (!id.equals(other.id))
+			return false;
+		return true;*/
+		return false;
+	}
+	
+	
 }

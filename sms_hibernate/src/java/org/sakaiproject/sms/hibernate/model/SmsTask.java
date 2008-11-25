@@ -19,6 +19,7 @@
 package org.sakaiproject.sms.hibernate.model;
 
 import java.sql.Timestamp;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_TaskDeliveryStatus;
@@ -32,7 +33,7 @@ import org.sakaiproject.sms.hibernate.model.constants.SmsConst_TaskDeliveryStatu
  * @version 1.0
  * @created 19-Nov-2008
  */
-public class SmsTask extends AbstractBaseModel {
+public class SmsTask extends BaseModel {
 
 	/**
 	 * Approximate credit cost for this task. The exact credits can only be
@@ -94,7 +95,7 @@ public class SmsTask extends AbstractBaseModel {
 	private Integer smsAccountId;
 
 	/** The sms messages. */
-	private Set<SmsMessage> smsMessages;
+	private Set<SmsMessage> smsMessages = new HashSet<SmsMessage>();
 
 	/** Current status of this task. */
 	private String statusCode;
@@ -492,6 +493,168 @@ public class SmsTask extends AbstractBaseModel {
 	 */
 	public void setStatusCode(String statusCode) {
 		this.statusCode = statusCode;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result
+				+ ((creditEstimate == null) ? 0 : creditEstimate.hashCode());
+		result = prime * result
+				+ ((dateCreated == null) ? 0 : dateCreated.hashCode());
+		result = prime * result
+				+ ((dateProcessed == null) ? 0 : dateProcessed.hashCode());
+		result = prime * result
+				+ ((dateToSend == null) ? 0 : dateToSend.hashCode());
+		result = prime * result
+				+ ((deliveryGroupId == null) ? 0 : deliveryGroupId.hashCode());
+		result = prime
+				* result
+				+ ((deliveryGroupName == null) ? 0 : deliveryGroupName
+						.hashCode());
+		result = prime * result
+				+ ((deliveryUserId == null) ? 0 : deliveryUserId.hashCode());
+		result = prime * result
+				+ ((groupSizeActual == null) ? 0 : groupSizeActual.hashCode());
+		result = prime
+				* result
+				+ ((groupSizeEstimate == null) ? 0 : groupSizeEstimate
+						.hashCode());
+		result = prime * result
+				+ ((messageBody == null) ? 0 : messageBody.hashCode());
+		result = prime * result
+				+ ((messageTypeId == null) ? 0 : messageTypeId.hashCode());
+		result = prime * result
+				+ ((retryCount == null) ? 0 : retryCount.hashCode());
+		result = prime * result
+				+ ((sakaiSiteId == null) ? 0 : sakaiSiteId.hashCode());
+		result = prime * result
+				+ ((sakaiToolId == null) ? 0 : sakaiToolId.hashCode());
+		result = prime * result
+				+ ((sakaiToolName == null) ? 0 : sakaiToolName.hashCode());
+		result = prime * result
+				+ ((senderUserName == null) ? 0 : senderUserName.hashCode());
+		result = prime * result
+				+ ((smsAccountId == null) ? 0 : smsAccountId.hashCode());
+		result = prime * result
+				+ ((smsMessages == null) ? 0 : smsMessages.hashCode());
+		result = prime * result
+				+ ((statusCode == null) ? 0 : statusCode.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (!(obj instanceof SmsTask))
+			return false;
+		SmsTask other = (SmsTask) obj;
+		if (creditEstimate == null) {
+			if (other.creditEstimate != null)
+				return false;
+		} else if (!creditEstimate.equals(other.creditEstimate))
+			return false;
+		if (dateCreated == null) {
+			if (other.dateCreated != null)
+				return false;
+		} else if (!dateCreated.equals(other.dateCreated))
+			return false;
+		if (dateProcessed == null) {
+			if (other.dateProcessed != null)
+				return false;
+		} else if (!dateProcessed.equals(other.dateProcessed))
+			return false;
+		if (dateToSend == null) {
+			if (other.dateToSend != null)
+				return false;
+		} else if (!dateToSend.equals(other.dateToSend))
+			return false;
+		if (deliveryGroupId == null) {
+			if (other.deliveryGroupId != null)
+				return false;
+		} else if (!deliveryGroupId.equals(other.deliveryGroupId))
+			return false;
+		if (deliveryGroupName == null) {
+			if (other.deliveryGroupName != null)
+				return false;
+		} else if (!deliveryGroupName.equals(other.deliveryGroupName))
+			return false;
+		if (deliveryUserId == null) {
+			if (other.deliveryUserId != null)
+				return false;
+		} else if (!deliveryUserId.equals(other.deliveryUserId))
+			return false;
+		if (groupSizeActual == null) {
+			if (other.groupSizeActual != null)
+				return false;
+		} else if (!groupSizeActual.equals(other.groupSizeActual))
+			return false;
+		if (groupSizeEstimate == null) {
+			if (other.groupSizeEstimate != null)
+				return false;
+		} else if (!groupSizeEstimate.equals(other.groupSizeEstimate))
+			return false;
+		if (messageBody == null) {
+			if (other.messageBody != null)
+				return false;
+		} else if (!messageBody.equals(other.messageBody))
+			return false;
+		if (messageTypeId == null) {
+			if (other.messageTypeId != null)
+				return false;
+		} else if (!messageTypeId.equals(other.messageTypeId))
+			return false;
+		if (retryCount == null) {
+			if (other.retryCount != null)
+				return false;
+		} else if (!retryCount.equals(other.retryCount))
+			return false;
+		if (sakaiSiteId == null) {
+			if (other.sakaiSiteId != null)
+				return false;
+		} else if (!sakaiSiteId.equals(other.sakaiSiteId))
+			return false;
+		if (sakaiToolId == null) {
+			if (other.sakaiToolId != null)
+				return false;
+		} else if (!sakaiToolId.equals(other.sakaiToolId))
+			return false;
+		if (sakaiToolName == null) {
+			if (other.sakaiToolName != null)
+				return false;
+		} else if (!sakaiToolName.equals(other.sakaiToolName))
+			return false;
+		if (senderUserName == null) {
+			if (other.senderUserName != null)
+				return false;
+		} else if (!senderUserName.equals(other.senderUserName))
+			return false;
+		if (smsAccountId == null) {
+			if (other.smsAccountId != null)
+				return false;
+		} else if (!smsAccountId.equals(other.smsAccountId))
+			return false;
+		if (smsMessages == null) {
+			if (other.smsMessages != null)
+				return false;
+		} else if (!smsMessages.equals(other.smsMessages))
+			return false;
+		if (statusCode == null) {
+			if (other.statusCode != null)
+				return false;
+		} else if (!statusCode.equals(other.statusCode))
+			return false;
+		return true;
 	}
 
 }

@@ -27,7 +27,7 @@ import java.sql.Timestamp;
  * @version 1.0
  * @created 19-Nov-2008
  */
-public class SmsMessage extends AbstractBaseModel {
+public class SmsMessage extends BaseModel {
 
 	/** The date delivered. */
 	private Timestamp dateDelivered;
@@ -125,11 +125,11 @@ public class SmsMessage extends AbstractBaseModel {
 	}
 
 	/**
-	 * Gets the smsc id.
+	 * Gets the smsc Message id.
 	 * 
-	 * @return the smsc id
+	 * @return the smsc Message id
 	 */
-	public String getSmscId() {
+	public String getSmscMessageId() {
 		return smscMessageId;
 	}
 
@@ -212,10 +212,10 @@ public class SmsMessage extends AbstractBaseModel {
 	/**
 	 * Sets the smsc id.
 	 * 
-	 * @param smscId
-	 *            the new smsc id
+	 * @param smscMessageId
+	 *            the new smsc Message id
 	 */
-	public void setSmscId(String smscId) {
+	public void setSmscMessageId(String smscId) {
 		this.smscMessageId = smscId;
 	}
 
@@ -247,6 +247,82 @@ public class SmsMessage extends AbstractBaseModel {
 	 */
 	public void setSubmitResult(boolean submitResult) {
 		this.submitResult = submitResult;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result
+				+ ((DebugInfo == null) ? 0 : DebugInfo.hashCode());
+		result = prime * result
+				+ ((dateDelivered == null) ? 0 : dateDelivered.hashCode());
+		result = prime * result
+				+ ((mobileNumber == null) ? 0 : mobileNumber.hashCode());
+		result = prime * result
+				+ ((sakaiUserId == null) ? 0 : sakaiUserId.hashCode());
+		result = prime * result + ((smsTask == null) ? 0 : smsTask.hashCode());
+		result = prime * result
+				+ ((smscMessageId == null) ? 0 : smscMessageId.hashCode());
+		result = prime * result
+				+ ((statusCode == null) ? 0 : statusCode.hashCode());
+		result = prime * result + (submitResult ? 1231 : 1237);
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (!(obj instanceof SmsMessage))
+			return false;
+		SmsMessage other = (SmsMessage) obj;
+		if (DebugInfo == null) {
+			if (other.DebugInfo != null)
+				return false;
+		} else if (!DebugInfo.equals(other.DebugInfo))
+			return false;
+		if (dateDelivered == null) {
+			if (other.dateDelivered != null)
+				return false;
+		} else if (!dateDelivered.equals(other.dateDelivered))
+			return false;
+		if (mobileNumber == null) {
+			if (other.mobileNumber != null)
+				return false;
+		} else if (!mobileNumber.equals(other.mobileNumber))
+			return false;
+		if (sakaiUserId == null) {
+			if (other.sakaiUserId != null)
+				return false;
+		} else if (!sakaiUserId.equals(other.sakaiUserId))
+			return false;
+		if (smsTask == null) {
+			if (other.smsTask != null)
+				return false;
+		} else if (!smsTask.equals(other.smsTask))
+			return false;
+		if (smscMessageId == null) {
+			if (other.smscMessageId != null)
+				return false;
+		} else if (!smscMessageId.equals(other.smscMessageId))
+			return false;
+		if (statusCode == null) {
+			if (other.statusCode != null)
+				return false;
+		} else if (!statusCode.equals(other.statusCode))
+			return false;
+		if (submitResult != other.submitResult)
+			return false;
+		return true;
 	}
 
 }

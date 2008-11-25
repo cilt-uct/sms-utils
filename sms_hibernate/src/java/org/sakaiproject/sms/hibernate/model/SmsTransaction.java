@@ -27,7 +27,7 @@ import java.sql.Timestamp;
  * @version 1.0
  * @created 19-Nov-2008
  */
-public class SmsTransaction extends AbstractBaseModel {
+public class SmsTransaction extends BaseModel {
 
 	/** The balance. */
 	private Float balance;
@@ -189,4 +189,82 @@ public class SmsTransaction extends AbstractBaseModel {
 	public void setTransactionTypeCode(String transactionTypeCode) {
 		this.transactionTypeCode = transactionTypeCode;
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((balance == null) ? 0 : balance.hashCode());
+		result = prime * result
+				+ ((sakaiUserId == null) ? 0 : sakaiUserId.hashCode());
+		result = prime * result
+				+ ((smsAccountId == null) ? 0 : smsAccountId.hashCode());
+		result = prime
+				* result
+				+ ((transactionAmount == null) ? 0 : transactionAmount
+						.hashCode());
+		result = prime
+				* result
+				+ ((transactionCredits == null) ? 0 : transactionCredits
+						.hashCode());
+		result = prime * result
+				+ ((transactionDate == null) ? 0 : transactionDate.hashCode());
+		result = prime
+				* result
+				+ ((transactionTypeCode == null) ? 0 : transactionTypeCode
+						.hashCode());
+		return result;
+	}
+
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof SmsTransaction))
+			return false;
+		SmsTransaction other = (SmsTransaction) obj;
+		if (balance == null) {
+			if (other.balance != null)
+				return false;
+		} else if (!balance.equals(other.balance))
+			return false;
+		if (sakaiUserId == null) {
+			if (other.sakaiUserId != null)
+				return false;
+		} else if (!sakaiUserId.equals(other.sakaiUserId))
+			return false;
+		if (smsAccountId == null) {
+			if (other.smsAccountId != null)
+				return false;
+		} else if (!smsAccountId.equals(other.smsAccountId))
+			return false;
+		if (transactionAmount == null) {
+			if (other.transactionAmount != null)
+				return false;
+		} else if (!transactionAmount.equals(other.transactionAmount))
+			return false;
+		if (transactionCredits == null) {
+			if (other.transactionCredits != null)
+				return false;
+		} else if (!transactionCredits.equals(other.transactionCredits))
+			return false;
+		if (transactionDate == null) {
+			if (other.transactionDate != null)
+				return false;
+		} else if (!transactionDate.equals(other.transactionDate))
+			return false;
+		if (transactionTypeCode == null) {
+			if (other.transactionTypeCode != null)
+				return false;
+		} else if (!transactionTypeCode.equals(other.transactionTypeCode))
+			return false;
+		return true;
+	}
+	
 }

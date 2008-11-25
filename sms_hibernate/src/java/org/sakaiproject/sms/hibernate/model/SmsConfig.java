@@ -26,7 +26,7 @@ package org.sakaiproject.sms.hibernate.model;
  * @version 1.0
  * @created 19-Nov-2008
  */
-public class SmsConfig extends AbstractBaseModel {
+public class SmsConfig extends BaseModel {
 
 	/**
 	 * The sms gateway report timeout in seconds. If a delivery report takes
@@ -149,5 +149,69 @@ public class SmsConfig extends AbstractBaseModel {
 	 */
 	public void setSmsEnabled(Boolean smsEnabled) {
 		this.smsEnabled = smsEnabled;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime
+				* result
+				+ ((gateWayReportTimeout == null) ? 0 : gateWayReportTimeout
+						.hashCode());
+		result = prime
+				* result
+				+ ((notificationEmail == null) ? 0 : notificationEmail
+						.hashCode());
+		result = prime * result
+				+ ((sakaiSiteId == null) ? 0 : sakaiSiteId.hashCode());
+		result = prime * result
+				+ ((sakaiToolId == null) ? 0 : sakaiToolId.hashCode());
+		result = prime * result
+				+ ((smsEnabled == null) ? 0 : smsEnabled.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (!(obj instanceof SmsConfig))
+			return false;
+		SmsConfig other = (SmsConfig) obj;
+		if (gateWayReportTimeout == null) {
+			if (other.gateWayReportTimeout != null)
+				return false;
+		} else if (!gateWayReportTimeout.equals(other.gateWayReportTimeout))
+			return false;
+		if (notificationEmail == null) {
+			if (other.notificationEmail != null)
+				return false;
+		} else if (!notificationEmail.equals(other.notificationEmail))
+			return false;
+		if (sakaiSiteId == null) {
+			if (other.sakaiSiteId != null)
+				return false;
+		} else if (!sakaiSiteId.equals(other.sakaiSiteId))
+			return false;
+		if (sakaiToolId == null) {
+			if (other.sakaiToolId != null)
+				return false;
+		} else if (!sakaiToolId.equals(other.sakaiToolId))
+			return false;
+		if (smsEnabled == null) {
+			if (other.smsEnabled != null)
+				return false;
+		} else if (!smsEnabled.equals(other.smsEnabled))
+			return false;
+		return true;
 	}
 }

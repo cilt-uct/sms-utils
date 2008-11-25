@@ -82,6 +82,18 @@
 			<artifactId>quartz</artifactId>
 			<version>1.5.2</version>
 		</dependency>
+		
+		<!-- generic DAO -->
+      <dependency>
+         <groupId>org.sakaiproject</groupId>
+         <artifactId>generic-dao</artifactId>
+         <version>0.9.11</version>
+      </dependency>
+      <dependency>
+         <groupId>org.springframework</groupId>
+         <artifactId>spring</artifactId>
+         <version>2.5.4</version>
+      </dependency>
 	</dependencies>
 	<reports />
 	<build>
@@ -96,25 +108,39 @@
 				</includes>
 			</resource>
 			<resource>
-				<directory>src/sql</directory>
+				<directory>src/test/resources</directory>
 				<includes>
-					<include>**/*.sql</include>
+					<include>**/*.xml</include>
+					<include>**/*.properties</include>
 				</includes>
 			</resource>
-		</resources>
-		<!--
-			<testResources> <testResource>
-			<directory>${basedir}/src/test</directory> <includes>
-			<include>log4j.properties</include>
-			<include>hibernate.test.properties</include>
-			<include>hibernate.dataload.properties</include>
-			<include>spring-test.xml</include>
-			<include>spring-config-test.xml</include>
-			<include>spring-config-dataload.xml</include> </includes>
-			</testResource> </testResources>
+			<resource>
+				<directory>src/test</directory>
+				<includes>
+					<include>**/*.java</include>
+					<include>**/*.xml</include>
+					<include>**/*.hbm.xml</include>
+				</includes>
+			</resource>
+		</resources><!--
 		-->
-
+			<testResources> 
+				<testResource>
+					<directory>${basedir}/src/test/org/sakaiproject/sms/hibernate/logic/impl</directory> 
+					<!--<includes>
+						<include>src/test/resources/log4j.properties</include>
+						<include>src/test/hibernate.properties</include>
+						<include>src/test/hibernate.cfg.xml</include>
+					</includes>
+				--></testResource> 
+			</testResources>
 <!--
+<testResources>
+         <testResource>
+            <directory>${basedir}/src/test/org/sakaiproject/sms/hibernate/logic/impl</directory>
+         </testResource>
+      </testResources>
+
 		<extensions>
 			<extension>
 				<groupId>jdbc.artifact.groupid</groupId>
@@ -128,17 +154,17 @@
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>hibernate3-maven-plugin</artifactId>
 				<version>1.0-SNAPSHOT</version>
-				<!--
+				
 				<executions>
 		        <execution>
 		          <phase>process-classes</phase>
 		          <goals>
 		            <goal>hbm2ddl</goal>
-		             <goal>hbm2java</goal> 
-		          </goals>
+		             <!--<goal>hbm2java</goal> 
+		          --></goals>
 		        </execution>
 		        
-		      </executions>-->
+		      </executions>
 				 <configuration>
 				 	<propertyfile>/src/java/resources/database.properties</propertyfile>
 					<hibernate>
@@ -153,7 +179,7 @@
 			          <persistenceunit>Default</persistenceunit>
 			          <outputfilename>schema.ddl</outputfilename>
 			          <drop>true</drop>
-			          <create>false</create>
+			          <create>true</create>
 			          <export>false</export>
 			          <format>true</format>
 			        </componentProperties>

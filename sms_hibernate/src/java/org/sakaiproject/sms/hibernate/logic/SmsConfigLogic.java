@@ -1,5 +1,5 @@
 /***********************************************************************************
- * SmsDataLogic.java
+ * SmsConfigLogic.java
  * Copyright (c) 2008 Sakai Project/Sakai Foundation
  * 
  * Licensed under the Educational Community License, Version 2.0 (the "License"); 
@@ -24,32 +24,21 @@ import java.util.Set;
 import org.sakaiproject.sms.hibernate.model.*;
 
 /**
- * The data service will handle all database transactions for the sms tool in
+ * The data service will handle all sms config database transactions for the sms tool in
  * Sakai.
  * 
- * @author louis@psybergate.com
+ * @author julian@psybergate.com
  * @version 1.0
- * @created 12-Nov-2008 08:12:41 AM
+ * @created 25-Nov-2008 08:12:41 AM
  */
-public interface SmsDataLogic {
+public interface SmsConfigLogic {
 
-	public SmsAccount getSmsAccount(Long smsAccountID);
+	public SmsConfig getSmsConfig(Long smsConfigId);
+	
+	public void persistSmsConfig(SmsConfig smsConfig);
+	
+	public Set<SmsConfig> getSmsConfigs();
+	
+	public void deleteSmsCongif(SmsConfig smsConfig);
 
-	// crud
-	public SmsConfig getSmsConfig();
-
-	// must look up smsTask and populate
-	public SmsMessage getSmsMessage(Long smsMessageID);
-
-	public Set<SmsMessage> getSmsMessages(Long smsTaskID);
-
-	// crud
-	public SmsTask getSmsTask(Long smsTaskID);
-
-	// statusCode may be null
-	public Set<SmsTask> getSmsTasks(String sakaiSiteID, String statusCode);
-
-	public SmsTransaction getSmsTransaction(Long smsTransactionID);
-
-	public Set<SmsTransaction> getSmsTransactions(Long smsAccountID);
 }
