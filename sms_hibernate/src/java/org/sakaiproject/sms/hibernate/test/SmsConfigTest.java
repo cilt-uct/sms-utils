@@ -19,7 +19,7 @@ public class SmsConfigTest extends TestCase {
 		insertSmsConfig.setSakaiSiteId("sakaiSiteId");
 		insertSmsConfig.setSakaiToolId("sakaiToolId");
 		insertSmsConfig.setNotificationEmail("notification@Email.Address");
-		insertSmsConfig.setSmsEnabled(true);
+		insertSmsConfig.setSmsEnabled(false);
 	}
 
 	public SmsConfigTest() {
@@ -40,6 +40,8 @@ public class SmsConfigTest extends TestCase {
 		assertTrue("Object not persisted", insertSmsConfig.exists());
 		assertNotNull(getSmsConfig);
 		assertEquals(insertSmsConfig, getSmsConfig);
+		assertTrue("Boolean property problem",
+				getSmsConfig.getSmsEnabled() == false);
 	}
 
 	public void testUpdateSmsConfig() {
@@ -52,7 +54,7 @@ public class SmsConfigTest extends TestCase {
 
 	public void testGetSmsConfigs() {
 		List<SmsConfig> confs = logic.getAllSmsConfig();
-		assertNotNull("Returnend collection is null", confs);
+		assertNotNull("Returned collection is null", confs);
 		assertTrue("No records returned", confs.size() > 0);
 	}
 
