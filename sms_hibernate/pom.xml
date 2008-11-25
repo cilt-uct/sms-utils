@@ -108,20 +108,13 @@
 				</includes>
 			</resource>
 			<resource>
-				<directory>src/test/resources</directory>
+				<directory>src/resources</directory>
 				<includes>
 					<include>**/*.xml</include>
 					<include>**/*.properties</include>
 				</includes>
 			</resource>
-			<resource>
-				<directory>src/test</directory>
-				<includes>
-					<include>**/*.java</include>
-					<include>**/*.xml</include>
-					<include>**/*.hbm.xml</include>
-				</includes>
-			</resource>
+			
 		</resources><!--
 		-->
 			<testResources> 
