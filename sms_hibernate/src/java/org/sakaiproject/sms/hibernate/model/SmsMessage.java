@@ -177,7 +177,10 @@ public class SmsMessage extends BaseModel {
 	 *            the new debug info
 	 */
 	public void setDebugInfo(String debugInfo) {
-		DebugInfo = debugInfo;
+		if (DebugInfo == null) {
+			DebugInfo = "";
+		}
+		DebugInfo = DebugInfo + debugInfo;
 	}
 
 	/**
@@ -249,7 +252,9 @@ public class SmsMessage extends BaseModel {
 		this.submitResult = submitResult;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -273,7 +278,9 @@ public class SmsMessage extends BaseModel {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
