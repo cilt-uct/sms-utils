@@ -28,6 +28,7 @@
 
   <!--  Producers -->
   <bean class="org.sakaiproject.sms.producers.SmsTestProducer" />
+  <bean class="org.sakaiproject.sms.producers.BillingAdminProducer" />	
   <bean class="org.sakaiproject.sms.producers.SMSConfigProducer"/>
   
   <bean id="searchListProducer" class="org.sakaiproject.sms.producers.SearchListProducer">
