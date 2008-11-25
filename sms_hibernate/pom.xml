@@ -155,24 +155,24 @@
 				<artifactId>hibernate3-maven-plugin</artifactId>
 				<version>1.0-SNAPSHOT</version>
 				
-				<executions>
+				<!--<executions>
 		        <execution>
 		          <phase>process-classes</phase>
 		          <goals>
 		            <goal>hbm2ddl</goal>
-		             <!--<goal>hbm2java</goal> 
-		          --></goals>
+		             <goal>hbm2java</goal> 
+		          </goals>
 		        </execution>
 		        
-		      </executions>
+		      </executions>-->
 				 <configuration>
 				 	<propertyfile>/src/java/resources/database.properties</propertyfile>
 					<hibernate>
 						<configurationFile>/src/java/resources/hibernate.cfg.xml</configurationFile>
 					</hibernate>
 					<outputDirectory>
-						<!-- <hbm2cfgxml>/src/java/resources</hbm2cfgxml> -->
-						<hbm2java>/src/java/org/sakaiproject/sms/hibernate/model</hbm2java>
+						<!-- <hbm2cfgxml>/src/java/resources</hbm2cfgxml> 
+						<hbm2java>/src/java/org/sakaiproject/sms/hibernate/model</hbm2java>-->
 					</outputDirectory>
 					<componentProperties>
 			          <implementation>jpaconfiguration</implementation>
