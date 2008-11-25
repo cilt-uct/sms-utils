@@ -44,8 +44,8 @@ public class SmsSmppStub implements SmsSmpp {
 	 * 
 	 * @see org.sakaiproject.sms.api.SmsSmpp#getConnectionStatus()
 	 */
-	public int getConnectionStatus() {
-		return 0;
+	public boolean getConnectionStatus() {
+		return true;
 	}
 
 	/*
@@ -99,6 +99,11 @@ public class SmsSmppStub implements SmsSmpp {
 		}
 
 		return msg;
+	}
+
+	public void enableDebugInformation(boolean arg0) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
