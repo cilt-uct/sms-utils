@@ -26,10 +26,6 @@ public class SMSConstants {
 	public static final int MAX_SMS_LENGTH = 160;
 	public static final int MAX_MOBILE_NR_LENGTH = 20; // Just arbitary
 	
-	//sort table constants
-	public static final String SORT_DIR_ASC = "asc";
-	public static final String SORT_DIR_DESC = "desc";
-
 	//default paging
 	public static final int DEFAULT_START_COUNT = 20;
 
@@ -41,8 +37,5 @@ public class SMSConstants {
 	public static final String  SORT_BY_NAME = "name";
 	public static final String  SORT_BY_HOUSE = "house";
 	public static final String  SORT_BY_STREET = "street";
-	
-	
-	
 	
 }

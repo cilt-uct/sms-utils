@@ -6,7 +6,7 @@ import java.util.Comparator;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.MethodUtils;
-import org.sakaiproject.sms.producers.TestDataResultSet.SortDirection;
+import org.sakaiproject.sms.constants.SortDirection;
 
 public class ReflectionBasedSorter {
 
@@ -25,15 +25,6 @@ public class ReflectionBasedSorter {
 					throw new RuntimeException(e);
 				}
 						
-//				if(valueLeft instanceof Comparable<?>){
-//					throw new RuntimeException("Cannot dynamically sort object " 
-//							+ valueLeft.getClass() + " this is not Comparable");
-//				}
-//				if(valueRight instanceof Comparable<?>){
-//					throw new RuntimeException("Cannot dynamically sort object " 
-//							+ valueLeft.getClass() + " this is not Comparable");
-//				}
-
 				Integer compare;
 				try {
 					

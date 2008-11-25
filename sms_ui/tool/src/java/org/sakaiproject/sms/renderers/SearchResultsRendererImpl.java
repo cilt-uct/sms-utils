@@ -3,6 +3,7 @@ package org.sakaiproject.sms.renderers;
 import java.util.ArrayList;
 
 import org.sakaiproject.sms.constants.SMSConstants;
+import org.sakaiproject.sms.constants.SortDirection;
 import org.sakaiproject.sms.producers.TestDataResultSet;
 import org.sakaiproject.sms.util.ReflectionBasedSorter;
 import org.springframework.util.Assert;
@@ -38,11 +39,8 @@ public class SearchResultsRendererImpl implements SearchResultsRenderer {
         sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-street:", sortViewParams,
         		SMSConstants.SORT_BY_STREET, "sms.view-search-results.street");
 		
-        TestDataResultSet.SortDirection sortDirection = TestDataResultSet.SortDirection.DESC;
+        SortDirection sortDirection = SortDirection.findByCode(sortViewParams.sortDir);
         
-        if(sortViewParams.sortDir.equals(SMSConstants.SORT_ASC))
-        	sortDirection = TestDataResultSet.SortDirection.ASC;
-        	
         ReflectionBasedSorter.sortByName(resultSet, sortViewParams.sortBy, sortDirection);
        
 		for (TestDataResultSet.TestDataRow testDataRow : resultSet) {
@@ -50,7 +48,7 @@ public class SearchResultsRendererImpl implements SearchResultsRenderer {
 			UIBranchContainer row = UIBranchContainer.make(searchResultsTable, "dataset:");
 			
 			UIOutput.make(row, "row-data-name", testDataRow.getName());
-			UIOutput.make(row, "row-data-house", testDataRow.getHouse());
+			UIOutput.make(row, "row-data-house", testDataRow.getHouse().toString());
 			UIOutput.make(row, "row-data-street", testDataRow.getStreet());
 		}
 	}

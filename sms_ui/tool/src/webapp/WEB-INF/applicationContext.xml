@@ -31,7 +31,7 @@
   <!-- Define the bean roots from the request scope file that are accessible 
     via incoming request URL -->
   <bean parent="requestAddressibleParent">
-    <property name="value" value="searchFilterBean, sMSConfigBean, sMSConfigActionBean, SmsTestActionBean, SmsMessageLocator"/>
+    <property name="value" value="searchFilterBean, sMSConfig, sMSConfigActionBean, SmsTestActionBean, SmsMessageLocator, SmsConfigLocator"/>
   </bean>
 
   <!-- The beans which will be preserved across a flow via simple instance
@@ -43,6 +43,11 @@
   <bean id="smsMessageGuard" parent="writeGuardParent">
      <property name="guardedPath" value="SmsMessageLocator.*"/>
 	 <property name="guard"> <bean class="org.sakaiproject.sms.validators.SmsMessageValidator" /></property>
+  </bean>
+  
+  <bean id="smsConfigGaurd" parent="writeGuardParent">
+  	<property name="guardedPath" value="SmsConfigLocator.*"/>
+	<property name="guard"><bean class="org.sakaiproject.sms.validators.SmsConfigValidator" /></property>
   </bean>
   
 </beans>

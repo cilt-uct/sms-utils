@@ -31,6 +31,7 @@ public class SmsMessageValidator implements Validator {
 	/**
 	 * @see org.springframework.validation.Validator#supports(java.lang.Class)
 	 */
+	@SuppressWarnings("unchecked")
 	public boolean supports(Class clazz) {
 		if (SmsMessage.class.equals(clazz.getClass())) {
 			return true;

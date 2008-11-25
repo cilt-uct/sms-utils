@@ -4,23 +4,21 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
+import org.sakaiproject.sms.constants.SortDirection;
+
 /**
  *	Temp object to test table generation
  */
 public class TestDataResultSet {
 
-	public enum SortDirection{
-		ASC,
-		DESC;
-	}
 	
 	public static ArrayList<TestDataRow> testDataSet() {
 
-		TestDataRow row1 = new TestDataRow("Bob", "12", "Abbey");
-		TestDataRow row2 = new TestDataRow("Ann", "18", "Won");
-		TestDataRow row3 = new TestDataRow("Mark", "12", "Get");
-		TestDataRow row4 = new TestDataRow("John", "77", "JL");
-		TestDataRow row5 = new TestDataRow("Sam", "12", "Jord");
+		TestDataRow row1 = new TestDataRow("Bob", new Integer(12), "Abbey");
+		TestDataRow row2 = new TestDataRow("Ann", new Integer(18), "Won");
+		TestDataRow row3 = new TestDataRow("Mark", new Integer(12), "Get");
+		TestDataRow row4 = new TestDataRow("John", new Integer(77), "JL");
+		TestDataRow row5 = new TestDataRow("Sam", new Integer(12), "Jord");
 
 		
 		ArrayList<TestDataRow> resultSet = new ArrayList<TestDataRow>();
@@ -52,7 +50,7 @@ public class TestDataResultSet {
 	public static class TestDataRow {
 		
 		private String name;
-		private String house;
+		private Integer house;
 		private String street;
 		
 
@@ -60,7 +58,7 @@ public class TestDataResultSet {
 			super();
 		}
 
-		public TestDataRow(String name, String house, String street) {
+		public TestDataRow(String name, Integer house, String street) {
 			super();
 			this.name = name;
 			this.house = house;
@@ -75,11 +73,11 @@ public class TestDataResultSet {
 			this.name = name;
 		}
 
-		public String getHouse() {
+		public Integer getHouse() {
 			return house;
 		}
 
-		public void setHouse(String house) {
+		public void setHouse(Integer house) {
 			this.house = house;
 		}
 

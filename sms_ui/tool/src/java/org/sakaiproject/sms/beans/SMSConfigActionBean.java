@@ -18,15 +18,18 @@
 
 package org.sakaiproject.sms.beans;
 
+import org.sakaiproject.sms.hibernate.model.SmsConfig;
+
+
 public class SMSConfigActionBean {
 
-	private SMSConfigBean smsConfigBean;
+	private SmsConfig smsConfig;
 
-	public void setSmsConfigBean(SMSConfigBean smsConfigBean) {
-		this.smsConfigBean = smsConfigBean;
+	public void setSmsConfig(SmsConfig smsConfig) {
+		this.smsConfig = smsConfig;
 	}
 
 	public void save(){		
-		System.err.println("In save action " + smsConfigBean.getNotificatonEmail() + " " + smsConfigBean.getSmsEnabled());
+		System.err.println("In save action " + smsConfig.getNotificationEmail() + " " + smsConfig.getSmsEnabled());
 	}
 }

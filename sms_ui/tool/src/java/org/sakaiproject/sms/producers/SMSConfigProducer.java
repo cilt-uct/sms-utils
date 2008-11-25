@@ -18,6 +18,13 @@
 
 package org.sakaiproject.sms.producers;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.sakaiproject.sms.beans.ActionResults;
+import org.sakaiproject.sms.otp.SmsConfigLocator;
+import org.sakaiproject.sms.otp.SmsMessageLocator;
+
 import uk.org.ponder.rsf.components.ELReference;
 import uk.org.ponder.rsf.components.UIBoundList;
 import uk.org.ponder.rsf.components.UICommand;
@@ -25,13 +32,16 @@ import uk.org.ponder.rsf.components.UIContainer;
 import uk.org.ponder.rsf.components.UIForm;
 import uk.org.ponder.rsf.components.UIInput;
 import uk.org.ponder.rsf.components.UIMessage;
-import uk.org.ponder.rsf.components.UIOutput;
 import uk.org.ponder.rsf.components.UISelect;
+import uk.org.ponder.rsf.flow.ARIResult;
+import uk.org.ponder.rsf.flow.jsfnav.NavigationCase;
+import uk.org.ponder.rsf.flow.jsfnav.NavigationCaseReporter;
 import uk.org.ponder.rsf.view.ComponentChecker;
 import uk.org.ponder.rsf.view.ViewComponentProducer;
+import uk.org.ponder.rsf.viewstate.SimpleViewParameters;
 import uk.org.ponder.rsf.viewstate.ViewParameters;
 
-public class SMSConfigProducer implements ViewComponentProducer{
+public class SMSConfigProducer implements ViewComponentProducer, NavigationCaseReporter{
 
 	public static final String VIEW_ID = "SMSConfig";
 	
@@ -41,15 +51,18 @@ public class SMSConfigProducer implements ViewComponentProducer{
 
 	public void fillComponents(UIContainer tofill, ViewParameters viewparams,
 			ComponentChecker checker) {
+		
+		String smsConfigOTP = SmsConfigLocator.LOCATOR_NAME + "."
+		+ SmsConfigLocator.NEW_1;
 				 
 		UIMessage.make(tofill, "page-title", "sms.config.title");
 		UIForm smsConfigform = UIForm.make(tofill, "sms-config-form");
-		UIInput.make(smsConfigform, "sms-config-notification-email", "#{sMSConfigBean.notificatonEmail}");
+	//	UIInput.make(smsConfigform, "sms-config-notification-email", smsConfigOTP + ".notificationEmail");
 
 
 		UISelect combo = UISelect.make(smsConfigform, "sms-config-enabled");
 		combo.selection = new UIInput();
-		combo.selection.valuebinding = new ELReference("#{sMSConfigBean.smsEnabled}");
+		combo.selection.valuebinding = new ELReference("#{sMSConfig.smsEnabled}");
 		UIBoundList comboValues = new UIBoundList();
 		comboValues.setValue(new String[] {"true", "false"});
 		combo.optionlist = comboValues;
@@ -60,5 +73,16 @@ public class SMSConfigProducer implements ViewComponentProducer{
 
 		UICommand.make(smsConfigform, "save", "#{sMSConfigActionBean.save}");
 		 
+	}
+
+	@SuppressWarnings("unchecked")
+	public List reportNavigationCases() {
+		List<NavigationCase> list = new ArrayList<NavigationCase>();
+		list.add(new NavigationCase(ActionResults.SUCCESS,
+				new SimpleViewParameters(SMSConfigProducer.VIEW_ID),
+				ARIResult.FLOW_ONESTEP));
+		list.add(new NavigationCase(ActionResults.CANCEL,
+				new SimpleViewParameters(SMSConfigProducer.VIEW_ID)));
+		return list;
 	}
 }
