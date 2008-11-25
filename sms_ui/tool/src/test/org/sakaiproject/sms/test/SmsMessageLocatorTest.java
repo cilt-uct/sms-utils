@@ -1,9 +1,12 @@
 package org.sakaiproject.sms.test;
 
+import junit.framework.TestCase;
+
+import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.otp.SmsMessageLocator;
 
 
-public class SmsMessageLocatorTest extends AbstarctLocatorTest {
+public class SmsMessageLocatorTest extends TestCase {
 
 	private SmsMessageLocator smsMsgLocator;
 
@@ -14,6 +17,15 @@ public class SmsMessageLocatorTest extends AbstarctLocatorTest {
 	
 	
 	public void testLocateNewSmsConfig(){
-		locateNewBean(smsMsgLocator);
+		Object obj = smsMsgLocator.locateBean(SmsMessageLocator.NEW_1);
+		assertNotNull(obj); // Should retrieve something
+		try {
+			SmsMessage msg = (SmsMessage) obj;
+			assertNull(msg.getId()); // Should not have id yet as it is not
+			// persisted
+		} catch (Exception e) {
+			fail("No exception should be caught"); // In case of possible
+			// ClassCastException
+		}
 	}
 }

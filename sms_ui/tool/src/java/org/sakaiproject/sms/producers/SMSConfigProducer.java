@@ -23,7 +23,6 @@ import java.util.List;
 
 import org.sakaiproject.sms.beans.ActionResults;
 import org.sakaiproject.sms.otp.SmsConfigLocator;
-import org.sakaiproject.sms.otp.SmsMessageLocator;
 
 import uk.org.ponder.rsf.components.ELReference;
 import uk.org.ponder.rsf.components.UIBoundList;
@@ -43,7 +42,7 @@ import uk.org.ponder.rsf.viewstate.ViewParameters;
 
 public class SMSConfigProducer implements ViewComponentProducer, NavigationCaseReporter{
 
-	public static final String VIEW_ID = "SMSConfig";
+	public static final String VIEW_ID = "SmsConfig";
 	
 	public String getViewID() {
 		return VIEW_ID;
@@ -57,7 +56,7 @@ public class SMSConfigProducer implements ViewComponentProducer, NavigationCaseR
 				 
 		UIMessage.make(tofill, "page-title", "sms.config.title");
 		UIForm smsConfigform = UIForm.make(tofill, "sms-config-form");
-	//	UIInput.make(smsConfigform, "sms-config-notification-email", smsConfigOTP + ".notificationEmail");
+		UIInput.make(smsConfigform, "sms-config-notification-email", smsConfigOTP + ".notificationEmail");
 
 
 		UISelect combo = UISelect.make(smsConfigform, "sms-config-enabled");
