@@ -70,7 +70,7 @@ class SmppThread extends TestRunnable {
 			System.out.println(sessionName + ": waiting for delivery reports ("
 					+ reportsReceived + " of " + message_count + ")");
 
-			Thread.sleep(5000);
+			Thread.sleep(10000);
 
 			delivery_count = smsSmppImpl.getDeliveryNotifications().size();
 			if (delivery_count == reportsReceived) {
