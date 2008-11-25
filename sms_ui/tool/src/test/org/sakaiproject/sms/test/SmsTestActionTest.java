@@ -73,9 +73,8 @@ public class SmsTestActionTest extends TestCase {
 	public void testSendActionWithException() {
 		smsSmppStub.forceException = true;
 		String result = smsTestAction.send();
-		assertEquals(ActionResults.SUCCESS, result); // At the moment same
-		// actionResult still
-		// returned
+		// At the moment same actionResult still returned
+		assertEquals(ActionResults.SUCCESS, result);
 		Object obj = smsMessageLocator.locateBean(SmsMessageLocator.NEW_1);
 		assertNotNull(obj);
 		SmsMessage msg = (SmsMessage) obj;
