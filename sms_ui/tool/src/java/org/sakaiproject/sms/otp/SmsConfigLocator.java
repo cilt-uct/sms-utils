@@ -3,7 +3,7 @@ package org.sakaiproject.sms.otp;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.sakaiproject.sms.hibernate.model.SmsMessage;
+import org.sakaiproject.sms.hibernate.model.SmsConfig;
 
 import uk.org.ponder.beanutil.BeanLocator;
 
@@ -19,7 +19,7 @@ public class SmsConfigLocator implements BeanLocator{
 	public static final String NEW_1 = NEW_PREFIX + "1";
 
 	/** The delivered map (used to store beans). */
-	private final Map<String, SmsMessage> delivered = new HashMap<String, SmsMessage>();
+	private final Map<String, SmsConfig> delivered = new HashMap<String, SmsConfig>();
 
 	/**
 	 * Retrieves SmsMessage bean
@@ -27,10 +27,10 @@ public class SmsConfigLocator implements BeanLocator{
 	 * @see uk.org.ponder.beanutil.BeanLocator#locateBean(java.lang.String)
 	 */
 	public Object locateBean(String name) {
-		SmsMessage togo = delivered.get(name);
+		SmsConfig togo = delivered.get(name);
 		if (togo == null) {
 			if (name.startsWith(NEW_PREFIX)) {
-				togo = new SmsMessage("", "");
+				togo = new SmsConfig();
 			} else {
 				// TODO: Retrieve it from database
 			}

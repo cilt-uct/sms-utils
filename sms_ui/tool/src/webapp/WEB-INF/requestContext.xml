@@ -13,8 +13,6 @@
 <!--     </property>-->
 <!--  </bean>-->
 
-<!--    <bean id="sortHeaderRenderer" class="org.sakaiproject.sms.renderers.SortHeaderRenderer" />	-->
-
   <bean id="searchCriteriaRenderer" class="org.sakaiproject.sms.renderers.SearchCriteriaRenderer"/>
   <bean id="sortHeaderRenderer" class="org.sakaiproject.sms.renderers.SortHeaderRenderer"/>  
 
@@ -28,6 +26,7 @@
 
   <!--  Producers -->
   <bean class="org.sakaiproject.sms.producers.SmsTestProducer" />
+  <bean class="org.sakaiproject.sms.producers.SmsConfigProducer"/>
   <bean class="org.sakaiproject.sms.producers.BillingAdminProducer" />	
   <bean class="org.sakaiproject.sms.producers.SMSConfigProducer"/>
   
@@ -43,8 +42,9 @@
   	<property name="messages" ref="targettedMessageList"/>
   </bean>
 
-  <bean id="sMSConfigActionBean" class="org.sakaiproject.sms.beans.SMSConfigActionBean">
-  	 <property name="smsConfig" ref="sMSConfig"/>
+  <bean id="sMSConfigActionBean" class="org.sakaiproject.sms.beans.SmsConfigActionBean">
+  	 <property name="smsConfigLocator" ref="SmsConfigLocator"/>
+  	 <property name="smsConfigLogic" ref="smsConfigLogic"/>
   </bean>
   
   <!-- Locators -->

@@ -40,7 +40,7 @@ import uk.org.ponder.rsf.view.ViewComponentProducer;
 import uk.org.ponder.rsf.viewstate.SimpleViewParameters;
 import uk.org.ponder.rsf.viewstate.ViewParameters;
 
-public class SMSConfigProducer implements ViewComponentProducer, NavigationCaseReporter{
+public class SmsConfigProducer implements ViewComponentProducer, NavigationCaseReporter{
 
 	public static final String VIEW_ID = "SmsConfig";
 	
@@ -61,7 +61,7 @@ public class SMSConfigProducer implements ViewComponentProducer, NavigationCaseR
 
 		UISelect combo = UISelect.make(smsConfigform, "sms-config-enabled");
 		combo.selection = new UIInput();
-		combo.selection.valuebinding = new ELReference("#{sMSConfig.smsEnabled}");
+		combo.selection.valuebinding = new ELReference(smsConfigOTP + ".smsEnabled");
 		UIBoundList comboValues = new UIBoundList();
 		comboValues.setValue(new String[] {"true", "false"});
 		combo.optionlist = comboValues;
@@ -78,10 +78,10 @@ public class SMSConfigProducer implements ViewComponentProducer, NavigationCaseR
 	public List reportNavigationCases() {
 		List<NavigationCase> list = new ArrayList<NavigationCase>();
 		list.add(new NavigationCase(ActionResults.SUCCESS,
-				new SimpleViewParameters(SMSConfigProducer.VIEW_ID),
+				new SimpleViewParameters(SmsConfigProducer.VIEW_ID),
 				ARIResult.FLOW_ONESTEP));
 		list.add(new NavigationCase(ActionResults.CANCEL,
-				new SimpleViewParameters(SMSConfigProducer.VIEW_ID)));
+				new SimpleViewParameters(SmsConfigProducer.VIEW_ID)));
 		return list;
 	}
 }

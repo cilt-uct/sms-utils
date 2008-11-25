@@ -20,12 +20,13 @@ public class SmsConfigValidator implements Validator{
 	public void validate(Object obj, Errors err) {
 		SmsConfig smsConfig = (SmsConfig) obj;
 
+
 		if(smsConfig.getSmsEnabled()){
 			
 			ValidationUtils.rejectIfEmptyOrWhitespace(err, "notificationEmail",
 			"sms.errors.email.empty");
 			
-			StringTokenizer stringTokenizer = new StringTokenizer(",");
+			StringTokenizer stringTokenizer = new StringTokenizer(smsConfig.getNotificationEmail(), ",");
 			
 			while (stringTokenizer.hasMoreElements()) {
 				String address =  stringTokenizer.nextToken();
@@ -34,7 +35,6 @@ public class SmsConfigValidator implements Validator{
 					err.rejectValue("notificationEmail",
 							"sms.errors.email.invalid");
 				}
-				
 			}
 		}
 	}
