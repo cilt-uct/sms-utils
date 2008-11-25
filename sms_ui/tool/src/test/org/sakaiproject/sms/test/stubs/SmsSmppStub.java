@@ -28,8 +28,7 @@ public class SmsSmppStub implements SmsSmpp {
 	 * @see org.sakaiproject.sms.api.SmsSmpp#connectToGateway()
 	 */
 	public boolean connectToGateway() {
-		throw new UnsupportedOperationException();
-
+		return true;
 	}
 
 	/*
@@ -38,7 +37,6 @@ public class SmsSmppStub implements SmsSmpp {
 	 * @see org.sakaiproject.sms.api.SmsSmpp#disconnectGateWay()
 	 */
 	public void disconnectGateWay() {
-		throw new UnsupportedOperationException();
 	}
 
 	/*
@@ -47,7 +45,7 @@ public class SmsSmppStub implements SmsSmpp {
 	 * @see org.sakaiproject.sms.api.SmsSmpp#getConnectionStatus()
 	 */
 	public int getConnectionStatus() {
-		throw new UnsupportedOperationException();
+		return 0;
 	}
 
 	/*
@@ -56,7 +54,7 @@ public class SmsSmppStub implements SmsSmpp {
 	 * @see org.sakaiproject.sms.api.SmsSmpp#getDeliveryNotifications()
 	 */
 	public List<SmsDeliveryReport> getDeliveryNotifications() {
-		throw new UnsupportedOperationException();
+		return null;
 	}
 
 	/*
@@ -65,7 +63,7 @@ public class SmsSmppStub implements SmsSmpp {
 	 * @see org.sakaiproject.sms.api.SmsSmpp#getGatewayInfo()
 	 */
 	public String getGatewayInfo() {
-		throw new UnsupportedOperationException();
+		return null;
 	}
 
 	/*
@@ -74,7 +72,6 @@ public class SmsSmppStub implements SmsSmpp {
 	 * @see org.sakaiproject.sms.api.SmsSmpp#processMessageRemotely()
 	 */
 	public void processMessageRemotely() {
-		throw new UnsupportedOperationException();
 	}
 
 	/*
@@ -85,7 +82,7 @@ public class SmsSmppStub implements SmsSmpp {
 	 * .sms.hibernate.model.SmsMessage[])
 	 */
 	public SmsMessage[] sendMessagesToGateway(SmsMessage[] arg0) {
-		throw new UnsupportedOperationException();
+		return new SmsMessage[] {};
 	}
 
 	/**
