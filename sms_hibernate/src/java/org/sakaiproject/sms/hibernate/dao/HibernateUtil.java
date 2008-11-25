@@ -124,14 +124,10 @@ public class HibernateUtil {
      *            hibernate session
      */    
     public static Session currentSession() throws HibernateException {
-        
-        Session s = session;
-
-        if (s == null) {
+        if (session == null) {
             session = getSessionFactory().openSession();
-            s = session;
         }
-        return s;
+        return session;
     }
     
    

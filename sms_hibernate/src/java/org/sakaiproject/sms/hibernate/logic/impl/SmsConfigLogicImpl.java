@@ -57,7 +57,7 @@ public class SmsConfigLogicImpl extends SmsDao implements SmsConfigLogic {
 	 * @return sms congiguration
 	 */
 	public SmsConfig getSmsConfig(Long smsConfigId) {
-		return null;
+		return (SmsConfig) findById(SmsConfig.class, smsConfigId);
 	}
 
 	/**

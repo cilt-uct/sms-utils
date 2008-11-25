@@ -9,13 +9,14 @@ import org.sakaiproject.sms.hibernate.model.SmsTransaction;
 import junit.framework.TestCase;
 
 public class SmsConfigTest extends TestCase {
-	private SmsConfigLogicImpl logic = null;
+	private static SmsConfigLogicImpl logic = null;
 	
-	private SmsConfig insertSmsConfig;
+	private static SmsConfig insertSmsConfig;
 	
-	{
+	static {
 		logic = new SmsConfigLogicImpl();
 		
+		insertSmsConfig = new SmsConfig();
 		insertSmsConfig.setSakaiSiteId("sakaiSiteId");
 		insertSmsConfig.setSakaiToolId("sakaiToolId");
 		insertSmsConfig.setNotificationEmail("notification@Email.Address");
@@ -33,27 +34,33 @@ public class SmsConfigTest extends TestCase {
 		logic.persistSmsConfig(insertSmsConfig);
 		
 		//Check the record was created on the DB
-		assertTrue("Object not persisted correclty", insertSmsConfig.exists());
+		assertTrue("Object not persisted", insertSmsConfig.exists());
 		
 		System.out.println("");
 	}
 	
-	public void testGetSmsConfig(){
-		logic.getSmsConfig(insertSmsConfig.getId());
+	public void testGetSmsConfigById(){
+		SmsConfig getSmsSonfig = logic.getSmsConfig(insertSmsConfig.getId());
+		assertTrue("Object not persisted", insertSmsConfig.exists());
+		assertNotNull(getSmsSonfig);
+		assertEquals(insertSmsConfig, getSmsSonfig);
 	}
 	
 	
 	public void testUpdateSmsConfig(){
-		
+		SmsConfig origionalSmsSonfig = logic.getSmsConfig(insertSmsConfig.getId());
+		insertSmsConfig.setSakaiSiteId("newSakaiSiteId");
+		logic.persistSmsConfig(insertSmsConfig);
+		if(insertSmsConfig.equals(origionalSmsSonfig)) {
+			fail("Persist not succesfull");
+		}
 	}
-	
-	
-	public void testGetSmsConfigById(){
-		
-	}
+
 	
 	public void testDeleteSmsConfig(){
-		
+		logic.deleteSmsCongif(insertSmsConfig);
+		SmsConfig getSmsConfig = logic.getSmsConfig(insertSmsConfig.getId());
+		assertNull(getSmsConfig);
 	}
 	
 	

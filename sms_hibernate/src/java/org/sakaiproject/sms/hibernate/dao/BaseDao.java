@@ -106,7 +106,8 @@ abstract public class BaseDao  {
         Object obj = null;
         try{
             Session session = HibernateUtil.currentSession();
-            obj = session.load(className, id);
+            //obj = session.load(className, id);
+            obj = session.get(className, id);
         }catch(ObjectNotFoundException ex){
             obj = null;
         }finally{
