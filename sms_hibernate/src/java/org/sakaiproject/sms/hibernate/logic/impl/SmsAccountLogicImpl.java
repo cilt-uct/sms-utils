@@ -27,7 +27,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.sakaiproject.sms.hibernate.dao.HibernateUtil;
 import org.sakaiproject.sms.hibernate.dao.SmsDao;
-import org.sakaiproject.sms.hibernate.logic.SmsConfigLogic;
+import org.sakaiproject.sms.hibernate.logic.SmsAccountLogic;
 import org.sakaiproject.sms.hibernate.logic.SmsDataLogic;
 import org.sakaiproject.sms.hibernate.model.SmsAccount;
 import org.sakaiproject.sms.hibernate.model.SmsConfig;
@@ -36,40 +36,40 @@ import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.hibernate.model.SmsTransaction;
 
 /**
- * The data service will handle all sms config database transactions for the sms tool in
+ * The data service will handle all sms Account database transactions for the sms tool in
  * Sakai.
  * 
  * @author julian@psybergate.com
  * @version 1.0
  * @created 25-Nov-2008 08:12:41 AM
  */
-public class SmsConfigLogicImpl extends SmsDao implements SmsConfigLogic {
+public class SmsAccountLogicImpl extends SmsDao implements SmsAccountLogic {
 
 	/**
 	 * Deletes and the given entity from the DB
 	 */
-	public void deleteSmsCongif(SmsConfig smsConfig) {
-		delete(smsConfig);
+	public void deleteSmsCongif(SmsAccount smsAccount) {
+		delete(smsAccount);
 	}
 
 	/**
-	 * Gets a SmsConfig entity for the given id
+	 * Gets a SmsAccount entity for the given id
 	 * 
-	 * @param Long sms configuration id
+	 * @param Long sms account id
 	 * @return sms congiguration
 	 */
-	public SmsConfig getSmsConfig(Long smsConfigId) {
-		return (SmsConfig) findById(SmsConfig.class, smsConfigId);
+	public SmsAccount getSmsAccount(Long smsAccountId) {
+		return (SmsAccount) findById(SmsAccount.class, smsAccountId);
 	}
 
 	/**
-	 * Gets all the sms configuration records
+	 * Gets all the sms account records
 	 * 
-	 * @return List of SmsConfig objects
+	 * @return List of SmsAccount objects
 	 */
-	public List<SmsConfig> getAllSmsConfig() {
+	public List<SmsAccount> getAllSmsAccounts() {
 		Session s = HibernateUtil.currentSession();
-		Query query = s.createQuery("from SmsConfig");
+		Query query = s.createQuery("from SmsAccount");
 		return query.list();
 	}
 
@@ -79,10 +79,10 @@ public class SmsConfigLogicImpl extends SmsDao implements SmsConfigLogic {
 	 * If the object is a new entity then it will be created on the DB. 
 	 * If it is an existing entity then the record will be updates on the DB.
 	 * 
-	 * @param sms confuguration to be persisted
+	 * @param sms account to be persisted
 	 */
-	public void persistSmsConfig(SmsConfig smsConfig) {
-		persist(smsConfig);
+	public void persistSmsAccount(SmsAccount smsAccount) {
+		persist(smsAccount);
 	}
 
 	

@@ -1,5 +1,5 @@
 /***********************************************************************************
- * SmsAccountLogicImpl.java
+ * SmsTransactionLogicImpl.java
  * Copyright (c) 2008 Sakai Project/Sakai Foundation
  * 
  * Licensed under the Educational Community License, Version 2.0 (the "License"); 
@@ -27,49 +27,49 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.sakaiproject.sms.hibernate.dao.HibernateUtil;
 import org.sakaiproject.sms.hibernate.dao.SmsDao;
-import org.sakaiproject.sms.hibernate.logic.SmsConfigLogic;
+import org.sakaiproject.sms.hibernate.logic.SmsTransactionLogic;
 import org.sakaiproject.sms.hibernate.logic.SmsDataLogic;
 import org.sakaiproject.sms.hibernate.model.SmsAccount;
-import org.sakaiproject.sms.hibernate.model.SmsConfig;
+import org.sakaiproject.sms.hibernate.model.SmsTransaction;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.hibernate.model.SmsTransaction;
 
 /**
- * The data service will handle all sms config database transactions for the sms tool in
+ * The data service will handle all sms Transaction database transactions for the sms tool in
  * Sakai.
  * 
  * @author julian@psybergate.com
  * @version 1.0
  * @created 25-Nov-2008 08:12:41 AM
  */
-public class SmsConfigLogicImpl extends SmsDao implements SmsConfigLogic {
+public class SmsTransactionLogicImpl extends SmsDao implements SmsTransactionLogic {
 
 	/**
 	 * Deletes and the given entity from the DB
 	 */
-	public void deleteSmsCongif(SmsConfig smsConfig) {
-		delete(smsConfig);
+	public void deleteSmsCongif(SmsTransaction smsTransaction) {
+		delete(smsTransaction);
 	}
 
 	/**
-	 * Gets a SmsConfig entity for the given id
+	 * Gets a SmsTransaction entity for the given id
 	 * 
-	 * @param Long sms configuration id
+	 * @param Long sms transaction id
 	 * @return sms congiguration
 	 */
-	public SmsConfig getSmsConfig(Long smsConfigId) {
-		return (SmsConfig) findById(SmsConfig.class, smsConfigId);
+	public SmsTransaction getSmsTransaction(Long smsTransactionId) {
+		return (SmsTransaction) findById(SmsTransaction.class, smsTransactionId);
 	}
 
 	/**
-	 * Gets all the sms configuration records
+	 * Gets all the sms transaction records
 	 * 
-	 * @return List of SmsConfig objects
+	 * @return List of SmsTransaction objects
 	 */
-	public List<SmsConfig> getAllSmsConfig() {
+	public List<SmsTransaction> getAllSmsTransactions() {
 		Session s = HibernateUtil.currentSession();
-		Query query = s.createQuery("from SmsConfig");
+		Query query = s.createQuery("from SmsTransaction");
 		return query.list();
 	}
 
@@ -81,10 +81,7 @@ public class SmsConfigLogicImpl extends SmsDao implements SmsConfigLogic {
 	 * 
 	 * @param sms confuguration to be persisted
 	 */
-	public void persistSmsConfig(SmsConfig smsConfig) {
-		persist(smsConfig);
+	public void persistSmsTransaction(SmsTransaction smsTransaction) {
+		persist(smsTransaction);
 	}
-
-	
-	
 }
