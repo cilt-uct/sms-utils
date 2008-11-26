@@ -8,13 +8,13 @@ public class SmsTestSuite {
 	public static Test suite() {
 		TestSuite suite = new TestSuite(
 				"Test for org.sakaiproject.sms.hibernate.test");
-		//$JUnit-BEGIN$
+		// $JUnit-BEGIN$
 		suite.addTestSuite(SmsTransactionTest.class);
 		suite.addTestSuite(SmsTaskTest.class);
 		suite.addTestSuite(SmsConfigTest.class);
 		suite.addTestSuite(SmsMessageTest.class);
 		suite.addTestSuite(SmsAccountTest.class);
-		//$JUnit-END$
+		// $JUnit-END$
 		return suite;
 	}
 
