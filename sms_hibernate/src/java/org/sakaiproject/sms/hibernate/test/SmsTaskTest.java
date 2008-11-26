@@ -33,13 +33,13 @@ public class SmsTaskTest extends TestCase {
 		insertMessage1.setMobileNumber("0721998919");
 		insertMessage1.setSmscMessageId("smscMessageId1Task");
 		insertMessage1.setSakaiUserId("sakaiUserId");
-		insertMessage1.setStatusCode(-1);
+		insertMessage1.setStatusCode("P");
 		//
 		insertMessage2 = new SmsMessage();
 		insertMessage2.setMobileNumber("0823450983");
 		insertMessage2.setSmscMessageId("smscMessageId2Task");
 		insertMessage2.setSakaiUserId("sakaiUserId");
-		insertMessage2.setStatusCode(-1);
+		insertMessage2.setStatusCode("P");
 	}
 
 	public SmsTaskTest() {
