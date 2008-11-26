@@ -20,7 +20,7 @@ package org.sakaiproject.sms.hibernate.model;
 
 /**
  * Some site specific configuration info for the sms tool. COnfiguration info
- * could also be set up for a specific tool in a specific site
+ * could also be set up for a specific tool in a specific site or for all sites.
  * 
  * @author Julian Wyngaard
  * @version 1.0
@@ -151,7 +151,9 @@ public class SmsConfig extends BaseModel {
 		this.smsEnabled = smsEnabled;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -175,7 +177,9 @@ public class SmsConfig extends BaseModel {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override

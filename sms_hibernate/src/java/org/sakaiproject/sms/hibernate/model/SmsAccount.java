@@ -19,7 +19,7 @@
 package org.sakaiproject.sms.hibernate.model;
 
 /**
- * Each Sakai site will have its own set of account for billing outgoing
+ * Each Sakai site will have its own set of accounts for billing outgoing
  * messages. A specific user may also have a account.
  * 
  * @author Julian Wyngaard
@@ -147,7 +147,9 @@ public class SmsAccount extends BaseModel {
 		this.sakaiUserId = sakaiUserId;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -166,7 +168,9 @@ public class SmsAccount extends BaseModel {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override

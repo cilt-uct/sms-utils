@@ -25,9 +25,9 @@ import java.util.Set;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_TaskDeliveryStatus;
 
 /**
- * The object to represent a sms task that needs to be processed. For example:
- * send message A to sakai group B at time C. When a sms task is processed, a
- * record is inserted into SMS_MESSAGE for each message that must be sent out.
+ * A sms task that needs to be processed. For example: send message X to sakai
+ * group Y at time Z. When a sms task is processed, a record is inserted into
+ * SMS_MESSAGE for each message that must be sent out.
  * 
  * @author Julian Wyngaard
  * @version 1.0
@@ -36,18 +36,26 @@ import org.sakaiproject.sms.hibernate.model.constants.SmsConst_TaskDeliveryStatu
 public class SmsTask extends BaseModel {
 
 	/**
-	 * Approximate credit cost for this task. The exact credits can only be
-	 * calculated when the task is processed (might be in the future).
+	 * Approximate credit cost for this task as calculated when the task is
+	 * created. The exact credits can only be calculated when the task is
+	 * processed and this might happen in the future.
 	 */
 	private Integer creditEstimate;
 
-	/** The date created. */
+	/** The date-time when the task was successfully create. */
 	private Timestamp dateCreated;
 
-	/** The date processed. */
+	/**
+	 * The date-time when the task was last processed. It might be processed a
+	 * few times until successful or until the retry count reaches a predefined
+	 * maximum..
+	 */
 	private Timestamp dateProcessed;
 
-	/** Post dated for future delivery, deliver asap if equal to DateCreated. */
+	/**
+	 * Post dated for future delivery. If this date is equal to the current time
+	 * or null, the message will be processed immediately, if possible.
+	 */
 	private Timestamp dateToSend;
 
 	/** The Sakai group who will receive the message, empty if not applicable. */
@@ -57,17 +65,16 @@ public class SmsTask extends BaseModel {
 	private String deliveryGroupName;
 
 	/**
-	 * Will be used for incoming messages.
+	 * Will be used for incoming messages. For phase II.
 	 */
 	private String deliveryUserId;
 
-	/** The group size actual. */
+	/** The actual Sakai group size. Calculated when the task is processed. */
 	private Integer groupSizeActual;
 
-	/** The group size estimate. */
+	/** The estimated Sakai group size. Calculated when the task is created. */
 	private Integer groupSizeEstimate;
 
-	// Actual SMS contents
 	/** The message body. */
 	private String messageBody;
 
@@ -75,7 +82,11 @@ public class SmsTask extends BaseModel {
 	/** Type of task, only SO (system originating) for now. */
 	private Integer messageTypeId;
 
-	/** Number of delivery attempts. */
+	/**
+	 * Number of delivery attempts until the task is marked as failed. The
+	 * processing of the task will fail when the gateway is down or the line is
+	 * down.
+	 */
 	private Integer retryCount;
 
 	/** The sakai site from where the sms task originated. */
@@ -90,14 +101,16 @@ public class SmsTask extends BaseModel {
 	/** The Sakai user name of the sender. */
 	private String senderUserName;
 
-	// 
 	/** The sms account (cost centre) that will pay for the messages. */
 	private Integer smsAccountId;
 
-	/** The sms messages. */
+	/**
+	 * The sms messages for this task. This will be generated when the task is
+	 * processed.
+	 */
 	private Set<SmsMessage> smsMessages = new HashSet<SmsMessage>();
 
-	/** Current status of this task. */
+	/** Current status of this task. See SmsConst_TaskDeliveryStatus */
 	private String statusCode;
 
 	/**
@@ -495,7 +508,9 @@ public class SmsTask extends BaseModel {
 		this.statusCode = statusCode;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -547,7 +562,9 @@ public class SmsTask extends BaseModel {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override

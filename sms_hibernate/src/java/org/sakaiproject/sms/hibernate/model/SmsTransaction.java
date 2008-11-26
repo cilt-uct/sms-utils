@@ -21,7 +21,10 @@ package org.sakaiproject.sms.hibernate.model;
 import java.sql.Timestamp;
 
 /**
- * Transactions for a specific sms account.
+ * Transactions linked to a specific sms account. When a sms task is created, a
+ * transaction will be inserted indicating that credits are reserved. When the
+ * task is processed, the actual credits will be calculated and the difference
+ * will be settled with another transaction.
  * 
  * @author Julian Wyngaard
  * @version 1.0
@@ -29,10 +32,10 @@ import java.sql.Timestamp;
  */
 public class SmsTransaction extends BaseModel {
 
-	/** The balance. */
+	/** The running account balance in currency. */
 	private Float balance;
 
-	/** The sakai user id. */
+	/** The sakai user id. This is the user who request the sms task. */
 	private String sakaiUserId;
 
 	/** The sms account id. */
@@ -190,7 +193,9 @@ public class SmsTransaction extends BaseModel {
 		this.transactionTypeCode = transactionTypeCode;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -219,7 +224,6 @@ public class SmsTransaction extends BaseModel {
 		return result;
 	}
 
-	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -266,5 +270,5 @@ public class SmsTransaction extends BaseModel {
 			return false;
 		return true;
 	}
-	
+
 }
