@@ -7,7 +7,8 @@
 
 	<!-- add sakai application scope bean definitions here -->
 
-	<bean id="org.sakaiproject.sms.api.SmsSmpp" class="org.sakaiproject.sms.impl.SmsSmppImpl" init-method="init">	
-	</bean>
+	<bean id="org.sakaiproject.sms.api.SmsSmpp" class="org.sakaiproject.sms.impl.SmsSmppImpl" init-method="init" />	
+	<bean id="org.sakaiproject.sms.hibernate.logic.SmsAccountLogic" class="org.sakaiproject.sms.hibernate.logic.impl.SmsAccountLogicImpl" />
+	
 
 </beans>

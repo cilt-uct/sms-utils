@@ -20,6 +20,7 @@ package org.sakaiproject.sms.producers;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.sakaiproject.sms.hibernate.logic.SmsAccountLogic;
 import org.sakaiproject.sms.hibernate.model.SmsAccount;
 
 import uk.org.ponder.rsf.components.UIBranchContainer;
@@ -34,6 +35,8 @@ import uk.org.ponder.rsf.viewstate.ViewParameters;
 
 public class BillingAdminProducer implements ViewComponentProducer {
 	public static final String VIEW_ID = "billing_admin";
+
+	private SmsAccountLogic smsAccountLogic;
 
 	// Temporary: used for mocking Creates the sms account.
 	private SmsAccount createSmsAccount() {
@@ -79,6 +82,7 @@ public class BillingAdminProducer implements ViewComponentProducer {
 
 		// TODO: Change to retrieve from SmsAccount service
 		List<SmsAccount> accounts = retrieveMockAccounts();
+		// List<SmsAccount> accounts = smsAccountLogic.getAllSmsAccounts();
 
 		for (SmsAccount account : accounts) {
 
@@ -86,7 +90,7 @@ public class BillingAdminProducer implements ViewComponentProducer {
 					"account-entry:");
 
 			// TODO: Change to go to edit account
-			UIInternalLink.make(entry, "account-name-link", "mock name",
+			UIInternalLink.make(entry, "account-name-link", "mocked name",
 					new SimpleViewParameters(SmsTestProducer.VIEW_ID));
 			UIOutput.make(entry, "account-no", account.getId().toString());
 			UIOutput.make(entry, "sakai-site", account.getSakaiSiteId());
@@ -112,5 +116,9 @@ public class BillingAdminProducer implements ViewComponentProducer {
 			accounts.add(createSmsAccount());
 		}
 		return accounts;
+	}
+
+	public void setSmsAccountLogic(SmsAccountLogic smsAccountLogic) {
+		this.smsAccountLogic = smsAccountLogic;
 	}
 }
