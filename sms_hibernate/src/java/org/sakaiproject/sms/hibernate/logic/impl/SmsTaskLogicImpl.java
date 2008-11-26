@@ -20,12 +20,14 @@ package org.sakaiproject.sms.hibernate.logic.impl;
 
 import java.util.List;
 
+import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.sakaiproject.sms.hibernate.dao.HibernateUtil;
 import org.sakaiproject.sms.hibernate.dao.SmsDao;
 import org.sakaiproject.sms.hibernate.logic.SmsTaskLogic;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
+import org.sakaiproject.sms.hibernate.model.constants.SmsConst_TaskDeliveryStatus;
 
 /**
  * The data service will handle all sms task database transactions for the sms
@@ -79,9 +81,26 @@ public class SmsTaskLogicImpl extends SmsDao implements SmsTaskLogic {
 		persist(smsTask);
 	}
 
+	/**
+	 * Gets the next sms task to be processed.
+	 * 
+	 * @return next sms task
+	 */
 	public SmsTask getNextSmsTask() {
-		// TODO Auto-generated method stub
+		StringBuilder hql = new StringBuilder();
+		hql.append(" from SmsTask task where task.dateToSend <= :today ");
+		hql.append(" and task.statusCode = :statusCode ");
+		hql.append(" order by task.dateToSend ");
+		log.debug("getNextSmsTask() HQL: " + hql.toString());
+		Query query = HibernateUtil.currentSession().createQuery(hql.toString());
+		query.setParameter("today", getTimestampCurrent(), Hibernate.TIMESTAMP);
+		query.setParameter("statusCode", SmsConst_TaskDeliveryStatus.STATUS_PENDING, Hibernate.STRING);
+		List<SmsTask> tasks = query.list();
+		HibernateUtil.closeSession();
+		if(tasks != null && tasks.size() > 0) {
+			//Gets the oldest dateToSend. I.e the first to be processed.
+			return tasks.get(0);
+		}
 		return null;
 	}
-
 }

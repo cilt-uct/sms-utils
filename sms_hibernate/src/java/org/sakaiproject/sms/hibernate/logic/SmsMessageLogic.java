@@ -64,4 +64,12 @@ public interface SmsMessageLogic {
 	 * @param sms Message to be persisted
 	 */
 	public void persistSmsMessage(SmsMessage smsMessage);
+	
+	/**
+	 * Returns a message for the given smsc message id or null if nothing found
+	 * 
+	 * @param smsc message id
+	 * @return sms message
+	 */
+	public SmsMessage getSmsMessageBySmscMessageId(String smscMessageId);
 }

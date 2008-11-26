@@ -63,7 +63,9 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 	public List<SmsMessage> getAllSmsMessages() {
 		Session s = HibernateUtil.currentSession();
 		Query query = s.createQuery("from SmsMessage");
-		return query.list();
+		List<SmsMessage> messages =  query.list();
+		HibernateUtil.closeSession();
+		return messages;
 	}
 
 	/**
@@ -78,6 +80,21 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 		persist(smsMessage);
 	}
 
-	
+	/**
+	 * Returns a message for the given smsc message id or null if nothing found
+	 * 
+	 * @param smsc message id
+	 * @return sms message
+	 */
+	public SmsMessage getSmsMessageBySmscMessageId(String smscMessageId) {
+		Session s = HibernateUtil.currentSession();
+		Query query = s.createQuery("from SmsMessage");
+		HibernateUtil.closeSession();
+		List<SmsMessage> messages = query.list();
+		if(messages != null && messages.size() > 0) {
+			return messages.get(0);
+		}
+		return null;
+	}
 	
 }
