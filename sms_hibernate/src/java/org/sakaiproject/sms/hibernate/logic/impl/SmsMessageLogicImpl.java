@@ -20,6 +20,7 @@ package org.sakaiproject.sms.hibernate.logic.impl;
 
 import java.util.List;
 
+import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.sakaiproject.sms.hibernate.dao.HibernateUtil;
@@ -88,7 +89,8 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 	 */
 	public SmsMessage getSmsMessageBySmscMessageId(String smscMessageId) {
 		Session s = HibernateUtil.currentSession();
-		Query query = s.createQuery("from SmsMessage");
+		Query query = s.createQuery("from SmsMessage mes where mes.smscMessageId = :smscId ");
+		query.setParameter("smscId", smscMessageId, Hibernate.STRING);
 		HibernateUtil.closeSession();
 		List<SmsMessage> messages = query.list();
 		if(messages != null && messages.size() > 0) {
