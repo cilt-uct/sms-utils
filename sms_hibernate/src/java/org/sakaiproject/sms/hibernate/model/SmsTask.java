@@ -47,7 +47,7 @@ public class SmsTask extends BaseModel {
 
 	/**
 	 * The date-time when the task was last processed. It might be processed a
-	 * few times until successful or until the retry count reaches a predefined
+	 * few times until successful or until the attempt count reaches a predefined
 	 * maximum..
 	 */
 	private Timestamp dateProcessed;
@@ -87,7 +87,7 @@ public class SmsTask extends BaseModel {
 	 * processing of the task will fail when the gateway is down or the line is
 	 * down.
 	 */
-	private Integer retryCount;
+	private Integer attemptCount;
 
 	/** The sakai site from where the sms task originated. */
 	private String sakaiSiteId;
@@ -140,7 +140,7 @@ public class SmsTask extends BaseModel {
 		this.deliveryGroupId = deliveryGroupID;
 		this.smsAccountId = accountID;
 		this.messageBody = messageBody;
-		this.retryCount = 0;
+		this.attemptCount = 0;
 		this.statusCode = "";
 		this.creditEstimate = 0;
 		this.statusCode = SmsConst_DeliveryStatus.STATUS_PENDING;
@@ -247,12 +247,12 @@ public class SmsTask extends BaseModel {
 	}
 
 	/**
-	 * Gets the retry count.
+	 * Gets the attempt count.
 	 * 
-	 * @return the retry count
+	 * @return the attempt count
 	 */
-	public Integer getRetryCount() {
-		return retryCount;
+	public Integer getAttemptCount() {
+		return attemptCount;
 	}
 
 	/**
@@ -429,13 +429,13 @@ public class SmsTask extends BaseModel {
 	}
 
 	/**
-	 * Sets the retry count.
+	 * Sets the attempt count.
 	 * 
-	 * @param retryCount
-	 *            the new retry count
+	 * @param attemptCount
+	 *            the new attempt count
 	 */
-	public void setRetryCount(Integer retryCount) {
-		this.retryCount = retryCount;
+	public void setAttemptCount(Integer attemptCount) {
+		this.attemptCount = attemptCount;
 	}
 
 	/**
@@ -544,7 +544,7 @@ public class SmsTask extends BaseModel {
 		result = prime * result
 				+ ((messageTypeId == null) ? 0 : messageTypeId.hashCode());
 		result = prime * result
-				+ ((retryCount == null) ? 0 : retryCount.hashCode());
+				+ ((attemptCount == null) ? 0 : attemptCount.hashCode());
 		result = prime * result
 				+ ((sakaiSiteId == null) ? 0 : sakaiSiteId.hashCode());
 		result = prime * result
@@ -631,10 +631,10 @@ public class SmsTask extends BaseModel {
 				return false;
 		} else if (!messageTypeId.equals(other.messageTypeId))
 			return false;
-		if (retryCount == null) {
-			if (other.retryCount != null)
+		if (attemptCount == null) {
+			if (other.attemptCount != null)
 				return false;
-		} else if (!retryCount.equals(other.retryCount))
+		} else if (!attemptCount.equals(other.attemptCount))
 			return false;
 		if (sakaiSiteId == null) {
 			if (other.sakaiSiteId != null)

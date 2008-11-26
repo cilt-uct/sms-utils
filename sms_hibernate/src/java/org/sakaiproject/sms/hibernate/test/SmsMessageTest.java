@@ -27,7 +27,7 @@ public class SmsMessageTest extends TestCase {
 		insertTask.setDateCreated(new Timestamp(System.currentTimeMillis()));
 		insertTask.setDateToSend(new Timestamp(System.currentTimeMillis()));
 		insertTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
-		insertTask.setRetryCount(2);
+		insertTask.setAttemptCount(2);
 		insertTask.setMessageBody("messageBody");
 		insertTask.setSenderUserName("senderUserName");
 		taskLogic = new SmsTaskLogicImpl();

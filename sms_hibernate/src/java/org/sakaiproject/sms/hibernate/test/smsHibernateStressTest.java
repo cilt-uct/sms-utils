@@ -60,7 +60,7 @@ public class smsHibernateStressTest extends TestCase {
 		smsTask.setDateCreated(new Timestamp(System.currentTimeMillis()));
 		smsTask.setDateToSend(new Timestamp(System.currentTimeMillis()));
 		smsTask.setStatusCode("SC");
-		smsTask.setRetryCount(2);
+		smsTask.setAttemptCount(2);
 		smsTask.setMessageBody("messageBody");
 		smsTask.setSenderUserName("senderUserName");
 	}

@@ -19,7 +19,7 @@
         <property name="dateToSend" type="timestamp" column="DATE_TO_SEND" not-null="true"/>
         <property name="creditEstimate" type="integer" column="CREDIT_ESTIMATE" not-null="false"/>
         <property name="statusCode" type="string" column="STATUS_CODE" not-null="true"  length="2"/>
-        <property name="retryCount" type="integer" column="RETRY_COUNT" not-null="true"/>
+        <property name="attemptCount" type="integer" column="ATTEMPT_COUNT" not-null="true"/>
         <property name="messageBody" type="string" column="MESSAGE_BODY" not-null="true" length="200"/>
         <property name="sakaiToolName" type="string" column="SAKAI_TOOL_NAME" not-null="false" length="50"/>
         <property name="sakaiToolId" type="string" column="SAKAI_TOOL_ID" not-null="false"  length="99"/>
@@ -32,10 +32,10 @@
         	<key column="MESSAGE_ID"/>  
         	<one-to-many class="org.sakaiproject.sms.hibernate.model.SmsMessage" not-found="exception"/>  
         </set> -->
-        <set name="smsMessages" inverse="true" cascade="all">
+        <set name="smsMessages" inverse="true" cascade="all-delete-orphan">
             <key column="MESSAGE_ID" not-null="true"/>            
             <one-to-many class="org.sakaiproject.sms.hibernate.model.SmsMessage" not-found="ignore"/>
-        </set>
+            </set>
     </class>
     
     
@@ -51,8 +51,8 @@
         <property name="statusCode" type="string" column="STATUS_CODE" not-null="true" length="2"/>
         <property name="smscDeliveryStatusCode" type="integer" column="SMSC_DELIVERY_STATUS_CODE" not-null="false"/>
         <property name="dateDelivered" type="timestamp" column="DATE_DELIVERED" not-null="false"/>
-        <!--<many-to-one name="smsTask" class="org.sakaiproject.sms.hibernate.model.SmsTask" column="SMS_TASK_ID" not-null="true"/>
-    --></class>
+        <many-to-one name="smsTask" class="org.sakaiproject.sms.hibernate.model.SmsTask" column="SMS_TASK_ID" not-null="true"/>
+    </class>
     
     
     
