@@ -20,6 +20,8 @@ package org.sakaiproject.sms.hibernate.model;
 
 import java.sql.Timestamp;
 
+import org.sakaiproject.sms.hibernate.model.constants.SmsConst_SmscDeliveryStatus;
+
 /**
  * A single sms message. One or more messages is linked to a sms task. When a
  * task is future dated (e.q.: send message x to group x and date z). It's
@@ -57,7 +59,7 @@ public class SmsMessage extends BaseModel {
 	private SmsTask smsTask;
 
 	/** Current delivery status of this message. */
-	private String statusCode;
+	private int statusCode;
 
 	/**
 	 * The submit result returned by the gateway when the message was sent.
@@ -83,6 +85,8 @@ public class SmsMessage extends BaseModel {
 	public SmsMessage(String mobileNumber, String messageBody) {
 		smsTask = new SmsTask("", "", "", 0, messageBody);
 		this.mobileNumber = mobileNumber;
+		this.statusCode = SmsConst_SmscDeliveryStatus.PENDING;
+
 	}
 
 	/**
@@ -153,7 +157,7 @@ public class SmsMessage extends BaseModel {
 	 * 
 	 * @return the status code
 	 */
-	public String getStatusCode() {
+	public int getStatusCode() {
 		return statusCode;
 	}
 
@@ -247,7 +251,7 @@ public class SmsMessage extends BaseModel {
 	 * @param statusCode
 	 *            the new status code
 	 */
-	public void setStatusCode(String statusCode) {
+	public void setStatusCode(int statusCode) {
 		this.statusCode = statusCode;
 	}
 
@@ -261,11 +265,6 @@ public class SmsMessage extends BaseModel {
 		this.submitResult = submitResult;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -280,24 +279,18 @@ public class SmsMessage extends BaseModel {
 				+ ((sakaiUserId == null) ? 0 : sakaiUserId.hashCode());
 		result = prime * result
 				+ ((smscMessageId == null) ? 0 : smscMessageId.hashCode());
-		result = prime * result
-				+ ((statusCode == null) ? 0 : statusCode.hashCode());
+		result = prime * result + statusCode;
 		result = prime * result + (submitResult ? 1231 : 1237);
 		return result;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
 		if (!super.equals(obj))
 			return false;
-		if (!(obj instanceof SmsMessage))
+		if (getClass() != obj.getClass())
 			return false;
 		SmsMessage other = (SmsMessage) obj;
 		if (DebugInfo == null) {
@@ -325,10 +318,7 @@ public class SmsMessage extends BaseModel {
 				return false;
 		} else if (!smscMessageId.equals(other.smscMessageId))
 			return false;
-		if (statusCode == null) {
-			if (other.statusCode != null)
-				return false;
-		} else if (!statusCode.equals(other.statusCode))
+		if (statusCode != other.statusCode)
 			return false;
 		if (submitResult != other.submitResult)
 			return false;

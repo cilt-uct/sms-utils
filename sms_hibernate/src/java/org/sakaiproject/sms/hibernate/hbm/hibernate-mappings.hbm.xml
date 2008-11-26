@@ -48,7 +48,7 @@
         <property name="smscMessageId" type="string" column="SMSC_MESSAGE_ID" not-null="true" length="20"/>
         <property name="mobileNumber" type="string" column="MOBILE_NUMBER" not-null="true" length="50"/>
         <property name="sakaiUserId" type="string" column="SAKAI_USER_ID" not-null="true" length="99"/>
-        <property name="statusCode" type="string" column="STATUS_CODE" not-null="true" length="2"/>
+        <property name="statusCode" type="integer" column="STATUS_CODE" not-null="true" length="2"/>
         <property name="dateDelivered" type="timestamp" column="DATE_DELIVERED" not-null="false"/>
         <many-to-one name="smsTask" class="org.sakaiproject.sms.hibernate.model.SmsTask" column="SMS_TASK_ID" not-null="true"/>
     </class>
