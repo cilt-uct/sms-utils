@@ -14,7 +14,8 @@
 <!--  </bean>-->
 
   <bean id="searchCriteriaRenderer" class="org.sakaiproject.sms.renderers.SearchCriteriaRenderer"/>
-  <bean id="sortHeaderRenderer" class="org.sakaiproject.sms.renderers.SortHeaderRenderer"/>  
+  <bean id="sortHeaderRenderer" class="org.sakaiproject.sms.renderers.SortHeaderRenderer"/>
+  <bean id="tablePagerRenderer" class="org.sakaiproject.sms.renderers.TablePagerRenderer"/>
 
   <bean id="searchResultsRenderer" class="org.sakaiproject.sms.renderers.SearchResultsRendererImpl">
    <property name="sortHeaderRenderer" ref="sortHeaderRenderer"/>
@@ -34,6 +35,7 @@
   <bean id="searchListProducer" class="org.sakaiproject.sms.producers.SearchListProducer">
   	<property name="searchCriteriaRenderer" ref="searchCriteriaRenderer"/>  
   	<property name="searchResultsRenderer" ref="searchResultsRenderer"/>
+  	<property name="tablePagerRenderer" ref="tablePagerRenderer"/>
   </bean>
 
   <!--  Action Beans -->  

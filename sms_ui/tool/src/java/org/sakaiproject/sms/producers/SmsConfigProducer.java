@@ -70,7 +70,7 @@ public class SmsConfigProducer implements ViewComponentProducer, NavigationCaseR
 		combo.optionnames = comboNames;
 
 
-		UICommand.make(smsConfigform, "save", "#{sMSConfigActionBean.save}");
+		UICommand.make(smsConfigform, "save", "SmsConfigActionBean.save");
 		 
 	}
 

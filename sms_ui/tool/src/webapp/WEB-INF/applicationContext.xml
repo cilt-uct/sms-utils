@@ -26,13 +26,13 @@
 
   <bean id="messageTemplateContributor" parent="templateContributorParent">
   	<property name="baseDirectory" value="content/component-templates/" />
-  	<property name="templateNames" value="Messages,SearchCriteriaRenderer,SearchResultsRenderer,SortHeader" />
+  	<property name="templateNames" value="Messages,SearchCriteriaRenderer,SearchResultsRenderer,SortHeader,TablePagerRenderer" />
   </bean>
 
   <!-- Define the bean roots from the request scope file that are accessible 
     via incoming request URL -->
   <bean parent="requestAddressibleParent">
-    <property name="value" value="searchFilterBean, sMSConfig, sMSConfigActionBean, SmsTestActionBean, SmsMessageLocator, SmsConfigLocator"/>
+    <property name="value" value="searchFilterBean, sMSConfig, SmsConfigActionBean, SmsTestActionBean, SmsMessageLocator, SmsConfigLocator"/>
   </bean>
 
   <!-- The beans which will be preserved across a flow via simple instance
