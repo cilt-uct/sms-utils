@@ -1,8 +1,32 @@
+/***********************************************************************************
+ * BillingAdminProducer.java
+ * Copyright (c) 2008 Sakai Project/Sakai Foundation
+ * 
+ * Licensed under the Educational Community License, Version 2.0 (the "License"); 
+ * you may not use this file except in compliance with the License. 
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.osedu.org/licenses/ECL-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software 
+ * distributed under the License is distributed on an "AS IS" BASIS, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+ * See the License for the specific language governing permissions and 
+ * limitations under the License.
+ *
+ **********************************************************************************/
 package org.sakaiproject.sms.producers;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.sakaiproject.sms.hibernate.model.SmsAccount;
+
+import uk.org.ponder.rsf.components.UIBranchContainer;
 import uk.org.ponder.rsf.components.UIContainer;
 import uk.org.ponder.rsf.components.UIInternalLink;
 import uk.org.ponder.rsf.components.UIMessage;
+import uk.org.ponder.rsf.components.UIOutput;
 import uk.org.ponder.rsf.view.ComponentChecker;
 import uk.org.ponder.rsf.view.ViewComponentProducer;
 import uk.org.ponder.rsf.viewstate.SimpleViewParameters;
@@ -11,6 +35,22 @@ import uk.org.ponder.rsf.viewstate.ViewParameters;
 public class BillingAdminProducer implements ViewComponentProducer {
 	public static final String VIEW_ID = "billing_admin";
 
+	// Temporary: used for mocking Creates the sms account.
+	private SmsAccount createSmsAccount() {
+		SmsAccount account = new SmsAccount();
+		account.setBalance(200f);
+		account.setId(123l);
+		account.setOverdraftLimit(100f);
+		account.setSakaiSiteId("mocked site");
+		account.setSakaiUserId("mocked user id");
+		return account;
+	}
+
+	/**
+	 * @see uk.org.ponder.rsf.view.ComponentProducer#fillComponents(uk.org.ponder.rsf.components.UIContainer,
+	 *      uk.org.ponder.rsf.viewstate.ViewParameters,
+	 *      uk.org.ponder.rsf.view.ComponentChecker)
+	 */
 	public void fillComponents(UIContainer tofill, ViewParameters viewparams,
 			ComponentChecker checker) {
 		UIMessage.make(tofill, "page-title", "sms.billing-admin.title");
@@ -23,9 +63,54 @@ public class BillingAdminProducer implements ViewComponentProducer {
 		UIMessage.make(tofill, "accounts-heading",
 				"sms.billing-admin.accounts-heading");
 
+		// Creates headers
+		UIMessage.make(tofill, "account-name-title",
+				"sms.billing-admin.account-name-title");
+		UIMessage.make(tofill, "account-no-title",
+				"sms.billing-admin.account-no-title");
+		UIMessage.make(tofill, "sakai-site-title",
+				"sms.billing-admin.sakai-site-title");
+		UIMessage.make(tofill, "sakai-user-title",
+				"sms.billing-admin.sakai-user-title");
+		UIMessage.make(tofill, "overdraft-limit-title",
+				"sms.billing-admin.overdraft-limit-title");
+		UIMessage.make(tofill, "balance-title",
+				"sms.billing-admin.balance-title");
+
+		// TODO: Change to retrieve from SmsAccount service
+		List<SmsAccount> accounts = retrieveMockAccounts();
+
+		for (SmsAccount account : accounts) {
+
+			UIBranchContainer entry = UIBranchContainer.make(tofill,
+					"account-entry:");
+
+			// TODO: Change to go to edit account
+			UIInternalLink.make(entry, "account-name-link", "mock name",
+					new SimpleViewParameters(SmsTestProducer.VIEW_ID));
+			UIOutput.make(entry, "account-no", account.getId().toString());
+			UIOutput.make(entry, "sakai-site", account.getSakaiSiteId());
+			UIOutput.make(entry, "sakai-user", account.getSakaiUserId());
+			UIOutput.make(entry, "overdraft-limit", account.getOverdraftLimit()
+					.toString());
+			UIOutput.make(entry, "balance", account.getBalance().toString());
+		}
+
 	}
 
+	/**
+	 * Returns the view id of the Producer
+	 */
 	public String getViewID() {
 		return VIEW_ID;
+	}
+
+	// Temporary: used for mocking
+	private List<SmsAccount> retrieveMockAccounts() {
+		List<SmsAccount> accounts = new ArrayList<SmsAccount>();
+		for (int i = 0; i < 10; i++) {
+			accounts.add(createSmsAccount());
+		}
+		return accounts;
 	}
 }

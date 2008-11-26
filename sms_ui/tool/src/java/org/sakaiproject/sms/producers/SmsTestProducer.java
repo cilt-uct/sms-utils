@@ -57,6 +57,7 @@ public class SmsTestProducer implements ViewComponentProducer, DefaultView,
 				+ SmsMessageLocator.NEW_1;
 
 		UIMessage.make(tofill, "page-title", "sms.test.title");
+		UIMessage.make(tofill, "sms-test-heading", "sms.test.heading");
 		UIForm form = UIForm.make(tofill, "test-form");
 
 		UIMessage.make(form, "mobile-nr-label", "sms.test.mobile-number");

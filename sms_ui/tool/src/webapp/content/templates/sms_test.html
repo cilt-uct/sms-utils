@@ -40,14 +40,16 @@
 </head>
 
 <body>
+	  <h3 rsf:id="sms-test-heading" >Sms Test Window</h3>
   	  <div rsf:id="message-for:*">
 		<span>Message for user here</span>
   	  </div>
-  	  
+  	  <br/>
 	  <form rsf:id="test-form" method="post">
 	  	<label rsf:id="mobile-nr-label" for="mobile-nr">Mobile number</label>
 	  	<input rsf:id="mobile-nr" type="text" name="mobile-nr" id="mobile-nr" size="20" value="+2783 123 1234" /><br/>
 		
+		<br/>
 		<label rsf:id="message-body-label" for="message-body">Message body</label><br/>
 		<textarea rsf:id="message-body" rows="10" cols="80" name="message-body" id="message-body" style="overflow-x: hidden;" wrap="soft" />
 	  	
@@ -55,11 +57,11 @@
 	  	<label rsf:id="chars-remaining-label" for="chars-remaining">Chars remaining</label>
 	  	<input rsf:id="chars-remaining" type="text" name="chars-remaining" id="chars-remaining" size="3" value="160"/>
 	  	
-	  	<br/>
+	  	<br/><br/>
 	  	<input rsf:id="ok-button" type="submit" name="ok-button" id="ok-button" />
 	  	<input rsf:id="cancel-button" type="submit" name="cancel-button" id="cancel-button" />
 	  	
-	  	<br/>
+	  	<br/><br/>
 	  	<label rsf:id="smpp-debug-label" for="message-body">SMPP debug</label><br/>
 		<textarea rsf:id="smpp-debug" rows="10" cols="80" name="smpp-debug" id="smpp-debug" />
 	  	 

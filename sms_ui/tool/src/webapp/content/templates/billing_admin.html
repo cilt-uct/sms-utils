@@ -12,22 +12,26 @@
 	<h3 rsf:id="accounts-heading" >SMS Accounts</h3>
 	
 	<table class="listHier lines" cellspacing="0">
-		<tr>
-			<th id="account-name">Account Name</th>
-			<th id="account-no">Account No.</th>
-			<th id="sakai-site">Sakai Site</th>
-			<th id="sakai-user">Sakai User</th>
-			<th id="overdraft-limit">Overdraft Limit</th>
-			<th id="balance">Balance</th>
-		</tr>
-		<tr>
-			<td headers="account-name">Name of account</td>
-			<td headers="account-nr">21212121212</td>
-			<td headers="sakai-site">something</td>
-			<td headers="sakai-user">someone</td>
-			<td headers="overdraft-limit">2000</td>
-			<td headers="balance">1500</td>
-		</tr>
+		<thead>
+			<tr>
+				<th rsf:id="account-name-title">Account Name</th>
+				<th rsf:id="account-no-title">Account No.</th>
+				<th rsf:id="sakai-site-title">Sakai Site</th>
+				<th rsf:id="sakai-user-title">Sakai User</th>
+				<th rsf:id="overdraft-limit-title">Overdraft Limit</th>
+				<th rsf:id="balance-title">Balance</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr rsf:id="account-entry:">
+				<td><a rsf:id="account-name-link" href="edit_account.html">Account name</a></td>
+				<td rsf:id="account-no">21212121212</td>
+				<td rsf:id="sakai-site">something</td>
+				<td rsf:id="sakai-user">someone</td>
+				<td rsf:id="overdraft-limit">2000</td>
+				<td rsf:id="balance">1500</td>
+			</tr>
+		</tbody>
 	</table>
 </body>
 
