@@ -145,6 +145,19 @@ public class HibernateUtil {
     }
     
     
+    /**
+     * Clears the current thread's hibernate session cache.
+     *
+     * @exception HibernateException if any error occurs closing the current
+     *            thread's hibernate session
+     */
+    public static void clearSession() throws HibernateException {        
+    	if (session != null) {
+            session.clear();
+        }
+    }
+    
+    
     
     /**
      * Extracts the connection URI from the JDBC connection string.
