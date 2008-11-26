@@ -19,30 +19,21 @@
 package org.sakaiproject.sms.hibernate.logic.impl;
 
 import java.util.List;
-import java.util.Set;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
 import org.sakaiproject.sms.hibernate.dao.HibernateUtil;
 import org.sakaiproject.sms.hibernate.dao.SmsDao;
 import org.sakaiproject.sms.hibernate.logic.SmsTaskLogic;
-import org.sakaiproject.sms.hibernate.logic.SmsDataLogic;
-import org.sakaiproject.sms.hibernate.logic.SmsTaskLogic;
-import org.sakaiproject.sms.hibernate.model.SmsAccount;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
-import org.sakaiproject.sms.hibernate.model.SmsMessage;
-import org.sakaiproject.sms.hibernate.model.SmsTask;
-import org.sakaiproject.sms.hibernate.model.SmsTransaction;
 
 /**
- * The data service will handle all sms task database transactions for the sms tool in
- * Sakai.
+ * The data service will handle all sms task database transactions for the sms
+ * tool in Sakai.
  * 
  * @author julian@psybergate.com
  * @version 1.0
- * @created 25-Nov-2008 
+ * @created 25-Nov-2008
  */
 public class SmsTaskLogicImpl extends SmsDao implements SmsTaskLogic {
 
@@ -56,7 +47,8 @@ public class SmsTaskLogicImpl extends SmsDao implements SmsTaskLogic {
 	/**
 	 * Gets a SmsTask entity for the given id
 	 * 
-	 * @param Long sms task id
+	 * @param Long
+	 *            sms task id
 	 * @return sms task
 	 */
 	public SmsTask getSmsTask(Long smsTaskId) {
@@ -77,15 +69,19 @@ public class SmsTaskLogicImpl extends SmsDao implements SmsTaskLogic {
 	/**
 	 * This method will persists the given object.
 	 * 
-	 * If the object is a new entity then it will be created on the DB. 
-	 * If it is an existing entity then the record will be updated on the DB.
+	 * If the object is a new entity then it will be created on the DB. If it is
+	 * an existing entity then the record will be updated on the DB.
 	 * 
-	 * @param sms task to be persisted
+	 * @param sms
+	 *            task to be persisted
 	 */
 	public void persistSmsTask(SmsTask smsTask) {
 		persist(smsTask);
 	}
 
-	
-	
+	public SmsTask getNextSmsTask() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

@@ -16,25 +16,27 @@
  *
  **********************************************************************************/
 
-
 package org.sakaiproject.sms.hibernate.logic;
 
 import java.util.List;
+
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 
 /**
- * The data service will handle all sms task database transactions for the sms tool in
- * Sakai.
+ * The data service will handle all sms task database transactions for the sms
+ * tool in Sakai.
  * 
  * @author julian@psybergate.com
  * @version 1.0
- * @created 25-Nov-2008 
+ * @created 25-Nov-2008
  */
 public interface SmsTaskLogic {
 
 	public void deleteSmsTask(SmsTask smsTask);
 
-	public SmsTask getSmsTask(Long smsTaskId) ;
+	public SmsTask getSmsTask(Long smsTaskId);
+
+	public SmsTask getNextSmsTask();
 
 	public List<SmsTask> getAllSmsTask();
 
