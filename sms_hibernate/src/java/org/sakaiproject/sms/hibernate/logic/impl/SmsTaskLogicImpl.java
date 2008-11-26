@@ -65,7 +65,9 @@ public class SmsTaskLogicImpl extends SmsDao implements SmsTaskLogic {
 	public List<SmsTask> getAllSmsTask() {
 		Session s = HibernateUtil.currentSession();
 		Query query = s.createQuery("from SmsTask");
-		return query.list();
+		List<SmsTask> tasks = query.list();
+		HibernateUtil.closeSession();
+		return tasks;
 	}
 
 	/**
