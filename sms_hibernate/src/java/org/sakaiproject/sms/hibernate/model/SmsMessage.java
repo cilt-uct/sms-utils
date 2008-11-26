@@ -66,6 +66,8 @@ public class SmsMessage extends BaseModel {
 	 * (This is not the delivery report.)
 	 */
 	private boolean submitResult;
+	
+	private Integer smscDeliveryStatusCode;
 
 	/**
 	 * Instantiates a new sms message.
@@ -264,6 +266,23 @@ public class SmsMessage extends BaseModel {
 		this.submitResult = submitResult;
 	}
 
+	/**
+	 * @return the smscDeliveryStatusCode
+	 */
+	public Integer getSmscDeliveryStatusCode() {
+		return smscDeliveryStatusCode;
+	}
+
+	/**
+	 * @param smscDeliveryStatusCode the smscDeliveryStatusCode to set
+	 */
+	public void setSmscDeliveryStatusCode(Integer smscDeliveryStatusCode) {
+		this.smscDeliveryStatusCode = smscDeliveryStatusCode;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -276,7 +295,10 @@ public class SmsMessage extends BaseModel {
 				+ ((mobileNumber == null) ? 0 : mobileNumber.hashCode());
 		result = prime * result
 				+ ((sakaiUserId == null) ? 0 : sakaiUserId.hashCode());
-		result = prime * result + ((smsTask == null) ? 0 : smsTask.hashCode());
+		result = prime
+				* result
+				+ ((smscDeliveryStatusCode == null) ? 0
+						: smscDeliveryStatusCode.hashCode());
 		result = prime * result
 				+ ((smscMessageId == null) ? 0 : smscMessageId.hashCode());
 		result = prime * result
@@ -285,13 +307,16 @@ public class SmsMessage extends BaseModel {
 		return result;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
 		if (!super.equals(obj))
 			return false;
-		if (getClass() != obj.getClass())
+		if (!(obj instanceof SmsMessage))
 			return false;
 		SmsMessage other = (SmsMessage) obj;
 		if (DebugInfo == null) {
@@ -314,10 +339,10 @@ public class SmsMessage extends BaseModel {
 				return false;
 		} else if (!sakaiUserId.equals(other.sakaiUserId))
 			return false;
-		if (smsTask == null) {
-			if (other.smsTask != null)
+		if (smscDeliveryStatusCode == null) {
+			if (other.smscDeliveryStatusCode != null)
 				return false;
-		} else if (!smsTask.equals(other.smsTask))
+		} else if (!smscDeliveryStatusCode.equals(other.smscDeliveryStatusCode))
 			return false;
 		if (smscMessageId == null) {
 			if (other.smscMessageId != null)
@@ -333,5 +358,7 @@ public class SmsMessage extends BaseModel {
 			return false;
 		return true;
 	}
+	
+	
 
 }

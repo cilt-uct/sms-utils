@@ -1,6 +1,8 @@
 package org.sakaiproject.sms.hibernate.test;
 
 import java.sql.Timestamp;
+import java.util.List;
+
 
 import junit.framework.TestCase;
 
@@ -24,7 +26,7 @@ public class SmsMessageTest extends TestCase {
 		insertTask.setSmsAccountId(1);
 		insertTask.setDateCreated(new Timestamp(System.currentTimeMillis()));
 		insertTask.setDateToSend(new Timestamp(System.currentTimeMillis()));
-		insertTask.setStatusCode("SC");
+		insertTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
 		insertTask.setRetryCount(2);
 		insertTask.setMessageBody("messageBody");
 		insertTask.setSenderUserName("senderUserName");
@@ -40,7 +42,7 @@ public class SmsMessageTest extends TestCase {
 
 		insertMessage2 = new SmsMessage();
 		insertMessage2.setMobileNumber("0823450983");
-		insertMessage2.setSmscMessageId("smscMessageId1");
+		insertMessage2.setSmscMessageId("smscMessageId2");
 		insertMessage2.setSakaiUserId("sakaiUserId");
 		insertMessage2.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
 	}
@@ -55,31 +57,49 @@ public class SmsMessageTest extends TestCase {
 	public void testInsertSmsMessage() {
 		assertTrue("Task for message not created", insertTask.exists());
 		insertMessage1.setSmsTask(insertTask);
+		insertMessage2.setSmsTask(insertTask);
 		logic.persistSmsMessage(insertMessage1);
+		logic.persistSmsMessage(insertMessage2);
 		assertTrue("Object not persisted", insertMessage1.exists());
+		assertTrue("Object not persisted", insertMessage2.exists());
 		insertTask.getSmsMessages().add(insertMessage1);
+		insertTask.getSmsMessages().add(insertMessage2);
 		taskLogic.persistSmsTask(insertTask);
 		assertTrue("", insertTask.getSmsMessages().contains(insertMessage1));
 	}
-
-	public void testUpdateSmsMessage() {
-
+	
+	public void testGetSmsMessageById(){
+		SmsMessage getSmsMessage = logic.getSmsMessage(insertMessage1.getId());
+		assertTrue("Object not persisted", insertMessage1.exists());
+		assertNotNull(getSmsMessage);
+		assertEquals(insertMessage1, getSmsMessage);
+		
 	}
-
-	public void testGetSmsMessages() {
-
+	
+	public void testUpdateSmsMessage(){
+		SmsMessage smsMessage = logic.getSmsMessage(insertMessage1.getId());
+		smsMessage.setSakaiUserId("newSakaiUserId");
+		logic.persistSmsMessage(smsMessage);
+		smsMessage = logic.getSmsMessage(insertMessage1.getId());
+		assertEquals("newSakaiUserId", smsMessage.getSakaiUserId());
 	}
-
-	public void testGetSmsMessageById() {
-
+	
+	public void testGetSmsMessages(){
+		List<SmsMessage> messages = logic.getAllSmsMessages();
+		assertNotNull("Returnend collection is null", messages);
+		assertTrue("No records returned", messages.size() > 0);
 	}
-
-	public void testDeleteSmsMessage() {
-
-		// Delete the associated task too
+	
+	public void testGetSmsMessageBySmscMessageId() {
+		SmsMessage smsMessage = logic.getSmsMessageBySmscMessageId(insertMessage2.getSmscMessageId());
+		assertSame(smsMessage, insertMessage2);
+		assertEquals(smsMessage.getSmscMessageId(), insertMessage2.getSmscMessageId());
+	}
+	
+	public void testDeleteSmsMessage(){
+		//Delete the associated task too
 		taskLogic.deleteSmsTask(insertTask);
 		SmsTask getSmsTask = taskLogic.getSmsTask(insertTask.getId());
 		assertNull("Object not removed", getSmsTask);
 	}
-
 }
