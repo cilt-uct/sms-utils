@@ -22,7 +22,7 @@
   </bean>
 
   <!-- Binding  Beans -->
-  <bean id="sMSConfig" class="org.sakaiproject.sms.hibernate.model.SmsConfig"/>
+  <bean id="smsConfig" class="org.sakaiproject.sms.hibernate.model.SmsConfig"/>
   <bean id="searchFilterBean" class="org.sakaiproject.sms.beans.SearchFilterBean"/>	
 
   <!--  Producers -->
@@ -45,7 +45,7 @@
   	<property name="messages" ref="targettedMessageList"/>
   </bean>
 
-  <bean id="sMSConfigActionBean" class="org.sakaiproject.sms.beans.SmsConfigActionBean">
+  <bean id="smsConfigActionBean" class="org.sakaiproject.sms.beans.SmsConfigActionBean">
   	 <property name="smsConfigLocator" ref="SmsConfigLocator"/>
   	 <property name="smsConfigLogic" ref="smsConfigLogic"/>
   </bean>

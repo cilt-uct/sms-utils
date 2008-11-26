@@ -65,6 +65,6 @@ public class SmsConfigActionBean {
 		
 		smsConfigLogic.persistSmsConfig(smsConfig);
 		
-		return ActionResults.SUCCESS;
+		return "";
 	}
 }
