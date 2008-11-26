@@ -71,6 +71,7 @@ public class SmsMessage extends BaseModel {
 	 * Instantiates a new sms message.
 	 */
 	public SmsMessage() {
+		this.statusCode = SmsConst_SmscDeliveryStatus.PENDING;
 
 	}
 
@@ -160,8 +161,6 @@ public class SmsMessage extends BaseModel {
 	public int getStatusCode() {
 		return statusCode;
 	}
-
-
 
 	/**
 	 * Checks if submit to gateway was successful.
@@ -324,7 +323,5 @@ public class SmsMessage extends BaseModel {
 			return false;
 		return true;
 	}
-
-	
 
 }
