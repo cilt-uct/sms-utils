@@ -23,5 +23,10 @@ public class SmsConst_DeliveryStatus {
 	 * errors
 	 */
 	public final static String STATUS_INCOMPLETE = "I";
+	/**
+	 * The Constant STATUS_RETRY.During sending some messages returned with
+	 * errors
+	 */
+	public final static String STATUS_FAIL = "F";
 
 }

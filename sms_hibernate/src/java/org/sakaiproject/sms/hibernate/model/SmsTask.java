@@ -175,6 +175,15 @@ public class SmsTask extends BaseModel {
 	}
 
 	/**
+	 * Reschedules the date to send the message
+	 * 
+	 * @param dateToSend
+	 */
+	public void rescheduleDateToSend(Timestamp dateToSend) {
+		this.setDateToSend(dateToSend);
+	}
+
+	/**
 	 * Gets the date to send.
 	 * 
 	 * @return the date to send
