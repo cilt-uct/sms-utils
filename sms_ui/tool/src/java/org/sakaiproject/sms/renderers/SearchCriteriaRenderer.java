@@ -12,7 +12,7 @@ import uk.org.ponder.rsf.components.UISelect;
 public class SearchCriteriaRenderer {
 
 
-	public void fillComponents(UIContainer tofill, String divID, String viewID) {
+	public void createSearchCriteria(UIContainer tofill, String divID, String viewID) {
 
 		UIJointContainer searchCriteria = new UIJointContainer(tofill,divID, "search-component:");
 		
@@ -33,8 +33,8 @@ public class SearchCriteriaRenderer {
 		combo.optionnames = comboNames;
 		
 		UIInput.make(searchForm, "date-to", "#{searchFilterBean.dateTo}");
-		UIInput.make(searchForm, "sender", "#{searchFilterBean.sender}");
 
+		UIInput.make(searchForm, "sender", "#{searchFilterBean.sender}");
 		UICommand.make(searchForm, "search", "#{searchFilterBean.fireAction}");
 	}
 		

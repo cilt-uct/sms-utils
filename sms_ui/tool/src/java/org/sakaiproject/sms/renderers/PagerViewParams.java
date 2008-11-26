@@ -18,6 +18,7 @@
 
 package org.sakaiproject.sms.renderers;
 
+
 import org.sakaiproject.sms.constants.SMSConstants;
 
 import uk.org.ponder.rsf.viewstate.SimpleViewParameters;
@@ -25,7 +26,7 @@ import uk.org.ponder.rsf.viewstate.SimpleViewParameters;
 public class PagerViewParams extends SimpleViewParameters {
 
 	public int current_start = 0;
-	public int current_count = SMSConstants.DEFAULT_START_COUNT;
+	public int current_count = SMSConstants.DEFAULT_PAGE_SIZE;
 	
 	public PagerViewParams() {}
 	

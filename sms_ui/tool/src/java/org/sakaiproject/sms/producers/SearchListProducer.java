@@ -60,13 +60,10 @@ public class SearchListProducer implements ViewComponentProducer, ViewParamsRepo
 			sortParams.sortDir = SMSConstants.SORT_DESC; // default
 		}
 		
-		searchCriteriaRenderer.fillComponents(tofill, "searchCriteria:", VIEW_ID);
+		searchCriteriaRenderer.createSearchCriteria(tofill, "searchCriteria:", VIEW_ID);
 		UIMessage.make(tofill, "table-caption", "sms.view-search-task-list.name");
 		searchResultsRenderer.createTable(tofill, "searchResults:", sortParams, VIEW_ID);
-		
-		//tablePagerRenderer = new TablePagerRenderer(tofill, VIEW_ID, "scr=contribute-script", viewparams);
 		tablePagerRenderer.createPager(tofill, "searchPager:", sortParams, VIEW_ID);
-		//tablePagerRenderer.makePager(tofill, "searchPager:", 20, sortParams);
 		exportToCSV(tofill);
 	}
 

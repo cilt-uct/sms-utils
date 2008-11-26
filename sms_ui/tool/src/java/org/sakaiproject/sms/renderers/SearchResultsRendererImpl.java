@@ -25,10 +25,15 @@ public class SearchResultsRendererImpl implements SearchResultsRenderer {
 		Assert.notNull(sortHeaderRenderer);
 	}
 	
-	public void createTable(UIContainer tofill, String divID, SortPagerViewParams sortViewParams, String viewID) {
-		ArrayList<TestDataResultSet.TestDataRow> resultSet = TestDataResultSet.testDataSet();
-		
+	public void createTable(UIContainer tofill, String divID, SortPagerViewParams sortViewParams, String viewID) {		
 		init();
+		
+		ArrayList<TestDataResultSet.TestDataRow> resultSet = TestDataResultSet.testDataSet();
+		sortViewParams.current_count = resultSet.size()/SMSConstants.DEFAULT_PAGE_SIZE;
+		resultSet = TestDataResultSet.getPage(SMSConstants.DEFAULT_PAGE_SIZE, sortViewParams.current_start, resultSet);
+		SortDirection sortDirection = SortDirection.findByCode(sortViewParams.sortDir);		
+		ReflectionBasedSorter.sortByName(resultSet, sortViewParams.sortBy, sortDirection);
+		
 		
 		UIJointContainer searchResultsTable = new UIJointContainer(tofill, divID,  "search-results-component:");
 		
@@ -39,9 +44,8 @@ public class SearchResultsRendererImpl implements SearchResultsRenderer {
         sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-street:", sortViewParams,
         		SMSConstants.SORT_BY_STREET, "sms.view-search-results.street");
 		
-        SortDirection sortDirection = SortDirection.findByCode(sortViewParams.sortDir);
         
-        ReflectionBasedSorter.sortByName(resultSet, sortViewParams.sortBy, sortDirection);
+        
        
 		for (TestDataResultSet.TestDataRow testDataRow : resultSet) {
 			

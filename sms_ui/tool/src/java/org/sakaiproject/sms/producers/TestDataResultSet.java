@@ -1,10 +1,6 @@
 package org.sakaiproject.sms.producers;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-
-import org.sakaiproject.sms.constants.SortDirection;
 
 /**
  *	Temp object to test table generation
@@ -19,7 +15,8 @@ public class TestDataResultSet {
 		TestDataRow row3 = new TestDataRow("Mark", new Integer(12), "Get");
 		TestDataRow row4 = new TestDataRow("John", new Integer(77), "JL");
 		TestDataRow row5 = new TestDataRow("Sam", new Integer(12), "Jord");
-
+		TestDataRow row6 = new TestDataRow("Max", new Integer(12), "Red");
+		TestDataRow row7 = new TestDataRow("Rex", new Integer(12), "Blue");
 		
 		ArrayList<TestDataRow> resultSet = new ArrayList<TestDataRow>();
 		resultSet.add(row1);
@@ -27,24 +24,30 @@ public class TestDataResultSet {
 		resultSet.add(row3);
 		resultSet.add(row4);
 		resultSet.add(row5);
+		resultSet.add(row6);
+		resultSet.add(row7);
 
 		
 		return resultSet;
 	}
 	
-	public static ArrayList<TestDataRow> sortByName(ArrayList<TestDataRow> list, final SortDirection sortDirection){
+	public static ArrayList<TestDataRow> getPage(int pageSize, int pageNum, ArrayList<TestDataRow> input){
 		
-		Collections.sort(list, new Comparator<TestDataRow>(){
+		int fromIndex = pageSize*(pageNum);
+		fromIndex = checkBounds(input, fromIndex);
+		
+		int toIndex = pageSize*(pageNum+1);
+		toIndex = checkBounds(input, toIndex);
+		
+		
+		return new ArrayList<TestDataRow>(input.subList(fromIndex, toIndex));
+	}
 
-			public int compare(TestDataRow o1, TestDataRow o2) {
-				if(sortDirection == SortDirection.ASC)
-					return o1.getName().compareTo(o2.getName());
-				else
-					return o2.getName().compareTo(o1.getName());
-			}
-		});
+	private static int checkBounds(ArrayList<TestDataRow> input, int index) {
+		if(index > input.size())
+			index = input.size();
 		
-		return list;
+		return index;
 	}
 	
 	public static class TestDataRow {

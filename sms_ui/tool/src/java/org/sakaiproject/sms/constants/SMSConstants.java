@@ -27,7 +27,7 @@ public class SMSConstants {
 	public static final int MAX_MOBILE_NR_LENGTH = 20; // Just arbitary
 	
 	//default paging
-	public static final int DEFAULT_START_COUNT = 20;
+	public static final int DEFAULT_PAGE_SIZE = 5;
 
 	//Table Sort Directions
 	public static final String SORT_ASC ="asc";

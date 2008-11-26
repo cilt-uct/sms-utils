@@ -41,6 +41,11 @@
     <property name="value" value="SmsMessageLocator"/>
   </bean>
   
+  <!--  
+  <bean id="SearchCriteria" parent="entityBeanLocatorParent">
+  	<property name="entityClass" value="org.sakaiproject.sms.beans.SearchFilterBean"/>
+  </bean>-->
+  
   <bean id="smsMessageGuard" parent="writeGuardParent">
      <property name="guardedPath" value="SmsMessageLocator.*"/>
 	 <property name="guard"> <bean class="org.sakaiproject.sms.validators.SmsMessageValidator" /></property>
