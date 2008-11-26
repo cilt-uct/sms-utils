@@ -148,7 +148,7 @@ public class HibernateUtil {
     /**
      * Clears the current thread's hibernate session cache.
      *
-     * @exception HibernateException if any error occurs closing the current
+     * @exception HibernateException if any error occurs clearing the current
      *            thread's hibernate session
      */
     public static void clearSession() throws HibernateException {        
