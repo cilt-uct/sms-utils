@@ -20,7 +20,7 @@ package org.sakaiproject.sms.hibernate.model;
 
 import java.sql.Timestamp;
 
-import org.sakaiproject.sms.hibernate.model.constants.SmsConst_SmscDeliveryStatus;
+import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
 
 /**
  * A single sms message. One or more messages is linked to a sms task. When a
@@ -59,7 +59,7 @@ public class SmsMessage extends BaseModel {
 	private SmsTask smsTask;
 
 	/** Current delivery status of this message. */
-	private int statusCode;
+	private String statusCode;
 
 	/**
 	 * The submit result returned by the gateway when the message was sent.
@@ -71,7 +71,7 @@ public class SmsMessage extends BaseModel {
 	 * Instantiates a new sms message.
 	 */
 	public SmsMessage() {
-		this.statusCode = SmsConst_SmscDeliveryStatus.PENDING;
+		this.statusCode = SmsConst_DeliveryStatus.STATUS_PENDING;
 
 	}
 
@@ -86,7 +86,7 @@ public class SmsMessage extends BaseModel {
 	public SmsMessage(String mobileNumber, String messageBody) {
 		smsTask = new SmsTask("", "", "", 0, messageBody);
 		this.mobileNumber = mobileNumber;
-		this.statusCode = SmsConst_SmscDeliveryStatus.PENDING;
+		this.statusCode = SmsConst_DeliveryStatus.STATUS_PENDING;
 
 	}
 
@@ -158,7 +158,7 @@ public class SmsMessage extends BaseModel {
 	 * 
 	 * @return the status code
 	 */
-	public int getStatusCode() {
+	public String getStatusCode() {
 		return statusCode;
 	}
 
@@ -250,7 +250,7 @@ public class SmsMessage extends BaseModel {
 	 * @param statusCode
 	 *            the new status code
 	 */
-	public void setStatusCode(int statusCode) {
+	public void setStatusCode(String statusCode) {
 		this.statusCode = statusCode;
 	}
 
@@ -276,9 +276,11 @@ public class SmsMessage extends BaseModel {
 				+ ((mobileNumber == null) ? 0 : mobileNumber.hashCode());
 		result = prime * result
 				+ ((sakaiUserId == null) ? 0 : sakaiUserId.hashCode());
+		result = prime * result + ((smsTask == null) ? 0 : smsTask.hashCode());
 		result = prime * result
 				+ ((smscMessageId == null) ? 0 : smscMessageId.hashCode());
-		result = prime * result + statusCode;
+		result = prime * result
+				+ ((statusCode == null) ? 0 : statusCode.hashCode());
 		result = prime * result + (submitResult ? 1231 : 1237);
 		return result;
 	}
@@ -312,12 +314,20 @@ public class SmsMessage extends BaseModel {
 				return false;
 		} else if (!sakaiUserId.equals(other.sakaiUserId))
 			return false;
+		if (smsTask == null) {
+			if (other.smsTask != null)
+				return false;
+		} else if (!smsTask.equals(other.smsTask))
+			return false;
 		if (smscMessageId == null) {
 			if (other.smscMessageId != null)
 				return false;
 		} else if (!smscMessageId.equals(other.smscMessageId))
 			return false;
-		if (statusCode != other.statusCode)
+		if (statusCode == null) {
+			if (other.statusCode != null)
+				return false;
+		} else if (!statusCode.equals(other.statusCode))
 			return false;
 		if (submitResult != other.submitResult)
 			return false;

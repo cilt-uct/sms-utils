@@ -22,7 +22,7 @@ import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.sakaiproject.sms.hibernate.model.constants.SmsConst_TaskDeliveryStatus;
+import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
 
 /**
  * A sms task that needs to be processed. For example: send message X to sakai
@@ -143,7 +143,7 @@ public class SmsTask extends BaseModel {
 		this.retryCount = 0;
 		this.statusCode = "";
 		this.creditEstimate = 0;
-		this.statusCode = SmsConst_TaskDeliveryStatus.STATUS_PENDING;
+		this.statusCode = SmsConst_DeliveryStatus.STATUS_PENDING;
 
 	}
 

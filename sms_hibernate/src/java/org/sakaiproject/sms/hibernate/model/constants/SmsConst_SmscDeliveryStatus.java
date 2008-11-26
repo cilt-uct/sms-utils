@@ -24,8 +24,4 @@ public class SmsConst_SmscDeliveryStatus {
 
 	public final static int UNKNOWN = 7;
 
-	// Pending is used to indicate that the message must still be picked up by
-	// the scheduler.
-	public final static int PENDING = -1;
-
 }
