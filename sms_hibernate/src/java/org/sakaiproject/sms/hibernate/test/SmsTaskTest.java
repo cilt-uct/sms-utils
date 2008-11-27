@@ -169,14 +169,12 @@ public class SmsTaskTest extends TestCase {
 	 */
 	public void testRemoveSmsMessagesFromTask() {
 		SmsTask getSmsTask = logic.getSmsTask(insertTask.getId());
-		assertTrue("Collection size not correct", getSmsTask.getSmsMessages()
-				.size() == 2);
+		assertTrue("Collection size not correct", getSmsTask.getSmsMessages().size() == 4);
 		getSmsTask.setSakaiSiteId("oldSakaiSiteId");
 		getSmsTask.getSmsMessages().remove(insertMessage1);
 		logic.persistSmsTask(getSmsTask);
 		getSmsTask = logic.getSmsTask(insertTask.getId());
-		assertTrue("Object not removed from collection", getSmsTask
-				.getSmsMessages().size() == 1);
+		assertTrue("Object not removed from collection", getSmsTask.getSmsMessages().size() == 3);
 		// Check the right object was removed
 		assertFalse("The expected object was not removed from the collection",
 				getSmsTask.getSmsMessages().contains(insertMessage1));
@@ -193,15 +191,33 @@ public class SmsTaskTest extends TestCase {
 		assertTrue("No records returned", tasks.size() > 0);
 	}
 
+	public void insertNewTaskForPending() {
+		SmsTask insertTask = new SmsTask();
+		insertTask.setSakaiSiteId("sakaiSiteId");
+		insertTask.setSmsAccountId(0);
+		insertTask.setDateCreated(new Timestamp(System.currentTimeMillis()));
+		insertTask.setDateToSend(new Timestamp(System.currentTimeMillis()));
+		insertTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
+		insertTask.setAttemptCount(0);
+		insertTask.setMessageBody("testing1234567");
+		insertTask.setSenderUserName("administrator");
+		logic.persistSmsTask(insertTask);
+		// smsCoreImpl.processTask(insertTask);
+
+	}
+	
 	/**
-	 * Test get next sms task.
+	 * Test get next sms task. 
+	 * Checks if it is the oldest task to process (beeing the next task to process) 
 	 */
 	public void testGetNextSmsTask() {
 		SmsTask nextTask = logic.getNextSmsTask();
 		assertNotNull("Required record not found", nextTask);
-		List<SmsTask> tasks = logic.getSmsTasksFilteredByMessageStatus(SmsConst_DeliveryStatus.STATUS_PENDING);
+		List<SmsTask> tasks = logic.getSmsTasksFilteredByMessageStatus(SmsConst_DeliveryStatus.STATUS_PENDING, 
+																	   SmsConst_DeliveryStatus.STATUS_INCOMPLETE);
+		
+		
 		Timestamp t = null;
-
 		// Get the oldest date to send from the list;
 		for (SmsTask task : tasks) {
 			if (t == null) {
@@ -216,7 +232,10 @@ public class SmsTaskTest extends TestCase {
 		assertNotNull("No records found", t);
 		assertTrue("Did not get the correct task to be processed", nextTask
 				.getDateToSend().getTime() == t.getTime());
+		
 	}
+	
+	
 
 	/**
 	 * Test delete sms task.
