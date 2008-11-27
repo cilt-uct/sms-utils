@@ -19,14 +19,17 @@ public class SmsConst_DeliveryStatus {
 	public final static String STATUS_RETRY = "R";
 
 	/**
-	 * The Constant STATUS_RETRY.During sending some messages returned with
-	 * errors
+	 * The Constant STATUS_RETRY.
 	 */
 	public final static String STATUS_INCOMPLETE = "I";
 	/**
-	 * The Constant STATUS_RETRY.During sending some messages returned with
-	 * errors
+	 * The Constant STATUS_FAIL.
 	 */
 	public final static String STATUS_FAIL = "F";
+
+	/**
+	 * The Constant STATUS_BUSY.
+	 */
+	public final static String STATUS_BUSY = "B";
 
 }

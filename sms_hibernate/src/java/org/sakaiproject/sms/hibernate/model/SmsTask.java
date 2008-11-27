@@ -20,6 +20,7 @@ package org.sakaiproject.sms.hibernate.model;
 
 import java.sql.Timestamp;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
@@ -47,8 +48,8 @@ public class SmsTask extends BaseModel {
 
 	/**
 	 * The date-time when the task was last processed. It might be processed a
-	 * few times until successful or until the attempt count reaches a predefined
-	 * maximum..
+	 * few times until successful or until the attempt count reaches a
+	 * predefined maximum..
 	 */
 	private Timestamp dateProcessed;
 
@@ -683,4 +684,27 @@ public class SmsTask extends BaseModel {
 		return true;
 	}
 
+	public void setStatusForMessages(String oldStatus, String newStatus) {
+		Iterator<SmsMessage> it = getSmsMessages().iterator();
+		while (it.hasNext()) {
+			SmsMessage message = it.next();
+			if (message.getStatusCode().equals(oldStatus)) {
+				message.setStatusCode(newStatus);
+			}
+		}
+
+	}
+
+	public Set<SmsMessage> getMessagesWithStatus(String status) {
+		Set<SmsMessage> filtered = new HashSet<SmsMessage>();
+		Iterator<SmsMessage> it = getSmsMessages().iterator();
+		while (it.hasNext()) {
+			SmsMessage message = it.next();
+			if (message.getStatusCode().equals(status)) {
+				filtered.add(message);
+			}
+		}
+		return filtered;
+
+	}
 }
