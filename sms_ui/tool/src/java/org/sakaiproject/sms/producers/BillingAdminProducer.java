@@ -17,6 +17,7 @@
  **********************************************************************************/
 package org.sakaiproject.sms.producers;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -84,20 +85,24 @@ public class BillingAdminProducer implements ViewComponentProducer {
 		List<SmsAccount> accounts = retrieveMockAccounts();
 		// List<SmsAccount> accounts = smsAccountLogic.getAllSmsAccounts();
 
+		// get number format for default locale
+		NumberFormat nf = NumberFormat.getInstance();
+
 		for (SmsAccount account : accounts) {
 
 			UIBranchContainer entry = UIBranchContainer.make(tofill,
 					"account-entry:");
 
-			// TODO: Change to go to edit account
+			// TODO: Change link to go to edit account
 			UIInternalLink.make(entry, "account-name-link", "mocked name",
 					new SimpleViewParameters(SmsTestProducer.VIEW_ID));
 			UIOutput.make(entry, "account-no", account.getId().toString());
 			UIOutput.make(entry, "sakai-site", account.getSakaiSiteId());
 			UIOutput.make(entry, "sakai-user", account.getSakaiUserId());
-			UIOutput.make(entry, "overdraft-limit", account.getOverdraftLimit()
+			UIOutput.make(entry, "overdraft-limit", nf.format(
+					account.getOverdraftLimit()).toString());
+			UIOutput.make(entry, "balance", nf.format(account.getBalance())
 					.toString());
-			UIOutput.make(entry, "balance", account.getBalance().toString());
 		}
 
 	}
