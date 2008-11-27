@@ -29,11 +29,12 @@ import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
 import org.sakaiproject.sms.model.SmsDeliveryReport;
-import org.sakaiproject.sms.model.SmsSubmissionResult;
 
 public class SmsCoreImpl implements SmsCore {
 
 	public static final int MAX_RETRY = 5;
+
+	public static final int RESCHEDULE_TIMEOUT = 15;
 
 	SmsSmpp smsSmpp = null;
 
@@ -44,9 +45,9 @@ public class SmsCoreImpl implements SmsCore {
 	 * generate the list. Will get it from Sakai later on. So we generate a
 	 * random number of users with random mobile numbers.
 	 */
-	public Set getDeliveryGroup(String sakaiSiteID, String sakaiGroupID,
-			SmsTask smsTask) {
-		Set messages = new HashSet<SmsMessage>();
+	public Set<SmsMessage> getDeliveryGroup(String sakaiSiteID,
+			String sakaiGroupID, SmsTask smsTask) {
+		Set<SmsMessage> messages = new HashSet<SmsMessage>();
 		String users[] = new String[100];
 		String celnumbers[] = new String[100];
 		for (int i = 0; i < users.length; i++) {
@@ -54,7 +55,6 @@ public class SmsCoreImpl implements SmsCore {
 			celnumbers[i] = "+2773"
 					+ (int) Math.round(Math.random() * 10000000);
 		}
-
 		for (int i = 0; i < (int) Math.round(Math.random() * 100); i++) {
 
 			SmsMessage message = new SmsMessage();
@@ -62,9 +62,7 @@ public class SmsCoreImpl implements SmsCore {
 					.round(Math.random() * 99)]);
 			message.setSakaiUserId(users[(int) Math.round(Math.random() * 99)]);
 			message.setSmsTask(smsTask);
-
 			messages.add(message);
-
 		}
 		return messages;
 	}
@@ -75,8 +73,8 @@ public class SmsCoreImpl implements SmsCore {
 	}
 
 	public SmsTask getNextSmsTask() {
-		// TODO Auto-generated method stub
-		return null;
+		return smsTaskLogic.getNextSmsTask();
+
 	}
 
 	public String getSakaiMobileNumber(String sakaiUserID) {
@@ -108,7 +106,7 @@ public class SmsCoreImpl implements SmsCore {
 	}
 
 	public void processNextTask() {
-
+		this.processTask(smsTaskLogic.getNextSmsTask());
 	}
 
 	/**
@@ -118,29 +116,35 @@ public class SmsCoreImpl implements SmsCore {
 	 * reached or if credits are insufficient, the task is marked as failed.
 	 */
 	public void processTask(SmsTask smsTask) {
+		smsTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_BUSY);
 		smsTask.setAttemptCount((smsTask.getAttemptCount()) + 1);
-
 		if (smsTask.getAttemptCount() < MAX_RETRY) {
-			smsTask.setSmsMessages(getDeliveryGroup(smsTask.getSakaiSiteId(),
-					smsTask.getDeliveryGroupId(), smsTask));
-
-			SmsSubmissionResult smsSubmissionResult = smsSmpp
-					.sendMessagesToGateway(smsTask.getSmsMessages());
-			smsTask.setStatusCode(smsSubmissionResult.getStatus());
-
+			if (smsTask.getAttemptCount() <= 1) {
+				smsTask.setSmsMessages(getDeliveryGroup(smsTask
+						.getSakaiSiteId(), smsTask.getDeliveryGroupId(),
+						smsTask));
+				smsTaskLogic.persistSmsTask(smsTask);
+			}
+			String submissionStatus = smsSmpp
+					.sendMessagesToGateway(smsTask
+							.getMessagesWithStatus(SmsConst_DeliveryStatus.STATUS_PENDING));
+			smsTask.setStatusCode(submissionStatus);
 			if (smsTask.getStatusCode().equals(
-					SmsConst_DeliveryStatus.STATUS_INCOMPLETE)) {
+					SmsConst_DeliveryStatus.STATUS_INCOMPLETE)
+					|| smsTask.getStatusCode().equals(
+							SmsConst_DeliveryStatus.STATUS_RETRY)) {
 				Calendar now = Calendar.getInstance();
-				now.add(Calendar.MINUTE, +(15));
-
+				now.add(Calendar.MINUTE, +(RESCHEDULE_TIMEOUT));
 				smsTask.rescheduleDateToSend(new Timestamp(now
 						.getTimeInMillis()));
 			}
 
 		} else {
 			smsTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_FAIL);
+			smsTask.setStatusForMessages(
+					SmsConst_DeliveryStatus.STATUS_PENDING,
+					SmsConst_DeliveryStatus.STATUS_FAIL);
 		}
-
 		smsTaskLogic.persistSmsTask(smsTask);
 	}
 

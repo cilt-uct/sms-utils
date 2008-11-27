@@ -13,15 +13,7 @@ import org.sakaiproject.sms.impl.SmsSmppImpl;
 public class SmsCoreTest extends TestCase {
 	SmsCoreImpl smsCoreImpl = new SmsCoreImpl();
 
-	public void testGetDeliveryGroup() {
-
-		SmsTask smsTask = new SmsTask();
-		smsTask.setMessageBody("tesing sms");
-		smsCoreImpl.getDeliveryGroup("1234566789", "group1", smsTask);
-
-	}
-
-	public void testInsertNewTask() {
+	public void insertNewTask() {
 		SmsTask insertTask = new SmsTask();
 		insertTask.setSakaiSiteId("sakaiSiteId");
 		insertTask.setSmsAccountId(0);
@@ -32,12 +24,26 @@ public class SmsCoreTest extends TestCase {
 		insertTask.setMessageBody("testing1234567");
 		insertTask.setSenderUserName("administrator");
 		smsCoreImpl.setSmsTaskLogic(new SmsTaskLogicImpl());
+		smsCoreImpl.getSmsTaskLogic().persistSmsTask(insertTask);
+		// smsCoreImpl.processTask(insertTask);
+
+	}
+
+	public void testGetDeliveryGroup() {
+
+		SmsTask smsTask = new SmsTask();
+		smsTask.setMessageBody("tesing sms");
+		smsCoreImpl.getDeliveryGroup("1234566789", "group1", smsTask);
+
+	}
+
+	public void testProcessNextTask() {
+		insertNewTask();
 		SmsSmppImpl smsSmppImpl = new SmsSmppImpl();
 		smsSmppImpl.init();
 		smsCoreImpl.setSmsSmpp(smsSmppImpl);
-		smsCoreImpl.getSmsTaskLogic().persistSmsTask(insertTask);
-		smsCoreImpl.processTask(insertTask);
-
+		smsCoreImpl.setSmsTaskLogic(new SmsTaskLogicImpl());
+		smsCoreImpl.processNextTask();
 	}
 
 }

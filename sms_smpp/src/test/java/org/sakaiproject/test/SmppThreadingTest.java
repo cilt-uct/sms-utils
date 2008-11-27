@@ -78,6 +78,7 @@ public class SmppThreadingTest extends TestCase {
 		// assertEquals(true, smsThread2.sent_count == session2_message_count);
 		// MOTE: smpp delivery reports will be sent to any of the report
 		// listeners. But eventually the number of reports must add up.
+
 		assertEquals(true, delivery_count == message_count);
 		System.out.println("Done");
 

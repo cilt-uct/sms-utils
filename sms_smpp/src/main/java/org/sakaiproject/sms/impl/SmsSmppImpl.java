@@ -62,9 +62,36 @@ import org.sakaiproject.sms.api.SmsSmpp;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
 import org.sakaiproject.sms.model.SmsDeliveryReport;
-import org.sakaiproject.sms.model.SmsSubmissionResult;
 
 public class SmsSmppImpl implements SmsSmpp {
+
+	private final static org.apache.log4j.Logger LOG = org.apache.log4j.Logger
+			.getLogger(SmsSmppImpl.class);
+	private static TimeFormatter timeFormatter = new AbsoluteTimeFormatter();
+	private BindThread bindTest;
+	private int bindThreadTimer;
+	private byte dataCoding;
+	private ArrayList<SmsDeliveryReport> delReports = new ArrayList<SmsDeliveryReport>();
+	private byte destAddressNPI;
+	private byte destAddressTON;
+	private boolean disconnectGateWayCalled;
+	private int enquireLinkTimeOut;
+	private String gatewayAdress;
+	private boolean gatewayBound = false;
+	private String password;
+	private int port;
+	private byte priorityFlag;
+	private Properties properties = new Properties();
+	private byte protocolId;
+	private byte replaceIfPresentFlag;
+	private String serviceType;
+	private SMPPSession session = new SMPPSession();
+	private byte smDefaultMsgId;
+	private String sourceAddress;
+	private byte sourceAddressNPI;
+	private byte sourceAddressTON;
+	private String systemType;
+	private String userName;
 
 	class BindThread implements Runnable {
 
@@ -149,36 +176,6 @@ public class SmsSmppImpl implements SmsSmpp {
 			}
 		}
 	}
-
-	private final static org.apache.log4j.Logger LOG = org.apache.log4j.Logger
-			.getLogger(SmsSmppImpl.class);
-	private static TimeFormatter timeFormatter = new AbsoluteTimeFormatter();
-	private BindThread bindTest;
-	private int bindThreadTimer;
-	private byte dataCoding;
-	private ArrayList<SmsDeliveryReport> delReports = new ArrayList<SmsDeliveryReport>();
-	private byte destAddressNPI;
-	private byte destAddressTON;
-	private boolean disconnectGateWayCalled;
-	private int enquireLinkTimeOut;
-	private String gatewayAdress;
-	private boolean gatewayBound = false;
-	private String password;
-	private int port;
-	private byte priorityFlag;
-	private Properties properties = new Properties();
-	private byte protocolId;
-	private byte replaceIfPresentFlag;
-	private String serviceType;
-	private SMPPSession session = new SMPPSession();
-	private byte smDefaultMsgId;
-	private String sourceAddress;
-	private byte sourceAddressNPI;
-	private byte sourceAddressTON;
-
-	private String systemType;
-
-	private String userName;
 
 	public boolean bind() {
 
@@ -443,31 +440,31 @@ public class SmsSmppImpl implements SmsSmpp {
 	 * 
 	 * @return
 	 */
-	public SmsSubmissionResult sendMessagesToGateway(Set messages) {
-		SmsSubmissionResult result = new SmsSubmissionResult();
+	public String sendMessagesToGateway(Set<SmsMessage> messages) {
+		String status = null;
 		if (!gatewayBound) {
-			result.setStatus(SmsConst_DeliveryStatus.STATUS_RETRY);
-			return result;
+			return SmsConst_DeliveryStatus.STATUS_RETRY;
+
 		}
 		Iterator it = messages.iterator();
 		while (it.hasNext()) {
 			if (!gatewayBound) {
-				result.setStatus(SmsConst_DeliveryStatus.STATUS_INCOMPLETE);
-				return result;
+				return (SmsConst_DeliveryStatus.STATUS_INCOMPLETE);
+
 			}
 			SmsMessage message = (SmsMessage) it.next();
 			message = sendMessageToGateway(message);
-			result.getSmsMessages().add(message);
 			if (!message.getStatusCode().equals(
 					SmsConst_DeliveryStatus.STATUS_SENT)) {
-				result.setStatus(SmsConst_DeliveryStatus.STATUS_INCOMPLETE);
+				status = (SmsConst_DeliveryStatus.STATUS_INCOMPLETE);
 			}
 
 		}
-		if (result.getStatus() == null) {
-			result.setStatus(SmsConst_DeliveryStatus.STATUS_SENT);
+		if (status == null) {
+			return (SmsConst_DeliveryStatus.STATUS_SENT);
+		} else {
+			return status;
 		}
-		return result;
 	}
 
 	/**

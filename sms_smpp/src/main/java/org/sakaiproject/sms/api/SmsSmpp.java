@@ -5,7 +5,6 @@ import java.util.Set;
 
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.model.SmsDeliveryReport;
-import org.sakaiproject.sms.model.SmsSubmissionResult;
 
 /**
  * This service will contain the necessary logic to communicate with a standard
@@ -65,7 +64,7 @@ public interface SmsSmpp {
 	 * is down or gateway returns an error and mark relevant messages as failed.
 	 * Return message statuses back to caller.
 	 */
-	public SmsSubmissionResult sendMessagesToGateway(Set messages);
+	public String sendMessagesToGateway(Set<SmsMessage> messages);
 
 	/**
 	 * Send one message to the SMS gateway. Return result code to caller.
