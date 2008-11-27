@@ -66,7 +66,7 @@ public class SmsMessage extends BaseModel {
 	 * (This is not the delivery report.)
 	 */
 	private boolean submitResult;
-	
+
 	private Integer smscDeliveryStatusCode;
 
 	/**
@@ -193,7 +193,7 @@ public class SmsMessage extends BaseModel {
 		if (debugInfo == null) {
 			DebugInfo = "";
 		} else {
-			DebugInfo = debugInfo;
+			DebugInfo = DebugInfo + debugInfo + "\n";
 		}
 	}
 
@@ -274,13 +274,16 @@ public class SmsMessage extends BaseModel {
 	}
 
 	/**
-	 * @param smscDeliveryStatusCode the smscDeliveryStatusCode to set
+	 * @param smscDeliveryStatusCode
+	 *            the smscDeliveryStatusCode to set
 	 */
 	public void setSmscDeliveryStatusCode(Integer smscDeliveryStatusCode) {
 		this.smscDeliveryStatusCode = smscDeliveryStatusCode;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -307,7 +310,9 @@ public class SmsMessage extends BaseModel {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -358,7 +363,5 @@ public class SmsMessage extends BaseModel {
 			return false;
 		return true;
 	}
-	
-	
 
 }
