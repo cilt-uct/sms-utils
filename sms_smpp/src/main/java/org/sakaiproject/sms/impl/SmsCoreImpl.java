@@ -106,7 +106,10 @@ public class SmsCoreImpl implements SmsCore {
 	}
 
 	public void processNextTask() {
-		this.processTask(smsTaskLogic.getNextSmsTask());
+		SmsTask smsTask = smsTaskLogic.getNextSmsTask();
+		if (smsTask != null) {
+			this.processTask(smsTaskLogic.getNextSmsTask());
+		}
 	}
 
 	/**
