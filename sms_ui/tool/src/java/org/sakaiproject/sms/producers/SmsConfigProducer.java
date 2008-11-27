@@ -30,7 +30,9 @@ import uk.org.ponder.rsf.components.UICommand;
 import uk.org.ponder.rsf.components.UIContainer;
 import uk.org.ponder.rsf.components.UIForm;
 import uk.org.ponder.rsf.components.UIInput;
+import uk.org.ponder.rsf.components.UILink;
 import uk.org.ponder.rsf.components.UIMessage;
+import uk.org.ponder.rsf.components.UIOutput;
 import uk.org.ponder.rsf.components.UISelect;
 import uk.org.ponder.rsf.flow.ARIResult;
 import uk.org.ponder.rsf.flow.jsfnav.NavigationCase;
@@ -56,6 +58,9 @@ public class SmsConfigProducer implements ViewComponentProducer, NavigationCaseR
 				 
 		UIMessage.make(tofill, "page-title", "sms.config.title");
 		UIForm smsConfigform = UIForm.make(tofill, "sms-config-form");
+		UIMessage.make(tofill, "page-heading", "sms.config.title");
+		
+		
 		UIInput.make(smsConfigform, "sms-config-notification-email", smsConfigOTP + ".notificationEmail");
 
 
@@ -70,8 +75,8 @@ public class SmsConfigProducer implements ViewComponentProducer, NavigationCaseR
 		combo.optionnames = comboNames;
 
 
-		UICommand.make(smsConfigform, "save", "SmsConfigActionBean.save");
-		 
+		UICommand.make(smsConfigform, "save", "#{smsConfigActionBean.save}");
+		UICommand.make(smsConfigform, "cancel", "#"); 
 	}
 
 	@SuppressWarnings("unchecked")

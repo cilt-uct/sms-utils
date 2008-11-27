@@ -1,17 +1,18 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns:rsf="http://ponder.org.uk/rsf">
 <head>
-<link rel="stylesheet" href="../css/style.css" type="text/css" media="all" />
+<link href="../css/tool_base.css" type="text/css" rel="stylesheet" media="all" />
+<link href="../css/default/tool.css" type="text/css" rel="stylesheet" media="all" />
 <title rsf:id="page-title">Search Window</title>
 </head>
-<body>
+<body style="padding: 5px; margin: 4px;">
 	<div rsf:id="message-for:*">
 		<span>Message for user here</span>
   	</div>
 	<div align="left">
 	<form action="#" rsf:id="sms-config-form">
-  	<p>&nbsp;</p>
-    <table>
+    	<h2 rsf:id="page-heading">SMS Config</h2>
+    <table class="" align="left">
       <tr>
         <td>Notification Email:</td>
         <td><input style="width: 200px" type="text" rsf:id="sms-config-notification-email"></input></td>
@@ -26,8 +27,9 @@
         </td>
       </tr>
       <tr>
-        <td colspan="2" align="center">
-        <input rsf:id="save" type="submit" value="Save"/>
+      <td colspan="1" align="left">
+        <input style="color:#0099CC;" rsf:id="save" type="submit" value="Save"/>
+        <input style="color:#0099CC;" rsf:id="cancel" type="button" value="Cancel" onclick="history.go(-1)"/>
       </td>
       </tr>
     </table>
