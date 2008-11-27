@@ -26,14 +26,16 @@ public class SmsConfigValidator implements Validator{
 			ValidationUtils.rejectIfEmptyOrWhitespace(err, "notificationEmail",
 			"sms.errors.email.empty");
 			
-			StringTokenizer stringTokenizer = new StringTokenizer(smsConfig.getNotificationEmail(), ",");
-			
-			while (stringTokenizer.hasMoreElements()) {
-				String address =  stringTokenizer.nextToken();
-			
-				if(address.indexOf('@') == -1 || address.indexOf('.') == -1){
-					err.rejectValue("notificationEmail",
-							"sms.errors.email.invalid");
+			if(smsConfig.getNotificationEmail() != null){
+				StringTokenizer stringTokenizer = new StringTokenizer(smsConfig.getNotificationEmail(), ",");
+
+				while (stringTokenizer.hasMoreElements()) {
+					String address =  stringTokenizer.nextToken();
+
+					if(address.indexOf('@') == -1 || address.indexOf('.') == -1){
+						err.rejectValue("notificationEmail",
+						"sms.errors.email.invalid");
+					}
 				}
 			}
 		}

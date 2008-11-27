@@ -51,6 +51,9 @@ public class SearchListProducer implements ViewComponentProducer, ViewParamsRepo
 
 		init();
 		
+		String searchFilterOTP = "SearchFilterBean" + "."
+		+ SMSConstants.NEW_1;
+		
 		SortPagerViewParams sortParams = (SortPagerViewParams) viewparams;		
 	
 		if (sortParams.sortBy == null) {

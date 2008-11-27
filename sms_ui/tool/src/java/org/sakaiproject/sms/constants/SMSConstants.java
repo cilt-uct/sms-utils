@@ -22,6 +22,9 @@ package org.sakaiproject.sms.constants;
  */
 public class SMSConstants {
 
+	//for spring OTP
+	public static final String NEW_1 = "new 1";
+	
 	// This should probably defined by SMS API
 	public static final int MAX_SMS_LENGTH = 160;
 	public static final int MAX_MOBILE_NR_LENGTH = 20; // Just arbitary

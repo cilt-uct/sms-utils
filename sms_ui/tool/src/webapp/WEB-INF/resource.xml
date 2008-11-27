@@ -6,5 +6,6 @@
 <beans>
 
 	<bean id="smsConfigLogic" class="org.sakaiproject.sms.hibernate.logic.impl.SmsConfigLogicImpl"/>
+	<bean id="org.sakaiproject.sms.hibernate.logic.SmsAccountLogic" class="org.sakaiproject.sms.hibernate.logic.impl.SmsAccountLogicImpl" />
 
 </beans>

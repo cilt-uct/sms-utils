@@ -3,12 +3,19 @@ package org.sakaiproject.sms.otp;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.sakaiproject.sms.hibernate.logic.SmsConfigLogic;
 import org.sakaiproject.sms.hibernate.model.SmsConfig;
 
 import uk.org.ponder.beanutil.BeanLocator;
 
 
 public class SmsConfigLocator implements BeanLocator{
+	
+	private SmsConfigLogic smsConfigLogic;
+
+	public void setSmsConfigLogic(SmsConfigLogic smsConfigLogic) {
+		this.smsConfigLogic = smsConfigLogic;
+	}
 
 	/** The Constant LOCATOR_NAME. */
 	public static final String LOCATOR_NAME = "SmsConfigLocator";
@@ -32,7 +39,15 @@ public class SmsConfigLocator implements BeanLocator{
 			if (name.startsWith(NEW_PREFIX)) {
 				togo = new SmsConfig();
 			} else {
-				// TODO: Retrieve it from database
+				togo = smsConfigLogic.getSmsConfig(new Long(name));
+				//TODO: when we get test data removed this
+				if(togo == null){
+					togo = new SmsConfig();
+					togo.setId(new Long(3));
+					togo.setSakaiSiteId("sakaiSiteId");
+					togo.setSakaiToolId("sakaiToolId");
+				}
+				
 			}
 			delivered.put(name, togo);
 		}
