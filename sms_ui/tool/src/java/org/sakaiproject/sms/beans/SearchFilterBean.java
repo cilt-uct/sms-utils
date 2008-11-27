@@ -9,7 +9,17 @@ public class SearchFilterBean {
 	private String toolName;
 	private String sender;
 	private Integer currentPage;
+	private String orderBy;
 	
+	
+	public String getOrderBy() {
+		return orderBy;
+	}
+
+	public void setOrderBy(String orderBy) {
+		this.orderBy = orderBy;
+	}
+
 	public SearchFilterBean() {
 		super();
 		currentPage = new Integer(1);
