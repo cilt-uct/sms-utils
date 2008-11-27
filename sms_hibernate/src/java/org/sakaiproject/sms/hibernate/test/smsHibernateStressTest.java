@@ -22,16 +22,13 @@ import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
 public class smsHibernateStressTest extends TestCase {
 
 	/** The number of messages to insert, change as required. */
-	private static int messageCount = 100;
+	private static int messageCount = 5000;
 
 	/** The task logic. */
 	private static SmsTaskLogicImpl taskLogic = null;
 
 	/** The message logic. */
 	private static SmsMessageLogicImpl messageLogic = null;
-
-	/** The sms message. */
-	private static SmsMessage smsMessage;
 
 	/** The first message id. */
 	private static long firstMessageID;
@@ -71,9 +68,9 @@ public class smsHibernateStressTest extends TestCase {
 	public void testInsertManyMessages() {
 
 		for (int i = 0; i < messageCount; i++) {
-			smsMessage = new SmsMessage();
+			SmsMessage smsMessage = new SmsMessage();
 			smsMessage.setMobileNumber("0823450983");
-			smsMessage.setSmscMessageId("smscMessageId2Task");
+			smsMessage.setSmscMessageId("smscMessage_" + i);
 			smsMessage.setSakaiUserId("sakaiUserId");
 			smsMessage.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
 			smsMessage.setSmsTask(smsTask);
@@ -90,7 +87,7 @@ public class smsHibernateStressTest extends TestCase {
 	 * Test get task messages.
 	 */
 	public void testGetTaskMessages() {
-		HibernateUtil.clearSession();
+		// HibernateUtil.closeSession();
 		SmsTask theSmsTask = taskLogic.getSmsTask(smsTaskID);
 		firstMessageID = ((SmsMessage) theSmsTask.getSmsMessages().toArray()[0])
 				.getId();
@@ -111,7 +108,7 @@ public class smsHibernateStressTest extends TestCase {
 		assertNotNull(theMessage);
 	}
 
-	public void testDeleteTaske() {
+	public void testDeleteTasks() {
 		HibernateUtil.clearSession();
 		taskLogic.deleteSmsTask(smsTask);
 		SmsTask getSmsTask = taskLogic.getSmsTask(smsTaskID);

@@ -39,6 +39,11 @@ public class SmsCoreImpl implements SmsCore {
 
 	SmsTaskLogic smsTaskLogic = null;
 
+	/**
+	 * Get the sakai group list for the specific sms task. For now we just
+	 * generate the list. Will get it from Sakai later on. So we generate a
+	 * random number of users with random mobile numbers.
+	 */
 	public Set getDeliveryGroup(String sakaiSiteID, String sakaiGroupID,
 			SmsTask smsTask) {
 		Set messages = new HashSet<SmsMessage>();
@@ -106,6 +111,12 @@ public class SmsCoreImpl implements SmsCore {
 
 	}
 
+	/**
+	 * Process is specific task. A task can be retried if a previous send
+	 * attempt was unsuccessful due to gateway connection problems. A retry will
+	 * be re-scheduled some time in the future. When the max rety attempts are
+	 * reached or if credits are insufficient, the task is marked as failed.
+	 */
 	public void processTask(SmsTask smsTask) {
 		smsTask.setAttemptCount((smsTask.getAttemptCount()) + 1);
 
