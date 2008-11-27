@@ -50,7 +50,7 @@ public class SmsMessageTest extends TestCase {
 		insertMessage1.setMobileNumber("0721998919");
 		insertMessage1.setSmscMessageId("smscMessageId1");
 		insertMessage1.setSakaiUserId("sakaiUserId");
-		insertMessage1.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
+		insertMessage1.setStatusCode(SmsConst_DeliveryStatus.STATUS_DELIVERED);
 
 		insertMessage2 = new SmsMessage();
 		insertMessage2.setMobileNumber("0823450983");
@@ -133,12 +133,40 @@ public class SmsMessageTest extends TestCase {
 		assertEquals(smsMessage.getSmscMessageId(), insertMessage2
 				.getSmscMessageId());
 	}
-
+	
+	/**
+	 * Tests getSmsMessagesWithStatus returns only messages with the specifed status codes
+	 */
+	public void testGetSmsMessagesWithStatus() {
+		
+		//Assert that messages exist for this task that have a status other than PENDING
+		SmsTask task = taskLogic.getSmsTask(insertTask.getId());
+		boolean otherStatusFound = false;
+		for(SmsMessage message : task.getSmsMessages()) {
+			if(message.getStatusCode().equals(SmsConst_DeliveryStatus.STATUS_PENDING)) {
+				otherStatusFound = true;
+				break;
+			}
+		}
+		assertTrue("This test requires that messages exist for this task that have a status other than PENDING", otherStatusFound);
+		
+		List<SmsMessage> messages = logic.getSmsMessagesWithStatus(insertTask.getId(), SmsConst_DeliveryStatus.STATUS_PENDING);
+		
+		//We expect some records to be returned
+		assertTrue("Expected objects in collection", messages.size() > 0);
+		
+		//We know there are messages for this task that have status codes other than the one specifies above
+		//So assert that the method only retured ones with the spedified status.
+		for(SmsMessage message : messages) {
+			assertTrue("Incorrect value returned for object", message.getStatusCode().equals(SmsConst_DeliveryStatus.STATUS_PENDING));
+		}
+	}
+	
 	/**
 	 * Test delete sms message.
 	 */
-	public void testDeleteSmsMessage() {
-		// Delete the associated task too
+	public void testDeleteSmsMessage(){
+		//Delete the associated task too
 		taskLogic.deleteSmsTask(insertTask);
 		SmsTask getSmsTask = taskLogic.getSmsTask(insertTask.getId());
 		assertNull("Object not removed", getSmsTask);

@@ -1,7 +1,9 @@
 package org.sakaiproject.sms.hibernate.test;
 
 import java.sql.Timestamp;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import junit.framework.TestCase;
 
@@ -44,13 +46,13 @@ public class SmsTaskTest extends TestCase {
 		insertMessage1.setMobileNumber("0721998919");
 		insertMessage1.setSmscMessageId("smscMessageId1Task");
 		insertMessage1.setSakaiUserId("sakaiUserId");
-		insertMessage1.setStatusCode("P");
+		insertMessage1.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
 		//
 		insertMessage2 = new SmsMessage();
 		insertMessage2.setMobileNumber("0823450983");
 		insertMessage2.setSmscMessageId("smscMessageId2Task");
 		insertMessage2.setSakaiUserId("sakaiUserId");
-		insertMessage2.setStatusCode("P");
+		insertMessage2.setStatusCode(SmsConst_DeliveryStatus.STATUS_INCOMPLETE);
 	}
 
 	/**
@@ -98,6 +100,13 @@ public class SmsTaskTest extends TestCase {
 		smsTask = logic.getSmsTask(insertTask.getId());
 		assertEquals("newSakaiSiteId", smsTask.getSakaiSiteId());
 	}
+	
+	public void testAddSmsMessagesToTask_setMessages() {
+		Set<SmsMessage> messages = getSmsMessages(insertTask);
+		insertTask.setSmsMessagesOnTask(messages);
+		logic.persistSmsTask(insertTask);
+	}
+	
 
 	/**
 	 * Test add sms messages to task.
@@ -112,25 +121,48 @@ public class SmsTaskTest extends TestCase {
 		SmsTask getSmsTask = logic.getSmsTask(insertTask.getId());
 		assertNotNull(insertTask);
 		assertTrue("Collection size not correct", getSmsTask.getSmsMessages()
-				.size() == 2);
+				.size() == 4);
 
 	}
 
 	/**
 	 * Test get sms tasks filtered by message status.
+	 * Depricated for now
 	 */
-	public void testGetSmsTasksFilteredByMessageStatus() {
+	/*public void testGetSmsTasksFilteredByMessageStatus() {
+		
+		//We now that there is a task that has messages with status STATUS_PENDING and STATUS_INCOMPLETE
 		List<SmsTask> tasks = logic.getSmsTasksFilteredByMessageStatus(
-				SmsConst_DeliveryStatus.STATUS_PENDING,
-				SmsConst_DeliveryStatus.STATUS_INCOMPLETE);
-		for (SmsTask task : tasks) {
-			for (SmsMessage smsMessage : task.getSmsMessages()) {
-				assertTrue("Objetc found with incorrect value", smsMessage
-						.getStatusCode().equals(
-								SmsConst_DeliveryStatus.STATUS_PENDING));
+												SmsConst_DeliveryStatus.STATUS_PENDING,
+												SmsConst_DeliveryStatus.STATUS_INCOMPLETE);
+		boolean requiredStatusFound = false;
+		for(SmsTask task : tasks) {
+			for(SmsMessage smsMessage : task.getSmsMessages()) {
+				requiredStatusFound = (smsMessage.getStatusCode().equals(SmsConst_DeliveryStatus.STATUS_PENDING)
+						|| smsMessage.getStatusCode().equals(SmsConst_DeliveryStatus.STATUS_PENDING));
+				
 			}
 		}
-	}
+		//We know at least one task should have a message with the required status
+		assertTrue("Objetc with required status not found", requiredStatusFound);
+		
+		//Change the messages to status delivered
+		insertMessage1.setStatusCode(SmsConst_DeliveryStatus.STATUS_DELIVERED);
+		insertMessage2.setStatusCode(SmsConst_DeliveryStatus.STATUS_DELIVERED);
+		logic.persistSmsTask(insertTask);
+
+		tasks = logic.getSmsTasksFilteredByMessageStatus(
+				SmsConst_DeliveryStatus.STATUS_PENDING,
+				SmsConst_DeliveryStatus.STATUS_INCOMPLETE);
+		
+		//Make sure that no messages with status: pending and incomplete
+		for(SmsTask task : tasks) {
+			for(SmsMessage smsMessage : task.getSmsMessages()) {
+				assertFalse("Objetc found with incorrect value", smsMessage.getStatusCode().equals(SmsConst_DeliveryStatus.STATUS_PENDING));
+				assertFalse("Objetc found with incorrect value", smsMessage.getStatusCode().equals(SmsConst_DeliveryStatus.STATUS_INCOMPLETE));
+			}
+		}
+	}*/
 
 	/**
 	 * Test remove sms messages from task.
@@ -167,7 +199,7 @@ public class SmsTaskTest extends TestCase {
 	public void testGetNextSmsTask() {
 		SmsTask nextTask = logic.getNextSmsTask();
 		assertNotNull("Required record not found", nextTask);
-		List<SmsTask> tasks = logic.getAllSmsTask();
+		List<SmsTask> tasks = logic.getSmsTasksFilteredByMessageStatus(SmsConst_DeliveryStatus.STATUS_PENDING);
 		Timestamp t = null;
 
 		// Get the oldest date to send from the list;
@@ -193,6 +225,32 @@ public class SmsTaskTest extends TestCase {
 		logic.deleteSmsTask(insertTask);
 		SmsTask getSmsTask = logic.getSmsTask(insertTask.getId());
 		assertNull("Object not removed", getSmsTask);
+	}
+	
+	/////////////////////////////////////////////////////////////////////////////////////
+	// Helper methods
+	/////////////////////////////////////////////////////////////////////////////////////
+	
+	private Set<SmsMessage> getSmsMessages(SmsTask task) {
+		SmsMessage insertMessage1 = new SmsMessage();
+		insertMessage1.setMobileNumber("0721998919");
+		insertMessage1.setSmscMessageId("smscGetID1");
+		insertMessage1.setSakaiUserId("sakaiUserId");
+		insertMessage1.setStatusCode(SmsConst_DeliveryStatus.STATUS_DELIVERED);
+		//
+		SmsMessage insertMessage2 = new SmsMessage();
+		insertMessage2.setMobileNumber("0823450983");
+		insertMessage2.setSmscMessageId("smscGetID2");
+		insertMessage2.setSakaiUserId("sakaiUserId");
+		insertMessage2.setStatusCode(SmsConst_DeliveryStatus.STATUS_DELIVERED);
+		
+		insertMessage1.setSmsTask(task);
+		insertMessage2.setSmsTask(task);
+		
+		Set<SmsMessage> messages = new HashSet<SmsMessage>();
+		messages.add(insertMessage1);
+		messages.add(insertMessage2);
+		return messages;
 	}
 
 }
