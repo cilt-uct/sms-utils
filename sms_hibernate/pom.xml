@@ -139,7 +139,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>hibernate3-maven-plugin</artifactId>
-				<version>1.0-SNAPSHOT</version>
+				<version>2.1</version>
 				
 				<!--<executions>
 		        <execution>
@@ -152,16 +152,19 @@
 		        
 		      </executions>-->
 				 <configuration>
-				 	<propertyfile>/src/java/resources/database.properties</propertyfile>
-					<hibernate>
-						<configurationFile>/src/java/resources/hibernate.cfg.xml</configurationFile>
-					</hibernate>
 					<outputDirectory>
 						<!-- <hbm2cfgxml>/src/java/resources</hbm2cfgxml> 
 						<hbm2java>/src/java/org/sakaiproject/sms/hibernate/model</hbm2java>-->
 					</outputDirectory>
+					<components>
+					    <component>
+						  <name>hbm2ddl</name>
+						  <implementation>configuration</implementation>
+						</component>
+				    </components>
 					<componentProperties>
-			          <implementation>jpaconfiguration</implementation>
+				 	  <propertyfile>src/java/resources/database.properties</propertyfile>
+					  <configurationfile>src/java/resources/hibernate.cfg.xml</configurationfile>
 			          <persistenceunit>Default</persistenceunit>
 			          <outputfilename>schema.ddl</outputfilename>
 			          <drop>true</drop>

@@ -30,7 +30,7 @@ public class SmsConfig extends BaseModel {
 
 	/**
 	 * The sms gateway report timeout in seconds. If a delivery report takes
-	 * langer that this, the message will be marked as failed.
+	 * longer that this, the message will be marked as failed.
 	 */
 	private Integer gateWayReportTimeout;
 

@@ -22,7 +22,7 @@ public class SmsTestSuite {
 		suite.addTestSuite(SmsConfigTest.class);
 		suite.addTestSuite(SmsMessageTest.class);
 		suite.addTestSuite(SmsAccountTest.class);
-		suite.addTestSuite(SmsHibernateStressTest.class);
+		suite.addTestSuite(smsHibernateStressTest.class);
 		// $JUnit-END$
 		return suite;
 	}
