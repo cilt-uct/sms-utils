@@ -100,6 +100,7 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 		return null;
 	}
 	
+	
 	/**
 	 * Gets a list of SmsMessage objects for the specified and specified status code(s)
 	 * 

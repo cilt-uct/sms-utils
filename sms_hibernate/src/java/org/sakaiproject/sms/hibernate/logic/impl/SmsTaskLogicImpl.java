@@ -112,6 +112,7 @@ public class SmsTaskLogicImpl extends SmsDao implements SmsTaskLogic {
 		return null;
 	}
 
+	
 	/**
 	 * Returns a list of SmsTask objects with messages that 
 	 * have the specified status code(s)
