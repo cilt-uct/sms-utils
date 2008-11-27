@@ -43,7 +43,7 @@
   
   
   <bean id="SearchCriteria" parent="entityBeanLocatorParent">
-  	<property name="entityClass" value="org.sakaiproject.sms.beans.SearchFilterBean"/>
+  	<property name="entityClass" value="org.sakaiproject.sms.hibernate.bean.SearchFilterBean"/>
   </bean>
   
   <bean id="smsMessageGuard" parent="writeGuardParent">

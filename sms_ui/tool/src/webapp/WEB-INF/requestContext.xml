@@ -23,7 +23,7 @@
 
   <!-- Binding  Beans -->
   <bean id="smsConfig" class="org.sakaiproject.sms.hibernate.model.SmsConfig"/>
-  <bean id="searchFilterBean" class="org.sakaiproject.sms.beans.SearchFilterBean"/>	
+  <bean id="searchFilterBean" class="org.sakaiproject.sms.hibernate.bean.SearchFilterBean"/>	
 
   <!--  Producers -->
   <bean class="org.sakaiproject.sms.producers.SmsTestProducer" />
