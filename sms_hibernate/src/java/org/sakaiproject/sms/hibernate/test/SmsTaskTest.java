@@ -85,18 +85,28 @@ public class SmsTaskTest extends TestCase {
 
 	}
 
+	public void testGetSmsTasksFilteredByMessageStatus() {
+		List<SmsTask> tasks = logic.getSmsTasksFilteredByMessageStatus(
+												SmsConst_DeliveryStatus.STATUS_PENDING,
+												SmsConst_DeliveryStatus.STATUS_INCOMPLETE);
+		for(SmsTask task : tasks) {
+			for(SmsMessage smsMessage : task.getSmsMessages()) {
+				assertTrue("Objetc found with incorrect value", smsMessage.getStatusCode().equals(SmsConst_DeliveryStatus.STATUS_PENDING));
+			}
+		}
+	}
+	
 	public void testRemoveSmsMessagesFromTask() {
 		SmsTask getSmsTask = logic.getSmsTask(insertTask.getId());
 		assertTrue("Collection size not correct", getSmsTask.getSmsMessages().size() == 2);
-		getSmsTask.getSmsMessages().clear();
 		getSmsTask.setSakaiSiteId("oldSakaiSiteId");
-		//getSmsTask.getSmsMessages().remove(insertMessage1);
+		getSmsTask.getSmsMessages().remove(insertMessage1);
 		logic.persistSmsTask(getSmsTask);
-		/*getSmsTask = logic.getSmsTask(insertTask.getId());
+		getSmsTask = logic.getSmsTask(insertTask.getId());
 		assertTrue("Object not removed from collection", getSmsTask.getSmsMessages().size() == 1);
 		// Check the right object was removed
 		assertFalse("The expected object was not removed from the collection",getSmsTask.getSmsMessages().contains(insertMessage1));
-		assertTrue("The incorrect object was removed from the collection",getSmsTask.getSmsMessages().contains(insertMessage2));*/
+		assertTrue("The incorrect object was removed from the collection",getSmsTask.getSmsMessages().contains(insertMessage2));
 	}
 
 	public void testGetSmsTasks() {
@@ -115,7 +125,6 @@ public class SmsTaskTest extends TestCase {
 		for(SmsTask task : tasks) {
 			if(t == null) {
 				t = task.getDateToSend();
-				continue;
 			}
 			if(task.getDateToSend() != null 
 					&& task.getDateToSend().getTime() < t.getTime()) {
@@ -126,6 +135,8 @@ public class SmsTaskTest extends TestCase {
 		assertNotNull("No records found", t);
 		assertTrue("Did not get the correct task to be processed", nextTask.getDateToSend().getTime() ==  t.getTime());
 	}
+	
+	
 	
 	public void testDeleteSmsTask(){
 		logic.deleteSmsTask(insertTask);

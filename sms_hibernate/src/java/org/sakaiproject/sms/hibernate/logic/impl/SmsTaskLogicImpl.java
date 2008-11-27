@@ -93,12 +93,10 @@ public class SmsTaskLogicImpl extends SmsDao implements SmsTaskLogic {
 		hql.append(" from SmsTask task where task.dateToSend <= :today ");
 		hql.append(" and task.statusCode = :statusCode ");
 		hql.append(" order by task.dateToSend ");
-		log.debug("getNextSmsTask() HQL: " + hql.toString());
-		Query query = HibernateUtil.currentSession()
-				.createQuery(hql.toString());
+		Query query = HibernateUtil.currentSession().createQuery(hql.toString());
 		query.setParameter("today", getTimestampCurrent(), Hibernate.TIMESTAMP);
-		query.setParameter("statusCode",
-				SmsConst_DeliveryStatus.STATUS_PENDING, Hibernate.STRING);
+		query.setParameter("statusCode",SmsConst_DeliveryStatus.STATUS_PENDING, Hibernate.STRING);
+		log.debug("getNextSmsTask() HQL: " + query.getQueryString());
 		List<SmsTask> tasks = query.list();
 		HibernateUtil.closeSession();
 		if (tasks != null && tasks.size() > 0) {
@@ -107,4 +105,40 @@ public class SmsTaskLogicImpl extends SmsDao implements SmsTaskLogic {
 		}
 		return null;
 	}
+
+	/**
+	 * Returns a list of SmsTask objects with messages that 
+	 * have the specified status code(s)
+	 * 
+	 * @param message status code(s)
+	 * @return List of SmsTask objetcs
+	 */
+	public List<SmsTask> getSmsTasksFilteredByMessageStatus(String... messageStatusCodes) {
+		
+		//
+		
+		StringBuilder hql = new StringBuilder();
+		
+		//hql.append("from SmsTask task where :statusCodes in elements(task.smsMessages)");
+		
+		//hql.append(" from SmsTask task ");
+		//hql.append(" task.statusCode IN (:statusCodes) ");
+		/*hql.append(" from SmsTask task ");
+		hql.append(" LEFT OUTER JOIN SmsMessage message ON task.task_id = message.task_id ");
+		hql.append(" and message.statusCode IN (:statusCodes) ");*/
+		
+		hql.append(" from SmsTask task where task.id in ( ");
+		hql.append("     select distinct message.smsTask.id from SmsMessage message where message.statusCode IN (:statusCodes) ) ");
+		
+		log.debug("getSmsTasksFilteredByMessageStatus() HQL: " + hql.toString());
+		Query query = HibernateUtil.currentSession().createQuery(hql.toString());
+		query.setParameterList("statusCodes", messageStatusCodes, Hibernate.STRING);
+		//query.setParameter("statusCodes", messageStatusCodes[0], Hibernate.STRING);
+		log.debug("getSmsTasksFilteredByMessageStatus() HQL: " + query.getQueryString());
+		List<SmsTask> tasks = query.list();
+		HibernateUtil.closeSession();
+		return tasks;
+	}
+	
+	
 }

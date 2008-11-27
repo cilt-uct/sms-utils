@@ -19,8 +19,9 @@ package org.sakaiproject.sms.hibernate.dao;
 
 import java.sql.Timestamp;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+/*import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;*/
+import org.apache.log4j.Level;
 
 
 /**
@@ -32,6 +33,8 @@ import org.apache.commons.logging.LogFactory;
 public class SmsDao extends BaseDao{
 
     //protected static Log log = LogFactory.getLog(SmsDao.class);
+	//protected static org.apache.log4j.Logger log = org.apache.log4j.Logger
+	//.getLogger(SmsDao.class);
 	protected Log log = new Log();
 	protected class Log {//THIS IS A TEMP SOLUTION TILL I GET A FREE MIN TO SORT OUT LOG4J
 		public void debug(String msg) {
@@ -44,6 +47,20 @@ public class SmsDao extends BaseDao{
     }
 
     public void init() {
+    	//log.setLevel(Level.ALL);
         log.debug("init");
     }
+    
+    /**
+	 * Enables or disables the debug Information
+	 * 
+	 * @param debug
+	 */
+	public void enableDebugInformation(boolean debug) {
+		if (debug) {
+			//log.setLevel(Level.ALL);
+		} else {
+			//log.setLevel(Level.OFF);
+		}
+	}
 }

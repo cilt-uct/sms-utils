@@ -32,7 +32,7 @@
         	<key column="MESSAGE_ID"/>  
         	<one-to-many class="org.sakaiproject.sms.hibernate.model.SmsMessage" not-found="exception"/>  
         </set> -->
-        <set name="smsMessages" inverse="true" cascade="all-delete-orphan">
+        <set name="smsMessages" inverse="true" cascade="all">
             <key column="MESSAGE_ID" not-null="true"/>            
             <one-to-many class="org.sakaiproject.sms.hibernate.model.SmsMessage" not-found="ignore"/>
             </set>
@@ -45,7 +45,7 @@
         <id name="id" type="long" column="MESSAGE_ID">
             <generator class="increment"/>
         </id>
-        <property name="smscMessageId" type="string" column="SMSC_MESSAGE_ID" not-null="true" length="20" unique-key="true"/>
+        <property name="smscMessageId" type="string" column="SMSC_MESSAGE_ID" not-null="false" length="20" unique-key="true"/>
         <property name="mobileNumber" type="string" column="MOBILE_NUMBER" not-null="true" length="50"/>
         <property name="sakaiUserId" type="string" column="SAKAI_USER_ID" not-null="true" length="99"/>
         <property name="statusCode" type="string" column="STATUS_CODE" not-null="true" length="2"/>

@@ -41,5 +41,7 @@ public interface SmsTaskLogic {
 	public List<SmsTask> getAllSmsTask();
 
 	public void persistSmsTask(SmsTask smsTask);
+	
+	public List<SmsTask> getSmsTasksFilteredByMessageStatus(String... messageStatusCode);
 
 }
