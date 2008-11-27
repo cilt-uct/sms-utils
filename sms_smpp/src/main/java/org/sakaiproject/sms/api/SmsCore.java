@@ -18,6 +18,8 @@
 
 package org.sakaiproject.sms.api;
 
+import java.util.Set;
+
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.model.SmsDeliveryReport;
@@ -38,8 +40,10 @@ public interface SmsCore {
 	 * 
 	 * @param sakaiSiteID
 	 * @param sakaiGroupID
+	 * @param smsTask
 	 */
-	public SmsMessage[] getDeliveryGroup(String sakaiSiteID, String sakaiGroupID);
+	public Set getDeliveryGroup(String sakaiSiteID, String sakaiGroupID,
+			SmsTask smsTask);
 
 	/**
 	 * Get all buffered gateway delivery reports from SMPP service. And update
@@ -83,6 +87,12 @@ public interface SmsCore {
 	 * @param messageID
 	 */
 	public void processIncomingMessage(SmsMessage smsMessage);
+
+	/**
+	 * Gets the next task to process.This will inturn call the processTask
+	 * method to execute the task
+	 */
+	public void processNextTask();
 
 	/**
 	 * Get the list of users that must receive the message. Send messages to

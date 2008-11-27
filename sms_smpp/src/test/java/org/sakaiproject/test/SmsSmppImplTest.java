@@ -46,7 +46,7 @@ public class SmsSmppImplTest extends TestCase {
 			smsMessages[i].setId(new Long(i));
 
 		}
-		smsMessages = smsSmppImpl.sendMessagesToGateway(smsMessages);
+		// smsMessages = smsSmppImpl.sendMessagesToGateway(smsMessages);
 	}
 
 	public void testSendMultiSMStoOtherSession() {
@@ -59,6 +59,6 @@ public class SmsSmppImplTest extends TestCase {
 			smsMessages[i].setId(new Long(i));
 
 		}
-		smsMessages = smsSmppImpl2.sendMessagesToGateway(smsMessages);
+		// smsMessages = smsSmppImpl2.sendMessagesToGateway(smsMessages);
 	}
 }

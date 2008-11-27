@@ -1,0 +1,127 @@
+package org.sakaiproject.sms.impl;
+
+import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.sakaiproject.sms.api.SmsCore;
+import org.sakaiproject.sms.api.SmsSmpp;
+import org.sakaiproject.sms.hibernate.logic.SmsTaskLogic;
+import org.sakaiproject.sms.hibernate.model.SmsMessage;
+import org.sakaiproject.sms.hibernate.model.SmsTask;
+import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
+import org.sakaiproject.sms.model.SmsDeliveryReport;
+import org.sakaiproject.sms.model.SmsSubmissionResult;
+
+public class SmsCoreImpl implements SmsCore {
+
+	public static final int MAX_RETRY = 5;
+
+	SmsSmpp smsSmpp = null;
+
+	SmsTaskLogic smsTaskLogic = null;
+
+	public Set getDeliveryGroup(String sakaiSiteID, String sakaiGroupID,
+			SmsTask smsTask) {
+		Set messages = new HashSet<SmsMessage>();
+		String users[] = new String[100];
+		String celnumbers[] = new String[100];
+		for (int i = 0; i < users.length; i++) {
+			users[i] = "SakaiUser" + i;
+			celnumbers[i] = "+2773"
+					+ (int) Math.round(Math.random() * 10000000);
+		}
+
+		for (int i = 0; i < (int) Math.round(Math.random() * 100); i++) {
+
+			SmsMessage message = new SmsMessage();
+			message.setMobileNumber(celnumbers[(int) Math
+					.round(Math.random() * 99)]);
+			message.setSakaiUserId(users[(int) Math.round(Math.random() * 99)]);
+			message.setSmsTask(smsTask);
+
+			messages.add(message);
+
+		}
+		return messages;
+	}
+
+	public SmsDeliveryReport[] getDeliveryReports() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public SmsTask getNextSmsTask() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String getSakaiMobileNumber(String sakaiUserID) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public SmsSmpp getSmsSmpp() {
+		return smsSmpp;
+	}
+
+	public SmsTaskLogic getSmsTaskLogic() {
+		return smsTaskLogic;
+	}
+
+	public void insertIntoDebugLog() {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void insertNewTask(SmsTask smsTask) {
+		smsTaskLogic.persistSmsTask(smsTask);
+
+	}
+
+	public void processIncomingMessage(SmsMessage smsMessage) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void processNextTask() {
+
+	}
+
+	public void processTask(SmsTask smsTask) {
+		smsTask.setAttemptCount((smsTask.getAttemptCount()) + 1);
+
+		if (smsTask.getAttemptCount() < MAX_RETRY) {
+			smsTask.setSmsMessages(getDeliveryGroup(smsTask.getSakaiSiteId(),
+					smsTask.getDeliveryGroupId(), smsTask));
+
+			SmsSubmissionResult smsSubmissionResult = smsSmpp
+					.sendMessagesToGateway(smsTask.getSmsMessages());
+			smsTask.setStatusCode(smsSubmissionResult.getStatus());
+
+			if (smsTask.getStatusCode().equals(
+					SmsConst_DeliveryStatus.STATUS_INCOMPLETE)) {
+				Calendar now = Calendar.getInstance();
+				now.add(Calendar.MINUTE, +(15));
+
+				smsTask.rescheduleDateToSend(new Timestamp(now
+						.getTimeInMillis()));
+			}
+
+		} else {
+			smsTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_FAIL);
+		}
+
+		smsTaskLogic.persistSmsTask(smsTask);
+	}
+
+	public void setSmsSmpp(SmsSmpp smsSmpp) {
+		this.smsSmpp = smsSmpp;
+	}
+
+	public void setSmsTaskLogic(SmsTaskLogic smsTaskLogic) {
+		this.smsTaskLogic = smsTaskLogic;
+	}
+
+}

@@ -23,8 +23,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 
 import org.apache.log4j.Level;
 import org.jsmpp.InvalidResponseException;
@@ -58,37 +60,11 @@ import org.jsmpp.util.InvalidDeliveryReceiptException;
 import org.jsmpp.util.TimeFormatter;
 import org.sakaiproject.sms.api.SmsSmpp;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
+import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
 import org.sakaiproject.sms.model.SmsDeliveryReport;
+import org.sakaiproject.sms.model.SmsSubmissionResult;
 
 public class SmsSmppImpl implements SmsSmpp {
-
-	private final static org.apache.log4j.Logger LOG = org.apache.log4j.Logger
-			.getLogger(SmsSmppImpl.class);
-	private static TimeFormatter timeFormatter = new AbsoluteTimeFormatter();
-	private BindThread bindTest;
-	private int bindThreadTimer;
-	private byte dataCoding;
-	private ArrayList<SmsDeliveryReport> delReports = new ArrayList<SmsDeliveryReport>();
-	private byte destAddressNPI;
-	private byte destAddressTON;
-	private boolean disconnectGateWayCalled;
-	private int enquireLinkTimeOut;
-	private String gatewayAdress;
-	private boolean gatewayBound = false;
-	private String password;
-	private int port;
-	private byte priorityFlag;
-	private Properties properties = new Properties();
-	private byte protocolId;
-	private byte replaceIfPresentFlag;
-	private String serviceType;
-	private SMPPSession session = new SMPPSession();
-	private byte smDefaultMsgId;
-	private String sourceAddress;
-	private byte sourceAddressNPI;
-	private byte sourceAddressTON;
-	private String systemType;
-	private String userName;
 
 	class BindThread implements Runnable {
 
@@ -173,6 +149,36 @@ public class SmsSmppImpl implements SmsSmpp {
 			}
 		}
 	}
+
+	private final static org.apache.log4j.Logger LOG = org.apache.log4j.Logger
+			.getLogger(SmsSmppImpl.class);
+	private static TimeFormatter timeFormatter = new AbsoluteTimeFormatter();
+	private BindThread bindTest;
+	private int bindThreadTimer;
+	private byte dataCoding;
+	private ArrayList<SmsDeliveryReport> delReports = new ArrayList<SmsDeliveryReport>();
+	private byte destAddressNPI;
+	private byte destAddressTON;
+	private boolean disconnectGateWayCalled;
+	private int enquireLinkTimeOut;
+	private String gatewayAdress;
+	private boolean gatewayBound = false;
+	private String password;
+	private int port;
+	private byte priorityFlag;
+	private Properties properties = new Properties();
+	private byte protocolId;
+	private byte replaceIfPresentFlag;
+	private String serviceType;
+	private SMPPSession session = new SMPPSession();
+	private byte smDefaultMsgId;
+	private String sourceAddress;
+	private byte sourceAddressNPI;
+	private byte sourceAddressTON;
+
+	private String systemType;
+
+	private String userName;
 
 	public boolean bind() {
 
@@ -431,57 +437,100 @@ public class SmsSmppImpl implements SmsSmpp {
 	}
 
 	/**
+	 * Send a list of messages to the gateway. Abort if the gateway connection
+	 * is down or gateway returns an error and mark relevant messages as failed.
+	 * Return message statuses back to caller.
+	 * 
+	 * @return
+	 */
+	public SmsSubmissionResult sendMessagesToGateway(Set messages) {
+		SmsSubmissionResult result = new SmsSubmissionResult();
+		if (!gatewayBound) {
+			result.setStatus(SmsConst_DeliveryStatus.STATUS_RETRY);
+			return result;
+		}
+		Iterator it = messages.iterator();
+		while (it.hasNext()) {
+			if (!gatewayBound) {
+				result.setStatus(SmsConst_DeliveryStatus.STATUS_INCOMPLETE);
+				return result;
+			}
+			SmsMessage message = (SmsMessage) it.next();
+			message = sendMessageToGateway(message);
+			result.getSmsMessages().add(message);
+			if (!message.getStatusCode().equals(
+					SmsConst_DeliveryStatus.STATUS_SENT)) {
+				result.setStatus(SmsConst_DeliveryStatus.STATUS_INCOMPLETE);
+			}
+
+		}
+		if (result.getStatus() == null) {
+			result.setStatus(SmsConst_DeliveryStatus.STATUS_SENT);
+		}
+		return result;
+	}
+
+	/**
 	 * Send one message to the SMS gateway. Return result code to caller.
 	 */
 	public SmsMessage sendMessageToGateway(SmsMessage message) {
+		if (gatewayBound) {
+			try {
 
-		try {
+				String messageId = session.submitShortMessage(serviceType,
+						TypeOfNumber.valueOf(sourceAddressTON),
+						NumberingPlanIndicator.valueOf(sourceAddressNPI),
+						sourceAddress, TypeOfNumber.valueOf(destAddressTON),
+						NumberingPlanIndicator.valueOf(destAddressNPI), message
+								.getMobileNumber(), new ESMClass(), protocolId,
+						priorityFlag, timeFormatter.format(new Date()), null,
+						new RegisteredDelivery(
+								SMSCDeliveryReceipt.SUCCESS_FAILURE),
+						replaceIfPresentFlag, new GeneralDataCoding(false,
+								true, MessageClass.CLASS1,
+								Alphabet.ALPHA_DEFAULT), smDefaultMsgId,
+						message.getMessageBody().getBytes());
 
-			String messageId = session
-					.submitShortMessage(serviceType, TypeOfNumber
-							.valueOf(sourceAddressTON), NumberingPlanIndicator
-							.valueOf(sourceAddressNPI), sourceAddress,
-							TypeOfNumber.valueOf(destAddressTON),
-							NumberingPlanIndicator.valueOf(destAddressNPI),
-							message.getMobileNumber(), new ESMClass(),
-							protocolId, priorityFlag, timeFormatter
-									.format(new Date()), null,
-							new RegisteredDelivery(
-									SMSCDeliveryReceipt.SUCCESS_FAILURE),
-							replaceIfPresentFlag, new GeneralDataCoding(false,
-									true, MessageClass.CLASS1,
-									Alphabet.ALPHA_DEFAULT), smDefaultMsgId,
-							message.getMessageBody().getBytes());
+				message.setSmscMessageId(messageId);
+				message.setDebugInfo("Message submitted, message_id is "
+						+ messageId);
+				message.setSubmitResult(true);
+				message.setStatusCode(SmsConst_DeliveryStatus.STATUS_SENT);
+				LOG.info("Message submitted, message_id is " + messageId);
+			} catch (PDUException e) {
+				// Invalid PDU parameter
+				message.setDebugInfo("Invalid PDU parameter Message failed");
+				message.setStatusCode(SmsConst_DeliveryStatus.STATUS_ERROR);
+				LOG.error(e);
 
-			message.setSmscMessageId(messageId);
-			message.setDebugInfo("Message submitted, message_id is "
-					+ messageId);
-			message.setSubmitResult(true);
-			LOG.info("Message submitted, message_id is " + messageId);
-		} catch (PDUException e) {
-			// Invalid PDU parameter
-			message.setDebugInfo("Invalid PDU parameter Message failed");
-			LOG.error(e);
+			} catch (ResponseTimeoutException e) {
+				// Response timeout
+				message.setDebugInfo("Response timeout Message failed");
+				message.setStatusCode(SmsConst_DeliveryStatus.STATUS_ERROR);
+				LOG.error(e);
 
-		} catch (ResponseTimeoutException e) {
-			// Response timeout
-			message.setDebugInfo("Response timeout Message failed");
-			LOG.error(e);
+			} catch (InvalidResponseException e) {
+				// Invalid response
+				message.setDebugInfo("Receive invalid respose Message failed");
+				message.setStatusCode(SmsConst_DeliveryStatus.STATUS_ERROR);
+				LOG.error(e);
 
-		} catch (InvalidResponseException e) {
-			// Invalid response
-			message.setDebugInfo("Receive invalid respose Message failed");
-			LOG.error(e);
+			} catch (NegativeResponseException e) {
+				// Receiving negative response (non-zero command_status)
+				message
+						.setDebugInfo("Receive negative response Message failed");
+				message.setStatusCode(SmsConst_DeliveryStatus.STATUS_ERROR);
+				LOG.error(e);
 
-		} catch (NegativeResponseException e) {
-			// Receiving negative response (non-zero command_status)
-			message.setDebugInfo("Receive negative response Message failed");
-			LOG.error(e);
+			} catch (IOException e) {
+				message.setDebugInfo("IO error occur Message failed");
+				message.setStatusCode(SmsConst_DeliveryStatus.STATUS_ERROR);
+				LOG.error(e);
 
-		} catch (IOException e) {
-			message.setDebugInfo("IO error occur Message failed");
-			LOG.error(e);
-
+			}
+		} else {
+			message.setDebugInfo("Sms Gateway is not bound");
+			message.setStatusCode(SmsConst_DeliveryStatus.STATUS_ERROR);
 		}
 		return message;
 	}
@@ -491,15 +540,4 @@ public class SmsSmppImpl implements SmsSmpp {
 
 	}
 
-	/**
-	 * Send a list of messages to the gateway. Abort if the gateway connection
-	 * is down or gateway returns an error and mark relevant messages as failed.
-	 * Return message statuses back to caller.
-	 */
-	public SmsMessage[] sendMessagesToGateway(SmsMessage[] messages) {
-		for (int i = 0; i < messages.length; i++) {
-			sendMessageToGateway(messages[i]);
-		}
-		return messages;
-	}
 }
