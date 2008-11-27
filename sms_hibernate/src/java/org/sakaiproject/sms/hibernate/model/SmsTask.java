@@ -504,7 +504,7 @@ public class SmsTask extends BaseModel {
 	 * @param smsMessages
 	 *            the new sms messages
 	 */
-	public void setSmsMessages(Set<SmsMessage> smsMessages) {
+	private void setSmsMessages(Set<SmsMessage> smsMessages) {
 		this.smsMessages = smsMessages;
 	}
 
@@ -516,6 +516,19 @@ public class SmsTask extends BaseModel {
 	 */
 	public void setStatusCode(String statusCode) {
 		this.statusCode = statusCode;
+	}
+	
+	/**
+	 * Sets the sms messages on a this SmsTask object
+	 * 
+	 * @param smsMessages
+	 */
+	public void setSmsMessagesOnTask(Set<SmsMessage> smsMessages) {
+		if(smsMessages != null) {
+			for(SmsMessage message : smsMessages) {
+				this.smsMessages.add(message);
+			}
+		}
 	}
 
 	/*

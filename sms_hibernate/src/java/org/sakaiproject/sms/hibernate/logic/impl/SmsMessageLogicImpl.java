@@ -18,6 +18,7 @@
 
 package org.sakaiproject.sms.hibernate.logic.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Hibernate;
@@ -97,6 +98,34 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 			return messages.get(0);
 		}
 		return null;
+	}
+	
+	/**
+	 * Gets a list of SmsMessage objects for the specified and specified status code(s)
+	 * 
+	 * @param sms task id
+	 * @param statusCode(s)
+	 * @return List<SmsMessage> - sms messages 
+	 */
+	public List<SmsMessage> getSmsMessagesWithStatus(Long smsTaskId, String... statusCodes){
+		List<SmsMessage> messages = new ArrayList<SmsMessage>();
+		
+		//Return empty list if no status codes were passed in
+		if(statusCodes.length > 0) {
+			
+			StringBuilder hql = new StringBuilder();
+			hql.append(" from SmsMessage message where message.smsTask.id = :smsTaskId ");
+			hql.append(" and message.statusCode IN (:statusCodes) ");
+			
+			log.debug("getSmsTasksFilteredByMessageStatus() HQL: " + hql.toString());
+			Query query = HibernateUtil.currentSession().createQuery(hql.toString());
+			query.setParameter("smsTaskId", smsTaskId);
+			query.setParameterList("statusCodes", statusCodes, Hibernate.STRING);
+			messages = query.list();
+			HibernateUtil.closeSession();
+			
+		}
+		return messages;
 	}
 	
 }

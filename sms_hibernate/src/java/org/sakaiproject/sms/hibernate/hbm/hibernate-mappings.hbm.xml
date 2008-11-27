@@ -32,7 +32,7 @@
         	<key column="MESSAGE_ID"/>  
         	<one-to-many class="org.sakaiproject.sms.hibernate.model.SmsMessage" not-found="exception"/>  
         </set> -->
-        <set name="smsMessages" inverse="true" cascade="all">
+        <set name="smsMessages" inverse="true" cascade="all-delete-orphan">
             <key column="MESSAGE_ID" not-null="true"/>            
             <one-to-many class="org.sakaiproject.sms.hibernate.model.SmsMessage" not-found="ignore"/>
             </set>
