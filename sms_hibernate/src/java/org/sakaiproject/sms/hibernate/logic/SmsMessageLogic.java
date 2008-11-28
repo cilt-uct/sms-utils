@@ -23,6 +23,7 @@ import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.sakaiproject.sms.hibernate.bean.SearchFilterBean;
 import org.sakaiproject.sms.hibernate.dao.HibernateUtil;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 
@@ -72,4 +73,21 @@ public interface SmsMessageLogic {
 	 * @return sms message
 	 */
 	public SmsMessage getSmsMessageBySmscMessageId(String smscMessageId);
+	
+	/**
+	 * Gets a list of SmsMessage objects for the specified and specified status code(s)
+	 * 
+	 * @param sms task id
+	 * @param statusCode(s)
+	 * @return List<SmsMessage> - sms messages 
+	 */
+	public List<SmsMessage> getSmsMessagesWithStatus(Long smsTaskId, String... statusCodes);
+	
+	/**
+	 * Gets a list of SmsMessage objects for the specified search criteria
+	 * 
+	 * @param search Bean containing the search criteria
+	 * @return LList of SmsMessages
+	 */
+	public List<SmsMessage> getSmsMessagesForCriteria(SearchFilterBean searchBean);
 }

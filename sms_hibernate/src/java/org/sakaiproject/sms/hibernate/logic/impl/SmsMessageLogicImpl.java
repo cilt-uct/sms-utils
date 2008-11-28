@@ -21,9 +21,12 @@ package org.sakaiproject.sms.hibernate.logic.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
+import org.sakaiproject.sms.hibernate.bean.SearchFilterBean;
 import org.sakaiproject.sms.hibernate.dao.HibernateUtil;
 import org.sakaiproject.sms.hibernate.dao.SmsDao;
 import org.sakaiproject.sms.hibernate.logic.SmsMessageLogic;
@@ -126,6 +129,46 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 			HibernateUtil.closeSession();
 			
 		}
+		return messages;
+	}
+	
+
+	/**
+	 * Gets a list of SmsMessage objects for the specified search criteria
+	 * 
+	 * @param search Bean containing the search criteria
+	 * @return LList of SmsMessages
+	 */
+	public List<SmsMessage> getSmsMessagesForCriteria(SearchFilterBean searchBean){
+		Criteria crit = HibernateUtil.currentSession().createCriteria(SmsMessage.class);
+		List<SmsMessage> messages = new ArrayList<SmsMessage>();
+		
+		//Message status
+		if(searchBean.getTaskStatus() != null && !searchBean.getTaskStatus().trim().equals("")) {
+			crit.add(Restrictions.ilike("statusCode", searchBean.getTaskStatus()));
+		}
+		
+		//Sakai tool name
+		if(searchBean.getToolName() != null && !searchBean.getToolName().trim().equals("")) {
+			crit.add(Restrictions.ilike("smsTask.sakaiToolName", searchBean.getToolName()));
+		}
+		
+		//Date to send start
+		if(searchBean.getDateFrom() != null) {
+			crit.add(Restrictions.ge("smsTask.dateToSend", searchBean.getDateFrom()));
+		}
+		
+		//Date to send end
+		if(searchBean.getDateTo() != null) {
+			crit.add(Restrictions.le("smsTask.dateToSend", searchBean.getDateTo()));
+		}
+		
+		//Sender name
+		if(searchBean.getSender() != null && !searchBean.getSender().trim().equals("") ) {
+			crit.add(Restrictions.ilike("smsTask.senderUserName", searchBean.getSender()));
+		}
+		
+		messages = crit.list();
 		return messages;
 	}
 	

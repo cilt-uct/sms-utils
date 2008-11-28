@@ -5,6 +5,7 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.sakaiproject.sms.hibernate.bean.SearchFilterBean;
 import org.sakaiproject.sms.hibernate.logic.impl.SmsMessageLogicImpl;
 import org.sakaiproject.sms.hibernate.logic.impl.SmsTaskLogicImpl;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
@@ -160,6 +161,53 @@ public class SmsMessageTest extends TestCase {
 		for(SmsMessage message : messages) {
 			assertTrue("Incorrect value returned for object", message.getStatusCode().equals(SmsConst_DeliveryStatus.STATUS_PENDING));
 		}
+	}
+	
+	/**
+	 * Tests the getMessagesForCriteria method
+	 */
+	public void testGetMessagesForCriteria() {
+		
+		SmsTask insertTask = new SmsTask();
+		insertTask.setSakaiSiteId("sakaiSiteId");
+		insertTask.setSmsAccountId(1);
+		insertTask.setDateCreated(new Timestamp(System.currentTimeMillis()));
+		insertTask.setDateToSend(new Timestamp(System.currentTimeMillis()));
+		insertTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
+		insertTask.setAttemptCount(2);
+		insertTask.setMessageBody("messageCrit");
+		insertTask.setSenderUserName("messageCrit");
+		insertTask.setSakaiToolName("sakaiToolName");
+		
+		SmsMessage insertMessage = new SmsMessage();
+		insertMessage.setMobileNumber("0721998919");
+		insertMessage.setSmscMessageId("criterai");
+		insertMessage.setSakaiUserId("criterai");
+		insertMessage.setStatusCode(SmsConst_DeliveryStatus.STATUS_ERROR);
+		
+		insertMessage.setSmsTask(insertTask);
+		insertTask.getSmsMessages().add(insertMessage);
+		
+		taskLogic.persistSmsTask(insertTask);
+		
+		SearchFilterBean bean = new SearchFilterBean();
+		bean.setTaskStatus(SmsConst_DeliveryStatus.STATUS_ERROR);
+		
+		List<SmsMessage> messages = logic.getSmsMessagesForCriteria(bean);
+		assertTrue("Collection returned has no objects", messages.size() > 0);
+		try {
+			for(SmsMessage message : messages) {
+				//We know that only one message should be returned becuase
+				//we only added one with status ERROR.
+				assertEquals(message, insertMessage);
+				//assertTrue("Object does not conform to specified criteria", message.getStatusCode().equals(SmsConst_DeliveryStatus.STATUS_ERROR));
+				//assertTrue("Object does not conform to specified criteria", message.getSmsTask().getSakaiToolName().equals("sakaiToolName"));
+				
+			}
+		}finally {
+			taskLogic.deleteSmsTask(insertTask);
+		}
+		
 	}
 	
 	/**
