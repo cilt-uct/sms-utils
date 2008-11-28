@@ -123,7 +123,7 @@ public class SmsCoreImpl implements SmsCore {
 		smsTask.setAttemptCount((smsTask.getAttemptCount()) + 1);
 		if (smsTask.getAttemptCount() < MAX_RETRY) {
 			if (smsTask.getAttemptCount() <= 1) {
-				smsTask.setSmsMessages(getDeliveryGroup(smsTask
+				smsTask.setSmsMessagesOnTask(getDeliveryGroup(smsTask
 						.getSakaiSiteId(), smsTask.getDeliveryGroupId(),
 						smsTask));
 				smsTaskLogic.persistSmsTask(smsTask);
