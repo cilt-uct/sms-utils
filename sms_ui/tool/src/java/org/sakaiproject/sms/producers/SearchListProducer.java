@@ -24,6 +24,7 @@ public class SearchListProducer implements ViewComponentProducer, ViewParamsRepo
 	private SearchCriteriaRenderer searchCriteriaRenderer;
 	private SearchResultsRenderer searchResultsRenderer;
 	private TablePagerRenderer tablePagerRenderer;
+	private String titleMessage;
 	
 	public void setTablePagerRenderer(TablePagerRenderer tablePagerRenderer) {
 		this.tablePagerRenderer = tablePagerRenderer;
@@ -36,6 +37,10 @@ public class SearchListProducer implements ViewComponentProducer, ViewParamsRepo
 	public void setSearchCriteriaRenderer(SearchCriteriaRenderer searchCriteriaRender) {
 		this.searchCriteriaRenderer = searchCriteriaRender;
 	}
+	
+	public void setTitleMessage(){
+		
+	}
 
 	public String getViewID() {
 		return VIEW_ID;
@@ -44,6 +49,8 @@ public class SearchListProducer implements ViewComponentProducer, ViewParamsRepo
 	public void init(){		
 		Assert.notNull(searchCriteriaRenderer);
 		Assert.notNull(searchResultsRenderer);
+		Assert.notNull(tablePagerRenderer);
+		Assert.notNull(titleMessage);
 	}
 	
 	public void fillComponents(UIContainer tofill, ViewParameters viewparams,
@@ -51,8 +58,6 @@ public class SearchListProducer implements ViewComponentProducer, ViewParamsRepo
 
 		init();
 		
-		String searchFilterOTP = "SearchFilterBean" + "."
-		+ SMSConstants.NEW_1;
 		
 		SortPagerViewParams sortParams = (SortPagerViewParams) viewparams;		
 	

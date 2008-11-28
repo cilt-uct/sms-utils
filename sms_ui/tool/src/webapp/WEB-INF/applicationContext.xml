@@ -38,12 +38,11 @@
   <!-- The beans which will be preserved across a flow via simple instance
     copying -->
   <bean parent="copyPreservingParent">
-    <property name="value" value="SmsMessageLocator"/>
+    <property name="value" value="SmsMessageLocator, SmsConfigLocator"/>
   </bean>
   
-  
-  <bean id="SearchCriteria" parent="entityBeanLocatorParent">
-  	<property name="entityClass" value="org.sakaiproject.sms.hibernate.bean.SearchFilterBean"/>
+  <bean id="searchScope" parent="beanScopeParent">
+    <property name="copyPreservingBeans" value="searchFilterBean"/>
   </bean>
   
   <bean id="smsMessageGuard" parent="writeGuardParent">

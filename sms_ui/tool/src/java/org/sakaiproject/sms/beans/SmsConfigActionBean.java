@@ -49,8 +49,10 @@ public class SmsConfigActionBean {
 	
 	public String save(){		
 		
+		
+		//TODO hard code id for now
 		SmsConfig smsConfig = (SmsConfig) smsConfigLocator
-		.locateBean(SmsMessageLocator.NEW_1);
+		.locateBean("3");
 		
 		if(smsConfig.getSmsEnabled().equals(Boolean.FALSE))
 			smsConfig.setNotificationEmail("");
@@ -63,8 +65,8 @@ public class SmsConfigActionBean {
 			log.info("Persisting smsConfig");
 		}
 		
-		smsConfigLogic.persistSmsConfig(smsConfig);
+//		smsConfigLogic.persistSmsConfig(smsConfig);
 		
-		return "";
+		return ActionResults.SUCCESS;
 	}
 }

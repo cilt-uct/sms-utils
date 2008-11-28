@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.sakaiproject.sms.beans.ActionResults;
-import org.sakaiproject.sms.hibernate.model.SmsConfig;
 import org.sakaiproject.sms.otp.SmsConfigLocator;
 
 import uk.org.ponder.rsf.components.ELReference;
@@ -31,9 +30,7 @@ import uk.org.ponder.rsf.components.UICommand;
 import uk.org.ponder.rsf.components.UIContainer;
 import uk.org.ponder.rsf.components.UIForm;
 import uk.org.ponder.rsf.components.UIInput;
-import uk.org.ponder.rsf.components.UILink;
 import uk.org.ponder.rsf.components.UIMessage;
-import uk.org.ponder.rsf.components.UIOutput;
 import uk.org.ponder.rsf.components.UISelect;
 import uk.org.ponder.rsf.flow.ARIResult;
 import uk.org.ponder.rsf.flow.jsfnav.NavigationCase;
@@ -89,4 +86,6 @@ public class SmsConfigProducer implements ViewComponentProducer, NavigationCaseR
 				new SimpleViewParameters(SmsConfigProducer.VIEW_ID)));
 		return list;
 	}
+	
+	
 }

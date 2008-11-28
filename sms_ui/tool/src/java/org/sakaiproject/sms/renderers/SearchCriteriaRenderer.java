@@ -1,7 +1,5 @@
 package org.sakaiproject.sms.renderers;
 
-import org.sakaiproject.sms.constants.SMSConstants;
-
 import uk.org.ponder.rsf.components.ELReference;
 import uk.org.ponder.rsf.components.UIBoundList;
 import uk.org.ponder.rsf.components.UICommand;
@@ -11,19 +9,16 @@ import uk.org.ponder.rsf.components.UIInput;
 import uk.org.ponder.rsf.components.UIJointContainer;
 import uk.org.ponder.rsf.components.UISelect;
 
-public class SearchCriteriaRenderer {
-
+public class SearchCriteriaRenderer{
 
 	public void createSearchCriteria(UIContainer tofill, String divID, String viewID) {
 
-		String searchFilterOTP = "SearchFilterBean" + "."
-		+ SMSConstants.NEW_1;
 		
 		UIJointContainer searchCriteria = new UIJointContainer(tofill,divID, "search-component:");
 		
 		UIForm searchForm =  UIForm.make(searchCriteria, "search-criteria");
 		
-		UIInput.make(searchForm, "id", searchFilterOTP + ".id");
+		UIInput.make(searchForm, "id", "#{searchFilterBean.id}");
 		UIInput.make(searchForm, "date-from", "#{searchFilterBean.dateFrom}");
 		UIInput.make(searchForm, "tool-name", "#{searchFilterBean.toolName}");
 		
@@ -42,5 +37,7 @@ public class SearchCriteriaRenderer {
 		UIInput.make(searchForm, "sender", "#{searchFilterBean.sender}");
 		UICommand.make(searchForm, "search", "#{searchFilterBean.fireAction}");
 	}
+	
+	
 		
 }
