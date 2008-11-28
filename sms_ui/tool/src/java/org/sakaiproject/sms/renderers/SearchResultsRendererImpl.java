@@ -8,7 +8,6 @@ import org.sakaiproject.sms.constants.SortDirection;
 import org.sakaiproject.sms.hibernate.bean.SearchFilterBean;
 import org.sakaiproject.sms.producers.TestDataResultSet;
 import org.sakaiproject.sms.util.ReflectionBasedSorter;
-import org.springframework.util.Assert;
 
 import uk.org.ponder.rsf.components.UIBranchContainer;
 import uk.org.ponder.rsf.components.UIContainer;
@@ -17,21 +16,12 @@ import uk.org.ponder.rsf.components.UIOutput;
 
 public class SearchResultsRendererImpl implements SearchResultsRenderer {
 
-	private SortHeaderRenderer sortHeaderRenderer;
+	SortHeaderRenderer sortHeaderRenderer;
 	private SearchFilterBean searchFilterBean;
-	
-	public void setSortHeaderRenderer(SortHeaderRenderer sortHeaderRenderer) {
-		this.sortHeaderRenderer = sortHeaderRenderer;
-	}
 
 	public void init(){
-		Assert.notNull(sortHeaderRenderer);
-		Assert.notNull(searchFilterBean);
-	}
-	
-	
-	public void setSearchFilterBean(SearchFilterBean searchFilterBean) {
-		this.searchFilterBean = searchFilterBean;
+		sortHeaderRenderer = new SortHeaderRenderer();
+		searchFilterBean = new SearchFilterBean();
 	}
 	
 	public void createTable(UIContainer tofill, String divID, SortPagerViewParams sortViewParams, String viewID) {		

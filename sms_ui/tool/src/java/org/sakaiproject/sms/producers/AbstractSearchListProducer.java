@@ -17,18 +17,14 @@ import uk.org.ponder.rsf.view.ViewComponentProducer;
 import uk.org.ponder.rsf.viewstate.ViewParameters;
 import uk.org.ponder.rsf.viewstate.ViewParamsReporter;
 
-public class SearchListProducer implements ViewComponentProducer, ViewParamsReporter{
-
-	public static final String VIEW_ID = "SearchList";
+public abstract class AbstractSearchListProducer implements ViewComponentProducer, ViewParamsReporter{
 	
 	private SearchCriteriaRenderer searchCriteriaRenderer;
 	private SearchResultsRenderer searchResultsRenderer;
 	private TablePagerRenderer tablePagerRenderer;
-	private String titleMessage;
 	
-	public void setTablePagerRenderer(TablePagerRenderer tablePagerRenderer) {
-		this.tablePagerRenderer = tablePagerRenderer;
-	}
+	public abstract String getViewID();
+	public abstract String getTitleMessage();
 
 	public void setSearchResultsRenderer(SearchResultsRenderer searchResultsRenderer) {
 		this.searchResultsRenderer = searchResultsRenderer;
@@ -38,19 +34,9 @@ public class SearchListProducer implements ViewComponentProducer, ViewParamsRepo
 		this.searchCriteriaRenderer = searchCriteriaRender;
 	}
 	
-	public void setTitleMessage(){
-		
-	}
-
-	public String getViewID() {
-		return VIEW_ID;
-	}
-
 	public void init(){		
 		Assert.notNull(searchCriteriaRenderer);
 		Assert.notNull(searchResultsRenderer);
-		Assert.notNull(tablePagerRenderer);
-		Assert.notNull(titleMessage);
 	}
 	
 	public void fillComponents(UIContainer tofill, ViewParameters viewparams,
@@ -58,6 +44,7 @@ public class SearchListProducer implements ViewComponentProducer, ViewParamsRepo
 
 		init();
 		
+		tablePagerRenderer = new TablePagerRenderer();
 		
 		SortPagerViewParams sortParams = (SortPagerViewParams) viewparams;		
 	
@@ -68,10 +55,10 @@ public class SearchListProducer implements ViewComponentProducer, ViewParamsRepo
 			sortParams.sortDir = SMSConstants.SORT_DESC; // default
 		}
 		
-		searchCriteriaRenderer.createSearchCriteria(tofill, "searchCriteria:", VIEW_ID);
-		UIMessage.make(tofill, "table-caption", "sms.view-search-task-list.name");
-		searchResultsRenderer.createTable(tofill, "searchResults:", sortParams, VIEW_ID);
-		tablePagerRenderer.createPager(tofill, "searchPager:", sortParams, VIEW_ID);
+		searchCriteriaRenderer.createSearchCriteria(tofill, "searchCriteria:", getViewID());
+		UIMessage.make(tofill, "table-caption", getTitleMessage());
+		searchResultsRenderer.createTable(tofill, "searchResults:", sortParams, getViewID());
+		tablePagerRenderer.createPager(tofill, "searchPager:", sortParams, getViewID());
 		exportToCSV(tofill);
 	}
 
@@ -80,7 +67,6 @@ public class SearchListProducer implements ViewComponentProducer, ViewParamsRepo
 		UIInput exportToCSVButton = UIInput.make(exportToCSV, "export-to-csv", null);
 	}
 
-	
 
 	public ViewParameters getViewParameters() {
 		return new SortPagerViewParams();

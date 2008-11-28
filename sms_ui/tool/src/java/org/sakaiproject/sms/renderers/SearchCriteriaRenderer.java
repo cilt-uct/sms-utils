@@ -7,9 +7,21 @@ import uk.org.ponder.rsf.components.UIContainer;
 import uk.org.ponder.rsf.components.UIForm;
 import uk.org.ponder.rsf.components.UIInput;
 import uk.org.ponder.rsf.components.UIJointContainer;
+import uk.org.ponder.rsf.components.UIOutput;
 import uk.org.ponder.rsf.components.UISelect;
 
 public class SearchCriteriaRenderer{
+
+	private String labelID;
+	private String labelDropDown;
+	
+	public void setLabelID(String labelID) {
+		this.labelID = "1:";
+	}
+
+	public void setLabelDropDown(String labelDropDown) {
+		this.labelDropDown = "2:";
+	}
 
 	public void createSearchCriteria(UIContainer tofill, String divID, String viewID) {
 
@@ -17,6 +29,10 @@ public class SearchCriteriaRenderer{
 		UIJointContainer searchCriteria = new UIJointContainer(tofill,divID, "search-component:");
 		
 		UIForm searchForm =  UIForm.make(searchCriteria, "search-criteria");
+		
+		UIOutput.make(searchForm, "label-id", labelID);
+		UIOutput.make(searchForm, "label-dropdown", labelDropDown);
+	
 		
 		UIInput.make(searchForm, "id", "#{searchFilterBean.id}");
 		UIInput.make(searchForm, "date-from", "#{searchFilterBean.dateFrom}");
