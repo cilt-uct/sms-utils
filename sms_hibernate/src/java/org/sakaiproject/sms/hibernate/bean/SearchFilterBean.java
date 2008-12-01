@@ -10,16 +10,9 @@ public class SearchFilterBean {
 	private String sender;
 	private Integer currentPage;
 	private String orderBy;
+	private String sortDirection;
 	private String mobileNumber;
 	
-	
-	public String getOrderBy() {
-		return orderBy;
-	}
-
-	public void setOrderBy(String orderBy) {
-		this.orderBy = orderBy;
-	}
 
 	public SearchFilterBean() {
 		super();
@@ -27,7 +20,8 @@ public class SearchFilterBean {
 	}
 	
 	public SearchFilterBean(String id, String taskStatus, String dateFrom,
-			String dateTo, String toolName, String sender, Integer currentPage) {
+			String dateTo, String toolName, String sender, Integer currentPage,
+			String orderBy, String sortDirection) {
 		super();
 		this.id = id;
 		this.taskStatus = taskStatus;
@@ -36,6 +30,8 @@ public class SearchFilterBean {
 		this.toolName = toolName;
 		this.sender = sender;
 		this.currentPage = currentPage;
+		this.orderBy = orderBy;
+		this.sortDirection = sortDirection;
 	}
 
 	public String getId() {
@@ -107,4 +103,24 @@ public class SearchFilterBean {
 	public void setMobileNumber(String mobileNumber) {
 		this.mobileNumber = mobileNumber;
 	}	
+	
+	public String getSortDirection() {
+		return sortDirection;
+	}
+	
+	public void setSortDirection(String sortDirection) {
+		this.sortDirection = sortDirection;
+	}
+	
+	public String getOrderBy() {
+		return orderBy;
+	}
+	
+	public void setOrderBy(String orderBy) {
+		this.orderBy = orderBy;
+	}
+	
+	public boolean fireAction(){
+		return true;
+	}
 }
