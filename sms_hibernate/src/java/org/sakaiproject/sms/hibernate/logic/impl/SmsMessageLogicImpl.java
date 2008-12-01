@@ -95,8 +95,8 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 		Session s = HibernateUtil.currentSession();
 		Query query = s.createQuery("from SmsMessage mes where mes.smscMessageId = :smscId ");
 		query.setParameter("smscId", smscMessageId, Hibernate.STRING);
-		HibernateUtil.closeSession();
 		List<SmsMessage> messages = query.list();
+		HibernateUtil.closeSession();
 		if(messages != null && messages.size() > 0) {
 			return messages.get(0);
 		}
@@ -105,7 +105,10 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 	
 	
 	/**
-	 * Gets a list of SmsMessage objects for the specified and specified status code(s)
+	 * Gets a list of SmsMessage objects for the specified and specified status code(s).
+	 * 
+	 * It will ignore the smsTaskId if it is passed as null and return all 
+	 * smsMessages with the specified status code(s).
 	 * 
 	 * @param sms task id
 	 * @param statusCode(s)
@@ -118,13 +121,18 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 		if(statusCodes.length > 0) {
 			
 			StringBuilder hql = new StringBuilder();
-			hql.append(" from SmsMessage message where message.smsTask.id = :smsTaskId ");
+			hql.append(" from SmsMessage message where 1=1  ");
+			if(smsTaskId != null) {
+				hql.append(" and message.smsTask.id = :smsTaskId ");
+			}
 			hql.append(" and message.statusCode IN (:statusCodes) ");
 			
 			log.debug("getSmsTasksFilteredByMessageStatus() HQL: " + hql.toString());
 			Query query = HibernateUtil.currentSession().createQuery(hql.toString());
-			query.setParameter("smsTaskId", smsTaskId);
 			query.setParameterList("statusCodes", statusCodes, Hibernate.STRING);
+			if(smsTaskId != null) {
+				query.setParameter("smsTaskId", smsTaskId);
+			}
 			messages = query.list();
 			HibernateUtil.closeSession();
 			
