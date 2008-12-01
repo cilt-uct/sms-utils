@@ -1,3 +1,21 @@
+/***********************************************************************************
+ * TaskListResultsRenderer.java
+ * Copyright (c) 2008 Sakai Project/Sakai Foundation
+ * 
+ * Licensed under the Educational Community License, Version 2.0 (the "License"); 
+ * you may not use this file except in compliance with the License. 
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.osedu.org/licenses/ECL-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software 
+ * distributed under the License is distributed on an "AS IS" BASIS, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+ * See the License for the specific language governing permissions and 
+ * limitations under the License.
+ *
+ **********************************************************************************/
+
 package org.sakaiproject.sms.renderers;
 
 import java.util.List;
@@ -40,8 +58,7 @@ public class TaskListResultsRenderer implements SearchResultsRenderer{
 		searchFilterBean.setSortDirection(sortViewParams.sortDir);
 		searchFilterBean.setCurrentPage(sortViewParams.current_start);		
 		
-		//List<SmsMessage> messageList = smsMessageLogic.getSmsMessagesForCriteria(searchFilterBean);
-		
+		List<SmsMessage> messageList = smsMessageLogic.getSmsMessagesForCriteria(searchFilterBean);
 		
 		UIJointContainer searchResultsTable = new UIJointContainer(tofill, divID,  "task-search-results-component:");
 		
@@ -54,21 +71,18 @@ public class TaskListResultsRenderer implements SearchResultsRenderer{
         sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-process-date:", sortViewParams, "processDate", "sms.task-list-search-results.process.date");
         sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-status:", sortViewParams, "status", "sms.task-list-search-results.status");
         
-		//for (SmsMessage smsMessage : messageList) {
-			
-			//smsMessage.
+		for (SmsMessage smsMessage : messageList) {
+
 			UIBranchContainer row = UIBranchContainer.make(searchResultsTable, "dataset:");
 			
-			UIOutput.make(row, "row-data-group", "1");
-			UIOutput.make(row, "row-data-size-estimate", "2");
-			UIOutput.make(row, "row-data-size-actual", "3");
-			UIOutput.make(row, "row-data-tool-name", "4");
-			UIOutput.make(row, "row-data-sender", "5");
-			UIOutput.make(row, "row-data-message", "6");
-			UIOutput.make(row, "row-data-process-date", "7");
-			UIOutput.make(row, "row-data-status", "8");		
-			
-		//}
-		
+			UIOutput.make(row, "row-data-group", smsMessage.getSmsTask().getDeliveryGroupName());
+			UIOutput.make(row, "row-data-size-estimate", smsMessage.getSmsTask().getGroupSizeEstimate().toString());
+			UIOutput.make(row, "row-data-size-actual", smsMessage.getSmsTask().getGroupSizeActual().toString());
+			UIOutput.make(row, "row-data-tool-name", smsMessage.getSmsTask().getSakaiToolName());
+			UIOutput.make(row, "row-data-sender", smsMessage.getSmsTask().getSenderUserName());
+			UIOutput.make(row, "row-data-message", smsMessage.getSmsTask().getMessageBody());
+			UIOutput.make(row, "row-data-process-date", smsMessage.getSmsTask().getDateProcessed().toString());
+			UIOutput.make(row, "row-data-status", smsMessage.getStatusCode());		
+	   }
 	}
 }

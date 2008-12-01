@@ -49,16 +49,14 @@ public class SmsConfigActionBean {
 	
 	public String save(){		
 		
-		
 		//TODO hard code id for now
 		SmsConfig smsConfig = (SmsConfig) smsConfigLocator
 		.locateBean("3");
 		
-		if(smsConfig.getSmsEnabled().equals(Boolean.FALSE))
-			smsConfig.setNotificationEmail("");
+		//TODO: find out if this should be the case
+		//		if(smsConfig.getSmsEnabled().equals(Boolean.FALSE))
+		//			smsConfig.setNotificationEmail("");
 		
-		//don't have the sakaiSiteId or sakaiToolId Yet
-		smsConfig.setSakaiSiteId("sakaiSiteId");
 		smsConfig.setSakaiToolId("sakaiToolId");
 		
 		if(log.isInfoEnabled()){			
