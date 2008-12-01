@@ -21,7 +21,10 @@ public class SearchResultsRendererImpl implements SearchResultsRenderer {
 
 	public void init(){
 		sortHeaderRenderer = new SortHeaderRenderer();
-		searchFilterBean = new SearchFilterBean();
+	}
+
+	public void setSearchFilterBean(SearchFilterBean searchFilterBean) {
+		this.searchFilterBean = searchFilterBean;
 	}
 	
 	public void createTable(UIContainer tofill, String divID, SortPagerViewParams sortViewParams, String viewID) {		
@@ -59,4 +62,5 @@ public class SearchResultsRendererImpl implements SearchResultsRenderer {
 			UIOutput.make(row, "row-data-street", testDataRow.getStreet());
 		}
 	}
+
 }

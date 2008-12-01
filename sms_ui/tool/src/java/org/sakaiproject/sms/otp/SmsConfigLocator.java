@@ -39,10 +39,11 @@ public class SmsConfigLocator implements BeanLocator{
 			if (name.startsWith(NEW_PREFIX)) {
 				togo = new SmsConfig();
 			} else {
-				//togo = smsConfigLogic.getSmsConfig(new Long(name));
+				togo = smsConfigLogic.getSmsConfig(new Long(name));
 				//TODO: when we get test data removed this
 				if(togo == null){
 					togo = new SmsConfig();
+					togo.setNotificationEmail("test@test.com");
 					togo.setId(new Long(3));
 					togo.setSakaiSiteId("sakaiSiteId");
 					togo.setSakaiToolId("sakaiToolId");

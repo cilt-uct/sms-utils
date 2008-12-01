@@ -39,10 +39,17 @@
   	<property name="searchBeanName" value="searchMessageLog"/>
   </bean>	
   
-  <bean id="taskListSearchResultsRenderer" class="org.sakaiproject.sms.renderers.SearchResultsRendererImpl"/>  
-  <bean id="transactionLogSearchResultsRenderer" class="org.sakaiproject.sms.renderers.SearchResultsRendererImpl"/> 
-  <bean id="messageLogSearchResultsRenderer" class="org.sakaiproject.sms.renderers.SearchResultsRendererImpl"/>
-
+  <bean id="taskListSearchResultsRenderer" class="org.sakaiproject.sms.renderers.SearchResultsRendererImpl">  
+  	 <property name="searchFilterBean" ref="searchTaskList"/>
+  </bean>
+  	 
+  <bean id="transactionLogSearchResultsRenderer" class="org.sakaiproject.sms.renderers.SearchResultsRendererImpl">  
+  	 <property name="searchFilterBean" ref="searchTransactionLog"/>
+  </bean> 
+  
+  <bean id="messageLogSearchResultsRenderer" class="org.sakaiproject.sms.renderers.SearchResultsRendererImpl">  
+  	 <property name="searchFilterBean" ref="searchMessageLog"/>
+  </bean>
 
   <!--  Producers -->
   <bean class="org.sakaiproject.sms.producers.SmsTestProducer" />

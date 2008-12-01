@@ -65,7 +65,7 @@ public class SmsConfigActionBean {
 			log.info("Persisting smsConfig");
 		}
 		
-//		smsConfigLogic.persistSmsConfig(smsConfig);
+		smsConfigLogic.persistSmsConfig(smsConfig);
 		
 		return ActionResults.SUCCESS;
 	}
