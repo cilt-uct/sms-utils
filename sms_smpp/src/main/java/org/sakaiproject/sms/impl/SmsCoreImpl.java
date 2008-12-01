@@ -91,8 +91,8 @@ public class SmsCoreImpl implements SmsCore {
 	}
 
 	/**
-	 * Get Sakai user's mobile number from profile. Return the mobile number,
-	 * null if not found.
+	 * Get Sakai user's mobile number from member profile. Return the mobile
+	 * number, null if not found.
 	 * 
 	 * @param sakaiUserID
 	 */
@@ -151,7 +151,7 @@ public class SmsCoreImpl implements SmsCore {
 	/**
 	 * Process is specific task. A task can be retried if a previous send
 	 * attempt was unsuccessful due to gateway connection problems. A retry will
-	 * be re-scheduled some time in the future. When the max retty attempts are
+	 * be re-scheduled some time in the future. When the max retry attempts are
 	 * reached or if credits are insufficient, the task is marked as failed.
 	 */
 	public void processTask(SmsTask smsTask) {

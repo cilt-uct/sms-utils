@@ -43,8 +43,8 @@ public class SmsCoreTest extends TestCase {
 	}
 
 	/*
-	 * In this test the populating of SmsMessages is tested.The test succeeds if
-	 * the smsTask's messages are bigger then 0 .
+	 * In this test the populating of the task messages are tested. The test
+	 * succeeds if the smsTask's message count is > 0.
 	 */
 	public void testGetDeliveryGroup() {
 
@@ -58,12 +58,13 @@ public class SmsCoreTest extends TestCase {
 	}
 
 	/*
-	 * In this test the smsc is not bound.The task is executed 5 times to
-	 * simulate the scheduler retrying and eventually failing.
+	 * In this test the smsc (gateway) is not bound (disconnected). The task is
+	 * executed 5 times to simulate the scheduler retrying and eventually
+	 * failing.
 	 */
 	public void testProcessTaskFail() {
 		SmsTask smsTask = insertNewTask("testProcessTaskFail",
-				SmsConst_DeliveryStatus.STATUS_FAIL, new Timestamp(System
+				SmsConst_DeliveryStatus.STATUS_PENDING, new Timestamp(System
 						.currentTimeMillis()), 1);
 		SmsSmppImpl smsSmppImpl = new SmsSmppImpl();
 		smsSmppImpl.setLogLevel(Level.OFF);
@@ -81,6 +82,7 @@ public class SmsCoreTest extends TestCase {
 		}
 		assertEquals(true, smsTask.getStatusCode().equals(
 				SmsConst_DeliveryStatus.STATUS_FAIL));
+		assertEquals(true, smsTask.getAttemptCount() == 5);
 		smsCoreImpl.getSmsTaskLogic().deleteSmsTask(smsTask);
 	}
 

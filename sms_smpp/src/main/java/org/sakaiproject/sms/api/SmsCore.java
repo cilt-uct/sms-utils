@@ -89,8 +89,8 @@ public interface SmsCore {
 	public void processIncomingMessage(SmsMessage smsMessage);
 
 	/**
-	 * Gets the next task to process.This will inturn call the processTask
-	 * method to execute the task
+	 * Gets the next task to process. Based on specific criteria like status en
+	 * date to sent.
 	 */
 	public void processNextTask();
 
