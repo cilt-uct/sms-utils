@@ -307,6 +307,7 @@ public class SearchFilterBean {
 		this.transactionType = transactionType;
 	}
 	
+	
 	/**
 	 * Gets the sort direction.
 	 * 
