@@ -20,6 +20,8 @@ package org.sakaiproject.sms.hibernate.logic;
 
 import java.util.List;
 
+import org.sakaiproject.sms.hibernate.bean.SearchFilterBean;
+import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsSearchException;
 import org.sakaiproject.sms.hibernate.model.SmsTransaction;
 
 /**
@@ -60,4 +62,13 @@ public interface SmsTransactionLogic {
 	 * @param sms confuguration to be persisted
 	 */
 	public void persistSmsTransaction(SmsTransaction smsTransaction);
+	
+
+	/**
+	 * Gets a list of SmsTransaction objects for the specified search criteria
+	 * 
+	 * @param search Bean containing the search criteria
+	 * @return List of SmsTransactions
+	 */
+	public List<SmsTransaction> getSmsTransactionsForCriteria(SearchFilterBean searchBean) throws SmsSearchException;
 }

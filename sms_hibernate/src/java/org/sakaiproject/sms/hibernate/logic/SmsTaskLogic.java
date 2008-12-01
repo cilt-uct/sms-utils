@@ -20,7 +20,10 @@ package org.sakaiproject.sms.hibernate.logic;
 
 import java.util.List;
 
+import org.sakaiproject.sms.hibernate.bean.SearchFilterBean;
+import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsSearchException;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
+import org.sakaiproject.sms.hibernate.model.SmsTransaction;
 
 /**
  * The data service will handle all sms task database transactions for the sms
@@ -71,6 +74,14 @@ public interface SmsTaskLogic {
 	 *            the sms task
 	 */
 	public void persistSmsTask(SmsTask smsTask);
+
+	/**
+	 * Gets a list of SmsTask objects for the specified search criteria
+	 * 
+	 * @param search Bean containing the search criteria
+	 * @return List of SmsTasks
+	 */
+	public List<SmsTask> getSmsTasksForCriteria(SearchFilterBean searchBean) throws SmsSearchException;
 
 	/**
 	 * Gets the sms tasks filtered by one or more message statuses.
