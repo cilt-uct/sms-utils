@@ -55,4 +55,5 @@
 	<property name="guard"><bean class="org.sakaiproject.sms.validators.SmsConfigValidator" /></property>
   </bean>
   
+  
 </beans>

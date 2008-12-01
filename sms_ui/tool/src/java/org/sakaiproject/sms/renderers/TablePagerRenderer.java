@@ -18,9 +18,6 @@
 package org.sakaiproject.sms.renderers;
 
 
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.sakaiproject.sms.hibernate.bean.SearchFilterBean;
-
 import uk.org.ponder.rsf.components.UIContainer;
 import uk.org.ponder.rsf.components.UIInternalLink;
 import uk.org.ponder.rsf.components.UIJointContainer;
@@ -32,12 +29,6 @@ public class TablePagerRenderer {
 	public Integer currentStart = 1;
 	public Integer currentCount = 1;
 	
-	private SearchFilterBean searchFilterBean;
-	
-	public void setSearchFilterBean(SearchFilterBean searchFilterBean) {
-		this.searchFilterBean = searchFilterBean;
-	}
-
 	public void createPager(UIContainer tofill, String divID, SortPagerViewParams sortParams, String viewId) {	
 		
 		this.currentStart = sortParams.current_start;

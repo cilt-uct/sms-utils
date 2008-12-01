@@ -60,18 +60,15 @@ public class SearchCriteriaRenderer{
 		UIJointContainer searchCriteria = new UIJointContainer(tofill,divID, "search-component:");
 		
 		UIForm searchForm =  UIForm.make(searchCriteria, "search-criteria");
-		
 		UIOutput.make(searchForm, "label-id", labelID);
-		UIOutput.make(searchForm, "label-dropdown", labelDropDown);
-	
-		
+		UIOutput.make(searchForm, "label-dropdown", labelDropDown);		
 		UIInput.make(searchForm, "id", createSearchELString("id"));
 		UIInput.make(searchForm, "date-from", createSearchELString("dateFrom"));
 		UIInput.make(searchForm, "tool-name", createSearchELString("toolName"));
 		
 		UISelect combo = UISelect.make(searchForm, "task-status");
 		combo.selection = new UIInput();
-		combo.selection.valuebinding = new ELReference(createSearchELString("taskStatus"));
+		combo.selection.valuebinding = new ELReference(createSearchELString("status"));
 		UIBoundList comboValues = new UIBoundList();
 		comboValues.setValue(new String[] {"All", "Pending", "Successful", "Failed"});
 		combo.optionlist = comboValues;
