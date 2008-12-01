@@ -58,6 +58,7 @@ public abstract class AbstractSearchListProducer implements ViewComponentProduce
 		searchCriteriaRenderer.createSearchCriteria(tofill, "searchCriteria:", getViewID());
 		UIMessage.make(tofill, "table-caption", getTitleMessage());
 		searchResultsRenderer.createTable(tofill, "searchResults:", sortParams, getViewID());
+	
 		tablePagerRenderer.createPager(tofill, "searchPager:", sortParams, getViewID());
 		exportToCSV(tofill);
 	}

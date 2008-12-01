@@ -63,4 +63,6 @@ public class SearchResultsRendererImpl implements SearchResultsRenderer {
 		}
 	}
 
+
+
 }

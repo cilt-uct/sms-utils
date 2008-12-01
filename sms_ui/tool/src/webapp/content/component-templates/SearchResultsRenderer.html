@@ -12,26 +12,77 @@
 
 <body>
 <!-- everything outside this div is thrown away -->
-<div rsf:id="search-results-component:">
+<div rsf:id="task-search-results-component:">
 <table style="width: 75%;" border="1">
 	<thead>
-		<th><a rsf:id="tableheader-name:">name</a></th>
-		<th><a rsf:id="tableheader-house:">house</a></th>
-		<th><a rsf:id="tableheader-street:">street</a></th>
+		<th><a rsf:id="tableheader-group:">Group</a></th>
+		<th><a rsf:id="tableheader-size-estimate:">Size Estimate</a></th>
+		<th><a rsf:id="tableheader-size-actual:">Size Actual</a></th>
+		<th><a rsf:id="tableheader-tool-name:">Tool Name</a></th>
+		<th><a rsf:id="tableheader-sender:">Sender</a></th>
+		<th><a rsf:id="tableheader-message:">Message</a></th>
+		<th><a rsf:id="tableheader-process-date:">Process Date</a></th>
+		<th><a rsf:id="tableheader-status:">Status</a></th>
 	</thead>
 	<tbody>
 		<tr rsf:id="dataset:">
-			<td rsf:id="row-data-name">Bob</td>
-			<td rsf:id="row-data-house">12</td>
-			<td rsf:id="row-data-street">Place</td>
+			<td rsf:id="row-data-group">1</td>
+			<td rsf:id="row-data-size-estimate">2</td>
+			<td rsf:id="row-data-size-actual">3</td>
+			<td rsf:id="row-data-tool-name">4</td>
+			<td rsf:id="row-data-sender">5</td>
+			<td rsf:id="row-data-message">6</td>
+			<td rsf:id="row-data-process-date">7</td>
+			<td rsf:id="row-data-status">8</td>
 		</tr>
 	</tbody>
-
 </table>
-<div style="border: 1;"><a href="#" rsf:id="prev">&lt;&lt;</a><a
-	rsf:id="pageCount">Page x of y</a> <a href="#" rsf:id="prev">&gt;&gt;</a>
 </div>
-
+<div rsf:id="transaction-log-search-results-component:">
+<table style="width: 75%;" border="1">
+	<thead>
+		<th><a rsf:id="tableheader-account-number:">Account Number</a></th>
+		<th><a rsf:id="tableheader-transaction-type:">Trans Type</a></th>
+		<th><a rsf:id="tableheader-transaction-date:">Trans Date</a></th>
+		<th><a rsf:id="tableheader-transaction-credits:">Trans Credits</a></th>
+		<th><a rsf:id="tableheader-transaction-amount:">Trans Credits</a></th>
+		<th><a rsf:id="tableheader-account-balance:">Account Balance</a></th>
+	</thead>
+	<tbody>
+		<tr rsf:id="dataset:">
+			<td rsf:id="row-data-account-number">1</td>
+			<td rsf:id="row-data-transaction-type">2</td>
+			<td rsf:id="row-data-transaction-date">3</td>
+			<td rsf:id="row-data-transaction-credits">4</td>
+			<td rsf:id="row-data-transaction-amount">5</td>
+			<td rsf:id="row-data-account-balance">6</td>
+		</tr>
+	</tbody>
+</table>
+</div>
+<div rsf:id="message-log-search-results-component:">
+<table style="width: 75%;" border="1">
+	<thead>
+		<th><a rsf:id="tableheader-group:">Group</a></th>
+		<th><a rsf:id="tableheader-tool-name:">Tool Name</a></th>
+		<th><a rsf:id="tableheader-sender:">Sender</a></th>
+		<th><a rsf:id="tableheader-receiver:">Receiver</a></th>
+		<th><a rsf:id="tableheader-mobile-number:">Mobile Number</a></th>
+		<th><a rsf:id="tableheader-date-processed:">Date Processed</a></th>
+		<th><a rsf:id="tableheader-status:">Status</a></th>
+	</thead>
+	<tbody>
+		<tr rsf:id="dataset:">
+			<td rsf:id="row-data-group">1</td>
+			<td rsf:id="row-data-tool-name">2</td>
+			<td rsf:id="row-data-sender">3</td>
+			<td rsf:id="row-data-receiver">4</td>
+			<td rsf:id="row-data-mobile-number">5</td>
+			<td rsf:id="row-data-date-processed">6</td>
+			<td rsf:id="row-data-status">6</td>
+		</tr>
+	</tbody>
+</table>
 </div>
 </body>
 </html>
