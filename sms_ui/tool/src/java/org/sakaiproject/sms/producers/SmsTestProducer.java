@@ -77,7 +77,7 @@ public class SmsTestProducer implements ViewComponentProducer, DefaultView,
 		// Disables the characters remaining input
 		charsRemaining.decorate(new UIDisabledDecorator());
 
-		UICommand.make(form, "ok-button", UIMessage.make("sms.general.ok"),
+		UICommand.make(form, "ok-button", UIMessage.make("sms.general.send"),
 				"SmsTestActionBean.send");
 		UICommand.make(form, "cancel-button",
 				UIMessage.make("sms.general.cancel")).setReturn(
