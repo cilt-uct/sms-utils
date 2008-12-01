@@ -1,6 +1,7 @@
 package org.sakaiproject.sms.test.stubs;
 
 import java.util.List;
+import java.util.Set;
 
 import org.sakaiproject.sms.api.SmsSmpp;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
@@ -103,7 +104,12 @@ public class SmsSmppStub implements SmsSmpp {
 
 	public void enableDebugInformation(boolean arg0) {
 		// TODO Auto-generated method stub
-		
+
+	}
+
+	public String sendMessagesToGateway(Set<SmsMessage> arg0) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

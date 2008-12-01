@@ -87,7 +87,7 @@ public class SmsAccountTest extends TestCase {
 	 * Test delete sms account.
 	 */
 	public void testDeleteSmsAccount() {
-		logic.deleteSmsCongif(insertSmsAccount);
+		logic.deleteSmsConfig(insertSmsAccount);
 		SmsAccount getSmsAccount = logic
 				.getSmsAccount(insertSmsAccount.getId());
 		assertNull(getSmsAccount);

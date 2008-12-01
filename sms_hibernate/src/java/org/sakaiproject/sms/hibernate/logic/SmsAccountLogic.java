@@ -23,8 +23,8 @@ import java.util.List;
 import org.sakaiproject.sms.hibernate.model.SmsAccount;
 
 /**
- * The data service will handle all sms Account database transactions for the sms tool in
- * Sakai.
+ * The data service will handle all sms Account database transactions for the
+ * sms tool in Sakai.
  * 
  * @author julian@psybergate.com
  * @version 1.0
@@ -35,12 +35,13 @@ public interface SmsAccountLogic {
 	/**
 	 * Deletes and the given entity from the DB
 	 */
-	public void deleteSmsCongif(SmsAccount smsAccount);
+	public void deleteSmsConfig(SmsAccount smsAccount);
 
 	/**
 	 * Gets a SmsAccount entity for the given id
 	 * 
-	 * @param Long sms account id
+	 * @param Long
+	 *            sms account id
 	 * @return sms congiguration
 	 */
 	public SmsAccount getSmsAccount(Long smsAccountId);
@@ -55,10 +56,11 @@ public interface SmsAccountLogic {
 	/**
 	 * This method will persists the given object.
 	 * 
-	 * If the object is a new entity then it will be created on the DB. 
-	 * If it is an existing entity then the record will be updates on the DB.
+	 * If the object is a new entity then it will be created on the DB. If it is
+	 * an existing entity then the record will be updated.
 	 * 
-	 * @param sms account to be persisted
+	 * @param sms
+	 *            account to be persisted
 	 */
 	public void persistSmsAccount(SmsAccount smsAccount);
 }

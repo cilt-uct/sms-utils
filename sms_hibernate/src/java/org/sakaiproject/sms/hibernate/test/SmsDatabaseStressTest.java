@@ -19,7 +19,7 @@ import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
  * its messages, 4) read back one of the messages, 5)remove the task and its
  * messages
  */
-public class smsHibernateStressTest extends TestCase {
+public class SmsDatabaseStressTest extends TestCase {
 
 	/** The number of messages to insert, change as required. */
 	private static int messageCount = 5000;
@@ -48,7 +48,7 @@ public class smsHibernateStressTest extends TestCase {
 	/**
 	 * Instantiates a new sms hibernate stress test.
 	 */
-	public smsHibernateStressTest() {
+	public SmsDatabaseStressTest() {
 		taskLogic = new SmsTaskLogicImpl();
 		messageLogic = new SmsMessageLogicImpl();
 		smsTask = new SmsTask();

@@ -32,16 +32,55 @@ import org.sakaiproject.sms.hibernate.model.SmsTask;
  */
 public interface SmsTaskLogic {
 
+	/**
+	 * Delete sms task.
+	 * 
+	 * @param smsTask
+	 *            the sms task
+	 */
 	public void deleteSmsTask(SmsTask smsTask);
 
+	/**
+	 * Gets the sms task.
+	 * 
+	 * @param smsTaskId
+	 *            the sms task id
+	 * 
+	 * @return the sms task
+	 */
 	public SmsTask getSmsTask(Long smsTaskId);
 
+	/**
+	 * Gets the next sms task to be processed.
+	 * 
+	 * @return the next sms task
+	 */
 	public SmsTask getNextSmsTask();
 
+	/**
+	 * Gets the all sms task.
+	 * 
+	 * @return the all sms task
+	 */
 	public List<SmsTask> getAllSmsTask();
 
+	/**
+	 * Persist sms task.
+	 * 
+	 * @param smsTask
+	 *            the sms task
+	 */
 	public void persistSmsTask(SmsTask smsTask);
-	
-	public List<SmsTask> getSmsTasksFilteredByMessageStatus(String... messageStatusCode);
+
+	/**
+	 * Gets the sms tasks filtered by one or more message statuses.
+	 * 
+	 * @param messageStatusCode
+	 *            the message status code
+	 * 
+	 * @return the sms tasks filtered by message status
+	 */
+	public List<SmsTask> getSmsTasksFilteredByMessageStatus(
+			String... messageStatusCode);
 
 }

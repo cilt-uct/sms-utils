@@ -1,3 +1,4 @@
+org.sakaiproject.sms.hibernate.bean
 org.sakaiproject.sms.hibernate.dao
 org.sakaiproject.sms.hibernate.logic
 org.sakaiproject.sms.hibernate.logic.impl

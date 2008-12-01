@@ -32,7 +32,7 @@ public interface SmsBilling {
 
 	/**
 	 * Add extra credits to the specific account by making an entry into
-	 * SMS_TRANSACTION.
+	 * SMS_TRANSACTION Also update the available credits on the account.
 	 * 
 	 * @param accountID
 	 * @param creditCount
@@ -40,7 +40,8 @@ public interface SmsBilling {
 	public void allocateCredits(int accountID, int creditCount);
 
 	/**
-	 * Return true of the account has the required credits available.
+	 * Return true of the account has the required credits available. Take into
+	 * account overdraft limits, if applicable.
 	 * 
 	 * @param accountID
 	 * @param creditsRequired
@@ -55,7 +56,7 @@ public interface SmsBilling {
 	public double getAccountBalance(int accountID);
 
 	/**
-	 * Return credits left in account.
+	 * Return credits available in the account.
 	 * 
 	 * @param accountID
 	 */
@@ -72,7 +73,8 @@ public interface SmsBilling {
 	public int getAccountID(Integer siteID, Integer userID, Integer accountType);
 
 	/**
-	 * Return a list of all transactions between startDate and endDate.
+	 * Return a list of all transactions between startDate and endDate for the
+	 * specific account.
 	 * 
 	 * @param accountID
 	 * @param startDate
@@ -88,12 +90,12 @@ public interface SmsBilling {
 	public void getAllSiteAccounts(String sakaiSiteID);
 
 	/**
-	 * Convert the given credits to currency base on the pre-defined conversion
-	 * values at the given time.
+	 * Convert the given credits to currency base on the defined conversion
+	 * value at the given time.
 	 * 
 	 * @param creditCount
 	 */
-	public double getCreditAmount(int creditCount);
+	public double convertCreditsToAmount(int creditCount);
 
 	/**
 	 * Insert a new account and return the new account id.
@@ -115,7 +117,7 @@ public interface SmsBilling {
 	/**
 	 * Insert a new transaction and indicate that the credits are reserved. If
 	 * the request is pending and the administrator delete the request, the
-	 * reservation must be rolled back with onother transaction.
+	 * reservation must be rolled back with another transaction.
 	 * 
 	 * @param accountID
 	 * @param creditAmount

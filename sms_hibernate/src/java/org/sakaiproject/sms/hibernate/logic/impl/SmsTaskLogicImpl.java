@@ -27,7 +27,6 @@ import org.hibernate.Session;
 import org.sakaiproject.sms.hibernate.dao.HibernateUtil;
 import org.sakaiproject.sms.hibernate.dao.SmsDao;
 import org.sakaiproject.sms.hibernate.logic.SmsTaskLogic;
-import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
 
@@ -95,11 +94,13 @@ public class SmsTaskLogicImpl extends SmsDao implements SmsTaskLogic {
 		hql.append(" from SmsTask task where task.dateToSend <= :today ");
 		hql.append(" and task.statusCode IN (:statusCodes) ");
 		hql.append(" order by task.dateToSend ");
-		Query query = HibernateUtil.currentSession().createQuery(hql.toString());
+		Query query = HibernateUtil.currentSession()
+				.createQuery(hql.toString());
 		query.setParameter("today", getTimestampCurrent(), Hibernate.TIMESTAMP);
-		query.setParameterList("statusCodes",new Object[] {SmsConst_DeliveryStatus.STATUS_PENDING, 
-														   SmsConst_DeliveryStatus.STATUS_INCOMPLETE,
-														   SmsConst_DeliveryStatus.STATUS_RETRY}, Hibernate.STRING);
+		query.setParameterList("statusCodes", new Object[] {
+				SmsConst_DeliveryStatus.STATUS_PENDING,
+				SmsConst_DeliveryStatus.STATUS_INCOMPLETE,
+				SmsConst_DeliveryStatus.STATUS_RETRY }, Hibernate.STRING);
 		log.debug("getNextSmsTask() HQL: " + query.getQueryString());
 		List<SmsTask> tasks = query.list();
 		HibernateUtil.closeSession();
@@ -110,33 +111,36 @@ public class SmsTaskLogicImpl extends SmsDao implements SmsTaskLogic {
 		return null;
 	}
 
-	
 	/**
-	 * Returns a list of SmsTask objects with messages that 
-	 * have the specified status code(s)
+	 * Returns a list of SmsTask objects with messages that have the specified
+	 * status code(s)
 	 * 
-	 * @param message status code(s)
-	 * @return List of SmsTask objetcs
+	 * @param message
+	 *            status code(s)
+	 * @return List of SmsTask objects
 	 */
-	public List<SmsTask> getSmsTasksFilteredByMessageStatus(String... messageStatusCodes) {
-		
+	public List<SmsTask> getSmsTasksFilteredByMessageStatus(
+			String... messageStatusCodes) {
 
 		List<SmsTask> tasks = new ArrayList<SmsTask>();
 
-		//Return empty list if no status codes were passed in
-		if(messageStatusCodes.length > 0) {
+		// Return empty list if no status codes were passed in
+		if (messageStatusCodes.length > 0) {
 			StringBuilder hql = new StringBuilder();
 			hql.append(" from SmsTask task where task.id in ( ");
-			hql.append(" 	select distinct message.smsTask.id from SmsMessage message where message.statusCode IN (:statusCodes) ) ");
-			
-			log.debug("getSmsTasksFilteredByMessageStatus() HQL: " + hql.toString());
-			Query query = HibernateUtil.currentSession().createQuery(hql.toString());
-			query.setParameterList("statusCodes", messageStatusCodes, Hibernate.STRING);
+			hql
+					.append(" 	select distinct message.smsTask.id from SmsMessage message where message.statusCode IN (:statusCodes) ) ");
+
+			log.debug("getSmsTasksFilteredByMessageStatus() HQL: "
+					+ hql.toString());
+			Query query = HibernateUtil.currentSession().createQuery(
+					hql.toString());
+			query.setParameterList("statusCodes", messageStatusCodes,
+					Hibernate.STRING);
 			tasks = query.list();
 			HibernateUtil.closeSession();
 		}
 		return tasks;
 	}
-	
-	
+
 }
