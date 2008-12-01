@@ -152,8 +152,8 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 		List<SmsMessage> messages = new ArrayList<SmsMessage>();
 		
 		//Message status
-		if(searchBean.getTaskStatus() != null && !searchBean.getTaskStatus().trim().equals("")) {
-			crit.add(Restrictions.ilike("statusCode", searchBean.getTaskStatus()));
+		if(searchBean.getStatus() != null && !searchBean.getStatus().trim().equals("")) {
+			crit.add(Restrictions.ilike("statusCode", searchBean.getStatus()));
 		}
 		
 		//Sakai tool name
