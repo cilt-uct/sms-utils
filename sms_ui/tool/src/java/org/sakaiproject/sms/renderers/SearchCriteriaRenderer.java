@@ -1,5 +1,7 @@
 package org.sakaiproject.sms.renderers;
 
+import org.springframework.util.Assert;
+
 import uk.org.ponder.rsf.components.ELReference;
 import uk.org.ponder.rsf.components.UIBoundList;
 import uk.org.ponder.rsf.components.UICommand;
@@ -14,17 +16,29 @@ public class SearchCriteriaRenderer{
 
 	private String labelID;
 	private String labelDropDown;
+	private String searchBeanName;
 	
+	public void setSearchBeanName(String searchBeanName) {
+		this.searchBeanName = searchBeanName;
+	}
+
 	public void setLabelID(String labelID) {
-		this.labelID = "1:";
+		this.labelID = labelID;
 	}
 
 	public void setLabelDropDown(String labelDropDown) {
-		this.labelDropDown = "2:";
+		this.labelDropDown = labelDropDown;
+	}
+	
+	public void init(){
+		Assert.notNull(labelID);
+		Assert.notNull(labelDropDown);
+		Assert.notNull(searchBeanName);
 	}
 
 	public void createSearchCriteria(UIContainer tofill, String divID, String viewID) {
 
+		init();	
 		
 		UIJointContainer searchCriteria = new UIJointContainer(tofill,divID, "search-component:");
 		
@@ -34,13 +48,13 @@ public class SearchCriteriaRenderer{
 		UIOutput.make(searchForm, "label-dropdown", labelDropDown);
 	
 		
-		UIInput.make(searchForm, "id", "#{searchFilterBean.id}");
-		UIInput.make(searchForm, "date-from", "#{searchFilterBean.dateFrom}");
-		UIInput.make(searchForm, "tool-name", "#{searchFilterBean.toolName}");
+		UIInput.make(searchForm, "id", createSearchELString("id"));
+		UIInput.make(searchForm, "date-from", createSearchELString("dateFrom"));
+		UIInput.make(searchForm, "tool-name", createSearchELString("toolName"));
 		
 		UISelect combo = UISelect.make(searchForm, "task-status");
 		combo.selection = new UIInput();
-		combo.selection.valuebinding = new ELReference("#{searchFilterBean.taskStatus}");
+		combo.selection.valuebinding = new ELReference(createSearchELString("taskStatus"));
 		UIBoundList comboValues = new UIBoundList();
 		comboValues.setValue(new String[] {"All", "Pending", "Successful", "Failed"});
 		combo.optionlist = comboValues;
@@ -48,12 +62,15 @@ public class SearchCriteriaRenderer{
 		comboNames.setValue(new String[] {"All", "Pending", "Successful", "Failed"});
 		combo.optionnames = comboNames;
 		
-		UIInput.make(searchForm, "date-to", "#{searchFilterBean.dateTo}");
+		UIInput.make(searchForm, "date-to", createSearchELString("dateTo"));
 
-		UIInput.make(searchForm, "sender", "#{searchFilterBean.sender}");
-		UICommand.make(searchForm, "search", "#{searchFilterBean.fireAction}");
+		UIInput.make(searchForm, "sender", createSearchELString("sender"));
+		UICommand.make(searchForm, "search", createSearchELString("fireAction"));
 	}
 	
+	private String createSearchELString(String field){
+		return "#{" + searchBeanName + "."  + field + "}";
+	}
 	
 		
 }
