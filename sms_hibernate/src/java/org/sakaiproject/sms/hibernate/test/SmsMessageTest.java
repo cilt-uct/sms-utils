@@ -8,6 +8,7 @@ import junit.framework.TestCase;
 import org.sakaiproject.sms.hibernate.bean.SearchFilterBean;
 import org.sakaiproject.sms.hibernate.logic.impl.SmsMessageLogicImpl;
 import org.sakaiproject.sms.hibernate.logic.impl.SmsTaskLogicImpl;
+import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsSearchException;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
@@ -188,26 +189,30 @@ public class SmsMessageTest extends TestCase {
 		insertMessage.setSmsTask(insertTask);
 		insertTask.getSmsMessages().add(insertMessage);
 		
-		taskLogic.persistSmsTask(insertTask);
-		
-		SearchFilterBean bean = new SearchFilterBean();
-		bean.setTaskStatus(SmsConst_DeliveryStatus.STATUS_ERROR);
-		
-		List<SmsMessage> messages = logic.getSmsMessagesForCriteria(bean);
-		assertTrue("Collection returned has no objects", messages.size() > 0);
 		try {
+			taskLogic.persistSmsTask(insertTask);
+			
+			SearchFilterBean bean = new SearchFilterBean();
+			bean.setStatus(insertMessage.getStatusCode());
+			bean.setDateFrom("12/01/2008");
+			bean.setDateTo("12/01/2008");
+			bean.setToolName(insertTask.getSakaiToolName());
+			bean.setSender(insertTask.getSenderUserName());
+			bean.setMobileNumber(insertMessage.getMobileNumber());
+		
+			List<SmsMessage> messages = logic.getSmsMessagesForCriteria(bean);
+			assertTrue("Collection returned has no objects", messages.size() > 0);
+		
 			for(SmsMessage message : messages) {
 				//We know that only one message should be returned becuase
 				//we only added one with status ERROR.
 				assertEquals(message, insertMessage);
-				//assertTrue("Object does not conform to specified criteria", message.getStatusCode().equals(SmsConst_DeliveryStatus.STATUS_ERROR));
-				//assertTrue("Object does not conform to specified criteria", message.getSmsTask().getSakaiToolName().equals("sakaiToolName"));
-				
 			}
+		}catch(SmsSearchException se) {
+			fail(se.getMessage());
 		}finally {
 			taskLogic.deleteSmsTask(insertTask);
 		}
-		
 	}
 	
 	/**

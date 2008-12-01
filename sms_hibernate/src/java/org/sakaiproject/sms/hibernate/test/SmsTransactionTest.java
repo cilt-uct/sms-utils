@@ -62,6 +62,57 @@ public class SmsTransactionTest extends TestCase {
 		assertNotNull("Returnend collection is null", transactions);
 		assertTrue("No records returned", transactions.size() > 0);
 	}
+	
+	/**
+	 * Tests the getMessagesForCriteria method
+	 */
+	public void testGetTransactionsForCriteria() {
+		fail("test not implemeted yet");
+		/*SmsTask insertTask = new SmsTask();
+		insertTask.setSakaiSiteId("sakaiSiteId");
+		insertTask.setSmsAccountId(1);
+		insertTask.setDateCreated(new Timestamp(System.currentTimeMillis()));
+		insertTask.setDateToSend(new Timestamp(System.currentTimeMillis()));
+		insertTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
+		insertTask.setAttemptCount(2);
+		insertTask.setMessageBody("messageCrit");
+		insertTask.setSenderUserName("messageCrit");
+		insertTask.setSakaiToolName("sakaiToolName");
+		
+		SmsMessage insertMessage = new SmsMessage();
+		insertMessage.setMobileNumber("0721998919");
+		insertMessage.setSmscMessageId("criterai");
+		insertMessage.setSakaiUserId("criterai");
+		insertMessage.setStatusCode(SmsConst_DeliveryStatus.STATUS_ERROR);
+		
+		insertMessage.setSmsTask(insertTask);
+		insertTask.getSmsMessages().add(insertMessage);
+		
+		try {
+			taskLogic.persistSmsTask(insertTask);
+			
+			SearchFilterBean bean = new SearchFilterBean();
+			bean.setStatus(insertMessage.getStatusCode());
+			bean.setDateFrom("12/01/2008");
+			bean.setDateTo("12/01/2008");
+			bean.setToolName(insertTask.getSakaiToolName());
+			bean.setSender(insertTask.getSenderUserName());
+			bean.setMobileNumber(insertMessage.getMobileNumber());
+		
+			List<SmsMessage> messages = logic.getSmsMessagesForCriteria(bean);
+			assertTrue("Collection returned has no objects", messages.size() > 0);
+		
+			for(SmsMessage message : messages) {
+				//We know that only one message should be returned becuase
+				//we only added one with status ERROR.
+				assertEquals(message, insertMessage);
+			}
+		}catch(SmsSearchException se) {
+			fail(se.getMessage());
+		}finally {
+			taskLogic.deleteSmsTask(insertTask);
+		}*/
+	}
 
 	public void testDeleteSmsTransaction() {
 		logic.deleteSmsCongif(insertSmsTransaction);

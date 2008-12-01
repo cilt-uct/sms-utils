@@ -7,7 +7,10 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
+import org.sakaiproject.sms.hibernate.bean.SearchFilterBean;
+import org.sakaiproject.sms.hibernate.logic.impl.SmsMessageLogicImpl;
 import org.sakaiproject.sms.hibernate.logic.impl.SmsTaskLogicImpl;
+import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsSearchException;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
@@ -28,8 +31,12 @@ public class SmsTaskTest extends TestCase {
 
 	/** The insert message2. */
 	private static SmsMessage insertMessage2;
+	
+	/** The message logic */
+	private static SmsMessageLogicImpl messageLogic = null;
 
 	static {
+		messageLogic = new SmsMessageLogicImpl();
 		logic = new SmsTaskLogicImpl();
 
 		insertTask = new SmsTask();
@@ -126,45 +133,6 @@ public class SmsTaskTest extends TestCase {
 	}
 
 	/**
-	 * Test get sms tasks filtered by message status.
-	 * Depricated for now
-	 */
-	/*public void testGetSmsTasksFilteredByMessageStatus() {
-		
-		//We now that there is a task that has messages with status STATUS_PENDING and STATUS_INCOMPLETE
-		List<SmsTask> tasks = logic.getSmsTasksFilteredByMessageStatus(
-												SmsConst_DeliveryStatus.STATUS_PENDING,
-												SmsConst_DeliveryStatus.STATUS_INCOMPLETE);
-		boolean requiredStatusFound = false;
-		for(SmsTask task : tasks) {
-			for(SmsMessage smsMessage : task.getSmsMessages()) {
-				requiredStatusFound = (smsMessage.getStatusCode().equals(SmsConst_DeliveryStatus.STATUS_PENDING)
-						|| smsMessage.getStatusCode().equals(SmsConst_DeliveryStatus.STATUS_PENDING));
-				
-			}
-		}
-		//We know at least one task should have a message with the required status
-		assertTrue("Objetc with required status not found", requiredStatusFound);
-		
-		//Change the messages to status delivered
-		insertMessage1.setStatusCode(SmsConst_DeliveryStatus.STATUS_DELIVERED);
-		insertMessage2.setStatusCode(SmsConst_DeliveryStatus.STATUS_DELIVERED);
-		logic.persistSmsTask(insertTask);
-
-		tasks = logic.getSmsTasksFilteredByMessageStatus(
-				SmsConst_DeliveryStatus.STATUS_PENDING,
-				SmsConst_DeliveryStatus.STATUS_INCOMPLETE);
-		
-		//Make sure that no messages with status: pending and incomplete
-		for(SmsTask task : tasks) {
-			for(SmsMessage smsMessage : task.getSmsMessages()) {
-				assertFalse("Objetc found with incorrect value", smsMessage.getStatusCode().equals(SmsConst_DeliveryStatus.STATUS_PENDING));
-				assertFalse("Objetc found with incorrect value", smsMessage.getStatusCode().equals(SmsConst_DeliveryStatus.STATUS_INCOMPLETE));
-			}
-		}
-	}*/
-
-	/**
 	 * Test remove sms messages from task.
 	 */
 	public void testRemoveSmsMessagesFromTask() {
@@ -191,20 +159,6 @@ public class SmsTaskTest extends TestCase {
 		assertTrue("No records returned", tasks.size() > 0);
 	}
 
-	public void insertNewTaskForPending() {
-		SmsTask insertTask = new SmsTask();
-		insertTask.setSakaiSiteId("sakaiSiteId");
-		insertTask.setSmsAccountId(0);
-		insertTask.setDateCreated(new Timestamp(System.currentTimeMillis()));
-		insertTask.setDateToSend(new Timestamp(System.currentTimeMillis()));
-		insertTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
-		insertTask.setAttemptCount(0);
-		insertTask.setMessageBody("testing1234567");
-		insertTask.setSenderUserName("administrator");
-		logic.persistSmsTask(insertTask);
-		// smsCoreImpl.processTask(insertTask);
-
-	}
 	
 	/**
 	 * Test get next sms task. 
@@ -213,19 +167,18 @@ public class SmsTaskTest extends TestCase {
 	public void testGetNextSmsTask() {
 		SmsTask nextTask = logic.getNextSmsTask();
 		assertNotNull("Required record not found", nextTask);
-		List<SmsTask> tasks = logic.getSmsTasksFilteredByMessageStatus(SmsConst_DeliveryStatus.STATUS_PENDING, 
-																	   SmsConst_DeliveryStatus.STATUS_INCOMPLETE);
-		
+		List<SmsMessage> messages = messageLogic.getSmsMessagesWithStatus(null, SmsConst_DeliveryStatus.STATUS_PENDING, 
+				   																SmsConst_DeliveryStatus.STATUS_INCOMPLETE); 
 		
 		Timestamp t = null;
 		// Get the oldest date to send from the list;
-		for (SmsTask task : tasks) {
+		for (SmsMessage message : messages) {
 			if (t == null) {
-				t = task.getDateToSend();
+				t = message.getSmsTask().getDateToSend();
 			}
-			if (task.getDateToSend() != null
-					&& task.getDateToSend().getTime() < t.getTime()) {
-				t = task.getDateToSend();
+			if (message.getSmsTask().getDateToSend() != null
+					&& message.getSmsTask().getDateToSend().getTime() < t.getTime()) {
+				t = message.getSmsTask().getDateToSend();
 				break;
 			}
 		}
@@ -235,6 +188,46 @@ public class SmsTaskTest extends TestCase {
 		
 	}
 	
+	
+	/**
+	 * Tests the getMessagesForCriteria method
+	 */
+	public void testGetTasksForCriteria() {
+		SmsTask insertTask = new SmsTask();
+		insertTask.setSakaiSiteId("sakaiSiteId");
+		insertTask.setSmsAccountId(1);
+		insertTask.setDateCreated(new Timestamp(System.currentTimeMillis()));
+		insertTask.setDateToSend(new Timestamp(System.currentTimeMillis()));
+		insertTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
+		insertTask.setAttemptCount(2);
+		insertTask.setMessageBody("taskCrit");
+		insertTask.setSenderUserName("taskCrit");
+		insertTask.setSakaiToolName("sakaiToolName");
+		
+		try {
+			logic.persistSmsTask(insertTask);
+			
+			SearchFilterBean bean = new SearchFilterBean();
+			bean.setStatus(insertTask.getStatusCode());
+			bean.setDateFrom("12/01/2008");
+			bean.setDateTo("12/01/2008");
+			bean.setToolName(insertTask.getSakaiToolName());
+			bean.setSender(insertTask.getSenderUserName());
+			
+			List<SmsTask> tasks = logic.getSmsTasksForCriteria(bean);
+			assertTrue("Collection returned has no objects", tasks.size() > 0);
+		
+			for(SmsTask task : tasks) {
+				//We know that only one message should be returned becuase
+				//we only added one with status ERROR.
+				assertEquals(task, insertTask);
+			}
+		}catch(SmsSearchException se) {
+			fail(se.getMessage());
+		}finally {
+			logic.deleteSmsTask(insertTask);
+		}
+	}
 	
 
 	/**
