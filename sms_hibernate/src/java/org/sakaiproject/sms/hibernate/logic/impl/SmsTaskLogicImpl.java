@@ -18,17 +18,25 @@
 
 package org.sakaiproject.sms.hibernate.logic.impl;
 
+import java.sql.Timestamp;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
+import org.sakaiproject.sms.hibernate.bean.SearchFilterBean;
 import org.sakaiproject.sms.hibernate.dao.HibernateUtil;
 import org.sakaiproject.sms.hibernate.dao.SmsDao;
 import org.sakaiproject.sms.hibernate.logic.SmsTaskLogic;
+import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsSearchException;
+import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
+import org.sakaiproject.sms.hibernate.util.DateUtil;
 
 /**
  * The data service will handle all sms task database transactions for the sms
@@ -115,9 +123,9 @@ public class SmsTaskLogicImpl extends SmsDao implements SmsTaskLogic {
 	 * Returns a list of SmsTask objects with messages that have the specified
 	 * status code(s)
 	 * 
-	 * @param message
-	 *            status code(s)
-	 * @return List of SmsTask objects
+	 * @param message status code(s)
+	 * @return List of SmsTask objetcs
+	 * @deprecated Currently no use for this method. 
 	 */
 	public List<SmsTask> getSmsTasksFilteredByMessageStatus(
 			String... messageStatusCodes) {
@@ -142,5 +150,59 @@ public class SmsTaskLogicImpl extends SmsDao implements SmsTaskLogic {
 		}
 		return tasks;
 	}
+	
+	
+	/**
+	 * Gets a list of SmsTask objects for the specified search criteria
+	 * 
+	 * @param search Bean containing the search criteria
+	 * @return LList of SmsTasks
+	 * @throws SmsSearchException when an invalid search criteria is specified
+	 */
+	public List<SmsTask> getSmsTasksForCriteria(SearchFilterBean searchBean) throws SmsSearchException {
+		
+		Criteria crit = HibernateUtil.currentSession().createCriteria(SmsMessage.class);
+		
+		List<SmsTask> tasks = new ArrayList<SmsTask>();
 
+		try {
+		// Message status
+		if (searchBean.getStatus() != null&& !searchBean.getStatus().trim().equals("")) {
+			crit.add(Restrictions.ilike("statusCode", searchBean.getStatus()));
+		}
+
+		// Sakai tool name
+		if (searchBean.getToolName() != null&& !searchBean.getToolName().trim().equals("")) {
+			crit.add(Restrictions.ilike("sakaiToolName", searchBean.getToolName()));
+		}
+
+		// Date to send start
+		if (searchBean.getDateFrom() != null) {
+			Timestamp date = DateUtil.getTimestampFromStartDateString(searchBean.getDateFrom());
+			crit.add(Restrictions.ge("dateToSend", date));
+		}
+		
+		// Date to send end
+		if (searchBean.getDateTo() != null) {
+			Timestamp date = DateUtil.getTimestampFromEndDateString(searchBean.getDateFrom());
+			crit.add(Restrictions.le("dateToSend", date));
+		}
+
+		// Sender name
+		if (searchBean.getSender() != null && !searchBean.getSender().trim().equals("")) {
+			crit.add(Restrictions.ilike("senderUserName", searchBean.getSender()));
+		}
+
+		
+		}catch(ParseException e) {
+			throw new SmsSearchException(e);
+		}catch(Exception e) {
+			throw new SmsSearchException(e);
+		}
+		
+		tasks = crit.list();
+		HibernateUtil.closeSession();
+		return tasks;
+	}
+	
 }

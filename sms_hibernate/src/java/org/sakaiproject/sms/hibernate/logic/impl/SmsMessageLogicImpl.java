@@ -18,6 +18,8 @@
 
 package org.sakaiproject.sms.hibernate.logic.impl;
 
+import java.sql.Timestamp;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,8 +32,10 @@ import org.sakaiproject.sms.hibernate.bean.SearchFilterBean;
 import org.sakaiproject.sms.hibernate.dao.HibernateUtil;
 import org.sakaiproject.sms.hibernate.dao.SmsDao;
 import org.sakaiproject.sms.hibernate.logic.SmsMessageLogic;
+import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsSearchException;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
-import org.sakaiproject.sms.hibernate.model.SmsMessage;
+import org.sakaiproject.sms.hibernate.model.SmsTask;
+import org.sakaiproject.sms.hibernate.util.DateUtil;
 
 /**
  * The data service will handle all sms Message database transactions for the sms tool in
@@ -43,6 +47,7 @@ import org.sakaiproject.sms.hibernate.model.SmsMessage;
  */
 public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 
+	
 	/**
 	 * Deletes and the given entity from the DB
 	 */
@@ -146,43 +151,59 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 	 * 
 	 * @param search Bean containing the search criteria
 	 * @return LList of SmsMessages
+	 * @throws SmsSearchException when an invalid search criteria is specified
 	 */
-	public List<SmsMessage> getSmsMessagesForCriteria(SearchFilterBean searchBean){
-		Criteria crit = HibernateUtil.currentSession().createCriteria(SmsMessage.class);
+	public List<SmsMessage> getSmsMessagesForCriteria(SearchFilterBean searchBean) throws SmsSearchException {
+		
+		Criteria crit = HibernateUtil.currentSession().createCriteria(SmsMessage.class).createAlias("smsTask", "smsTask");
+		
 		List<SmsMessage> messages = new ArrayList<SmsMessage>();
+		try {
+			//Message status
+			if(searchBean.getStatus() != null && !searchBean.getStatus().trim().equals("")) {
+				crit.add(Restrictions.ilike("statusCode", searchBean.getStatus()));
+			}
+	
+			// Sakai tool name
+			if (searchBean.getToolName() != null&& !searchBean.getToolName().trim().equals("")) {
+				crit.add(Restrictions.ilike("smsTask.sakaiToolName", searchBean.getToolName()));
+			}
+	
+			// Date to send start
+			if (searchBean.getDateFrom() != null) {
+				Timestamp date = DateUtil.getTimestampFromStartDateString(searchBean.getDateFrom());
+				crit.add(Restrictions.ge("smsTask.dateToSend", date));
+			}
+			
+			// Date to send end
+			if (searchBean.getDateTo() != null) {
+				Timestamp date = DateUtil.getTimestampFromEndDateString(searchBean.getDateFrom());
+				crit.add(Restrictions.le("smsTask.dateToSend", date));
+			}
+	
+			// Sender name
+			if (searchBean.getSender() != null && !searchBean.getSender().trim().equals("")) {
+				crit.add(Restrictions.ilike("smsTask.senderUserName", searchBean.getSender()));
+			}
+	
+			// Mobile number
+			if (searchBean.getMobileNumber() != null && !searchBean.getMobileNumber().trim().equals("")) {
+				crit.add(Restrictions.ilike("mobileNumber", searchBean.getMobileNumber()));
+			}
 		
-		//Message status
-		if(searchBean.getStatus() != null && !searchBean.getStatus().trim().equals("")) {
-			crit.add(Restrictions.ilike("statusCode", searchBean.getStatus()));
-		}
-		
-		//Sakai tool name
-		if(searchBean.getToolName() != null && !searchBean.getToolName().trim().equals("")) {
-			crit.add(Restrictions.ilike("smsTask.sakaiToolName", searchBean.getToolName()));
-		}
-		
-		//Date to send start
-		if(searchBean.getDateFrom() != null) {
-			crit.add(Restrictions.ge("smsTask.dateToSend", searchBean.getDateFrom()));
-		}
-		
-		//Date to send end
-		if(searchBean.getDateTo() != null) {
-			crit.add(Restrictions.le("smsTask.dateToSend", searchBean.getDateTo()));
-		}
-		
-		//Sender name
-		if(searchBean.getSender() != null && !searchBean.getSender().trim().equals("") ) {
-			crit.add(Restrictions.ilike("smsTask.senderUserName", searchBean.getSender()));
-		}
-		
-		//Mobile number
-		if(searchBean.getMobileNumber() != null && !searchBean.getMobileNumber().trim().equals("") ) {
-			crit.add(Restrictions.ilike("mobileNumber", searchBean.getMobileNumber()));
+		}catch(ParseException e) {
+			throw new SmsSearchException(e);
+		}catch(Exception e) {
+			throw new SmsSearchException(e);
 		}
 		
 		messages = crit.list();
+		HibernateUtil.closeSession();
 		return messages;
 	}
+	
+	
+	
+
 	
 }

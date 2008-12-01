@@ -18,14 +18,29 @@
 
 package org.sakaiproject.sms.hibernate.logic.impl;
 
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.criterion.Restrictions;
+import org.sakaiproject.sms.hibernate.bean.SearchFilterBean;
 import org.sakaiproject.sms.hibernate.dao.HibernateUtil;
 import org.sakaiproject.sms.hibernate.dao.SmsDao;
 import org.sakaiproject.sms.hibernate.logic.SmsTransactionLogic;
+import org.sakaiproject.sms.hibernate.logic.SmsDataLogic;
+import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsSearchException;
+import org.sakaiproject.sms.hibernate.model.SmsAccount;
 import org.sakaiproject.sms.hibernate.model.SmsTransaction;
+import org.sakaiproject.sms.hibernate.model.SmsMessage;
+import org.sakaiproject.sms.hibernate.model.SmsTask;
+import org.sakaiproject.sms.hibernate.model.SmsTransaction;
+import org.sakaiproject.sms.hibernate.util.DateUtil;
 
 /**
  * The data service will handle all sms Transaction database transactions for
@@ -79,4 +94,56 @@ public class SmsTransactionLogicImpl extends SmsDao implements
 	public void persistSmsTransaction(SmsTransaction smsTransaction) {
 		persist(smsTransaction);
 	}
+	
+	/**
+	 * Gets a list of SmsTransaction objects for the specified search criteria
+	 * 
+	 * @param search Bean containing the search criteria
+	 * @return List of SmsTransactions
+	 * @throws SmsSearchException when an invalid search criteria is specified
+	 */
+	public List<SmsTransaction> getSmsTransactionsForCriteria(SearchFilterBean searchBean) throws SmsSearchException {
+		
+		Criteria crit = HibernateUtil.currentSession().createCriteria(SmsMessage.class);
+		
+		List<SmsTransaction> transactions = new ArrayList<SmsTransaction>();
+
+		try {
+			//Transaction type
+			if(searchBean.getTransactionType() != null && !searchBean.getTransactionType().trim().equals("")) {
+				crit.add(Restrictions.ilike("transactionTypeCode", searchBean.getAccountNumber()));
+			}
+			
+			//Account number
+			if(searchBean.getAccountNumber() != null) {
+				crit.add(Restrictions.ilike("smsAccountId", searchBean.getAccountNumber()));
+			}
+			
+			// Transaction date start
+			if (searchBean.getDateFrom() != null) {
+				Timestamp date = DateUtil.getTimestampFromStartDateString(searchBean.getDateFrom());
+				crit.add(Restrictions.ge("transactionDate", date));
+			}
+			
+			// Transaction date end
+			if (searchBean.getDateTo() != null) {
+				Timestamp date = DateUtil.getTimestampFromEndDateString(searchBean.getDateFrom());
+				crit.add(Restrictions.le("transactionDate", date));
+			}
+	
+			// Sender name
+			if (searchBean.getSender() != null && !searchBean.getSender().trim().equals("")) {
+				crit.add(Restrictions.ilike("senderUserName", searchBean.getSender()));
+			}
+		}catch(ParseException e) {
+			throw new SmsSearchException(e);
+		}catch(Exception e) {
+			throw new SmsSearchException(e);
+		}
+		
+		transactions = crit.list();
+		HibernateUtil.closeSession();
+		return transactions;
+	}
+	
 }
