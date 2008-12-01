@@ -168,6 +168,11 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 			crit.add(Restrictions.ilike("smsTask.senderUserName", searchBean.getSender()));
 		}
 		
+		//Mobile number
+		if(searchBean.getMobileNumber() != null && !searchBean.getMobileNumber().trim().equals("") ) {
+			crit.add(Restrictions.ilike("mobileNumber", searchBean.getMobileNumber()));
+		}
+		
 		messages = crit.list();
 		return messages;
 	}

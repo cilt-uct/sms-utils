@@ -10,6 +10,7 @@ public class SearchFilterBean {
 	private String sender;
 	private Integer currentPage;
 	private String orderBy;
+	private String mobileNumber;
 	
 	
 	public String getOrderBy() {
@@ -91,5 +92,19 @@ public class SearchFilterBean {
 
 	public void setCurrentPage(Integer currentPage) {
 		this.currentPage = currentPage;
+	}
+
+	/**
+	 * @return the mobileNumber
+	 */
+	public String getMobileNumber() {
+		return mobileNumber;
+	}
+
+	/**
+	 * @param mobileNumber the mobileNumber to set
+	 */
+	public void setMobileNumber(String mobileNumber) {
+		this.mobileNumber = mobileNumber;
 	}	
 }

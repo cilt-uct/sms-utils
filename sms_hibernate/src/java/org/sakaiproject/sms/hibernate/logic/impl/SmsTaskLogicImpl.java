@@ -45,10 +45,6 @@ public class SmsTaskLogicImpl extends SmsDao implements SmsTaskLogic {
 	 * Deletes and the given entity from the DB
 	 */
 	public void deleteSmsTask(SmsTask smsTask) {
-		/*//Have not set cascade:all-delete-orphan
-		for(SmsMessage message : smsTask.getSmsMessages()) {
-			delete(message);
-		}*/
 		delete(smsTask);
 	}
 
@@ -102,7 +98,8 @@ public class SmsTaskLogicImpl extends SmsDao implements SmsTaskLogic {
 		Query query = HibernateUtil.currentSession().createQuery(hql.toString());
 		query.setParameter("today", getTimestampCurrent(), Hibernate.TIMESTAMP);
 		query.setParameterList("statusCodes",new Object[] {SmsConst_DeliveryStatus.STATUS_PENDING, 
-														   SmsConst_DeliveryStatus.STATUS_INCOMPLETE}, Hibernate.STRING);
+														   SmsConst_DeliveryStatus.STATUS_INCOMPLETE,
+														   SmsConst_DeliveryStatus.STATUS_RETRY}, Hibernate.STRING);
 		log.debug("getNextSmsTask() HQL: " + query.getQueryString());
 		List<SmsTask> tasks = query.list();
 		HibernateUtil.closeSession();
