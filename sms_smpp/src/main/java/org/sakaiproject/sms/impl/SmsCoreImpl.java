@@ -41,12 +41,21 @@ public class SmsCoreImpl implements SmsCore {
 	SmsTaskLogic smsTaskLogic = null;
 
 	/**
-	 * Get the sakai group list for the specific sms task. For now we just
-	 * generate the list. Will get it from Sakai later on. So we generate a
-	 * random number of users with random mobile numbers.
+	 * Get the group list from Sakai
 	 */
 	public Set<SmsMessage> getDeliveryGroup(String sakaiSiteID,
 			String sakaiGroupID, SmsTask smsTask) {
+		return getDummyDeliveryGroup(smsTask);
+	}
+
+	/**
+	 * For now we just generate the list. Will get it from Sakai later on. So we
+	 * generate a random number of users with random mobile numbers.
+	 * 
+	 * @param smsTask
+	 * @return
+	 */
+	private Set<SmsMessage> getDummyDeliveryGroup(SmsTask smsTask) {
 		Set<SmsMessage> messages = new HashSet<SmsMessage>();
 		String users[] = new String[100];
 		String celnumbers[] = new String[100];
@@ -72,11 +81,21 @@ public class SmsCoreImpl implements SmsCore {
 		return null;
 	}
 
+	/**
+	 * Find the next sms task to process from the task queue. Determine tasks
+	 * with highest priority. Priority is based on message age and type.
+	 */
 	public SmsTask getNextSmsTask() {
 		return smsTaskLogic.getNextSmsTask();
 
 	}
 
+	/**
+	 * Get Sakai user's mobile number from profile. Return the mobile number,
+	 * null if not found.
+	 * 
+	 * @param sakaiUserID
+	 */
 	public String getSakaiMobileNumber(String sakaiUserID) {
 		// TODO Auto-generated method stub
 		return null;
@@ -95,16 +114,33 @@ public class SmsCoreImpl implements SmsCore {
 
 	}
 
+	/**
+	 * Add a new task to the sms task list, for eg. send message to all
+	 * administrators at 10:00, or get latest announcements and send to mobile
+	 * numbers of Sakai group x (phase II).
+	 */
 	public void insertNewTask(SmsTask smsTask) {
 		smsTaskLogic.persistSmsTask(smsTask);
 
 	}
 
+	/**
+	 * Try to process an incoming message in real-time by inserting it into the
+	 * queue and calling processMessage immediately. If unable to process, then
+	 * leave in the queue for the job scheduler to handle. Incoming messages are
+	 * for later development.
+	 * 
+	 * @param messageID
+	 */
 	public void processIncomingMessage(SmsMessage smsMessage) {
 		// TODO Auto-generated method stub
 
 	}
 
+	/**
+	 * Gets the next task to process. Based on specific criteria like status and
+	 * date to sent.
+	 */
 	public void processNextTask() {
 		SmsTask smsTask = smsTaskLogic.getNextSmsTask();
 		if (smsTask != null) {
@@ -115,7 +151,7 @@ public class SmsCoreImpl implements SmsCore {
 	/**
 	 * Process is specific task. A task can be retried if a previous send
 	 * attempt was unsuccessful due to gateway connection problems. A retry will
-	 * be re-scheduled some time in the future. When the max rety attempts are
+	 * be re-scheduled some time in the future. When the max retty attempts are
 	 * reached or if credits are insufficient, the task is marked as failed.
 	 */
 	public void processTask(SmsTask smsTask) {
