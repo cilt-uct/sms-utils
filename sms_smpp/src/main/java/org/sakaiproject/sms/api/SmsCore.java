@@ -50,7 +50,7 @@ public interface SmsCore {
 	 * status in SMS_MESSAGE table according to delivery codes.
 	 * 
 	 */
-	public SmsDeliveryReport[] getDeliveryReports();
+	public boolean processDeliveryReports();
 
 	/**
 	 * Find the next sms task to process from the task queue. Determine tasks

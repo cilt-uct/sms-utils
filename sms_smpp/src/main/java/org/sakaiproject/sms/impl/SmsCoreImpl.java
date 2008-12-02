@@ -20,10 +20,13 @@ package org.sakaiproject.sms.impl;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import org.sakaiproject.sms.api.SmsCore;
 import org.sakaiproject.sms.api.SmsSmpp;
+import org.sakaiproject.sms.hibernate.logic.SmsMessageLogic;
 import org.sakaiproject.sms.hibernate.logic.SmsTaskLogic;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
@@ -32,6 +35,14 @@ import org.sakaiproject.sms.model.SmsDeliveryReport;
 
 public class SmsCoreImpl implements SmsCore {
 
+	public SmsMessageLogic getSmsMessageLogic() {
+		return smsMessageLogic;
+	}
+
+	public void setSmsMessageLogic(SmsMessageLogic smsMessageLogic) {
+		this.smsMessageLogic = smsMessageLogic;
+	}
+
 	public static final int MAX_RETRY = 5;
 
 	public static final int RESCHEDULE_TIMEOUT = 15;
@@ -39,6 +50,7 @@ public class SmsCoreImpl implements SmsCore {
 	SmsSmpp smsSmpp = null;
 
 	SmsTaskLogic smsTaskLogic = null;
+	SmsMessageLogic smsMessageLogic = null;
 
 	/**
 	 * Get the group list from Sakai
@@ -74,11 +86,6 @@ public class SmsCoreImpl implements SmsCore {
 			messages.add(message);
 		}
 		return messages;
-	}
-
-	public SmsDeliveryReport[] getDeliveryReports() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	/**
@@ -193,6 +200,24 @@ public class SmsCoreImpl implements SmsCore {
 
 	public void setSmsTaskLogic(SmsTaskLogic smsTaskLogic) {
 		this.smsTaskLogic = smsTaskLogic;
+	}
+
+	public boolean processDeliveryReports() {
+		List<SmsDeliveryReport> deliveryReports = this.smsSmpp
+				.getDeliveryNotifications();
+		Iterator<SmsDeliveryReport> it = deliveryReports.iterator();
+		while (it.hasNext()) {
+			SmsDeliveryReport smsDeliveryReport = it.next();
+			SmsMessage smsMessage = smsMessageLogic
+					.getSmsMessageBySmscMessageId(smsDeliveryReport.getSmscID());
+			if (smsMessage != null) {
+				smsMessage.setSmscDeliveryStatusCode(smsDeliveryReport
+						.getDeliveryStatus());
+				smsMessageLogic.persistSmsMessage(smsMessage);
+			}
+		}
+		deliveryReports.clear();
+		return false;
 	}
 
 }

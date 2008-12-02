@@ -28,15 +28,15 @@ package org.sakaiproject.sms.model;
 public class SmsDeliveryReport {
 
 	// One of the above constants
-	private int deliveryReport;
+	private int deliveryStatus;
 
 	// The unique ID of the message
 	private long kMessageID;
 
 	private String SmscID;
 
-	public int getDeliveryReport() {
-		return deliveryReport;
+	public int getDeliveryStatus() {
+		return deliveryStatus;
 	}
 
 	public long getKMessageID() {
@@ -47,8 +47,8 @@ public class SmsDeliveryReport {
 		return SmscID;
 	}
 
-	public void setDeliveryReport(int deliveryReport) {
-		this.deliveryReport = deliveryReport;
+	public void setDeliveryStatus(int deliveryStatus) {
+		this.deliveryStatus = deliveryStatus;
 	}
 
 	public void setKMessageID(long messageID) {
