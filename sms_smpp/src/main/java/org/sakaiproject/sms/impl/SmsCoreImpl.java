@@ -35,6 +35,14 @@ import org.sakaiproject.sms.model.SmsDeliveryReport;
 
 public class SmsCoreImpl implements SmsCore {
 
+	public static final int MAX_RETRY = 5;
+
+	public static final int RESCHEDULE_TIMEOUT = 15;
+
+	SmsSmpp smsSmpp = null;
+	SmsTaskLogic smsTaskLogic = null;
+	SmsMessageLogic smsMessageLogic = null;
+
 	public SmsMessageLogic getSmsMessageLogic() {
 		return smsMessageLogic;
 	}
@@ -43,14 +51,21 @@ public class SmsCoreImpl implements SmsCore {
 		this.smsMessageLogic = smsMessageLogic;
 	}
 
-	public static final int MAX_RETRY = 5;
+	public void setSmsSmpp(SmsSmpp smsSmpp) {
+		this.smsSmpp = smsSmpp;
+	}
 
-	public static final int RESCHEDULE_TIMEOUT = 15;
+	public void setSmsTaskLogic(SmsTaskLogic smsTaskLogic) {
+		this.smsTaskLogic = smsTaskLogic;
+	}
 
-	SmsSmpp smsSmpp = null;
+	public SmsSmpp getSmsSmpp() {
+		return smsSmpp;
+	}
 
-	SmsTaskLogic smsTaskLogic = null;
-	SmsMessageLogic smsMessageLogic = null;
+	public SmsTaskLogic getSmsTaskLogic() {
+		return smsTaskLogic;
+	}
 
 	/**
 	 * Get the group list from Sakai
@@ -106,14 +121,6 @@ public class SmsCoreImpl implements SmsCore {
 	public String getSakaiMobileNumber(String sakaiUserID) {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	public SmsSmpp getSmsSmpp() {
-		return smsSmpp;
-	}
-
-	public SmsTaskLogic getSmsTaskLogic() {
-		return smsTaskLogic;
 	}
 
 	public void insertIntoDebugLog() {
@@ -192,14 +199,6 @@ public class SmsCoreImpl implements SmsCore {
 					SmsConst_DeliveryStatus.STATUS_FAIL);
 		}
 		smsTaskLogic.persistSmsTask(smsTask);
-	}
-
-	public void setSmsSmpp(SmsSmpp smsSmpp) {
-		this.smsSmpp = smsSmpp;
-	}
-
-	public void setSmsTaskLogic(SmsTaskLogic smsTaskLogic) {
-		this.smsTaskLogic = smsTaskLogic;
 	}
 
 	public boolean processDeliveryReports() {

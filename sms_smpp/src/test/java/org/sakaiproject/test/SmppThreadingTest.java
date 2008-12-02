@@ -1,3 +1,20 @@
+/***********************************************************************************
+ * SmppThreadingTest.java
+ * Copyright (c) 2008 Sakai Project/Sakai Foundation
+ * 
+ * Licensed under the Educational Community License, Version 2.0 (the "License"); 
+ * you may not use this file except in compliance with the License. 
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.osedu.org/licenses/ECL-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software 
+ * distributed under the License is distributed on an "AS IS" BASIS, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+ * See the License for the specific language governing permissions and 
+ * limitations under the License.s
+ *
+ **********************************************************************************/
 package org.sakaiproject.test;
 
 import junit.framework.Test;
@@ -47,9 +64,9 @@ public class SmppThreadingTest extends TestCase {
 
 	private int delay_between_messages = 1; // ms
 
-	private int session1_message_count = 0;
+	private int session1_message_count = 100;
 
-	private int session2_message_count = 0;
+	private int session2_message_count = 100;
 
 	/**
 	 * You use the MultiThreadedTestRunner in your test cases. The MTTR takes an
@@ -77,8 +94,8 @@ public class SmppThreadingTest extends TestCase {
 
 		// kickstarts the MTTR & fires off threads
 		mttr.runTestRunnables();
-		int delivery_count = smsThread1.delivery_count
-				+ smsThread2.delivery_count;
+		int delivery_count = smsThread1.reportsReceivedAfterSleep
+				+ smsThread2.reportsReceivedAfterSleep;
 		int message_count = session1_message_count + session2_message_count;
 		System.out.println(delivery_count);
 

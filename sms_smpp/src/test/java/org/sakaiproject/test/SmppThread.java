@@ -1,3 +1,20 @@
+/***********************************************************************************
+ * SmppThread.java
+ * Copyright (c) 2008 Sakai Project/Sakai Foundation
+ * 
+ * Licensed under the Educational Community License, Version 2.0 (the "License"); 
+ * you may not use this file except in compliance with the License. 
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.osedu.org/licenses/ECL-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software 
+ * distributed under the License is distributed on an "AS IS" BASIS, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+ * See the License for the specific language governing permissions and 
+ * limitations under the License.s
+ *
+ **********************************************************************************/
 package org.sakaiproject.test;
 
 import net.sourceforge.groboutils.junit.v1.TestRunnable;
@@ -10,10 +27,11 @@ import org.sakaiproject.sms.impl.SmsSmppImpl;
  * The Class SmppSession.
  */
 class SmppThread extends TestRunnable {
-
+	private static final org.apache.log4j.Logger LOG = org.apache.log4j.Logger
+			.getLogger(SmppThread.class);
 	private int delay_between_messages;
 	/** some private stuff for each thread. */
-	public int delivery_count, sent_count, message_count;
+	public int reportsReceivedAfterSleep, sent_count, message_count;
 
 	/** The session name. */
 	private String sessionName;
@@ -31,10 +49,10 @@ class SmppThread extends TestRunnable {
 	 */
 	public SmppThread(String sessionName, int messageCount, int messageDelay) {
 		this.sessionName = sessionName;
-		smsSmppImpl = new SmsSmppImpl();
-		smsSmppImpl.init();
-		smsSmppImpl.setLogLevel(Level.WARN);
-		// smsSmppImpl.showDebug = false;
+		this.smsSmppImpl = new SmsSmppImpl();
+		this.smsSmppImpl.init();
+		this.smsSmppImpl.setLogLevel(Level.WARN);
+		this.LOG.setLevel(Level.ALL);
 		this.message_count = messageCount;
 		this.delay_between_messages = messageDelay;
 	}
@@ -42,10 +60,8 @@ class SmppThread extends TestRunnable {
 	/**
 	 * Send x messages to gateway inside a separate thread
 	 */
-	@Override
 	public void runTest() throws Throwable {
-		System.out.println(sessionName + ": sending " + message_count
-				+ " to gateway...");
+		LOG.info(sessionName + ": sending " + message_count + " to gateway...");
 		for (int i = 0; i < message_count; i++) {
 			SmsMessage smsMessage = new SmsMessage("+270731876135",
 					"Junit testing forloop num:" + i);
@@ -56,29 +72,35 @@ class SmppThread extends TestRunnable {
 			}
 			Thread.sleep(delay_between_messages);
 		}
-		System.out
-				.println(sessionName + ": sent " + sent_count + " to gateway");
+		LOG.info(sessionName + ": sent " + sent_count + " to gateway");
 
 		boolean waitForDeliveries = true;
 
-		// waiting for a-synchronise delivery reports to arrive. If no
-		// reports was received in a 10 seconds window, then we assume all
+		// waiting for a-synchronise delivery reports to arrive. Every 10
+		// secondes we check to see if new messages came in.If the
+		// reportsReceivedAfterSleep == reportsReceivedBeforeSleep, then we
+		// assume all
 		// reports was
 		// received from the simulator.
 		while (waitForDeliveries) {
-			int reportsReceived = smsSmppImpl.getDeliveryNotifications().size();
-			System.out.println(sessionName + ": waiting for delivery reports ("
-					+ reportsReceived + " of " + message_count + ")");
+			int reportsReceivedBeforeSleep = smsSmppImpl
+					.getDeliveryNotifications().size();
+			LOG
+					.info(sessionName + ": waiting for delivery reports ("
+							+ reportsReceivedBeforeSleep + " of "
+							+ message_count + ")");
 			Thread.sleep(10000);
-			delivery_count = smsSmppImpl.getDeliveryNotifications().size();
-			if (delivery_count == reportsReceived) {
-				delivery_count = smsSmppImpl.getDeliveryNotifications().size();
+			reportsReceivedAfterSleep = smsSmppImpl.getDeliveryNotifications()
+					.size();
+			if (reportsReceivedAfterSleep == reportsReceivedBeforeSleep) {
+				reportsReceivedAfterSleep = smsSmppImpl
+						.getDeliveryNotifications().size();
 				waitForDeliveries = false;
 
 			}
 		}
 		smsSmppImpl.disconnectGateWay();
-		System.out.println(sessionName + " ended, received " + delivery_count
+		LOG.info(sessionName + " ended, received " + reportsReceivedAfterSleep
 				+ " reports");
 	}
 }

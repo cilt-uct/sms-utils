@@ -61,7 +61,9 @@ import org.jsmpp.util.TimeFormatter;
 import org.sakaiproject.sms.api.SmsSmpp;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
+import org.sakaiproject.sms.hibernate.model.constants.SmsConst_SmscDeliveryStatus;
 import org.sakaiproject.sms.model.SmsDeliveryReport;
+import org.sakaiproject.sms.model.SmsStatusBridge;
 
 public class SmsSmppImpl implements SmsSmpp {
 	/**
@@ -77,7 +79,7 @@ public class SmsSmppImpl implements SmsSmpp {
 	private BindThread bindTest;
 	private int bindThreadTimer;
 	private byte dataCoding;
-	private ArrayList<SmsDeliveryReport> delReports = new ArrayList<SmsDeliveryReport>();
+	private ArrayList<SmsDeliveryReport> deliveryReports = new ArrayList<SmsDeliveryReport>();
 	private byte destAddressNPI;
 	private byte destAddressTON;
 	private boolean disconnectGateWayCalled;
@@ -100,7 +102,7 @@ public class SmsSmppImpl implements SmsSmpp {
 	private String userName;
 	private String addressRange;
 
-	class BindThread implements Runnable {
+	private class BindThread implements Runnable {
 
 		boolean allDone = false;
 
@@ -155,30 +157,25 @@ public class SmsSmppImpl implements SmsSmpp {
 					.getEsmClass())) {
 				// this message is delivery receipt
 				try {
-
 					DeliveryReceipt delReceipt = deliverSm
 							.getShortMessageAsDeliveryReceipt();
 					LOG.info("Receiving delivery receipt for message '"
 							+ delReceipt.getId() + " ' from "
 							+ deliverSm.getSourceAddr() + " to "
 							+ deliverSm.getDestAddress() + " : " + delReceipt);
-					SmsDeliveryReport receivedDelReport = new SmsDeliveryReport();
-					receivedDelReport.setSmscID(delReceipt.getId());
-					receivedDelReport.setDeliveryStatus(delReceipt
-							.getFinalStatus().value());
-					delReports.add(receivedDelReport);
-
+					SmsDeliveryReport receivedDeliveryReport = new SmsDeliveryReport();
+					receivedDeliveryReport.setSmscID(delReceipt.getId());
+					receivedDeliveryReport
+							.setDeliveryStatus(SmsStatusBridge
+									.getSmsDeliveryStatus((delReceipt
+											.getFinalStatus())));
+					deliveryReports.add(receivedDeliveryReport);
 				} catch (InvalidDeliveryReceiptException e) {
-					System.err.println("Failed getting delivery receipt");
-					e.printStackTrace();
+					LOG.error("Failed getting delivery receipt" + e);
+
 				}
 			} else {
 				// this message is regular short message
-
-				/*
-				 * you can save the incoming message to database.
-				 */
-
 				LOG.info("Receiving message : "
 						+ new String(deliverSm.getShortMessage()));
 
@@ -193,7 +190,7 @@ public class SmsSmppImpl implements SmsSmpp {
 	 * 
 	 * @return
 	 */
-	public boolean bind() {
+	private boolean bind() {
 
 		if (!gatewayBound) {
 
@@ -231,7 +228,6 @@ public class SmsSmppImpl implements SmsSmpp {
 				});
 				LOG.info("Bind successfull");
 			} catch (Exception e) {
-
 				LOG.error("Bind operation failed. " + e);
 				gatewayBound = false;
 				session.unbindAndClose();
@@ -265,6 +261,7 @@ public class SmsSmppImpl implements SmsSmpp {
 	public void disconnectGateWay() {
 		disconnectGateWayCalled = true;
 		session.unbindAndClose();
+		gatewayBound = false;
 
 	}
 
@@ -300,7 +297,7 @@ public class SmsSmppImpl implements SmsSmpp {
 	 * Return the buffered list of notifications and clear the buffer.
 	 */
 	public List<SmsDeliveryReport> getDeliveryNotifications() {
-		return delReports;
+		return deliveryReports;
 
 	}
 
@@ -515,6 +512,9 @@ public class SmsSmppImpl implements SmsSmpp {
 						+ messageId);
 				message.setSubmitResult(true);
 				message.setStatusCode(SmsConst_DeliveryStatus.STATUS_SENT);
+				message
+						.setSmscDeliveryStatusCode(SmsConst_SmscDeliveryStatus.ENROUTE);
+
 				LOG.info("Message submitted, message_id is " + messageId);
 			} catch (PDUException e) {
 				// Invalid PDU parameter

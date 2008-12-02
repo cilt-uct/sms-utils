@@ -1,11 +1,32 @@
+/***********************************************************************************
+ * SmsCoreTest.java
+ * Copyright (c) 2008 Sakai Project/Sakai Foundation
+ * 
+ * Licensed under the Educational Community License, Version 2.0 (the "License"); 
+ * you may not use this file except in compliance with the License. 
+ * You may obtain a copy of the License at
+ * 
+ *      http://www.osedu.org/licenses/ECL-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software 
+ * distributed under the License is distributed on an "AS IS" BASIS, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+ * See the License for the specific language governing permissions and 
+ * limitations under the License.s
+ *
+ **********************************************************************************/
 package org.sakaiproject.test;
 
 import java.sql.Timestamp;
 import java.util.Calendar;
 
+import junit.extensions.TestSetup;
+import junit.framework.Test;
 import junit.framework.TestCase;
+import junit.framework.TestSuite;
 
 import org.apache.log4j.Level;
+import org.sakaiproject.sms.hibernate.logic.impl.SmsMessageLogicImpl;
 import org.sakaiproject.sms.hibernate.logic.impl.SmsTaskLogicImpl;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
@@ -13,12 +34,33 @@ import org.sakaiproject.sms.impl.SmsCoreImpl;
 import org.sakaiproject.sms.impl.SmsSmppImpl;
 
 public class SmsCoreTest extends TestCase {
-	SmsCoreImpl smsCoreImpl = new SmsCoreImpl();
+
+	static SmsSmppImpl smsSmppImpl = null;
+	static SmsCoreImpl smsCoreImpl = null;
 	private final static org.apache.log4j.Logger LOG = org.apache.log4j.Logger
 			.getLogger(SmsCoreTest.class);
 
-	protected void setUp() throws Exception {
-		LOG.setLevel(Level.ALL);
+	// The setup method instanciates the smsCoreImpl once. The teardown
+	// method safely calls disconnectGateWay at the end of the test
+	public static Test suite() {
+
+		TestSetup setup = new TestSetup(new TestSuite(SmsCoreTest.class)) {
+
+			protected void setUp() throws Exception {
+				smsCoreImpl = new SmsCoreImpl();
+				smsSmppImpl = new SmsSmppImpl();
+				smsSmppImpl.init();
+				smsCoreImpl.setSmsSmpp(smsSmppImpl);
+				smsCoreImpl.setSmsTaskLogic(new SmsTaskLogicImpl());
+				smsCoreImpl.setSmsMessageLogic(new SmsMessageLogicImpl());
+			}
+
+			protected void tearDown() throws Exception {
+				smsSmppImpl.disconnectGateWay();
+			}
+
+		};
+		return setup;
 	}
 
 	/*
@@ -36,10 +78,8 @@ public class SmsCoreTest extends TestCase {
 		insertTask.setAttemptCount(0);
 		insertTask.setMessageBody("testing1234567");
 		insertTask.setSenderUserName("administrator");
-		smsCoreImpl.setSmsTaskLogic(new SmsTaskLogicImpl());
 		smsCoreImpl.getSmsTaskLogic().persistSmsTask(insertTask);
 		return insertTask;
-
 	}
 
 	/*
@@ -58,18 +98,37 @@ public class SmsCoreTest extends TestCase {
 	}
 
 	/*
+	 * In this test the smsc (gateway) is not bound (disconnected). The task is
+	 * executed 5 times to simulate the scheduler retrying and eventually
+	 * failing.
+	 */
+	public void testProcessTaskFail() {
+		SmsTask smsTask = insertNewTask("testProcessTaskFail",
+				SmsConst_DeliveryStatus.STATUS_PENDING, new Timestamp(System
+						.currentTimeMillis()), 1);
+		smsSmppImpl.setLogLevel(Level.OFF);
+		for (int i = 0; i < 5; i++) {
+			smsCoreImpl.processTask(smsTask);
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		assertEquals(true, smsTask.getStatusCode().equals(
+				SmsConst_DeliveryStatus.STATUS_FAIL));
+		assertEquals(true, smsTask.getAttemptCount() == 5);
+		smsCoreImpl.getSmsTaskLogic().deleteSmsTask(smsTask);
+	}
+
+	/*
 	 * In this test the updating of smsStatuses is tested. First a new task is
 	 * created and populated with smsMessages.The total number of pending
 	 * messages must equal 0 at the end.The total sent messages must equal the
 	 * total messages on the task.
 	 */
 	public void testMessageStatusUpdate() {
-
-		SmsSmppImpl smsSmppImpl = new SmsSmppImpl();
-		smsSmppImpl.init();
 		smsSmppImpl.setLogLevel(Level.OFF);
-		smsCoreImpl.setSmsSmpp(smsSmppImpl);
-		smsCoreImpl.setSmsTaskLogic(new SmsTaskLogicImpl());
 		if (smsCoreImpl.getSmsSmpp().getConnectionStatus()) {
 			SmsTask smsTask = insertNewTask("testMessageStatusUpdate",
 					SmsConst_DeliveryStatus.STATUS_PENDING, new Timestamp(
@@ -82,7 +141,7 @@ public class SmsCoreTest extends TestCase {
 			LOG.info("SMS-messages Pending: "
 					+ smsTask.getMessagesWithStatus(
 							SmsConst_DeliveryStatus.STATUS_PENDING).size());
-			LOG.info("sending Messages To Gateway");
+			LOG.info("Sending Messages To Gateway");
 			smsSmppImpl.sendMessagesToGateway(smsTask.getSmsMessages());
 			LOG.info("SMS-messages Pending: "
 					+ smsTask.getMessagesWithStatus(
@@ -90,7 +149,6 @@ public class SmsCoreTest extends TestCase {
 			LOG.info("SMS-messages STATUS_SENT: "
 					+ smsTask.getMessagesWithStatus(
 							SmsConst_DeliveryStatus.STATUS_SENT).size());
-
 			assertEquals(true, smsTask.getMessagesWithStatus(
 					SmsConst_DeliveryStatus.STATUS_PENDING).size() == 0);
 			assertEquals(true, smsTask.getMessagesWithStatus(
@@ -110,13 +168,7 @@ public class SmsCoreTest extends TestCase {
 	 * test, else it will fail.
 	 */
 	public void testProcessNextTask() {
-
-		SmsSmppImpl smsSmppImpl = new SmsSmppImpl();
-		smsSmppImpl.init();
-		smsSmppImpl.setLogLevel(Level.OFF);
-		smsCoreImpl.setSmsSmpp(smsSmppImpl);
-		smsCoreImpl.setSmsTaskLogic(new SmsTaskLogicImpl());
-
+		smsSmppImpl.setLogLevel(Level.ALL);
 		if (smsCoreImpl.getSmsSmpp().getConnectionStatus()) {
 
 			Calendar now = Calendar.getInstance();
@@ -135,7 +187,6 @@ public class SmsCoreTest extends TestCase {
 			SmsTask smsTask4 = insertNewTask("smsTask4",
 					SmsConst_DeliveryStatus.STATUS_RETRY, new Timestamp(now
 							.getTimeInMillis()), 0);
-
 			assertEquals(true, smsTask1.getId() == smsCoreImpl.getNextSmsTask()
 					.getId());
 			smsCoreImpl.processNextTask();
@@ -146,40 +197,31 @@ public class SmsCoreTest extends TestCase {
 					.getId());
 			smsCoreImpl.processNextTask();
 			assertEquals(true, smsCoreImpl.getNextSmsTask() == null);
+			boolean waitForDeliveries = true;
+			while (waitForDeliveries) {
+				int reportsReceived = smsSmppImpl.getDeliveryNotifications()
+						.size();
+				try {
+					Thread.sleep(10000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				int delivery_count = smsSmppImpl.getDeliveryNotifications()
+						.size();
+				if (delivery_count == reportsReceived) {
+					delivery_count = smsSmppImpl.getDeliveryNotifications()
+							.size();
+					waitForDeliveries = false;
+
+				}
+			}
+			smsCoreImpl.processDeliveryReports();
+			assertEquals(true, smsCoreImpl.getSmsSmpp()
+					.getDeliveryNotifications().size() == 0);
 			smsCoreImpl.getSmsTaskLogic().deleteSmsTask(smsTask1);
 			smsCoreImpl.getSmsTaskLogic().deleteSmsTask(smsTask2);
 			smsCoreImpl.getSmsTaskLogic().deleteSmsTask(smsTask3);
 			smsCoreImpl.getSmsTaskLogic().deleteSmsTask(smsTask4);
 		}
 	}
-
-	/*
-	 * In this test the smsc (gateway) is not bound (disconnected). The task is
-	 * executed 5 times to simulate the scheduler retrying and eventually
-	 * failing.
-	 */
-	public void testProcessTaskFail() {
-		SmsTask smsTask = insertNewTask("testProcessTaskFail",
-				SmsConst_DeliveryStatus.STATUS_PENDING, new Timestamp(System
-						.currentTimeMillis()), 1);
-		SmsSmppImpl smsSmppImpl = new SmsSmppImpl();
-		smsSmppImpl.setLogLevel(Level.OFF);
-		smsCoreImpl.setSmsSmpp(smsSmppImpl);
-		smsCoreImpl.setSmsTaskLogic(new SmsTaskLogicImpl());
-
-		for (int i = 0; i < 5; i++) {
-			smsCoreImpl.processTask(smsTask);
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-
-		}
-		assertEquals(true, smsTask.getStatusCode().equals(
-				SmsConst_DeliveryStatus.STATUS_FAIL));
-		assertEquals(true, smsTask.getAttemptCount() == 5);
-		smsCoreImpl.getSmsTaskLogic().deleteSmsTask(smsTask);
-	}
-
 }
