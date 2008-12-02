@@ -33,12 +33,54 @@ import org.sakaiproject.sms.hibernate.model.*;
  */
 public interface SmsConfigLogic {
 
+	/**
+	 * Gets the sms config.
+	 * 
+	 * @param smsConfigId the sms config id
+	 * 
+	 * @return the sms config
+	 */
 	public SmsConfig getSmsConfig(Long smsConfigId);
 	
+	/**
+	 * Persist sms config.
+	 * 
+	 * @param smsConfig the sms config
+	 */
 	public void persistSmsConfig(SmsConfig smsConfig);
 	
+	/**
+	 * Gets the all sms config.
+	 * 
+	 * @return the all sms config
+	 */
 	public List<SmsConfig> getAllSmsConfig();
 	
+	/**
+	 * Delete sms congif.
+	 * 
+	 * @param smsConfig the sms config
+	 */
 	public void deleteSmsCongif(SmsConfig smsConfig);
+	
+	
+	/**
+	 * Gets the sms config by sakai site id.
+	 * 
+	 * @param id the id
+	 * 
+	 * @return the sms config by sakai site id
+	 */
+	public SmsConfig getSmsConfigBySakaiSiteId(String id);
+	
+	
+	/**
+	 * Gets the sms config by sakai tool id.
+	 * 
+	 * @param id the id
+	 * 
+	 * @return the sms config by sakai tool id
+	 */
+	public SmsConfig getSmsConfigBySakaiToolId(String id);
 
 }

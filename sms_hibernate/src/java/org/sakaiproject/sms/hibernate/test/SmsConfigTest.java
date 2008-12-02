@@ -95,4 +95,12 @@ public class SmsConfigTest extends TestCase {
 		assertNull("Object not removed", getSmsConfig);
 	}
 
+	public void testGetSmsConfigBySakiaSiteId() {
+		fail("Test not implemented yet");
+	}
+
+	public void testGetSmsConfigBySakiaToolId() {
+		fail("Test not implemented yet");
+	}
+
 }

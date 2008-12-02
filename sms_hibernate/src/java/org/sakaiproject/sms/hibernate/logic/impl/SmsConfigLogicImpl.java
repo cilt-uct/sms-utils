@@ -18,6 +18,7 @@
 
 package org.sakaiproject.sms.hibernate.logic.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -61,9 +62,12 @@ public class SmsConfigLogicImpl extends SmsDao implements SmsConfigLogic {
 	 * @return List of SmsConfig objects
 	 */
 	public List<SmsConfig> getAllSmsConfig() {
+		List<SmsConfig> configs = new ArrayList<SmsConfig>();
 		Session s = HibernateUtil.currentSession();
 		Query query = s.createQuery("from SmsConfig");
-		return query.list();
+		configs = query.list();
+		HibernateUtil.closeSession();
+		return configs;
 	}
 
 	/**
@@ -77,6 +81,40 @@ public class SmsConfigLogicImpl extends SmsDao implements SmsConfigLogic {
 	 */
 	public void persistSmsConfig(SmsConfig smsConfig) {
 		persist(smsConfig);
+	}
+	
+	/**
+	 * Gets the sms config by sakai site id.
+	 * 
+	 * @param id
+	 *            the id
+	 * 
+	 * @return the sms config by sakai site id
+	 */
+	public SmsConfig getSmsConfigBySakaiSiteId(String id) {
+		List<SmsConfig> configs = new ArrayList<SmsConfig>();
+		Session s = HibernateUtil.currentSession();
+		Query query = s.createQuery("from SmsConfig");
+		configs = query.list();
+		HibernateUtil.closeSession();
+		return null;
+	}
+
+	/**
+	 * Gets the sms config by sakai tool id.
+	 * 
+	 * @param id
+	 *            the id
+	 * 
+	 * @return the sms config by sakai tool id
+	 */
+	public SmsConfig getSmsConfigBySakaiToolId(String id) {
+
+		Session s = HibernateUtil.currentSession();
+		Query query = s.createQuery("from SmsConfig");
+		// configs = query.list();
+		HibernateUtil.closeSession();
+		return null;
 	}
 
 }

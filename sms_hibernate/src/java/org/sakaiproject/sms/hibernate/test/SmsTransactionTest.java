@@ -9,7 +9,6 @@ import junit.framework.TestCase;
 import org.sakaiproject.sms.hibernate.bean.SearchFilterBean;
 import org.sakaiproject.sms.hibernate.logic.impl.SmsTransactionLogicImpl;
 import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsSearchException;
-import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.SmsTransaction;
 import org.sakaiproject.sms.hibernate.util.DateUtil;
 
@@ -67,7 +66,7 @@ public class SmsTransactionTest extends TestCase {
 		assertNotNull("Returnend collection is null", transactions);
 		assertTrue("No records returned", transactions.size() > 0);
 	}
-	
+
 	/**
 	 * Tests the getMessagesForCriteria method
 	 */
@@ -76,32 +75,38 @@ public class SmsTransactionTest extends TestCase {
 		insertSmsTransaction.setBalance(1.32f);
 		insertSmsTransaction.setSakaiUserId("sakaiUserId");
 		insertSmsTransaction.setSmsAccountId(1);
-		insertSmsTransaction.setTransactionDate(new Timestamp(System.currentTimeMillis()));
+
+		insertSmsTransaction.setTransactionDate(new Timestamp(System
+				.currentTimeMillis()));
 		insertSmsTransaction.setTransactionTypeCode("TTC");
 		insertSmsTransaction.setTransactionCredits(666);
 		insertSmsTransaction.setTransactionAmount(1000.00f);
-		
+
 		try {
 			logic.persistSmsTransaction(insertSmsTransaction);
-			assertTrue("Object not created successfullyu", insertSmsTransaction.exists());
-			
+			assertTrue("Object not created successfullyu", insertSmsTransaction
+					.exists());
+
 			SearchFilterBean bean = new SearchFilterBean();
-			bean.setTransactionType(insertSmsTransaction.getTransactionTypeCode());
+			bean.setTransactionType(insertSmsTransaction
+					.getTransactionTypeCode());
 			bean.setAccountNumber(insertSmsTransaction.getSmsAccountId());
 			bean.setDateFrom(DateUtil.getDateString(new Date()));
 			bean.setDateTo(DateUtil.getDateString(new Date()));
 			bean.setSender(insertSmsTransaction.getSakaiUserId());
-		
-			List<SmsTransaction> transactions = logic.getSmsTransactionsForCriteria(bean);
-			assertTrue("Collection returned has no objects", transactions.size() > 0);
-		
-			for(SmsTransaction transaction : transactions) {
-				//We know that only one transaction should be returned
+
+			List<SmsTransaction> transactions = logic
+					.getSmsTransactionsForCriteria(bean);
+			assertTrue("Collection returned has no objects", transactions
+					.size() > 0);
+
+			for (SmsTransaction transaction : transactions) {
+				// We know that only one transaction should be returned
 				assertEquals(transaction, insertSmsTransaction);
 			}
-		}catch(SmsSearchException se) {
+		} catch (SmsSearchException se) {
 			fail(se.getMessage());
-		}finally {
+		} finally {
 			logic.deleteSmsTransaction(insertSmsTransaction);
 		}
 	}
