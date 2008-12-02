@@ -2,6 +2,7 @@ package org.sakaiproject.test;
 
 import net.sourceforge.groboutils.junit.v1.TestRunnable;
 
+import org.apache.log4j.Level;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.impl.SmsSmppImpl;
 
@@ -32,7 +33,7 @@ class SmppThread extends TestRunnable {
 		this.sessionName = sessionName;
 		smsSmppImpl = new SmsSmppImpl();
 		smsSmppImpl.init();
-		// smsSmppImpl.setLogLevel(Level.ERROR);
+		smsSmppImpl.setLogLevel(Level.WARN);
 		// smsSmppImpl.showDebug = false;
 		this.message_count = messageCount;
 		this.delay_between_messages = messageDelay;
@@ -73,11 +74,10 @@ class SmppThread extends TestRunnable {
 			if (delivery_count == reportsReceived) {
 				delivery_count = smsSmppImpl.getDeliveryNotifications().size();
 				waitForDeliveries = false;
-				smsSmppImpl.disconnectGateWay();
 
 			}
 		}
-		// smsSmppImpl.disconnectGateWay();
+		smsSmppImpl.disconnectGateWay();
 		System.out.println(sessionName + " ended, received " + delivery_count
 				+ " reports");
 	}

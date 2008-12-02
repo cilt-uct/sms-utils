@@ -58,35 +58,6 @@ public class SmsCoreTest extends TestCase {
 	}
 
 	/*
-	 * In this test the smsc (gateway) is not bound (disconnected). The task is
-	 * executed 5 times to simulate the scheduler retrying and eventually
-	 * failing.
-	 */
-	public void testProcessTaskFail() {
-		SmsTask smsTask = insertNewTask("testProcessTaskFail",
-				SmsConst_DeliveryStatus.STATUS_PENDING, new Timestamp(System
-						.currentTimeMillis()), 1);
-		SmsSmppImpl smsSmppImpl = new SmsSmppImpl();
-		smsSmppImpl.setLogLevel(Level.OFF);
-		smsCoreImpl.setSmsSmpp(smsSmppImpl);
-		smsCoreImpl.setSmsTaskLogic(new SmsTaskLogicImpl());
-
-		for (int i = 0; i < 5; i++) {
-			smsCoreImpl.processTask(smsTask);
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-
-		}
-		assertEquals(true, smsTask.getStatusCode().equals(
-				SmsConst_DeliveryStatus.STATUS_FAIL));
-		assertEquals(true, smsTask.getAttemptCount() == 5);
-		smsCoreImpl.getSmsTaskLogic().deleteSmsTask(smsTask);
-	}
-
-	/*
 	 * In this test the updating of smsStatuses is tested. First a new task is
 	 * created and populated with smsMessages.The total number of pending
 	 * messages must equal 0 at the end.The total sent messages must equal the
@@ -134,6 +105,9 @@ public class SmsCoreTest extends TestCase {
 	 * with different sending times and statuses.The ProcessNextTask method must
 	 * pick up the oldest SmsTask with an (pending/incomplete/reply) status. The
 	 * test succeeds if the Smstasks are returned in the proper order.
+	 * 
+	 * NOTE: Make sure that the SMS_TASK table is empty before running this
+	 * test, else it will fail.
 	 */
 	public void testProcessNextTask() {
 
@@ -178,4 +152,34 @@ public class SmsCoreTest extends TestCase {
 			smsCoreImpl.getSmsTaskLogic().deleteSmsTask(smsTask4);
 		}
 	}
+
+	/*
+	 * In this test the smsc (gateway) is not bound (disconnected). The task is
+	 * executed 5 times to simulate the scheduler retrying and eventually
+	 * failing.
+	 */
+	public void testProcessTaskFail() {
+		SmsTask smsTask = insertNewTask("testProcessTaskFail",
+				SmsConst_DeliveryStatus.STATUS_PENDING, new Timestamp(System
+						.currentTimeMillis()), 1);
+		SmsSmppImpl smsSmppImpl = new SmsSmppImpl();
+		smsSmppImpl.setLogLevel(Level.OFF);
+		smsCoreImpl.setSmsSmpp(smsSmppImpl);
+		smsCoreImpl.setSmsTaskLogic(new SmsTaskLogicImpl());
+
+		for (int i = 0; i < 5; i++) {
+			smsCoreImpl.processTask(smsTask);
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
+		}
+		assertEquals(true, smsTask.getStatusCode().equals(
+				SmsConst_DeliveryStatus.STATUS_FAIL));
+		assertEquals(true, smsTask.getAttemptCount() == 5);
+		smsCoreImpl.getSmsTaskLogic().deleteSmsTask(smsTask);
+	}
+
 }

@@ -13,13 +13,16 @@ import net.sourceforge.groboutils.junit.v1.TestRunnable;
  * delivery reports are missing. It will also fail if a message could not be
  * sent to the gateway. The number of messages to be sent can be changed for
  * each thread. The delay between message transmissions can also be set. The
- * default is 100 ms. NOTE: Each thread can receive messages send by the other
- * thread. The gateway simply sends the reports to the ip address.
+ * default is 100 ms.
  * 
  * Due to limitation in the simulator, do not set session1_message_count and
- * session1_message_count higher that 500 each. Also give the simulator 30
+ * session1_message_count higher than 1000 each. Also give the simulator 30
  * seconds or so to process messages before re-running this unit test.
  * 
+ * NB NOTE: The gateway will send delivery report to ALL listeners that uses the
+ * same source mobile number. That means to all tomcat instances on all Sakai
+ * servers will receive delivery reports when one of them send messages out.
+ * thread. The gateway simply sends the reports to the ip address.
  */
 public class SmppThreadingTest extends TestCase {
 	/**
