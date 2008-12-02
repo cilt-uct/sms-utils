@@ -140,24 +140,18 @@ public class SmsSmppImpl implements SmsSmpp {
 					.getEsmClass())) {
 				// this message is delivery receipt
 				try {
+
 					DeliveryReceipt delReceipt = deliverSm
 							.getShortMessageAsDeliveryReceipt();
-
-					// lets cover the id to hex string format
-					long id = Long.parseLong(delReceipt.getId()) & 0xffffffff;
-					String messageId = Long.toString(id, 16).toUpperCase();
-
-					SmsDeliveryReport receivedDelReport = new SmsDeliveryReport();
-
-					receivedDelReport.setSmscID(messageId);
-					receivedDelReport.setDeliveryReport(delReceipt
-							.getFinalStatus().value());
-					delReports.add(receivedDelReport);
-
 					LOG.info("Receiving delivery receipt for message '"
-							+ messageId + " ' from "
+							+ delReceipt.getId() + " ' from "
 							+ deliverSm.getSourceAddr() + " to "
 							+ deliverSm.getDestAddress() + " : " + delReceipt);
+					SmsDeliveryReport receivedDelReport = new SmsDeliveryReport();
+					receivedDelReport.setSmscID(delReceipt.getId());
+					receivedDelReport.setDeliveryStatus(delReceipt
+							.getFinalStatus().value());
+					delReports.add(receivedDelReport);
 
 				} catch (InvalidDeliveryReceiptException e) {
 					System.err.println("Failed getting delivery receipt");
@@ -446,13 +440,13 @@ public class SmsSmppImpl implements SmsSmpp {
 			return SmsConst_DeliveryStatus.STATUS_RETRY;
 
 		}
-		Iterator it = messages.iterator();
+		Iterator<SmsMessage> it = messages.iterator();
 		while (it.hasNext()) {
 			if (!gatewayBound) {
 				return (SmsConst_DeliveryStatus.STATUS_INCOMPLETE);
 
 			}
-			SmsMessage message = (SmsMessage) it.next();
+			SmsMessage message = it.next();
 			message = sendMessageToGateway(message);
 			if (!message.getStatusCode().equals(
 					SmsConst_DeliveryStatus.STATUS_SENT)) {

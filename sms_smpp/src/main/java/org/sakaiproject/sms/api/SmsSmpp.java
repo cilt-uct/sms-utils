@@ -44,11 +44,6 @@ public interface SmsSmpp {
 	public boolean getConnectionStatus();
 
 	/**
-	 * Return the buffered list of notifications and clear the buffer.
-	 */
-	public List<SmsDeliveryReport> getDeliveryNotifications();
-
-	/**
 	 * Get some info about the remote gateway.
 	 */
 	public String getGatewayInfo();
@@ -70,5 +65,10 @@ public interface SmsSmpp {
 	 * Send one message to the SMS gateway. Return result code to caller.
 	 */
 	public SmsMessage sendMessageToGateway(SmsMessage message);
+
+	/**
+	 * Return the buffered list of notifications.
+	 */
+	public List<SmsDeliveryReport> getDeliveryNotifications();
 
 }
