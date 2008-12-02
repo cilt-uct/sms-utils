@@ -76,6 +76,7 @@ class SmppThread extends TestRunnable {
 			if (delivery_count == reportsReceived) {
 				delivery_count = smsSmppImpl.getDeliveryNotifications().size();
 				waitForDeliveries = false;
+				smsSmppImpl.disconnectGateWay();
 
 			}
 		}
