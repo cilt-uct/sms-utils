@@ -7,13 +7,18 @@ import net.sourceforge.groboutils.junit.v1.MultiThreadedTestRunner;
 import net.sourceforge.groboutils.junit.v1.TestRunnable;
 
 /**
- * This unit test will create 2 or more separate but concurrent connections to
- * the gateway simulator. Each thread will pass on messages. It will then hang
- * on and wait for sms delivery reports to come in. The test will fail if
+ * This unit test will create 2 separate but concurrent connections (sessions)
+ * to the gateway simulator. Each thread will pass on messages. It will then
+ * hang on and wait for sms delivery reports to come in. The test will fail if
  * delivery reports are missing. It will also fail if a message could not be
  * sent to the gateway. The number of messages to be sent can be changed for
  * each thread. The delay between message transmissions can also be set. The
- * default is 100 ms.
+ * default is 100 ms. NOTE: Each thread can receive messages send by the other
+ * thread. The gateway simply sends the reports to the ip address.
+ * 
+ * Due to limitation in the simulator, do not set session1_message_count and
+ * session1_message_count higher that 500 each. Also give the simulator 30
+ * seconds or so to process messages before re-running this unit test.
  * 
  */
 public class SmppThreadingTest extends TestCase {
@@ -37,7 +42,7 @@ public class SmppThreadingTest extends TestCase {
 		return new TestSuite(SmppThreadingTest.class);
 	}
 
-	private int delay_between_messages = 100; // ms
+	private int delay_between_messages = 1; // ms
 
 	private int session1_message_count = 0;
 
@@ -74,11 +79,8 @@ public class SmppThreadingTest extends TestCase {
 		int message_count = session1_message_count + session2_message_count;
 		System.out.println(delivery_count);
 
-		// assertEquals(true, smsThread1.sent_count == session1_message_count);
-		// assertEquals(true, smsThread2.sent_count == session2_message_count);
-		// MOTE: smpp delivery reports will be sent to any of the report
+		// NBNB: smpp delivery reports will be sent to any of the report
 		// listeners. But eventually the number of reports must add up.
-
 		assertEquals(true, delivery_count == message_count);
 		System.out.println("Done");
 

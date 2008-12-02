@@ -64,7 +64,13 @@ import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
 import org.sakaiproject.sms.model.SmsDeliveryReport;
 
 public class SmsSmppImpl implements SmsSmpp {
-
+	/**
+	 * Establish a connection to the gateway (bind). The connection will be kept
+	 * open for the lifetime of the session. Concurrent connections will be
+	 * possible from other smpp services. The status of the connection will be
+	 * checked before sending a message, and a auto-bind will be made if the
+	 * connection is lost.
+	 */
 	private final static org.apache.log4j.Logger LOG = org.apache.log4j.Logger
 			.getLogger(SmsSmppImpl.class);
 	private static TimeFormatter timeFormatter = new AbsoluteTimeFormatter();
@@ -125,8 +131,16 @@ public class SmsSmppImpl implements SmsSmpp {
 		}
 	}
 
-	// This listener will receive delivery reports as well as incoming
-	// messages!
+	/**
+	 * This listener will receive delivery reports as well as incoming messages
+	 * from the smpp gateway. When we are binded to the gateway, this listener
+	 * will receive tcp packets form the gateway. Note that any of the listeners
+	 * running on a ip address, will receive reports and not just the session
+	 * that sent them!
+	 * 
+	 * @author etienne@psybergate.co.za
+	 * 
+	 */
 	private class MessageReceiverListenerImpl implements
 			MessageReceiverListener {
 		public void onAcceptAlertNotification(
@@ -171,6 +185,13 @@ public class SmsSmppImpl implements SmsSmpp {
 		}
 	}
 
+	/**
+	 * Bind to the remote gateway using a username and password. If the
+	 * connection is dropped, this service will try and reconnect and specified
+	 * intervals.
+	 * 
+	 * @return
+	 */
 	public boolean bind() {
 
 		if (!gatewayBound) {
@@ -226,7 +247,7 @@ public class SmsSmppImpl implements SmsSmpp {
 	 * Establish a connection the the gateway (bind). The connection will be
 	 * kept open for the lifetime of the session. Concurrent connections will be
 	 * possible from other smpp services. The status of the connection will be
-	 * checked before sending a message, and a auto-bind will be made if
+	 * checked before sending a message, and an auto-bind will be made if
 	 * possible.
 	 */
 	public boolean connectToGateway() {
@@ -282,7 +303,7 @@ public class SmsSmppImpl implements SmsSmpp {
 	}
 
 	/**
-	 * Get some info about the remote gateway.
+	 * Get some info from the remote gateway.
 	 */
 	public String getGatewayInfo() {
 		String gatewayInfo = "Session bound as = " + session.getSessionState()
@@ -302,6 +323,10 @@ public class SmsSmppImpl implements SmsSmpp {
 		LOG.info("SmsSmpp implementation is started");
 	}
 
+	/**
+	 * Read some smpp properties from a file. These properties can be changed as
+	 * required.
+	 */
 	private void loadProperties() {
 
 		try {
@@ -370,7 +395,7 @@ public class SmsSmppImpl implements SmsSmpp {
 
 	/**
 	 * Send a list of Bulk messages to the gateway. This method is not
-	 * implemented because it does not return a list of message id's.The
+	 * implemented because it does not return a list of message id's. The
 	 * optional parameters are causing an exception.
 	 */
 	public SmsMessage[] sendBulkMessagesToGateway(SmsMessage[] messages) {
@@ -428,9 +453,9 @@ public class SmsSmppImpl implements SmsSmpp {
 	}
 
 	/**
-	 * Send a list of messages to the gateway. Abort if the gateway connection
-	 * is down or gateway returns an error and mark relevant messages as failed.
-	 * Return message statuses back to caller.
+	 * Send a list of messages one-by-one to the gateway. Abort if the gateway
+	 * connection is down or when gateway returns an error and mark relevant
+	 * messages as failed. Return message statuses (not reports) back to caller.
 	 * 
 	 * @return
 	 */

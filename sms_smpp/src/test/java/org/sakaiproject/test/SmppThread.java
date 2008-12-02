@@ -2,7 +2,6 @@ package org.sakaiproject.test;
 
 import net.sourceforge.groboutils.junit.v1.TestRunnable;
 
-import org.apache.log4j.Level;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.impl.SmsSmppImpl;
 
@@ -33,7 +32,7 @@ class SmppThread extends TestRunnable {
 		this.sessionName = sessionName;
 		smsSmppImpl = new SmsSmppImpl();
 		smsSmppImpl.init();
-		smsSmppImpl.setLogLevel(Level.ERROR);
+		// smsSmppImpl.setLogLevel(Level.ERROR);
 		// smsSmppImpl.showDebug = false;
 		this.message_count = messageCount;
 		this.delay_between_messages = messageDelay;
@@ -48,7 +47,7 @@ class SmppThread extends TestRunnable {
 				+ " to gateway...");
 		for (int i = 0; i < message_count; i++) {
 			SmsMessage smsMessage = new SmsMessage("+270731876135",
-					"Junit tesing forloop num:" + i);
+					"Junit testing forloop num:" + i);
 			smsMessage.setId(new Long(i));
 			smsMessage = smsSmppImpl.sendMessageToGateway(smsMessage);
 			if (smsMessage.isSubmitResult()) {
@@ -62,16 +61,14 @@ class SmppThread extends TestRunnable {
 		boolean waitForDeliveries = true;
 
 		// waiting for a-synchronise delivery reports to arrive. If no
+		// reports was received in a 10 seconds window, then we assume all
 		// reports was
-		// received in a 10 seconds window, then we assume all reports was
 		// received from the simulator.
 		while (waitForDeliveries) {
 			int reportsReceived = smsSmppImpl.getDeliveryNotifications().size();
 			System.out.println(sessionName + ": waiting for delivery reports ("
 					+ reportsReceived + " of " + message_count + ")");
-
 			Thread.sleep(10000);
-
 			delivery_count = smsSmppImpl.getDeliveryNotifications().size();
 			if (delivery_count == reportsReceived) {
 				delivery_count = smsSmppImpl.getDeliveryNotifications().size();
@@ -80,7 +77,7 @@ class SmppThread extends TestRunnable {
 
 			}
 		}
-
+		// smsSmppImpl.disconnectGateWay();
 		System.out.println(sessionName + " ended, received " + delivery_count
 				+ " reports");
 	}

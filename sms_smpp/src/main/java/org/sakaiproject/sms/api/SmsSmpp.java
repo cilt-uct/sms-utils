@@ -16,8 +16,8 @@ import org.sakaiproject.sms.model.SmsDeliveryReport;
 public interface SmsSmpp {
 
 	/**
-	 * Establish a connection the the gateway (bind). The connection will be
-	 * kept open for the lifetime of the session. Concurrent connections will be
+	 * Establish a connection to the gateway (bind). The connection will be kept
+	 * open for the lifetime of the session. Concurrent connections will be
 	 * possible from other smpp services. The status of the connection will be
 	 * checked before sending a message, and a auto-bind will be made if
 	 * possible.
