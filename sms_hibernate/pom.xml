@@ -108,6 +108,14 @@
 					<include>**/*.properties</include>
 				</includes>
 			</resource>
+			<resource>
+				<directory>${basedir}/src/test</directory>
+				<includes>
+					<include>**/*.xml</include>
+					<include>**/*.hbm.xml</include>
+					<include>**/*.properties</include>
+				</includes>
+			</resource>
 			</resources><!--
 		-->
 			<testResources> 
