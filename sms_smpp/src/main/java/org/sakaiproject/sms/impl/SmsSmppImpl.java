@@ -98,6 +98,7 @@ public class SmsSmppImpl implements SmsSmpp {
 	private byte sourceAddressTON;
 	private String systemType;
 	private String userName;
+	private String addressRange;
 
 	class BindThread implements Runnable {
 
@@ -205,7 +206,8 @@ public class SmsSmppImpl implements SmsSmpp {
 				session.connectAndBind(gatewayAdress, port, new BindParameter(
 						BindType.BIND_TRX, userName, password, systemType,
 						TypeOfNumber.valueOf(destAddressTON),
-						NumberingPlanIndicator.valueOf(destAddressNPI), null));
+						NumberingPlanIndicator.valueOf(destAddressNPI),
+						addressRange));
 				if (bindTest != null) {
 					bindTest.allDone = true;
 				}
@@ -360,6 +362,7 @@ public class SmsSmppImpl implements SmsSmpp {
 					.getProperty("enquireLinkTimeOutSecondes")) * 1000;
 			bindThreadTimer = Integer.parseInt(properties
 					.getProperty("bindThreadTimerSecondes")) * 1000;
+			addressRange = properties.getProperty("addressRange");
 
 		} catch (Exception e) {
 			LOG.error("Properies faild to load" + e);
