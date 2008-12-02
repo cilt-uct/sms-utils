@@ -8,12 +8,21 @@ import junit.framework.TestSuite;
  */
 public class SmsTestSuite {
 
+	private static void createTestSchema() {
+		/**
+		 * Configuration cfg = ....; new SchemaExport(cfg).create(false, true);
+		 */
+	}
+
 	/**
 	 * Suite.
 	 * 
 	 * @return the test
 	 */
 	public static Test suite() {
+
+		createTestSchema();
+
 		TestSuite suite = new TestSuite(
 				"Test for org.sakaiproject.sms.hibernate.test");
 		// $JUnit-BEGIN$
