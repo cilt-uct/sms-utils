@@ -20,6 +20,7 @@ package org.sakaiproject.sms.hibernate.util;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * Class containig date utility methods for the sakai sms project
@@ -30,9 +31,11 @@ import java.text.SimpleDateFormat;
  */
 public class DateUtil {
 	
+	private static final String DATE_TIME_FORMAT_STRING = "MM/dd/yyyy HH:mm:ss";
+	
 	private static final String DATE_FORMAT_STRING = "MM/dd/yyyy HH:mm:ss";
 	
-	private static SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_STRING);
+	private static SimpleDateFormat sdf = new SimpleDateFormat(DATE_TIME_FORMAT_STRING);
 	
 	/**
 	 * Creates a Timestamp object from the startDate parameter 
@@ -58,6 +61,17 @@ public class DateUtil {
 	public static Timestamp getTimestampFromEndDateString(String endDate) throws ParseException {
 		endDate = endDate.concat(" 23:59:59");
 		return new Timestamp(sdf.parse(endDate).getTime());
+	}
+	
+	/**
+	 * Get string representing the specified date.
+	 * 
+	 * @param date {@link Date}
+	 * @return date as MM/dd/yyyy
+	 */
+	public static String getDateString(Date date) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_STRING);
+		return dateFormat.format(date);
 	}
 	
 }

@@ -36,7 +36,7 @@ public interface SmsTransactionLogic {
 	/**
 	 * Deletes and the given entity from the DB
 	 */
-	public void deleteSmsCongif(SmsTransaction smsTransaction);
+	public void deleteSmsTransaction(SmsTransaction smsTransaction);
 
 	/**
 	 * Gets a SmsTransaction entity for the given id

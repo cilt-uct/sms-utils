@@ -161,7 +161,7 @@ public class SmsTaskLogicImpl extends SmsDao implements SmsTaskLogic {
 	 */
 	public List<SmsTask> getSmsTasksForCriteria(SearchFilterBean searchBean) throws SmsSearchException {
 		
-		Criteria crit = HibernateUtil.currentSession().createCriteria(SmsMessage.class);
+		Criteria crit = HibernateUtil.currentSession().createCriteria(SmsTask.class);
 		
 		List<SmsTask> tasks = new ArrayList<SmsTask>();
 
@@ -177,14 +177,14 @@ public class SmsTaskLogicImpl extends SmsDao implements SmsTaskLogic {
 		}
 
 		// Date to send start
-		if (searchBean.getDateFrom() != null) {
+		if (searchBean.getDateFrom() != null && !searchBean.getDateFrom().trim().equals("")) {
 			Timestamp date = DateUtil.getTimestampFromStartDateString(searchBean.getDateFrom());
 			crit.add(Restrictions.ge("dateToSend", date));
 		}
 		
 		// Date to send end
-		if (searchBean.getDateTo() != null) {
-			Timestamp date = DateUtil.getTimestampFromEndDateString(searchBean.getDateFrom());
+		if (searchBean.getDateTo() != null && !searchBean.getDateTo().trim().equals("")) {
+			Timestamp date = DateUtil.getTimestampFromEndDateString(searchBean.getDateTo());
 			crit.add(Restrictions.le("dateToSend", date));
 		}
 

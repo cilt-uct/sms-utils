@@ -56,7 +56,7 @@ public class SmsTransactionLogicImpl extends SmsDao implements
 	/**
 	 * Deletes and the given entity from the DB
 	 */
-	public void deleteSmsCongif(SmsTransaction smsTransaction) {
+	public void deleteSmsTransaction(SmsTransaction smsTransaction) {
 		delete(smsTransaction);
 	}
 
@@ -104,36 +104,36 @@ public class SmsTransactionLogicImpl extends SmsDao implements
 	 */
 	public List<SmsTransaction> getSmsTransactionsForCriteria(SearchFilterBean searchBean) throws SmsSearchException {
 		
-		Criteria crit = HibernateUtil.currentSession().createCriteria(SmsMessage.class);
+		Criteria crit = HibernateUtil.currentSession().createCriteria(SmsTransaction.class);
 		
 		List<SmsTransaction> transactions = new ArrayList<SmsTransaction>();
 
 		try {
 			//Transaction type
 			if(searchBean.getTransactionType() != null && !searchBean.getTransactionType().trim().equals("")) {
-				crit.add(Restrictions.ilike("transactionTypeCode", searchBean.getAccountNumber()));
+				crit.add(Restrictions.ilike("transactionTypeCode", searchBean.getTransactionType()));
 			}
 			
 			//Account number
 			if(searchBean.getAccountNumber() != null) {
-				crit.add(Restrictions.ilike("smsAccountId", searchBean.getAccountNumber()));
+				crit.add(Restrictions.like("smsAccountId", searchBean.getAccountNumber()));
 			}
 			
 			// Transaction date start
-			if (searchBean.getDateFrom() != null) {
+			if (searchBean.getDateFrom() != null && !searchBean.getDateFrom().trim().equals("")) {
 				Timestamp date = DateUtil.getTimestampFromStartDateString(searchBean.getDateFrom());
 				crit.add(Restrictions.ge("transactionDate", date));
 			}
 			
 			// Transaction date end
-			if (searchBean.getDateTo() != null) {
-				Timestamp date = DateUtil.getTimestampFromEndDateString(searchBean.getDateFrom());
+			if (searchBean.getDateTo() != null && !searchBean.getDateTo().trim().equals("")) {
+				Timestamp date = DateUtil.getTimestampFromEndDateString(searchBean.getDateTo());
 				crit.add(Restrictions.le("transactionDate", date));
 			}
 	
 			// Sender name
 			if (searchBean.getSender() != null && !searchBean.getSender().trim().equals("")) {
-				crit.add(Restrictions.ilike("senderUserName", searchBean.getSender()));
+				crit.add(Restrictions.ilike("sakaiUserId", searchBean.getSender()));
 			}
 		}catch(ParseException e) {
 			throw new SmsSearchException(e);

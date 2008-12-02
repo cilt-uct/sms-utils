@@ -72,8 +72,7 @@ public class SmsTransactionTest extends TestCase {
 	 * Tests the getMessagesForCriteria method
 	 */
 	public void testGetTransactionsForCriteria() {
-		fail("test not implemeted yet");
-		insertSmsTransaction = new SmsTransaction();
+		SmsTransaction insertSmsTransaction = new SmsTransaction();
 		insertSmsTransaction.setBalance(1.32f);
 		insertSmsTransaction.setSakaiUserId("sakaiUserId");
 		insertSmsTransaction.setSmsAccountId(1);
