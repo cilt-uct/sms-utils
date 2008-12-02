@@ -35,7 +35,7 @@ public interface SmsAccountLogic {
 	/**
 	 * Deletes and the given entity from the DB
 	 */
-	public void deleteSmsConfig(SmsAccount smsAccount);
+	public void deleteSmsAccount(SmsAccount smsAccount);
 
 	/**
 	 * Gets a SmsAccount entity for the given id

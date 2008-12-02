@@ -40,7 +40,7 @@ public class SmsAccountLogicImpl extends SmsDao implements SmsAccountLogic {
 	/**
 	 * Deletes and the given entity from the DB
 	 */
-	public void deleteSmsConfig(SmsAccount smsAccount) {
+	public void deleteSmsAccount(SmsAccount smsAccount) {
 		delete(smsAccount);
 	}
 
