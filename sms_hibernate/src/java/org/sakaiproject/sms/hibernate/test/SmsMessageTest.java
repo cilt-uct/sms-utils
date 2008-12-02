@@ -1,6 +1,7 @@
 package org.sakaiproject.sms.hibernate.test;
 
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 import junit.framework.TestCase;
@@ -12,6 +13,7 @@ import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsSearchException;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
+import org.sakaiproject.sms.hibernate.util.DateUtil;
 
 /**
  * The Class SmsMessageTest.
@@ -194,8 +196,8 @@ public class SmsMessageTest extends TestCase {
 			
 			SearchFilterBean bean = new SearchFilterBean();
 			bean.setStatus(insertMessage.getStatusCode());
-			bean.setDateFrom("12/01/2008");
-			bean.setDateTo("12/01/2008");
+			bean.setDateFrom(DateUtil.getDateString(new Date()));
+			bean.setDateTo(DateUtil.getDateString(new Date()));
 			bean.setToolName(insertTask.getSakaiToolName());
 			bean.setSender(insertTask.getSenderUserName());
 			bean.setMobileNumber(insertMessage.getMobileNumber());

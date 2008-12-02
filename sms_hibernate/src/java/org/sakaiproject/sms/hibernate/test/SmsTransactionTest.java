@@ -1,12 +1,17 @@
 package org.sakaiproject.sms.hibernate.test;
 
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 import junit.framework.TestCase;
 
+import org.sakaiproject.sms.hibernate.bean.SearchFilterBean;
 import org.sakaiproject.sms.hibernate.logic.impl.SmsTransactionLogicImpl;
+import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsSearchException;
+import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.SmsTransaction;
+import org.sakaiproject.sms.hibernate.util.DateUtil;
 
 public class SmsTransactionTest extends TestCase {
 
@@ -68,54 +73,42 @@ public class SmsTransactionTest extends TestCase {
 	 */
 	public void testGetTransactionsForCriteria() {
 		fail("test not implemeted yet");
-		/*SmsTask insertTask = new SmsTask();
-		insertTask.setSakaiSiteId("sakaiSiteId");
-		insertTask.setSmsAccountId(1);
-		insertTask.setDateCreated(new Timestamp(System.currentTimeMillis()));
-		insertTask.setDateToSend(new Timestamp(System.currentTimeMillis()));
-		insertTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
-		insertTask.setAttemptCount(2);
-		insertTask.setMessageBody("messageCrit");
-		insertTask.setSenderUserName("messageCrit");
-		insertTask.setSakaiToolName("sakaiToolName");
-		
-		SmsMessage insertMessage = new SmsMessage();
-		insertMessage.setMobileNumber("0721998919");
-		insertMessage.setSmscMessageId("criterai");
-		insertMessage.setSakaiUserId("criterai");
-		insertMessage.setStatusCode(SmsConst_DeliveryStatus.STATUS_ERROR);
-		
-		insertMessage.setSmsTask(insertTask);
-		insertTask.getSmsMessages().add(insertMessage);
+		insertSmsTransaction = new SmsTransaction();
+		insertSmsTransaction.setBalance(1.32f);
+		insertSmsTransaction.setSakaiUserId("sakaiUserId");
+		insertSmsTransaction.setSmsAccountId(1);
+		insertSmsTransaction.setTransactionDate(new Timestamp(System.currentTimeMillis()));
+		insertSmsTransaction.setTransactionTypeCode("TTC");
+		insertSmsTransaction.setTransactionCredits(666);
+		insertSmsTransaction.setTransactionAmount(1000.00f);
 		
 		try {
-			taskLogic.persistSmsTask(insertTask);
+			logic.persistSmsTransaction(insertSmsTransaction);
+			assertTrue("Object not created successfullyu", insertSmsTransaction.exists());
 			
 			SearchFilterBean bean = new SearchFilterBean();
-			bean.setStatus(insertMessage.getStatusCode());
-			bean.setDateFrom("12/01/2008");
-			bean.setDateTo("12/01/2008");
-			bean.setToolName(insertTask.getSakaiToolName());
-			bean.setSender(insertTask.getSenderUserName());
-			bean.setMobileNumber(insertMessage.getMobileNumber());
+			bean.setTransactionType(insertSmsTransaction.getTransactionTypeCode());
+			bean.setAccountNumber(insertSmsTransaction.getSmsAccountId());
+			bean.setDateFrom(DateUtil.getDateString(new Date()));
+			bean.setDateTo(DateUtil.getDateString(new Date()));
+			bean.setSender(insertSmsTransaction.getSakaiUserId());
 		
-			List<SmsMessage> messages = logic.getSmsMessagesForCriteria(bean);
-			assertTrue("Collection returned has no objects", messages.size() > 0);
+			List<SmsTransaction> transactions = logic.getSmsTransactionsForCriteria(bean);
+			assertTrue("Collection returned has no objects", transactions.size() > 0);
 		
-			for(SmsMessage message : messages) {
-				//We know that only one message should be returned becuase
-				//we only added one with status ERROR.
-				assertEquals(message, insertMessage);
+			for(SmsTransaction transaction : transactions) {
+				//We know that only one transaction should be returned
+				assertEquals(transaction, insertSmsTransaction);
 			}
 		}catch(SmsSearchException se) {
 			fail(se.getMessage());
 		}finally {
-			taskLogic.deleteSmsTask(insertTask);
-		}*/
+			logic.deleteSmsTransaction(insertSmsTransaction);
+		}
 	}
 
 	public void testDeleteSmsTransaction() {
-		logic.deleteSmsCongif(insertSmsTransaction);
+		logic.deleteSmsTransaction(insertSmsTransaction);
 		SmsTransaction getSmsTransaction = logic
 				.getSmsTransaction(insertSmsTransaction.getId());
 		assertNull(getSmsTransaction);

@@ -1,6 +1,7 @@
 package org.sakaiproject.sms.hibernate.test;
 
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -14,6 +15,7 @@ import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsSearchException;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
+import org.sakaiproject.sms.hibernate.util.DateUtil;
 
 /**
  * The Class SmsTaskTest.
@@ -209,8 +211,8 @@ public class SmsTaskTest extends TestCase {
 			
 			SearchFilterBean bean = new SearchFilterBean();
 			bean.setStatus(insertTask.getStatusCode());
-			bean.setDateFrom("12/01/2008");
-			bean.setDateTo("12/01/2008");
+			bean.setDateFrom(DateUtil.getDateString(new Date()));
+			bean.setDateTo(DateUtil.getDateString(new Date()));
 			bean.setToolName(insertTask.getSakaiToolName());
 			bean.setSender(insertTask.getSenderUserName());
 			
@@ -218,8 +220,7 @@ public class SmsTaskTest extends TestCase {
 			assertTrue("Collection returned has no objects", tasks.size() > 0);
 		
 			for(SmsTask task : tasks) {
-				//We know that only one message should be returned becuase
-				//we only added one with status ERROR.
+				//We know that only one task should be returned
 				assertEquals(task, insertTask);
 			}
 		}catch(SmsSearchException se) {
