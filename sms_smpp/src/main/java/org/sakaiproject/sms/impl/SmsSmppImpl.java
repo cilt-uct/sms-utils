@@ -221,12 +221,12 @@ public class SmsSmppImpl implements SmsSmpp {
 							SessionState arg1, Object arg2) {
 						if ((arg0.equals(SessionState.CLOSED) || arg0
 								.equals(SessionState.UNBOUND))
-								&& (!disconnectGateWayCalled))
+								&& (!disconnectGateWayCalled)) {
 							LOG.warn("SMSC session lost Starting BindThread");
-						session.unbindAndClose();
-						gatewayBound = false;
-						bindTest = new BindThread();
-
+							session.unbindAndClose();
+							gatewayBound = false;
+							bindTest = new BindThread();
+						}
 					}
 				});
 				LOG.info("Bind successfull");
