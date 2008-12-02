@@ -85,6 +85,54 @@ public class SmsConfigTest extends TestCase {
 		assertTrue("No records returned", confs.size() > 0);
 	}
 
+	public void testGetSmsConfigBySakiaSiteId() {
+		String testId = "testGetSmsConfigBySakiaSiteId";
+
+		SmsConfig insertSmsConfig = new SmsConfig();
+		insertSmsConfig.setSakaiSiteId(testId);
+		insertSmsConfig.setSakaiToolId("testGetSmsConfigBySakiaSiteId");
+		insertSmsConfig.setNotificationEmail("notification@Email.Address");
+		insertSmsConfig.setSmsEnabled(false);
+		logic.persistSmsConfig(insertSmsConfig);
+		assertTrue("Object not created correclty", insertSmsConfig.exists());
+
+		try {
+			SmsConfig conf = logic.getSmsConfigBySakaiSiteId(testId);
+			assertNotNull("Object not found", conf);
+			assertEquals("Incorrect object returned", conf, insertSmsConfig);
+
+			conf = logic.getSmsConfigBySakaiSiteId("SomeOtherId");
+			assertNull("No object should be found", conf);
+
+		} finally {
+			logic.deleteSmsCongif(insertSmsConfig);
+		}
+	}
+
+	public void testGetSmsConfigBySakiaToolId() {
+		String testId = "testGetSmsConfigBySakiaToolId";
+
+		SmsConfig insertSmsConfig = new SmsConfig();
+		insertSmsConfig.setSakaiSiteId("testGetSmsConfigBySakiaToolId");
+		insertSmsConfig.setSakaiToolId(testId);
+		insertSmsConfig.setNotificationEmail("notification@Email.Address");
+		insertSmsConfig.setSmsEnabled(false);
+		logic.persistSmsConfig(insertSmsConfig);
+		assertTrue("Object not created correclty", insertSmsConfig.exists());
+
+		try {
+			SmsConfig conf = logic.getSmsConfigBySakaiToolId(testId);
+			assertNotNull("Object not found", conf);
+			assertEquals("Incorrect object returned", conf, insertSmsConfig);
+
+			conf = logic.getSmsConfigBySakaiToolId("SomeOtherId");
+			assertNull("No object should be found", conf);
+
+		} finally {
+			logic.deleteSmsCongif(insertSmsConfig);
+		}
+	}
+
 	/**
 	 * Test delete sms config.
 	 */
@@ -93,14 +141,6 @@ public class SmsConfigTest extends TestCase {
 		SmsConfig getSmsConfig = logic.getSmsConfig(insertSmsConfig.getId());
 		assertNull(getSmsConfig);
 		assertNull("Object not removed", getSmsConfig);
-	}
-
-	public void testGetSmsConfigBySakiaSiteId() {
-		fail("Test not implemented yet");
-	}
-
-	public void testGetSmsConfigBySakiaToolId() {
-		fail("Test not implemented yet");
 	}
 
 }
