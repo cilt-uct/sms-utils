@@ -8,7 +8,7 @@
 	<session-factory>
 
 		<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-		<property name="hibernate.connection.url">jdbc:mysql://143.160.210.90/sms_louis</property>
+		<property name="hibernate.connection.url">jdbc:mysql://143.160.210.90/smshibernate_julian</property>
 		<property name="hibernate.connection.username">root</property>
 		<property name="hibernate.connection.password">sakai2008</property>
 		<property name="hibernate.connection.pool_size">10</property>

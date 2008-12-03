@@ -97,7 +97,7 @@
 	</dependencies>
 	<reports />
 	<build>
-		<sourceDirectory>${basedir}/src/java</sourceDirectory>
+		<sourceDirectory>${basedir}/src/main/java</sourceDirectory>
 		<finalName>sms_hibernate</finalName>
 		<resources>
 			<resource>
@@ -106,7 +106,6 @@
 					<include>**/*.xml</include>
 					<include>**/*.hbm.xml</include>
 					<include>**/*.properties</include>
-					<include>**/*.java</include>
 				</includes>
 			</resource>
 			<resource>
@@ -115,36 +114,21 @@
 					<include>**/*.xml</include>
 					<include>**/*.hbm.xml</include>
 					<include>**/*.properties</include>
-					<include>**/*.java</include>
 				</includes>
 			</resource>
-			</resources><!--
-		-->
+		</resources><!--
+		
 			<testResources> 
 				<testResource>
 					<directory>${basedir}/src/test/org/sakaiproject/sms/hibernate/logic/impl</directory> 
-					<!--<includes>
+					<includes>
 						<include>src/test/resources/log4j.properties</include>
 						<include>src/test/hibernate.properties</include>
 						<include>src/test/hibernate.cfg.xml</include>
 					</includes>
-				--></testResource> 
-			</testResources>
-<!--
-<testResources>
-         <testResource>
-            <directory>${basedir}/src/test/org/sakaiproject/sms/hibernate/logic/impl</directory>
-         </testResource>
-      </testResources>
+				</testResource> 
+			</testResources>-->
 
-		<extensions>
-			<extension>
-				<groupId>jdbc.artifact.groupid</groupId>
-				<artifactId>jdbc-driver</artifactId>
-				<version>1.0</version>
-			</extension>
-		</extensions>
--->
 		<plugins>	
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
@@ -184,39 +168,6 @@
 			        </componentProperties>
 				</configuration> 
 			</plugin>
-			
-		<!-- 
-			<plugin>
-      <groupId>org.codehaus.mojo</groupId>
-      <artifactId>hibernate3-maven-plugin</artifactId>
-      <version>2.0-alpha-2</version>
-      <executions>
-        <execution>
-          <phase>process-classes</phase>
-          <goals>
-            <goal>hbm2ddl</goal>
-          </goals>
-        </execution>
-      </executions>
-      <configuration>
-        <components>
-          <component>
-            <name>hbm2ddl</name>
-            <implementation>annotationconfiguration</implementation>
-          </component>
-        </components>
-        <componentProperties>
-          <implementation>jpaconfiguration</implementation>
-          <persistenceunit>Default</persistenceunit>
-          <outputfilename>schema.ddl</outputfilename>
-          <drop>false</drop>
-          <create>true</create>
-          <export>false</export>
-          <format>true</format>
-        </componentProperties>
-      </configuration>
-    </plugin>-->
-			
 			
 			
 		</plugins>
