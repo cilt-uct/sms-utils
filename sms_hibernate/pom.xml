@@ -168,7 +168,7 @@
 						<outputfilename>schema.ddl</outputfilename>
 						<drop>true</drop>
 						<create>true</create>
-						<export>false</export>
+						<export>true</export>
 						<format>true</format>
 					</componentProperties>
 				</configuration>
