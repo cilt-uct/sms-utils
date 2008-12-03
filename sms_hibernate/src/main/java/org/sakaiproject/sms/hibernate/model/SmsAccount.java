@@ -18,6 +18,9 @@
 
 package org.sakaiproject.sms.hibernate.model;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Each Sakai site will have its own set of accounts for billing outgoing
  * messages. A specific user may also have a account.
@@ -45,6 +48,9 @@ public class SmsAccount extends BaseModel {
 
 	/** The account must be linked to either an Sakai site or a Sakai user. */
 	private String sakaiUserId;
+
+	/** The sms transactions. */
+	private Set<SmsTransaction> smsTransactions = new HashSet<SmsTransaction>();
 
 	/**
 	 * Instantiates a new sms account.
@@ -145,6 +151,25 @@ public class SmsAccount extends BaseModel {
 	 */
 	public void setSakaiUserId(String sakaiUserId) {
 		this.sakaiUserId = sakaiUserId;
+	}
+
+	/**
+	 * Gets the sms transactions.
+	 * 
+	 * @return the sms transactions
+	 */
+	public Set<SmsTransaction> getSmsTransactions() {
+		return smsTransactions;
+	}
+
+	/**
+	 * Sets the sms transactions.
+	 * 
+	 * @param smsTransactions
+	 *            the new sms transactions
+	 */
+	public void setSmsTransactions(Set<SmsTransaction> smsTransactions) {
+		this.smsTransactions = smsTransactions;
 	}
 
 	/*

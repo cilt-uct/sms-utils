@@ -1,6 +1,8 @@
 <classpath>
-  <classpathentry kind="src" path="src/main/java" including="**/*.xml|**/*.hbm.xml|**/*.properties" excluding="**/*.java"/>
-  <classpathentry kind="src" path="src/test/java" including="**/*.xml|**/*.hbm.xml|**/*.properties" excluding="**/*.java"/>
+  <classpathentry kind="src" path="src/main/java"/>
+  <classpathentry kind="src" path="src/main/java/resources" output="target/test-classes" including="**/*.xml|**/*.hbm.xml" excluding="**/*.properties|**/*.java"/>
+  <classpathentry kind="src" path="src/test/java" output="target/test-classes"/>
+  <classpathentry kind="src" path="src/test/java/resources" output="target/test-classes" excluding="**/*.java"/>
   <classpathentry kind="output" path="target/classes"/>
   <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
   <classpathentry kind="var" path="M2_REPO/antlr/antlr/2.7.6/antlr-2.7.6.jar" sourcepath="M2_REPO/antlr/antlr/2.7.6/antlr-2.7.6-sources.jar"/>

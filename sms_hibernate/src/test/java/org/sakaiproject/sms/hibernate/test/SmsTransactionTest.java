@@ -7,28 +7,47 @@ import java.util.List;
 import junit.framework.TestCase;
 
 import org.sakaiproject.sms.hibernate.bean.SearchFilterBean;
+import org.sakaiproject.sms.hibernate.logic.SmsAccountLogic;
+import org.sakaiproject.sms.hibernate.logic.SmsTransactionLogic;
+import org.sakaiproject.sms.hibernate.logic.impl.SmsAccountLogicImpl;
 import org.sakaiproject.sms.hibernate.logic.impl.SmsTransactionLogicImpl;
 import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsSearchException;
+import org.sakaiproject.sms.hibernate.model.SmsAccount;
 import org.sakaiproject.sms.hibernate.model.SmsTransaction;
 import org.sakaiproject.sms.hibernate.util.DateUtil;
 
 public class SmsTransactionTest extends TestCase {
 
-	private static SmsTransactionLogicImpl logic = null;
+	private static SmsTransactionLogic logic = null;
+
+	private static SmsAccountLogic accountLogic;
+
 	private static SmsTransaction insertSmsTransaction;
+
+	private static SmsAccount insertSmsAccount;
 
 	static {
 		logic = new SmsTransactionLogicImpl();
+		accountLogic = new SmsAccountLogicImpl();
+
+		insertSmsAccount = new SmsAccount();
+		insertSmsAccount.setSakaiUserId("SakaiUSerId");
+		insertSmsAccount.setSakaiSiteId("SakaiSiteId");
+		insertSmsAccount.setMessageTypeCode("12345");
+		insertSmsAccount.setOverdraftLimit(10000.00f);
+		insertSmsAccount.setBalance(5000.00f);
+		accountLogic.persistSmsAccount(insertSmsAccount);
 
 		insertSmsTransaction = new SmsTransaction();
 		insertSmsTransaction.setBalance(1.32f);
 		insertSmsTransaction.setSakaiUserId("sakaiUserId");
-		insertSmsTransaction.setSmsAccountId(1);
 		insertSmsTransaction.setTransactionDate(new Timestamp(System
 				.currentTimeMillis()));
 		insertSmsTransaction.setTransactionTypeCode("TC");
 		insertSmsTransaction.setTransactionCredits(666);
 		insertSmsTransaction.setTransactionAmount(1000.00f);
+
+		insertSmsTransaction.setSmsAccount(insertSmsAccount);
 	}
 
 	public SmsTransactionTest() {
@@ -74,7 +93,7 @@ public class SmsTransactionTest extends TestCase {
 		SmsTransaction insertSmsTransaction = new SmsTransaction();
 		insertSmsTransaction.setBalance(1.32f);
 		insertSmsTransaction.setSakaiUserId("sakaiUserId");
-		insertSmsTransaction.setSmsAccountId(1);
+		insertSmsTransaction.setSmsAccount(insertSmsAccount);
 
 		insertSmsTransaction.setTransactionDate(new Timestamp(System
 				.currentTimeMillis()));
@@ -90,7 +109,8 @@ public class SmsTransactionTest extends TestCase {
 			SearchFilterBean bean = new SearchFilterBean();
 			bean.setTransactionType(insertSmsTransaction
 					.getTransactionTypeCode());
-			bean.setAccountNumber(insertSmsTransaction.getSmsAccountId());
+			bean.setAccountNumber(insertSmsTransaction.getSmsAccount().getId()
+					.intValue());
 			bean.setDateFrom(DateUtil.getDateString(new Date()));
 			bean.setDateTo(DateUtil.getDateString(new Date()));
 			bean.setSender(insertSmsTransaction.getSakaiUserId());

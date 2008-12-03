@@ -1,11 +1,13 @@
 package org.sakaiproject.sms.hibernate.test;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import junit.framework.TestCase;
 
 import org.sakaiproject.sms.hibernate.logic.impl.SmsAccountLogicImpl;
 import org.sakaiproject.sms.hibernate.model.SmsAccount;
+import org.sakaiproject.sms.hibernate.model.SmsTransaction;
 
 /**
  * The Class SmsAccountTest. Do some basic crud functions on the account table.
@@ -17,6 +19,13 @@ public class SmsAccountTest extends TestCase {
 
 	/** The insert sms account. */
 	private static SmsAccount insertSmsAccount;
+
+	/** The insert sms transaction1. */
+	private static SmsTransaction insertSmsTransaction1;
+
+	/** The insert sms transaction2. */
+	private static SmsTransaction insertSmsTransaction2;
+
 	static {
 		logic = new SmsAccountLogicImpl();
 		insertSmsAccount = new SmsAccount();
@@ -25,6 +34,24 @@ public class SmsAccountTest extends TestCase {
 		insertSmsAccount.setMessageTypeCode("12345");
 		insertSmsAccount.setOverdraftLimit(10000.00f);
 		insertSmsAccount.setBalance(5000.00f);
+
+		insertSmsTransaction1 = new SmsTransaction();
+		insertSmsTransaction1.setBalance(100.00f);
+		insertSmsTransaction1.setSakaiUserId("SakaiUserId1");
+		insertSmsTransaction1.setTransactionAmount(100.00f);
+		insertSmsTransaction1.setTransactionCredits(100);
+		insertSmsTransaction1.setTransactionDate(new Timestamp(System
+				.currentTimeMillis()));
+		insertSmsTransaction1.setTransactionTypeCode("TTC");
+
+		insertSmsTransaction2 = new SmsTransaction();
+		insertSmsTransaction2.setBalance(100.00f);
+		insertSmsTransaction2.setSakaiUserId("SakaiUserId1");
+		insertSmsTransaction2.setTransactionAmount(100.00f);
+		insertSmsTransaction2.setTransactionCredits(100);
+		insertSmsTransaction2.setTransactionDate(new Timestamp(System
+				.currentTimeMillis()));
+		insertSmsTransaction2.setTransactionTypeCode("TTC");
 	}
 
 	/**
@@ -72,6 +99,27 @@ public class SmsAccountTest extends TestCase {
 		logic.persistSmsAccount(smsAccount);
 		smsAccount = logic.getSmsAccount(insertSmsAccount.getId());
 		assertEquals("newSakaiSiteId", smsAccount.getSakaiSiteId());
+	}
+
+	/**
+	 * Test add transactions to account.
+	 */
+	public void testAddTransactionsToAccount() {
+		insertSmsTransaction1.setSmsAccount(insertSmsAccount);
+		insertSmsTransaction2.setSmsAccount(insertSmsAccount);
+		insertSmsAccount.getSmsTransactions().add(insertSmsTransaction1);
+		insertSmsAccount.getSmsTransactions().add(insertSmsTransaction2);
+
+		logic.persistSmsAccount(insertSmsAccount);
+
+		assertTrue("Object not persisted", insertSmsTransaction1.exists());
+		assertTrue("Object not persisted", insertSmsTransaction2.exists());
+		SmsAccount account = logic.getSmsAccount(insertSmsAccount.getId());
+		assertNotNull("No object returned", account);
+		assertEquals("Incorrect object returned", insertSmsAccount, account);
+		assertEquals("Returnend collection is incorreclt size", account
+				.getSmsTransactions().size() == 2);
+
 	}
 
 	/**

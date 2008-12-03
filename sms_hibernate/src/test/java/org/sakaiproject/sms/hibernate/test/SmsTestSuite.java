@@ -3,15 +3,15 @@ package org.sakaiproject.sms.hibernate.test;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
+import org.sakaiproject.sms.hibernate.dao.HibernateUtil;
+
 /**
  * Run all tests.
  */
 public class SmsTestSuite {
 
 	private static void createTestSchema() {
-		/**
-		 * Configuration cfg = ....; new SchemaExport(cfg).create(false, true);
-		 */
+		HibernateUtil.createSchema();
 	}
 
 	/**
@@ -25,7 +25,7 @@ public class SmsTestSuite {
 
 		TestSuite suite = new TestSuite(
 				"Test for org.sakaiproject.sms.hibernate.test");
-		// $JUnit-BEGIN$
+		// $JUnit-BEGIN$		
 		suite.addTestSuite(SmsTransactionTest.class);
 		suite.addTestSuite(SmsTaskTest.class);
 		suite.addTestSuite(SmsConfigTest.class);

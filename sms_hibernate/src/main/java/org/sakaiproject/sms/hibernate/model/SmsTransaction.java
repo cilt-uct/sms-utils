@@ -38,9 +38,6 @@ public class SmsTransaction extends BaseModel {
 	/** The sakai user id. This is the user who request the sms task. */
 	private String sakaiUserId;
 
-	/** The sms account id. */
-	private Integer smsAccountId;
-
 	/** The transaction amount. */
 	private Float transactionAmount;
 
@@ -53,13 +50,16 @@ public class SmsTransaction extends BaseModel {
 	/** The transaction type code. */
 	private String transactionTypeCode;
 
+	/** The Sms account. */
+	private SmsAccount smsAccount;
+
 	/**
 	 * Instantiates a new sms transaction.
 	 */
 	public SmsTransaction() {
 
-	}	
-	
+	}
+
 	/**
 	 * Instantiates a new sms transaction.
 	 */
@@ -70,13 +70,11 @@ public class SmsTransaction extends BaseModel {
 		super();
 		this.balance = balance;
 		this.sakaiUserId = sakaiUserId;
-		this.smsAccountId = smsAccountId;
 		this.transactionAmount = transactionAmount;
 		this.transactionCredits = transactionCredits;
 		this.transactionDate = transactionDate;
 		this.transactionTypeCode = transactionTypeCode;
 	}
-
 
 	/**
 	 * Gets the balance.
@@ -94,24 +92,6 @@ public class SmsTransaction extends BaseModel {
 	 */
 	public String getSakaiUserId() {
 		return sakaiUserId;
-	}
-
-	/**
-	 * Gets the sms account id.
-	 * 
-	 * @return the sms account id
-	 */
-	public Integer getSmsAccountId() {
-		return smsAccountId;
-	}
-
-	/**
-	 * Gets the transaction amount.
-	 * 
-	 * @return the transaction amount
-	 */
-	public Float getTransactionAmount() {
-		return transactionAmount;
 	}
 
 	/**
@@ -162,16 +142,6 @@ public class SmsTransaction extends BaseModel {
 	}
 
 	/**
-	 * Sets the sms account id.
-	 * 
-	 * @param smsAccountId
-	 *            the new sms account id
-	 */
-	public void setSmsAccountId(Integer smsAccountId) {
-		this.smsAccountId = smsAccountId;
-	}
-
-	/**
 	 * Sets the transaction amount.
 	 * 
 	 * @param transactionAmount
@@ -211,6 +181,25 @@ public class SmsTransaction extends BaseModel {
 		this.transactionTypeCode = transactionTypeCode;
 	}
 
+	/**
+	 * Gets the sms account.
+	 * 
+	 * @return the sms account
+	 */
+	public SmsAccount getSmsAccount() {
+		return smsAccount;
+	}
+
+	/**
+	 * Sets the sms account.
+	 * 
+	 * @param smsAccount
+	 *            the new sms account
+	 */
+	public void setSmsAccount(SmsAccount smsAccount) {
+		this.smsAccount = smsAccount;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -223,8 +212,6 @@ public class SmsTransaction extends BaseModel {
 		result = prime * result + ((balance == null) ? 0 : balance.hashCode());
 		result = prime * result
 				+ ((sakaiUserId == null) ? 0 : sakaiUserId.hashCode());
-		result = prime * result
-				+ ((smsAccountId == null) ? 0 : smsAccountId.hashCode());
 		result = prime
 				* result
 				+ ((transactionAmount == null) ? 0 : transactionAmount
@@ -260,11 +247,6 @@ public class SmsTransaction extends BaseModel {
 			if (other.sakaiUserId != null)
 				return false;
 		} else if (!sakaiUserId.equals(other.sakaiUserId))
-			return false;
-		if (smsAccountId == null) {
-			if (other.smsAccountId != null)
-				return false;
-		} else if (!smsAccountId.equals(other.smsAccountId))
 			return false;
 		if (transactionAmount == null) {
 			if (other.transactionAmount != null)
