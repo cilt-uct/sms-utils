@@ -12,9 +12,7 @@
 <!--     </property>-->
 <!--  </bean>-->
 
-  <!-- Binding  Beans -->
-  <bean id="searchFilterBean" class="org.sakaiproject.sms.hibernate.bean.SearchFilterBean"/>	
-  
+  <!-- Binding  Beans -->  
   <bean id="searchTaskList" class="org.sakaiproject.sms.hibernate.bean.SearchFilterBean"/>	
   <bean id="searchTransactionLog" class="org.sakaiproject.sms.hibernate.bean.SearchFilterBean"/>	
   <bean id="searchMessageLog" class="org.sakaiproject.sms.hibernate.bean.SearchFilterBean"/>	
@@ -41,15 +39,17 @@
   
   <bean id="taskListSearchResultsRenderer" class="org.sakaiproject.sms.renderers.TaskListResultsRenderer">  
   	 <property name="searchFilterBean" ref="searchTaskList"/>
-  	 <property name="smsMessageLogic" ref="smsMessageLogic"/>
+  	 <property name="smsTaskLogic" ref="smsTaskLogic"/>
   </bean>
   
   <bean id="transactionLogSearchResultsRenderer" class="org.sakaiproject.sms.renderers.TransactionLogResultsRenderer">  
   	 <property name="searchFilterBean" ref="searchTransactionLog"/>
-  </bean> 
+  	 <property name="smsTransactionLogic" ref="smsTransactionLogic"/> 
+  </bean>
   
   <bean id="messageLogSearchResultsRenderer" class="org.sakaiproject.sms.renderers.MessageLogResultsRenderer">  
   	 <property name="searchFilterBean" ref="searchMessageLog"/>
+  	 <property name="smsMessageLogic" ref="smsMessageLogic"/>
   </bean>
 
   <!--  Producers -->

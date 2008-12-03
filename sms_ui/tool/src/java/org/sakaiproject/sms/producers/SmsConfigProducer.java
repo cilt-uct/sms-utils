@@ -59,8 +59,6 @@ public class SmsConfigProducer implements ViewComponentProducer, NavigationCaseR
 		UIForm smsConfigform = UIForm.make(tofill, "sms-config-form");
 		UIMessage.make(tofill, "page-heading", "sms.config.title");
 				
-		UIInput.make(smsConfigform, "sms-config-notification-email", smsConfigOTP + ".notificationEmail");
-
 		UISelect combo = UISelect.make(smsConfigform, "sms-config-enabled");
 		combo.selection = new UIInput();
 		combo.selection.valuebinding = new ELReference(smsConfigOTP + ".smsEnabled");
@@ -71,6 +69,7 @@ public class SmsConfigProducer implements ViewComponentProducer, NavigationCaseR
 		comboNames.setValue(new String[] {"Yes","No"});
 		combo.optionnames = comboNames;
 
+		UIInput.make(smsConfigform, "sms-config-notification-email", smsConfigOTP + ".notificationEmail");
 
 		UICommand.make(smsConfigform, "save", "#{smsConfigActionBean.save}");
 		UICommand.make(smsConfigform, "cancel", "#"); 

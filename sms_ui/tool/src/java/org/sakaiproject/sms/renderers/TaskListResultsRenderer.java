@@ -21,23 +21,28 @@ package org.sakaiproject.sms.renderers;
 import java.util.List;
 
 import org.sakaiproject.sms.hibernate.bean.SearchFilterBean;
-import org.sakaiproject.sms.hibernate.logic.SmsMessageLogic;
-import org.sakaiproject.sms.hibernate.model.SmsMessage;
+import org.sakaiproject.sms.hibernate.logic.SmsTaskLogic;
+import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsSearchException;
+import org.sakaiproject.sms.hibernate.model.SmsTask;
+import org.sakaiproject.sms.util.NullHandling;
 import org.springframework.util.Assert;
 
 import uk.org.ponder.rsf.components.UIBranchContainer;
 import uk.org.ponder.rsf.components.UIContainer;
 import uk.org.ponder.rsf.components.UIJointContainer;
+import uk.org.ponder.rsf.components.UIMessage;
 import uk.org.ponder.rsf.components.UIOutput;
 
 public class TaskListResultsRenderer implements SearchResultsRenderer{
 
-	private SearchFilterBean searchFilterBean;
-	private SmsMessageLogic smsMessageLogic;
-	private SortHeaderRenderer sortHeaderRenderer;
+	private final static org.apache.log4j.Logger LOG = org.apache.log4j.Logger.getLogger(TaskListResultsRenderer.class);
 	
-	public void setSmsMessageLogic(SmsMessageLogic smsMessageLogic) {
-		this.smsMessageLogic = smsMessageLogic;
+	private SearchFilterBean searchFilterBean;
+	private SortHeaderRenderer sortHeaderRenderer;
+	private SmsTaskLogic smsTaskLogic;
+
+	public void setSmsTaskLogic(SmsTaskLogic smsTaskLogic) {
+		this.smsTaskLogic = smsTaskLogic;
 	}
 
 	public void setSearchFilterBean(SearchFilterBean searchFilterBean) {
@@ -46,7 +51,7 @@ public class TaskListResultsRenderer implements SearchResultsRenderer{
 	
 	public void init(){
 		sortHeaderRenderer = new SortHeaderRenderer();
-		Assert.notNull(smsMessageLogic);
+		Assert.notNull(smsTaskLogic);
 	}
 
 	public void createTable(UIContainer tofill, String divID,
@@ -58,31 +63,43 @@ public class TaskListResultsRenderer implements SearchResultsRenderer{
 		searchFilterBean.setSortDirection(sortViewParams.sortDir);
 		searchFilterBean.setCurrentPage(sortViewParams.current_start);		
 		
-		List<SmsMessage> messageList = smsMessageLogic.getSmsMessagesForCriteria(searchFilterBean);
+
+		List<SmsTask> smsTaskList = null;
+		boolean fail = false;
+		try {
+			smsTaskList = smsTaskLogic.getSmsTasksForCriteria(searchFilterBean);
+		} catch (SmsSearchException e) {
+			LOG.error(e);
+			fail = true;
+		}
 		
 		UIJointContainer searchResultsTable = new UIJointContainer(tofill, divID,  "task-search-results-component:");
 		
-		sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-group:", sortViewParams, "group", "sms.task-list-search-results.group");
-        sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-size-estimate:", sortViewParams, "resutlSize", "sms.task-list-search-results.size.estimate");
-        sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-size-actual:", sortViewParams, "sizeActaul", "sms.task-list-search-results.size.actual");
-        sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-tool-name:", sortViewParams, "toolName", "sms.task-list-search-results.tool.name");
-        sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-sender:", sortViewParams, "sender", "sms.task-list-search-results.sender");
-        sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-message:", sortViewParams, "message", "sms.task-list-search-results.messagae");
-        sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-process-date:", sortViewParams, "processDate", "sms.task-list-search-results.process.date");
-        sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-status:", sortViewParams, "status", "sms.task-list-search-results.status");
-        
-		for (SmsMessage smsMessage : messageList) {
+		if(fail)
+			UIMessage.make(searchResultsTable, "warning", "GeneralActionError");
+		else{
+			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-group:", sortViewParams, "group", "sms.task-list-search-results.group");
+			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-size-estimate:", sortViewParams, "resutlSize", "sms.task-list-search-results.size.estimate");
+			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-size-actual:", sortViewParams, "sizeActaul", "sms.task-list-search-results.size.actual");
+			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-tool-name:", sortViewParams, "toolName", "sms.task-list-search-results.tool.name");
+			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-sender:", sortViewParams, "sender", "sms.task-list-search-results.sender");
+			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-message:", sortViewParams, "message", "sms.task-list-search-results.messagae");
+			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-process-date:", sortViewParams, "processDate", "sms.task-list-search-results.process.date");
+			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-status:", sortViewParams, "status", "sms.task-list-search-results.status");
 
-			UIBranchContainer row = UIBranchContainer.make(searchResultsTable, "dataset:");
-			
-			UIOutput.make(row, "row-data-group", smsMessage.getSmsTask().getDeliveryGroupName());
-			UIOutput.make(row, "row-data-size-estimate", smsMessage.getSmsTask().getGroupSizeEstimate().toString());
-			UIOutput.make(row, "row-data-size-actual", smsMessage.getSmsTask().getGroupSizeActual().toString());
-			UIOutput.make(row, "row-data-tool-name", smsMessage.getSmsTask().getSakaiToolName());
-			UIOutput.make(row, "row-data-sender", smsMessage.getSmsTask().getSenderUserName());
-			UIOutput.make(row, "row-data-message", smsMessage.getSmsTask().getMessageBody());
-			UIOutput.make(row, "row-data-process-date", smsMessage.getSmsTask().getDateProcessed().toString());
-			UIOutput.make(row, "row-data-status", smsMessage.getStatusCode());		
-	   }
+			for (SmsTask smsTask : smsTaskList) {
+
+				UIBranchContainer row = UIBranchContainer.make(searchResultsTable, "dataset:");
+
+				UIOutput.make(row, "row-data-group", smsTask.getDeliveryGroupName());
+				UIOutput.make(row, "row-data-size-estimate", NullHandling.safeToString(smsTask.getGroupSizeEstimate()));
+				UIOutput.make(row, "row-data-size-actual", NullHandling.safeToString(smsTask.getGroupSizeActual()));
+				UIOutput.make(row, "row-data-tool-name", smsTask.getSakaiToolName());
+				UIOutput.make(row, "row-data-sender", smsTask.getSenderUserName());
+				UIOutput.make(row, "row-data-message", smsTask.getMessageBody());
+				UIOutput.make(row, "row-data-process-date", NullHandling.safeToString(smsTask.getDateProcessed()));
+				UIOutput.make(row, "row-data-status", smsTask.getStatusCode());		
+			}
+		}
 	}
 }

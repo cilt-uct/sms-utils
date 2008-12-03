@@ -70,7 +70,7 @@ public class SearchCriteriaRenderer{
 		combo.selection = new UIInput();
 		combo.selection.valuebinding = new ELReference(createSearchELString("status"));
 		UIBoundList comboValues = new UIBoundList();
-		comboValues.setValue(new String[] {"All", "Pending", "Successful", "Failed"});
+		comboValues.setValue(new String[] {"", "Pending", "Successful", "Failed"});
 		combo.optionlist = comboValues;
 		UIBoundList comboNames = new UIBoundList();
 		comboNames.setValue(new String[] {"All", "Pending", "Successful", "Failed"});

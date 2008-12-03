@@ -18,18 +18,33 @@
 
 package org.sakaiproject.sms.renderers;
 
+import java.util.List;
+
 import org.sakaiproject.sms.hibernate.bean.SearchFilterBean;
+import org.sakaiproject.sms.hibernate.logic.SmsMessageLogic;
+import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsSearchException;
+import org.sakaiproject.sms.hibernate.model.SmsMessage;
+import org.sakaiproject.sms.util.NullHandling;
+import org.springframework.util.Assert;
 
 import uk.org.ponder.rsf.components.UIBranchContainer;
 import uk.org.ponder.rsf.components.UIContainer;
 import uk.org.ponder.rsf.components.UIJointContainer;
+import uk.org.ponder.rsf.components.UIMessage;
 import uk.org.ponder.rsf.components.UIOutput;
 
 public class MessageLogResultsRenderer implements SearchResultsRenderer {
 
+	private final static org.apache.log4j.Logger LOG = org.apache.log4j.Logger.getLogger(MessageLogResultsRenderer.class);
+	
 	private SearchFilterBean searchFilterBean;
 	private SortHeaderRenderer sortHeaderRenderer;
+	private SmsMessageLogic smsMessageLogic;
 	
+
+	public void setSmsMessageLogic(SmsMessageLogic smsMessageLogic) {
+		this.smsMessageLogic = smsMessageLogic;
+	}
 
 	public void setSearchFilterBean(SearchFilterBean searchFilterBean) {
 		this.searchFilterBean = searchFilterBean;
@@ -37,6 +52,7 @@ public class MessageLogResultsRenderer implements SearchResultsRenderer {
 	
 	public void init(){
 		sortHeaderRenderer = new SortHeaderRenderer();
+		Assert.notNull(smsMessageLogic);
 	}
 
 	public void createTable(UIContainer tofill, String divID,
@@ -48,34 +64,41 @@ public class MessageLogResultsRenderer implements SearchResultsRenderer {
 		searchFilterBean.setSortDirection(sortViewParams.sortDir);
 		searchFilterBean.setCurrentPage(sortViewParams.current_start);		
 		
-		//List<SmsMessage> messageList = smsMessageLogic.getSmsMessagesForCriteria(searchFilterBean);
-		
+		List<SmsMessage> smsMessageList = null;
+		boolean fail = false;
+		try {
+			smsMessageList = smsMessageLogic.getSmsMessagesForCriteria(searchFilterBean);
+		} catch (SmsSearchException e) {
+			LOG.error(e);
+			fail = true;
+		}
 		
 		UIJointContainer searchResultsTable = new UIJointContainer(tofill, divID,  "message-log-search-results-component:");
-		
-		sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-group:", sortViewParams, "group", "sms.message-log-search-results.account.group");
-        sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-tool-name:", sortViewParams, "resutlSize", "sms.message-log-search-results.account.tool.name");
-        sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-sender:", sortViewParams, "sizeActaul", "sms.message-log-search-results.account.sender");
-        sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-receiver:", sortViewParams, "toolName", "sms.message-log-search-results.account.reciver");
-        sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-mobile-number:", sortViewParams, "sender", "sms.message-log-search-results.account.mobile.number");
-        sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-date-processed:", sortViewParams, "message", "sms.message-log-search-results.account.date.processesd");
-        sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-status:", sortViewParams, "processDate", "sms.message-log-search-results.account.Status");
-        
-		//for (SmsMessage smsMessage : messageList) {
-			
-			//smsMessage.
-			UIBranchContainer row = UIBranchContainer.make(searchResultsTable, "dataset:");
-			
-			UIOutput.make(row, "row-data-group", "1");
-			UIOutput.make(row, "row-data-size-estimate", "2");
-			UIOutput.make(row, "row-data-size-actual", "3");
-			UIOutput.make(row, "row-data-tool-name", "4");
-			UIOutput.make(row, "row-data-sender", "5");
-			UIOutput.make(row, "row-data-message", "6");
-			UIOutput.make(row, "row-data-process-date", "7");
-			
-		//}
-		
+		if(fail)
+			UIMessage.make(searchResultsTable, "warning", "GeneralActionError");
+		else{
+			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-group:", sortViewParams, "group", "sms.message-log-search-results.account.group");
+			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-tool-name:", sortViewParams, "resutlSize", "sms.message-log-search-results.account.tool.name");
+			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-sender:", sortViewParams, "sizeActaul", "sms.message-log-search-results.account.sender");
+			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-receiver:", sortViewParams, "toolName", "sms.message-log-search-results.account.reciver");
+			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-mobile-number:", sortViewParams, "sender", "sms.message-log-search-results.account.mobile.number");
+			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-date-processed:", sortViewParams, "message", "sms.message-log-search-results.account.date.processesd");
+			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-status:", sortViewParams, "processDate", "sms.message-log-search-results.account.Status");
+
+			for (SmsMessage smsMessage : smsMessageList) {
+
+				//smsMessage.
+				UIBranchContainer row = UIBranchContainer.make(searchResultsTable, "dataset:");
+
+				UIOutput.make(row, "row-data-group", smsMessage.getSmsTask().getDeliveryGroupName());
+				UIOutput.make(row, "row-data-tool-name", smsMessage.getSmsTask().getSakaiToolName());
+				UIOutput.make(row, "row-data-sender", smsMessage.getSmsTask().getSenderUserName());
+				UIOutput.make(row, "row-data-receiver", smsMessage.getSmsTask().getDeliveryGroupName());
+				UIOutput.make(row, "row-data-mobile-number", smsMessage.getMobileNumber());
+				UIOutput.make(row, "row-data-date-processed", NullHandling.safeToString(smsMessage.getSmsTask().getDateProcessed()));
+				UIOutput.make(row, "row-data-status", smsMessage.getStatusCode());
+			}
+		}
 	}
 
 }
