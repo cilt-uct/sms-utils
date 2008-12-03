@@ -101,28 +101,21 @@
 		<finalName>sms_hibernate</finalName>
 		<resources>
 			<resource>
-				<directory>${basedir}/src/main/java</directory>
-				<includes>
-					<include>**/*.xml</include>
-					<include>**/*.hbm.xml</include>
-					<include>**/*.properties</include>
-				</includes>
+				<directory>${basedir}/src/main/resources</directory>
 			</resource>
 		</resources>
-		<testSourceDirectory>${basedir}/src/test/java</testSourceDirectory>
+		
 		<testResources>
 			<testResource>
-				<directory>${basedir}/src/main/java/resources</directory>
-				<includes>
-					<include>**/*.xml</include>
-					<include>**/*.hbm.xml</include>
-				</includes>
+				<directory>${basedir}/src/main/resources</directory>
 				<excludes>				
-					<exclude>**/*.properties</exclude>
+					<exclude>**/log4l.properties</exclude>
+					<!-- Will be double loded by hbm2ddl otherwise -->
+					<exclude>**/hibernate-mappings.hbm.xml</exclude>
 				</excludes>
 			</testResource>
 			<testResource>
-				<directory>${basedir}/src/test/java/resources</directory>
+				<directory>${basedir}/src/test/resources</directory>
 			</testResource>
 		</testResources>
 		
@@ -162,8 +155,8 @@
 						</component>
 					</components>
 					<componentProperties>
-						<propertyfile>src/java/resources/database.properties</propertyfile>
-						<configurationfile>src/java/resources/hibernate.cfg.xml</configurationfile>
+						<propertyfile>target/classes/database.properties</propertyfile>
+						<configurationfile>target/classes/hibernate.cfg.xml</configurationfile>
 						<persistenceunit>Default</persistenceunit>
 						<outputfilename>schema.ddl</outputfilename>
 						<drop>true</drop>
@@ -183,7 +176,6 @@
             			<include>**/*Test.java</include>
 					</includes>
 				</configuration>
-
 			</plugin>
 
 

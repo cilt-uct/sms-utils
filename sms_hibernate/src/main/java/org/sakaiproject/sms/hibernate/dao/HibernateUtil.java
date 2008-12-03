@@ -30,17 +30,17 @@ public class HibernateUtil {
     /**
      * Hibernate mappings file name.
      */
-    private static final String HIB_MAPPINGS_FILE_NAME =  "/org/sakaiproject/sms/hibernate/hbm/hibernate-mappings.hbm.xml";
+    private static final String HIB_MAPPINGS_FILE_NAME =  "/hibernate-mappings.hbm.xml";
     
     /**
      * Hibernate configuration file name.
      */
-    private static final String HIB_PROPERTIES_FILE_NAME = "/resources/hibernate.properties";
+    private static final String HIB_PROPERTIES_FILE_NAME = "/hibernate.properties";
     
     /**
      * Location of hibernate.cfg.xml file. 
      */
-    private static String CONFIG_FILE_LOCATION = "resources/hibernate.cfg.xml";
+    private static String CONFIG_FILE_LOCATION = "hibernate.cfg.xml";
     
     /**
      * Hibernate session factory - singleton.
@@ -70,6 +70,7 @@ public class HibernateUtil {
      */
     private static Properties loadPropertiesFromClasspath(String file) throws IOException {        
         Properties properties = new Properties();
+ 
         properties.load(HibernateUtil.class.getResourceAsStream(file));
         
         return properties;
@@ -93,7 +94,7 @@ public class HibernateUtil {
 
                 //load bean mappings
                 configuration.configure(CONFIG_FILE_LOCATION);
-                
+
                 // load hibernate properties
                 Properties properties = loadPropertiesFromClasspath(HIB_PROPERTIES_FILE_NAME);
                 configuration.setProperties(properties);
