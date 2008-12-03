@@ -101,19 +101,21 @@
 		<finalName>sms_hibernate</finalName>
 		<resources>
 			<resource>
-				<directory>${basedir}/src/java</directory>
+				<directory>${basedir}/src/main/java</directory>
 				<includes>
 					<include>**/*.xml</include>
 					<include>**/*.hbm.xml</include>
 					<include>**/*.properties</include>
+					<include>**/*.java</include>
 				</includes>
 			</resource>
 			<resource>
-				<directory>${basedir}/src/test</directory>
+				<directory>${basedir}/src/test/java</directory>
 				<includes>
 					<include>**/*.xml</include>
 					<include>**/*.hbm.xml</include>
 					<include>**/*.properties</include>
+					<include>**/*.java</include>
 				</includes>
 			</resource>
 			</resources><!--
