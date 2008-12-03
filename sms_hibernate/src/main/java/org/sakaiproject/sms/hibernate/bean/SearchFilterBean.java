@@ -1,4 +1,3 @@
-
 /***********************************************************************************
  * SearchFilterBean.java
  * Copyright (c) 2008 Sakai Project/Sakai Foundation
@@ -18,11 +17,10 @@
  **********************************************************************************/
 package org.sakaiproject.sms.hibernate.bean;
 
-
 // TODO: Auto-generated Javadoc
 /**
- * Generic search filter bean object. Will be used for the search screens as a criteria
- * object to house the search parameters
+ * Generic search filter bean object. Will be used for the search screens as a
+ * criteria object to house the search parameters
  * 
  * @author Julian Wyngaard
  * @version 1.0
@@ -30,45 +28,47 @@ package org.sakaiproject.sms.hibernate.bean;
  */
 public class SearchFilterBean {
 
+	/** The Constant SORT_ASC. */
+	public static final String SORT_ASC = "asc";
+
+	/** The Constant SORT_DESC. */
+	public static final String SORT_DESC = "desc";
+
 	/** The id. */
 	private String id;
-	
+
 	/** The status. */
 	private String status;
-	
+
 	/** The date from. */
 	private String dateFrom;
-	
+
 	/** The date to. */
 	private String dateTo;
-	
+
 	/** The tool name. */
 	private String toolName;
-	
+
 	/** The sender. */
 	private String sender;
-	
+
 	/** The current page. */
 	private Integer currentPage;
-	
+
 	/** The order by. */
 	private String orderBy;
-	
+
 	/** The mobile number. */
 	private String mobileNumber;
-	
+
 	/** The account number. */
 	private Integer accountNumber;
 
 	/** The transaction type. */
 	private String transactionType;
-	
-	
+
 	/** The sort direction. */
 	private String sortDirection;
-	
-	
-	
 
 	/**
 	 * Instantiates a new search filter bean.
@@ -77,19 +77,28 @@ public class SearchFilterBean {
 		super();
 		currentPage = new Integer(1);
 	}
-	
+
 	/**
 	 * Instantiates a new search filter bean.
 	 * 
-	 * @param id the id
-	 * @param status the status
-	 * @param dateFrom the date from
-	 * @param dateTo the date to
-	 * @param toolName the tool name
-	 * @param sender the sender
-	 * @param currentPage the current page
-	 * @param orderBy the order by
-	 * @param sortDirection the sort direction
+	 * @param id
+	 *            the id
+	 * @param status
+	 *            the status
+	 * @param dateFrom
+	 *            the date from
+	 * @param dateTo
+	 *            the date to
+	 * @param toolName
+	 *            the tool name
+	 * @param sender
+	 *            the sender
+	 * @param currentPage
+	 *            the current page
+	 * @param orderBy
+	 *            the order by
+	 * @param sortDirection
+	 *            the sort direction
 	 */
 	public SearchFilterBean(String id, String status, String dateFrom,
 			String dateTo, String toolName, String sender, Integer currentPage,
@@ -118,7 +127,8 @@ public class SearchFilterBean {
 	/**
 	 * Sets the id.
 	 * 
-	 * @param id the new id
+	 * @param id
+	 *            the new id
 	 */
 	public void setId(String id) {
 		this.id = id;
@@ -136,7 +146,8 @@ public class SearchFilterBean {
 	/**
 	 * Sets the status.
 	 * 
-	 * @param status the new status
+	 * @param status
+	 *            the new status
 	 */
 	public void setStatus(String status) {
 		this.status = status;
@@ -154,7 +165,8 @@ public class SearchFilterBean {
 	/**
 	 * Sets the date from.
 	 * 
-	 * @param dateFrom the new date from
+	 * @param dateFrom
+	 *            the new date from
 	 */
 	public void setDateFrom(String dateFrom) {
 		this.dateFrom = dateFrom;
@@ -172,7 +184,8 @@ public class SearchFilterBean {
 	/**
 	 * Sets the date to.
 	 * 
-	 * @param dateTo the new date to
+	 * @param dateTo
+	 *            the new date to
 	 */
 	public void setDateTo(String dateTo) {
 		this.dateTo = dateTo;
@@ -190,7 +203,8 @@ public class SearchFilterBean {
 	/**
 	 * Sets the tool name.
 	 * 
-	 * @param toolName the new tool name
+	 * @param toolName
+	 *            the new tool name
 	 */
 	public void setToolName(String toolName) {
 		this.toolName = toolName;
@@ -208,7 +222,8 @@ public class SearchFilterBean {
 	/**
 	 * Sets the sender.
 	 * 
-	 * @param sender the new sender
+	 * @param sender
+	 *            the new sender
 	 */
 	public void setSender(String sender) {
 		this.sender = sender;
@@ -226,7 +241,8 @@ public class SearchFilterBean {
 	/**
 	 * Sets the current page.
 	 * 
-	 * @param currentPage the new current page
+	 * @param currentPage
+	 *            the new current page
 	 */
 	public void setCurrentPage(Integer currentPage) {
 		this.currentPage = currentPage;
@@ -244,17 +260,18 @@ public class SearchFilterBean {
 	/**
 	 * Sets the mobile number.
 	 * 
-	 * @param mobileNumber the mobileNumber to set
+	 * @param mobileNumber
+	 *            the mobileNumber to set
 	 */
 	public void setMobileNumber(String mobileNumber) {
 		this.mobileNumber = mobileNumber;
 	}
 
-
 	/**
 	 * Sets the account number.
 	 * 
-	 * @param accountNumber the new account number
+	 * @param accountNumber
+	 *            the new account number
 	 */
 	public void setAccountNumber(Integer accountNumber) {
 		this.accountNumber = accountNumber;
@@ -267,8 +284,8 @@ public class SearchFilterBean {
 	 */
 	public Integer getAccountNumber() {
 		return accountNumber;
-	}	
-	
+	}
+
 	/**
 	 * Gets the order by.
 	 * 
@@ -281,13 +298,13 @@ public class SearchFilterBean {
 	/**
 	 * Sets the order by.
 	 * 
-	 * @param orderBy the new order by
+	 * @param orderBy
+	 *            the new order by
 	 */
 	public void setOrderBy(String orderBy) {
 		this.orderBy = orderBy;
 	}
 
-	
 	/**
 	 * Gets the transaction type.
 	 * 
@@ -297,17 +314,16 @@ public class SearchFilterBean {
 		return transactionType;
 	}
 
-	
 	/**
 	 * Sets the transaction type.
 	 * 
-	 * @param transactionType the new transaction type
+	 * @param transactionType
+	 *            the new transaction type
 	 */
 	public void setTransactionType(String transactionType) {
 		this.transactionType = transactionType;
 	}
-	
-	
+
 	/**
 	 * Gets the sort direction.
 	 * 
@@ -316,11 +332,12 @@ public class SearchFilterBean {
 	public String getSortDirection() {
 		return sortDirection;
 	}
-	
+
 	/**
 	 * Sets the sort direction.
 	 * 
-	 * @param sortDirection the new sort direction
+	 * @param sortDirection
+	 *            the new sort direction
 	 */
 	public void setSortDirection(String sortDirection) {
 		this.sortDirection = sortDirection;
@@ -331,7 +348,20 @@ public class SearchFilterBean {
 	 * 
 	 * @return true, if successful
 	 */
-	public boolean fireAction(){
+	public boolean fireAction() {
+		return true;
+	}
+
+	/**
+	 * Sort asc.
+	 * 
+	 * @return true, if successful
+	 */
+	public boolean sortAsc() {
+		if (sortDirection != null && !sortDirection.trim().equals("")) {
+			return sortDirection.equals(SORT_ASC);
+		}
+		// default to asc
 		return true;
 	}
 }
