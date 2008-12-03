@@ -17,6 +17,7 @@
  **********************************************************************************/
 package org.sakaiproject.sms.renderers;
 
+import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
 import org.springframework.util.Assert;
 
 import uk.org.ponder.rsf.components.ELReference;
@@ -70,7 +71,11 @@ public class SearchCriteriaRenderer{
 		combo.selection = new UIInput();
 		combo.selection.valuebinding = new ELReference(createSearchELString("status"));
 		UIBoundList comboValues = new UIBoundList();
-		comboValues.setValue(new String[] {"", "Pending", "Successful", "Failed"});
+		comboValues.setValue(new String[] {"", 
+										   SmsConst_DeliveryStatus.STATUS_PENDING, 
+										   SmsConst_DeliveryStatus.STATUS_DELIVERED, 
+										   SmsConst_DeliveryStatus.STATUS_FAIL
+										   });
 		combo.optionlist = comboValues;
 		UIBoundList comboNames = new UIBoundList();
 		comboNames.setValue(new String[] {"All", "Pending", "Successful", "Failed"});

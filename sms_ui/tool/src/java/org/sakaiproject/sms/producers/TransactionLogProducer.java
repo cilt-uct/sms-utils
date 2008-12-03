@@ -31,4 +31,9 @@ public class TransactionLogProducer extends AbstractSearchListProducer{
 		return VIEW_ID;
 	}
 
+	@Override
+	public String getDefaultSortColumn() {
+		return "smsAccountId";
+	}
+
 }

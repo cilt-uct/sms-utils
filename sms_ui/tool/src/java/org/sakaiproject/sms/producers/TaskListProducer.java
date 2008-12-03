@@ -30,5 +30,10 @@ public class TaskListProducer extends AbstractSearchListProducer{
 	public String getTitleMessage() {
 		return "sms.view-results-task-list.name";
 	}
+
+	@Override
+	public String getDefaultSortColumn() {
+		return "deliveryGroupName";
+	}
 }
 

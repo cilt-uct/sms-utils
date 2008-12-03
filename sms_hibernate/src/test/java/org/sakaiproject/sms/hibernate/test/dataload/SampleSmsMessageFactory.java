@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
+import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
 
 public class SampleSmsMessageFactory {
 
@@ -18,18 +19,23 @@ public class SampleSmsMessageFactory {
 		
 		SmsMessage message1 = new SmsMessage("083468221", "Test date moved form 12 Jan to 15 Jan");
 		message1.setSakaiUserId("SNK111");
+		message1.setStatusCode(SmsConst_DeliveryStatus.STATUS_DELIVERED);
 		smsMessages.add(message1);
 		SmsMessage message2 = new SmsMessage("0823456789", "Matlab tutorial move to Science labs D");
 		message2.setSakaiUserId("BIT111");
+		message2.setStatusCode(SmsConst_DeliveryStatus.STATUS_SENT);
 		smsMessages.add(message2);
 		SmsMessage message3 = new SmsMessage("08255552222", "Location of tut changed to Science Block");
 		message3.setSakaiUserId("BAT111");
+		message3.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
 		smsMessages.add(message3);
 		SmsMessage message4 = new SmsMessage("08266661122", "Problem set to be handed in by 15 Jan");
 		message4.setSakaiUserId("RAT111");
+		message4.setStatusCode(SmsConst_DeliveryStatus.STATUS_DELIVERED);
 		smsMessages.add(message4);
 		SmsMessage message5 = new SmsMessage("084444667", "No tutorial required this month");
 		message5.setSakaiUserId("COW111");
+		message5.setStatusCode(SmsConst_DeliveryStatus.STATUS_DELIVERED);
 		smsMessages.add(message5);	
 	}
 	

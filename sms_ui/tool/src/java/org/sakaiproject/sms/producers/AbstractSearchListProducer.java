@@ -42,7 +42,8 @@ public abstract class AbstractSearchListProducer implements ViewComponentProduce
 	
 	public abstract String getViewID();
 	public abstract String getTitleMessage();
-
+	public abstract String getDefaultSortColumn();
+	
 	public void setSearchResultsRenderer(SearchResultsRenderer searchResultsRenderer) {
 		this.searchResultsRenderer = searchResultsRenderer;
 	}
@@ -66,10 +67,10 @@ public abstract class AbstractSearchListProducer implements ViewComponentProduce
 		SortPagerViewParams sortParams = (SortPagerViewParams) viewparams;		
 	
 		if (sortParams.sortBy == null) {
-			sortParams.sortBy = SMSConstants.SORT_BY_NAME; // default
+			sortParams.sortBy = getDefaultSortColumn(); // default
 		}
 		if (sortParams.sortDir == null) {
-			sortParams.sortDir = SMSConstants.SORT_DESC; // default
+			sortParams.sortDir = SMSConstants.SORT_ASC; // default
 		}
 		
 		searchCriteriaRenderer.createSearchCriteria(tofill, "searchCriteria:", getViewID());

@@ -145,11 +145,11 @@ public class SmsTransactionLogicImpl extends SmsDao implements
 			}
 
 			// Ordering
-//			if (searchBean.getOrderBy() != null
-//					&& !searchBean.getOrderBy().trim().equals("")) {
-//				crit.addOrder((searchBean.sortAsc() ? Order.asc(searchBean
-//						.getOrderBy()) : Order.desc(searchBean.getOrderBy())));
-//			}
+			if (searchBean.getOrderBy() != null
+					&& !searchBean.getOrderBy().trim().equals("")) {
+				crit.addOrder((searchBean.sortAsc() ? Order.asc(searchBean
+						.getOrderBy()) : Order.desc(searchBean.getOrderBy())));
+			}
 
 		} catch (ParseException e) {
 			throw new SmsSearchException(e);

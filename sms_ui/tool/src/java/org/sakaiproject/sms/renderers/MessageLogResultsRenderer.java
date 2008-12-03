@@ -77,13 +77,13 @@ public class MessageLogResultsRenderer implements SearchResultsRenderer {
 		if(fail)
 			UIMessage.make(searchResultsTable, "warning", "GeneralActionError");
 		else{
-			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-group:", sortViewParams, "group", "sms.message-log-search-results.account.group");
-			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-tool-name:", sortViewParams, "resutlSize", "sms.message-log-search-results.account.tool.name");
-			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-sender:", sortViewParams, "sizeActaul", "sms.message-log-search-results.account.sender");
-			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-receiver:", sortViewParams, "toolName", "sms.message-log-search-results.account.reciver");
-			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-mobile-number:", sortViewParams, "sender", "sms.message-log-search-results.account.mobile.number");
-			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-date-processed:", sortViewParams, "message", "sms.message-log-search-results.account.date.processesd");
-			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-status:", sortViewParams, "processDate", "sms.message-log-search-results.account.Status");
+			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-group:", sortViewParams, "smsTask.deliveryGroupName", "sms.message-log-search-results.account.group");
+			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-tool-name:", sortViewParams, "smsTask.sakaiToolName", "sms.message-log-search-results.account.tool.name");
+			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-sender:", sortViewParams, "smsTask.senderUserName", "sms.message-log-search-results.account.sender");
+			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-receiver:", sortViewParams, "smsTask.deliveryGroupName", "sms.message-log-search-results.account.reciver");
+			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-mobile-number:", sortViewParams, "mobileNumber", "sms.message-log-search-results.account.mobile.number");
+			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-date-processed:", sortViewParams, "smsTask.dateProcessed", "sms.message-log-search-results.account.date.processesd");
+			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-status:", sortViewParams, "smsTask.statusCode", "sms.message-log-search-results.account.Status");
 
 			for (SmsMessage smsMessage : smsMessageList) {
 

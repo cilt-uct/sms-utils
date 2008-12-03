@@ -78,14 +78,14 @@ public class TaskListResultsRenderer implements SearchResultsRenderer{
 		if(fail)
 			UIMessage.make(searchResultsTable, "warning", "GeneralActionError");
 		else{
-			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-group:", sortViewParams, "group", "sms.task-list-search-results.group");
-			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-size-estimate:", sortViewParams, "resutlSize", "sms.task-list-search-results.size.estimate");
-			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-size-actual:", sortViewParams, "sizeActaul", "sms.task-list-search-results.size.actual");
-			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-tool-name:", sortViewParams, "toolName", "sms.task-list-search-results.tool.name");
-			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-sender:", sortViewParams, "sender", "sms.task-list-search-results.sender");
-			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-message:", sortViewParams, "message", "sms.task-list-search-results.messagae");
-			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-process-date:", sortViewParams, "processDate", "sms.task-list-search-results.process.date");
-			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-status:", sortViewParams, "status", "sms.task-list-search-results.status");
+			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-group:", sortViewParams, "deliveryGroupName", "sms.task-list-search-results.group");
+			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-size-estimate:", sortViewParams, "groupSizeEstimate", "sms.task-list-search-results.size.estimate");
+			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-size-actual:", sortViewParams, "groupSizeActual", "sms.task-list-search-results.size.actual");
+			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-tool-name:", sortViewParams, "sakaiToolName", "sms.task-list-search-results.tool.name");
+			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-sender:", sortViewParams, "senderUserName", "sms.task-list-search-results.sender");
+			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-message:", sortViewParams, "messageBody", "sms.task-list-search-results.messagae");
+			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-process-date:", sortViewParams, "dateProcessed", "sms.task-list-search-results.process.date");
+			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-status:", sortViewParams, "statusCode", "sms.task-list-search-results.status");
 
 			for (SmsTask smsTask : smsTaskList) {
 

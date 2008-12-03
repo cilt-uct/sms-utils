@@ -32,4 +32,9 @@ public class MessageLogProducer extends AbstractSearchListProducer{
 		return VIEW_ID;
 	}
 
+	@Override
+	public String getDefaultSortColumn() {
+		return "smsTask.deliveryGroupName";
+	}
+
 }

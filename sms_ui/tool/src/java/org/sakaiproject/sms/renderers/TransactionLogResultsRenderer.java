@@ -77,11 +77,11 @@ public class TransactionLogResultsRenderer implements SearchResultsRenderer{
 		if(fail)
 			UIMessage.make(searchResultsTable, "warning", "GeneralActionError");
 		else{
-			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-account-number:", sortViewParams, "accountNumber", "sms.transaction-log-search-results.account.no");
-			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-transaction-type", sortViewParams, "transactionType", "sms.transaction-log-search-results.trans.type");
+			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-account-number:", sortViewParams, "smsAccountId", "sms.transaction-log-search-results.account.no");
+			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-transaction-type", sortViewParams, "transactionTypeCode", "sms.transaction-log-search-results.trans.type");
 			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-transaction-date:", sortViewParams, "transactionDate", "sms.transaction-log-search-results.trans.date");
 			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-transaction-credits:", sortViewParams, "transactionCredits", "sms.transaction-log-search-results.trans.credits");
-			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-transaction-amount:", sortViewParams, "transactionCredits", "sms.transaction-log-search-results.trans.amount");
+			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-transaction-amount:", sortViewParams, "transactionAmount", "sms.transaction-log-search-results.trans.amount");
 			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-account-balance:", sortViewParams, "balance", "sms.transaction-log-search-results.account.balanace");
 
 			for (SmsTransaction smsTransaction : smsTransactions) {
