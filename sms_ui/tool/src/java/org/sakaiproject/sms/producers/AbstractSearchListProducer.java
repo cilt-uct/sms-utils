@@ -25,10 +25,12 @@ import org.sakaiproject.sms.renderers.TablePagerRenderer;
 import org.springframework.util.Assert;
 
 import uk.org.ponder.rsf.components.UIBranchContainer;
+import uk.org.ponder.rsf.components.UICommand;
 import uk.org.ponder.rsf.components.UIContainer;
 import uk.org.ponder.rsf.components.UIInput;
 import uk.org.ponder.rsf.components.UIJointContainer;
 import uk.org.ponder.rsf.components.UIMessage;
+import uk.org.ponder.rsf.components.UIOutput;
 import uk.org.ponder.rsf.view.ComponentChecker;
 import uk.org.ponder.rsf.view.ViewComponentProducer;
 import uk.org.ponder.rsf.viewstate.ViewParameters;
@@ -83,7 +85,7 @@ public abstract class AbstractSearchListProducer implements ViewComponentProduce
 
 	private void exportToCSV(UIContainer tofill) {
 		UIBranchContainer exportToCSV = UIJointContainer.make(tofill, "export:",  "search-results:");
-		UIInput exportToCSVButton = UIInput.make(exportToCSV, "export-to-csv", null);
+		UICommand.make(exportToCSV, "export-to-csv", "#{csvActionBean.fireAction}");
 	}
 
 

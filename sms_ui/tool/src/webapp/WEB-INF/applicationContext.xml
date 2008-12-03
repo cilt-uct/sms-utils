@@ -32,17 +32,17 @@
   <!-- Define the bean roots from the request scope file that are accessible 
     via incoming request URL -->
   <bean parent="requestAddressibleParent">
-    <property name="value" value="searchTaskList, searchTransactionLog, searchMessageLog, smsConfig, smsConfigActionBean, SmsTestActionBean, SmsMessageLocator, SmsConfigLocator"/>
+    <property name="value" value="searchTaskList, searchTransactionLog, searchMessageLog, smsConfig, 
+    smsConfigActionBean, SmsTestActionBean, SmsMessageLocator, SmsConfigLocator, csvActionBean"/>
   </bean>
 
-  <!-- The beans which will be preserved across a flow via simple instance
-    copying -->
+  <!-- The beans which will be preserved across a flow via simple instance copying -->
   <bean parent="copyPreservingParent">
     <property name="value" value="SmsMessageLocator, SmsConfigLocator"/>
   </bean>
   
   <bean id="searchScope" parent="beanScopeParent">
-    <property name="copyPreservingBeans" value="searchTaskList, searchTransactionLog, searchMessageLog,"/>
+    <property name="copyPreservingBeans" value="searchTaskList, searchTransactionLog, searchMessageLog"/>
   </bean>
   
   <bean id="smsMessageGuard" parent="writeGuardParent">

@@ -23,7 +23,6 @@ import org.apache.commons.logging.LogFactory;
 import org.sakaiproject.sms.hibernate.logic.SmsConfigLogic;
 import org.sakaiproject.sms.hibernate.model.SmsConfig;
 import org.sakaiproject.sms.otp.SmsConfigLocator;
-import org.sakaiproject.sms.otp.SmsMessageLocator;
 import org.springframework.util.Assert;
 
 
