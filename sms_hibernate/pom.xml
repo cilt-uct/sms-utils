@@ -59,7 +59,12 @@
 			<artifactId>hibernate</artifactId>
 			<version>3.2.5.ga</version>
 		</dependency>
-
+		<dependency>
+			<groupId>javax.transaction</groupId>
+			<artifactId>jta</artifactId>
+			<version>1.0.1B</version>
+			<scope>provided</scope>
+		</dependency>
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
