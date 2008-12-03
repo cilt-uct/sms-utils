@@ -26,6 +26,7 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.sakaiproject.sms.hibernate.bean.SearchFilterBean;
 import org.sakaiproject.sms.hibernate.dao.HibernateUtil;
@@ -142,6 +143,14 @@ public class SmsTransactionLogicImpl extends SmsDao implements
 				crit.add(Restrictions.ilike("sakaiUserId", searchBean
 						.getSender()));
 			}
+
+			// Ordering
+			if (searchBean.getOrderBy() != null
+					&& !searchBean.getOrderBy().trim().equals("")) {
+				crit.addOrder((searchBean.sortAsc() ? Order.asc(searchBean
+						.getOrderBy()) : Order.desc(searchBean.getOrderBy())));
+			}
+
 		} catch (ParseException e) {
 			throw new SmsSearchException(e);
 		} catch (Exception e) {
