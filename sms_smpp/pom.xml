@@ -8,11 +8,6 @@
 	<packaging>jar</packaging>
 	<version>1.0</version>
 	<description>SmsSmpp api</description>
-	<parent>
-		<groupId>uk.org.ponder.pure-poms</groupId>
-		<artifactId>standard-jar</artifactId>
-		<version>POM-3</version>
-	</parent>
 	<dependencies>
 		<dependency>
 			<groupId>log4j</groupId>

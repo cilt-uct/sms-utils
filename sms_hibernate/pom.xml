@@ -7,11 +7,6 @@
 	<name>sms_hibernate</name>
 	<packaging>jar</packaging>
 	<version>1.0</version>
-	<parent>
-		<groupId>uk.org.ponder.pure-poms</groupId>
-		<artifactId>standard-jar</artifactId>
-		<version>POM-3</version>
-	</parent>
 	<description>SMS Hibernate. Provided the libraries and data access objects for the sms project</description>
 
 	<repositories>
@@ -104,11 +99,11 @@
 				<directory>${basedir}/src/main/resources</directory>
 			</resource>
 		</resources>
-		
+
 		<testResources>
 			<testResource>
 				<directory>${basedir}/src/main/resources</directory>
-				<excludes>				
+				<excludes>
 					<exclude>**/log4j.properties</exclude>
 					<!-- Will be double loded by hbm2ddl otherwise -->
 					<exclude>**/hibernate-mappings.hbm.xml</exclude>
@@ -118,7 +113,7 @@
 				<directory>${basedir}/src/test/resources</directory>
 			</testResource>
 		</testResources>
-		
+
 		<!--
 
 			<testResources> <testResource>
@@ -130,6 +125,13 @@
 		-->
 
 		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>1.5</source>
+					<target>1.5</target>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>hibernate3-maven-plugin</artifactId>
@@ -173,7 +175,7 @@
 				<configuration>
 					<includes>
 						<include>**/Test*.java</include>
-            			<include>**/*Test.java</include>
+						<include>**/*Test.java</include>
 					</includes>
 				</configuration>
 			</plugin>
