@@ -22,7 +22,7 @@ import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
 public class SmsDatabaseStressTest extends TestCase {
 
 	/** The number of messages to insert, change as required. */
-	private static int messageCount = 5000;
+	private static int messageCount = 50;
 
 	/** The task logic. */
 	private static SmsTaskLogicImpl taskLogic = null;
