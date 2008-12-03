@@ -517,21 +517,20 @@ public class SmsTask extends BaseModel {
 	public void setStatusCode(String statusCode) {
 		this.statusCode = statusCode;
 	}
-	
+
 	/**
 	 * Sets the sms messages on a this SmsTask object
 	 * 
 	 * @param smsMessages
 	 */
 	public void setSmsMessagesOnTask(Set<SmsMessage> smsMessages) {
-		if(smsMessages != null) {
-			for(SmsMessage message : smsMessages) {
+		if (smsMessages != null) {
+			for (SmsMessage message : smsMessages) {
 				this.smsMessages.add(message);
 			}
 		}
 	}
 
-	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -706,6 +705,18 @@ public class SmsTask extends BaseModel {
 				message.setStatusCode(newStatus);
 			}
 		}
+	}
+
+	public Set<SmsMessage> getMessagesWithSmscStatus(int smscStatus) {
+		Set<SmsMessage> filtered = new HashSet<SmsMessage>();
+		Iterator<SmsMessage> it = getSmsMessages().iterator();
+		while (it.hasNext()) {
+			SmsMessage message = it.next();
+			if (message.getSmscDeliveryStatusCode() == smscStatus) {
+				filtered.add(message);
+			}
+		}
+		return filtered;
 
 	}
 
