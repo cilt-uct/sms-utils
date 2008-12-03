@@ -30,6 +30,7 @@ import org.sakaiproject.sms.hibernate.logic.impl.SmsMessageLogicImpl;
 import org.sakaiproject.sms.hibernate.logic.impl.SmsTaskLogicImpl;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
+import org.sakaiproject.sms.hibernate.model.constants.SmsConst_SmscDeliveryStatus;
 import org.sakaiproject.sms.impl.SmsCoreImpl;
 import org.sakaiproject.sms.impl.SmsSmppImpl;
 
@@ -214,10 +215,18 @@ public class SmsCoreTest extends TestCase {
 					waitForDeliveries = false;
 
 				}
+				smsCoreImpl.processDeliveryReports();
 			}
-			smsCoreImpl.processDeliveryReports();
+
 			assertEquals(true, smsCoreImpl.getSmsSmpp()
 					.getDeliveryNotifications().size() == 0);
+			assertEquals(true, smsTask1.getMessagesWithSmscStatus(
+					SmsConst_SmscDeliveryStatus.ENROUTE).size() == 0);
+			assertEquals(true, smsTask2.getMessagesWithSmscStatus(
+					SmsConst_SmscDeliveryStatus.ENROUTE).size() == 0);
+			assertEquals(true, smsTask3.getMessagesWithSmscStatus(
+					SmsConst_SmscDeliveryStatus.ENROUTE).size() == 0);
+
 			smsCoreImpl.getSmsTaskLogic().deleteSmsTask(smsTask1);
 			smsCoreImpl.getSmsTaskLogic().deleteSmsTask(smsTask2);
 			smsCoreImpl.getSmsTaskLogic().deleteSmsTask(smsTask3);
