@@ -82,18 +82,18 @@
 			<artifactId>quartz</artifactId>
 			<version>1.5.2</version>
 		</dependency>
-		
+
 		<!-- generic DAO -->
-      <dependency>
-         <groupId>org.sakaiproject</groupId>
-         <artifactId>generic-dao</artifactId>
-         <version>0.9.11</version>
-      </dependency>
-      <dependency>
-         <groupId>org.springframework</groupId>
-         <artifactId>spring</artifactId>
-         <version>2.5.4</version>
-      </dependency>
+		<dependency>
+			<groupId>org.sakaiproject</groupId>
+			<artifactId>generic-dao</artifactId>
+			<version>0.9.11</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring</artifactId>
+			<version>2.5.4</version>
+		</dependency>
 	</dependencies>
 	<reports />
 	<build>
@@ -116,68 +116,75 @@
 					<include>**/*.properties</include>
 				</includes>
 			</resource>
-		</resources><!--
-		
-			<testResources> 
-				<testResource>
-					<directory>${basedir}/src/test/org/sakaiproject/sms/hibernate/logic/impl</directory> 
-					<includes>
-						<include>src/test/resources/log4j.properties</include>
-						<include>src/test/hibernate.properties</include>
-						<include>src/test/hibernate.cfg.xml</include>
-					</includes>
-				</testResource> 
-			</testResources>-->
+		</resources>
+		<!--
 
-		<plugins>	
+			<testResources> <testResource>
+			<directory>${basedir}/src/test/org/sakaiproject/sms/hibernate/logic/impl</directory>
+			<includes> <include>src/test/resources/log4j.properties</include>
+			<include>src/test/hibernate.properties</include>
+			<include>src/test/hibernate.cfg.xml</include> </includes>
+			</testResource> </testResources>
+		-->
+
+		<plugins>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>hibernate3-maven-plugin</artifactId>
 				<version>2.1</version>
-				
-				<!--<executions>
-		        <execution>
-		          <phase>process-classes</phase>
-		          <goals>
-		            <goal>hbm2ddl</goal>
-		             <goal>hbm2java</goal> 
-		          </goals>
-		        </execution>
-		        
-		      </executions>-->
-				 <configuration>
+
+				<!--
+					<executions> <execution> <phase>process-classes</phase> <goals>
+					<goal>hbm2ddl</goal> <goal>hbm2java</goal> </goals> </execution>
+
+					</executions>
+				-->
+				<configuration>
 					<outputDirectory>
-						<!-- <hbm2cfgxml>/src/java/resources</hbm2cfgxml> 
-						<hbm2java>/src/java/org/sakaiproject/sms/hibernate/model</hbm2java>-->
+						<!--
+							<hbm2cfgxml>/src/java/resources</hbm2cfgxml>
+							<hbm2java>/src/java/org/sakaiproject/sms/hibernate/model</hbm2java>
+						-->
 					</outputDirectory>
 					<components>
-					    <component>
-						  <name>hbm2ddl</name>
-						  <implementation>configuration</implementation>
+						<component>
+							<name>hbm2ddl</name>
+							<implementation>configuration</implementation>
 						</component>
-				    </components>
+					</components>
 					<componentProperties>
-				 	  <propertyfile>src/java/resources/database.properties</propertyfile>
-					  <configurationfile>src/java/resources/hibernate.cfg.xml</configurationfile>
-			          <persistenceunit>Default</persistenceunit>
-			          <outputfilename>schema.ddl</outputfilename>
-			          <drop>true</drop>
-			          <create>true</create>
-			          <export>false</export>
-			          <format>true</format>
-			        </componentProperties>
-				</configuration> 
+						<propertyfile>src/java/resources/database.properties</propertyfile>
+						<configurationfile>src/java/resources/hibernate.cfg.xml</configurationfile>
+						<persistenceunit>Default</persistenceunit>
+						<outputfilename>schema.ddl</outputfilename>
+						<drop>true</drop>
+						<create>true</create>
+						<export>false</export>
+						<format>true</format>
+					</componentProperties>
+				</configuration>
 			</plugin>
-			
-			
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>**</exclude>
+					</excludes>
+				</configuration>
+
+			</plugin>
+
+
 		</plugins>
 		<extensions>
-      <extension>
-      	<groupId>mysql</groupId>
-		<artifactId>mysql-connector-java</artifactId>
-		<version>5.1.5</version>
-		</extension>
-    </extensions>
-		
+			<extension>
+				<groupId>mysql</groupId>
+				<artifactId>mysql-connector-java</artifactId>
+				<version>5.1.5</version>
+			</extension>
+		</extensions>
+
 	</build>
 </project>
