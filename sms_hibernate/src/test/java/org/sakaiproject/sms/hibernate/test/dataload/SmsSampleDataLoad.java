@@ -17,6 +17,7 @@ public class SmsSampleDataLoad {
 	public static void main(String[] args) {
 		loadSmsMessages();
 		loadSmsTransactions();
+		System.out.println("Done");
 	}
 
 	private static void loadSmsTransactions() {
@@ -26,6 +27,8 @@ public class SmsSampleDataLoad {
 		
 		SampleSmsTransactionFactory testSMSTransactionFactory = new SampleSmsTransactionFactory();
 		
+		System.out.println("Inserting SmsTransactions:");
+		
 		List<SmsTransaction> smsTransactions = testSMSTransactionFactory.getAllSmsTransaction();
 		for (SmsTransaction smsTransaction : smsTransactions) {
 			smsTransactionLogic.persistSmsTransaction(smsTransaction);
@@ -34,12 +37,15 @@ public class SmsSampleDataLoad {
 
 
 	private static void loadSmsMessages() {
+		
 		SmsTaskLogic smsTaskLogic = new SmsTaskLogicImpl();
 		SmsMessageLogic smsMessageLogic = new SmsMessageLogicImpl();
 		
 		deleteSmsMessages(smsMessageLogic);
 		deleteSmsTasks(smsTaskLogic);
 	
+		System.out.println("Inserting SmsMessages:");
+
 		SampleSmsTaskFactory taskFactory = new SampleSmsTaskFactory();
 		SampleSmsMessageFactory messageFactory =  new SampleSmsMessageFactory();
 		List<SmsMessage> smsMessages = messageFactory.getAllTestSmsMessages();
