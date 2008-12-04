@@ -20,6 +20,16 @@
 				<enabled>false</enabled>
 			</releases>
 		</repository>
+			<repository>
+			<id>sourcefordge</id>
+			<url>http://maven2.opensymphony.com</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
 	</repositories>
 	<pluginRepositories>
 		<pluginRepository>
