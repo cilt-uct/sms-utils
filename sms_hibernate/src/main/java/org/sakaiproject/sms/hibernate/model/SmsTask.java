@@ -118,6 +118,7 @@ public class SmsTask extends BaseModel {
 	 * Instantiates a new sms task.
 	 */
 	public SmsTask() {
+		setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
 	}
 
 	/**
