@@ -61,6 +61,7 @@ public class SmsConfigLocator implements BeanLocator{
 				if(togo == null){
 					togo = new SmsConfig();
 					togo.setSakaiSiteId("3");
+					togo.setSakaiToolId("sakaiToolId");
 				}
 			}
 			delivered.put(name, togo);

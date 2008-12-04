@@ -56,8 +56,6 @@ public class SmsConfigActionBean {
 		//		if(smsConfig.getSmsEnabled().equals(Boolean.FALSE))
 		//			smsConfig.setNotificationEmail("");
 		
-		smsConfig.setSakaiToolId("sakaiToolId");
-		
 		if(log.isInfoEnabled()){			
 			log.info("Persisting smsConfig");
 		}
