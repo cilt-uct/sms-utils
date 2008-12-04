@@ -30,48 +30,54 @@ import java.util.Date;
  * @created 01-Dec-2008
  */
 public class DateUtil {
-	
+
 	private static final String DATE_TIME_FORMAT_STRING = "MM/dd/yyyy HH:mm:ss";
-	
-	private static final String DATE_FORMAT_STRING = "MM/dd/yyyy HH:mm:ss";
-	
-	private static SimpleDateFormat sdf = new SimpleDateFormat(DATE_TIME_FORMAT_STRING);
-	
+
+	private static final String DATE_FORMAT_STRING = "MM/dd/yyyy";
+
+	private static SimpleDateFormat sdf = new SimpleDateFormat(
+			DATE_TIME_FORMAT_STRING);
+
 	/**
-	 * Creates a Timestamp object from the startDate parameter 
-	 * for use in start dates searches
+	 * Creates a Timestamp object from the startDate parameter for use in start
+	 * dates searches
 	 * 
-	 * @param start date
+	 * @param start
+	 *            date
 	 * @return time stamp for start date
 	 * @throws ParseException
 	 */
-	public static Timestamp getTimestampFromStartDateString(String startDate) throws ParseException {
+	public static Timestamp getTimestampFromStartDateString(String startDate)
+			throws ParseException {
 		startDate = startDate.concat(" 00:00:00");
 		return new Timestamp(sdf.parse(startDate).getTime());
 	}
-	
+
 	/**
-	 * Creates a Timestamp object from the endDate parameter 
-	 * for use in end dates searches
+	 * Creates a Timestamp object from the endDate parameter for use in end
+	 * dates searches
 	 * 
-	 * @param end date
+	 * @param end
+	 *            date
 	 * @return time stamp for end date
 	 * @throws ParseException
 	 */
-	public static Timestamp getTimestampFromEndDateString(String endDate) throws ParseException {
+	public static Timestamp getTimestampFromEndDateString(String endDate)
+			throws ParseException {
 		endDate = endDate.concat(" 23:59:59");
 		return new Timestamp(sdf.parse(endDate).getTime());
 	}
-	
+
 	/**
 	 * Get string representing the specified date.
 	 * 
-	 * @param date {@link Date}
+	 * @param date
+	 *            {@link Date}
 	 * @return date as MM/dd/yyyy
 	 */
 	public static String getDateString(Date date) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_STRING);
 		return dateFormat.format(date);
 	}
-	
+
 }
