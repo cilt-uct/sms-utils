@@ -29,8 +29,10 @@ secure location. The important settings are:
 * sourceAddress: The unique id of the Sakai instance to whom the gateway will reply
 
 
-HOW TO TEST THE SMPP SERVICE
+RUNNING THE UNIT TEST
 ============================
+The test can be run from Eclipse or via the command line with: mvn test -Dtest=*
+
 1.  Start up the smpp simulator: 
 1.1 Build the sms_smpp_sim project by running: mvn clean install
 1.2 Start simulator by running startsmppsim.bat or startsmppsim.sh
