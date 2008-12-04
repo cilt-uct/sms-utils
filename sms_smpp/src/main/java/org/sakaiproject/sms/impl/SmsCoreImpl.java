@@ -31,6 +31,7 @@ import org.sakaiproject.sms.hibernate.logic.SmsTaskLogic;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
+import org.sakaiproject.sms.hibernate.model.constants.SmsConst_SmscDeliveryStatus;
 import org.sakaiproject.sms.model.SmsDeliveryReport;
 
 public class SmsCoreImpl implements SmsCore {
@@ -212,6 +213,10 @@ public class SmsCoreImpl implements SmsCore {
 			if (smsMessage != null) {
 				smsMessage.setSmscDeliveryStatusCode(smsDeliveryReport
 						.getDeliveryStatus());
+				if (smsDeliveryReport.getDeliveryStatus() != SmsConst_SmscDeliveryStatus.DELIVERED) {
+					smsMessage
+							.setStatusCode(SmsConst_DeliveryStatus.STATUS_FAIL);
+				}
 				smsMessageLogic.persistSmsMessage(smsMessage);
 			}
 		}
