@@ -4,9 +4,13 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
+import junit.extensions.TestSetup;
+import junit.framework.Test;
 import junit.framework.TestCase;
+import junit.framework.TestSuite;
 
 import org.sakaiproject.sms.hibernate.bean.SearchFilterBean;
+import org.sakaiproject.sms.hibernate.dao.HibernateUtil;
 import org.sakaiproject.sms.hibernate.logic.SmsAccountLogic;
 import org.sakaiproject.sms.hibernate.logic.SmsTransactionLogic;
 import org.sakaiproject.sms.hibernate.logic.impl.SmsAccountLogicImpl;
@@ -17,6 +21,26 @@ import org.sakaiproject.sms.hibernate.model.SmsTransaction;
 import org.sakaiproject.sms.hibernate.util.DateUtil;
 
 public class SmsTransactionTest extends TestCase {
+
+	/**
+	 * This is used for one time setup and tear down per test case.
+	 * 
+	 * @return the test
+	 */
+	public static Test suite() {
+
+		TestSetup setup = new TestSetup(new TestSuite(SmsTransactionTest.class)) {
+
+			protected void setUp() throws Exception {
+				HibernateUtil.createSchema();
+			}
+
+			protected void tearDown() throws Exception {
+
+			}
+		};
+		return setup;
+	}
 
 	private static SmsTransactionLogic logic = null;
 
@@ -90,10 +114,17 @@ public class SmsTransactionTest extends TestCase {
 	 * Tests the getMessagesForCriteria method
 	 */
 	public void testGetTransactionsForCriteria() {
+
+		SmsAccount insertSmsAccount = new SmsAccount();
+		insertSmsAccount.setSakaiUserId("SakaiUSerId");
+		insertSmsAccount.setSakaiSiteId("SakaiSiteId");
+		insertSmsAccount.setMessageTypeCode("12345");
+		insertSmsAccount.setOverdraftLimit(10000.00f);
+		insertSmsAccount.setBalance(5000.00f);
+
 		SmsTransaction insertSmsTransaction = new SmsTransaction();
 		insertSmsTransaction.setBalance(1.32f);
 		insertSmsTransaction.setSakaiUserId("sakaiUserId");
-		insertSmsTransaction.setSmsAccount(insertSmsAccount);
 
 		insertSmsTransaction.setTransactionDate(new Timestamp(System
 				.currentTimeMillis()));
@@ -101,8 +132,10 @@ public class SmsTransactionTest extends TestCase {
 		insertSmsTransaction.setTransactionCredits(666);
 		insertSmsTransaction.setTransactionAmount(1000.00f);
 
+		insertSmsTransaction.setSmsAccount(insertSmsAccount);
+		insertSmsAccount.getSmsTransactions().add(insertSmsTransaction);
 		try {
-			logic.persistSmsTransaction(insertSmsTransaction);
+			accountLogic.persistSmsAccount(insertSmsAccount);
 			assertTrue("Object not created successfullyu", insertSmsTransaction
 					.exists());
 
@@ -126,11 +159,12 @@ public class SmsTransactionTest extends TestCase {
 		} catch (SmsSearchException se) {
 			fail(se.getMessage());
 		} finally {
-			logic.deleteSmsTransaction(insertSmsTransaction);
+			accountLogic.deleteSmsAccount(insertSmsAccount);
 		}
 	}
 
 	public void testDeleteSmsTransaction() {
+		insertSmsTransaction.setSmsAccount(null);
 		logic.deleteSmsTransaction(insertSmsTransaction);
 		SmsTransaction getSmsTransaction = logic
 				.getSmsTransaction(insertSmsTransaction.getId());

@@ -18,21 +18,22 @@ import org.sakaiproject.sms.hibernate.model.SmsTransaction;
  */
 public class SmsAccountTest extends TestCase {
 
-	// The setup method instanciates the smsCoreImpl once. The teardown
-	// method safely calls disconnectGateWay at the end of the test
+	/**
+	 * This is used for one time setup and tear down per test case.
+	 * 
+	 * @return the test
+	 */
 	public static Test suite() {
 
 		TestSetup setup = new TestSetup(new TestSuite(SmsAccountTest.class)) {
 
 			protected void setUp() throws Exception {
 				HibernateUtil.createSchema();
-				System.out.println("");
 			}
 
 			protected void tearDown() throws Exception {
 
 			}
-
 		};
 		return setup;
 	}

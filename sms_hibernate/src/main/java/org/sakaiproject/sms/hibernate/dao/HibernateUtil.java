@@ -135,7 +135,9 @@ public class HibernateUtil {
 
 	public static void createSchema() {
 		try {
+			currentSession();
 			new SchemaExport(getConfiguration()).create(false, true);
+			closeSession();
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new HibernateException("Error reading hibernate properties: "
