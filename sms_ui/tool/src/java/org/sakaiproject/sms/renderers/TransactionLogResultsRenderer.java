@@ -81,7 +81,7 @@ public class TransactionLogResultsRenderer implements SearchResultsRenderer {
 		else {
 			sortHeaderRenderer.makeSortingLink(searchResultsTable,
 					"tableheader-account-number:", sortViewParams,
-					"smsAccountId",
+					"smsAccount",
 					"sms.transaction-log-search-results.account.no");
 			sortHeaderRenderer.makeSortingLink(searchResultsTable,
 					"tableheader-transaction-type", sortViewParams,

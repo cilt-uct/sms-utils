@@ -78,13 +78,15 @@ public class SearchCriteriaRenderer{
 		combo.selection.valuebinding = new ELReference(createSearchELString("status"));
 		UIBoundList comboValues = new UIBoundList();
 		comboValues.setValue(new String[] {"", 
-										   SmsConst_DeliveryStatus.STATUS_PENDING, 
-										   SmsConst_DeliveryStatus.STATUS_DELIVERED, 
-										   SmsConst_DeliveryStatus.STATUS_FAIL
-										   });
+										   SmsConst_DeliveryStatus.STATUS_RETRY, 
+										   SmsConst_DeliveryStatus.STATUS_SENT, 
+										   SmsConst_DeliveryStatus.STATUS_BUSY,
+										   SmsConst_DeliveryStatus.STATUS_INCOMPLETE,
+										   SmsConst_DeliveryStatus.STATUS_FAIL,
+										});
 		combo.optionlist = comboValues;
 		UIBoundList comboNames = new UIBoundList();
-		comboNames.setValue(new String[] {"All", "Pending", "Successful", "Failed"});
+		comboNames.setValue(new String[] {"All", "Retry", "Sent", "Busy", "Incomplete", "Failed"});
 		combo.optionnames = comboNames;
 		
 		UIInput.make(searchForm, "date-to", createSearchELString("dateTo"));
