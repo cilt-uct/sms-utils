@@ -21,14 +21,9 @@
 			</releases>
 		</repository>
 			<repository>
-			<id>sourcefordge</id>
-			<url>http://maven2.opensymphony.com</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
+			<id>Source Forge</id>
+			<name>Source Forge Maven Repo</name>
+			<url>http://source.sakaiproject.org/maven2</url>
 		</repository>
 	</repositories>
 	<pluginRepositories>
