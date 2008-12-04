@@ -19,9 +19,9 @@
   
   <repositories>
     <repository>
-      <id>CARET</id>
-      <name>CARET Maven Repository</name>
-      <url>http://www2.caret.cam.ac.uk/maven2</url>
+      <id>Source Forge</id>
+      <name>Source Forge Maven Repo</name>
+      <url>http://source.sakaiproject.org/maven2</url>
     </repository>
     <repository>
       <id>honestyworks</id>
