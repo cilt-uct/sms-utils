@@ -64,9 +64,8 @@ public class SmsTransaction extends BaseModel {
 	 * Instantiates a new sms transaction.
 	 */
 	public SmsTransaction(Float balance, String sakaiUserId,
-			Integer smsAccountId, Float transactionAmount,
-			Integer transactionCredits, Timestamp transactionDate,
-			String transactionTypeCode) {
+			Float transactionAmount, Integer transactionCredits,
+			Timestamp transactionDate, String transactionTypeCode) {
 		super();
 		this.balance = balance;
 		this.sakaiUserId = sakaiUserId;

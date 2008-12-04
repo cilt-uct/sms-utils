@@ -6,12 +6,21 @@ import java.util.List;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
 
-public class SampleSmsMessageFactory {
+public class SampleSmsMessageFactory implements Listable{
 
 	private List<SmsMessage> smsMessages;
 
 	public SampleSmsMessageFactory() {
 		creatSampleSmsMessages();
+	}
+	
+	public Object getElementAt(int i) {
+		return getTestSmsMessage(i);
+	}
+	
+	public void refreshList() {
+		creatSampleSmsMessages();
+		
 	}
 
 	private void creatSampleSmsMessages() {
@@ -54,5 +63,6 @@ public class SampleSmsMessageFactory {
 	public int getTotalSmsMessages(){
 		return smsMessages.size();
 	}
+
 	
 }

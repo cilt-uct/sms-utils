@@ -2,7 +2,7 @@ function clearSearchCriteria(){
 	document.getElementById('searchCriteria::id').value = '';
 	document.getElementById('searchCriteria::tool-name').value = '';
 	document.getElementById('searchCriteria::sender').value = '';
-	document.getElementById('searchCriteria::task-status-selection').value = 'All';
+	document.getElementById('searchCriteria::task-status-selection').value = '';
 	resetDates();
 }
 
