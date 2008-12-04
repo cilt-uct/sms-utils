@@ -61,9 +61,15 @@ public class SearchCriteriaRenderer{
 		UIJointContainer searchCriteria = new UIJointContainer(tofill,divID, "search-component:");
 		
 		UIForm searchForm =  UIForm.make(searchCriteria, "search-criteria");
-		UIOutput.make(searchForm, "label-id", labelID);
+		
+		if(labelDropDown.indexOf("Task") == -1)
+			UIOutput.make(searchForm, "label-id", labelID);
+		
 		UIOutput.make(searchForm, "label-dropdown", labelDropDown);		
+		
+		if(labelDropDown.indexOf("Task") == -1)
 		UIInput.make(searchForm, "id", createSearchELString("id"));
+		
 		UIInput.make(searchForm, "date-from", createSearchELString("dateFrom"));
 		UIInput.make(searchForm, "tool-name", createSearchELString("toolName"));
 		

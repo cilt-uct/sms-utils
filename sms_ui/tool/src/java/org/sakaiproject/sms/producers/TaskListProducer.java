@@ -17,8 +17,8 @@
  **********************************************************************************/
 package org.sakaiproject.sms.producers;
 
-public class TaskListProducer extends AbstractSearchListProducer{
-	
+public class TaskListProducer extends AbstractSearchListProducer {
+
 	public static final String VIEW_ID = "TaskList";
 
 	@Override
@@ -36,4 +36,3 @@ public class TaskListProducer extends AbstractSearchListProducer{
 		return "deliveryGroupName";
 	}
 }
-
