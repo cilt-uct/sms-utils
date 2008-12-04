@@ -221,6 +221,8 @@ public class SmsTaskLogicImpl extends SmsDao implements SmsTaskLogic {
 			throw new SmsSearchException(e);
 		}
 
+		log.debug(crit.toString());
+
 		tasks = crit.list();
 		HibernateUtil.closeSession();
 		return tasks;

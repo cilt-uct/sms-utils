@@ -19,48 +19,38 @@ package org.sakaiproject.sms.hibernate.dao;
 
 import java.sql.Timestamp;
 
-/*import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;*/
 import org.apache.log4j.Level;
 
-
 /**
- * Implementations of any specialized DAO methods from the specialized DAO that allows the developer to extend the functionality of the
- * generic dao package
- *
+ * Implementations of any specialized DAO methods from the specialized DAO that
+ * allows the developer to extend the functionality of the generic dao package
+ * 
  * @author Sakai App Builder -AZ
  */
-public class SmsDao extends BaseDao{
+public class SmsDao extends BaseDao {
 
-    //protected static Log log = LogFactory.getLog(SmsDao.class);
-	//protected static org.apache.log4j.Logger log = org.apache.log4j.Logger
-	//.getLogger(SmsDao.class);
-	protected Log log = new Log();
-	protected class Log {//THIS IS A TEMP SOLUTION TILL I GET A FREE MIN TO SORT OUT LOG4J
-		public void debug(String msg) {
-			System.out.println(msg);
-		}
+	static {
+		log = org.apache.log4j.Logger.getLogger(SmsDao.class);
+		init();
 	}
-    
-    protected Timestamp getTimestampCurrent() {
-    	return new Timestamp(System.currentTimeMillis());
-    }
 
-    public void init() {
-    	//log.setLevel(Level.ALL);
-        log.debug("init");
-    }
-    
-    /**
-	 * Enables or disables the debug Information
+	/** The log. */
+	protected static org.apache.log4j.Logger log;
+
+	/**
+	 * Gets the timestamp current.
 	 * 
-	 * @param debug
+	 * @return the timestamp current
 	 */
-	public void enableDebugInformation(boolean debug) {
-		if (debug) {
-			//log.setLevel(Level.ALL);
-		} else {
-			//log.setLevel(Level.OFF);
-		}
+	protected Timestamp getTimestampCurrent() {
+		return new Timestamp(System.currentTimeMillis());
+	}
+
+	/**
+	 * Inits the.
+	 */
+	public static void init() {
+		log.setLevel(Level.ALL);
+		log.debug("init");
 	}
 }
