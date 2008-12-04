@@ -8,6 +8,25 @@
 	<packaging>jar</packaging>
 	<version>1.0</version>
 	<description>SmsSmpp api</description>
+	<repositories>
+
+		<repository>
+			<id>Source Forge</id>
+			<name>Source Forge Maven Repo</name>
+			<url>http://source.sakaiproject.org/maven2</url>
+		</repository>
+
+		<repository>
+			<id>sourcefordge</id>
+			<url>http://maven2.opensymphony.com</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
 	<dependencies>
 		<dependency>
 			<groupId>log4j</groupId>
@@ -69,7 +88,7 @@
 			</resource>
 		</resources>
 		<plugins>
-		<plugin>
+			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
 					<source>1.5</source>
@@ -86,7 +105,7 @@
 				</configuration>
 
 			</plugin>
-			
+
 		</plugins>
 	</build>
 </project>

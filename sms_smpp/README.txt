@@ -24,7 +24,7 @@ secure location. The important settings are:
 * SMSCport: The port to use on the gateway.
 * SMSCUsername: Username to bind with gateway
 * SMSCPassword: Password to bind with gateway
-* enquireLinkTimeOutSecondes: Interval in seconds  to poll the gateway to see if its alive. 
+* enquireLinkTimeOutSecondes: Interval in seconds  to poll the gateway to keep the session binded. 
 * bindThreadTimerSecondes: Interval in seconds trying to reconnect if connection is down. 
 * sourceAddress: The unique id of the Sakai instance to whom the gateway will reply
 
