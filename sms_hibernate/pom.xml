@@ -111,17 +111,8 @@
 				<directory>${basedir}/src/test/resources</directory>
 			</testResource>
 		</testResources>
-
-		<!--
-
-			<testResources> <testResource>
-			<directory>${basedir}/src/test/org/sakaiproject/sms/hibernate/logic/impl</directory>
-			<includes> <include>src/test/resources/log4j.properties</include>
-			<include>src/test/hibernate.properties</include>
-			<include>src/test/hibernate.cfg.xml</include> </includes>
-			</testResource> </testResources>
-		-->
-
+		
+		
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -133,7 +124,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>hibernate3-maven-plugin</artifactId>
-				<version>2.1</version>
+				<version>2.2-SNAPSHOT</version>
 
 				<!--
 					<executions> <execution> <phase>process-classes</phase> <goals>
@@ -155,9 +146,10 @@
 						</component>
 					</components>
 					<componentProperties>
-						<propertyfile>target/classes/database.properties</propertyfile>
-						<configurationfile>target/classes/hibernate.cfg.xml</configurationfile>
-						<persistenceunit>Default</persistenceunit>
+						<!-- Can ignore this, it will use the hibernate.properties file automatically -->
+						<!--<propertyFile>target/classes/hibernate.properties</propertyFile>-->
+						<!--<configurationfile>target/classes/hibernate.cfg.xml</configurationfile>
+						--><persistenceunit>Default</persistenceunit>
 						<outputfilename>schema.ddl</outputfilename>
 						<drop>true</drop>
 						<create>true</create>

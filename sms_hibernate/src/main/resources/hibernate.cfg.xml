@@ -7,15 +7,9 @@
 
 	<session-factory>
 
-		<property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-		<property name="hibernate.connection.url">jdbc:mysql://143.160.210.90/smshibernate_julian</property>
-		<property name="hibernate.connection.username">root</property>
-		<property name="hibernate.connection.password">sakai2008</property>
-		<property name="hibernate.connection.pool_size">10</property>
-		<property name="show_sql">true</property>
-		<property name="dialect">org.hibernate.dialect.MySQLDialect</property>
-		<property name="hibernate.hbm2ddl.auto">create</property>
-
+		<!-- Hibernate properties are read from hibernate.properties -->
+		<!-- Only specify location of mapping files here-->
+		
 		<!-- This is causing the hibernate3 pluging to load the file twice -->
 		<mapping resource="hibernate-mappings.hbm.xml" />
 	
