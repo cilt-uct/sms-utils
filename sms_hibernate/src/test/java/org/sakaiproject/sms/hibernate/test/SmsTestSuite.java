@@ -10,10 +10,6 @@ import org.sakaiproject.sms.hibernate.dao.HibernateUtil;
  */
 public class SmsTestSuite {
 
-	private static void createTestSchema() {
-		HibernateUtil.createSchema();
-	}
-
 	/**
 	 * Suite.
 	 * 
@@ -21,11 +17,11 @@ public class SmsTestSuite {
 	 */
 	public static Test suite() {
 
-		createTestSchema();
+		HibernateUtil.createSchema();
 
 		TestSuite suite = new TestSuite(
 				"Test for org.sakaiproject.sms.hibernate.test");
-		// $JUnit-BEGIN$		
+		// $JUnit-BEGIN$
 		suite.addTestSuite(SmsTransactionTest.class);
 		suite.addTestSuite(SmsTaskTest.class);
 		suite.addTestSuite(SmsConfigTest.class);

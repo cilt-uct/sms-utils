@@ -200,6 +200,15 @@ public class SmsTransaction extends BaseModel {
 		this.smsAccount = smsAccount;
 	}
 
+	/**
+	 * Gets the transaction amount.
+	 * 
+	 * @return the transaction amount
+	 */
+	public Float getTransactionAmount() {
+		return transactionAmount;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 

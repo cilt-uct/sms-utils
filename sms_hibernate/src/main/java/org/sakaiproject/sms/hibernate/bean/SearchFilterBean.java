@@ -62,7 +62,7 @@ public class SearchFilterBean {
 	private String mobileNumber;
 
 	/** The account number. */
-	private Integer accountNumber;
+	private Long accountNumber;
 
 	/** The transaction type. */
 	private String transactionType;
@@ -273,7 +273,7 @@ public class SearchFilterBean {
 	 * @param accountNumber
 	 *            the new account number
 	 */
-	public void setAccountNumber(Integer accountNumber) {
+	public void setAccountNumber(Long accountNumber) {
 		this.accountNumber = accountNumber;
 	}
 
@@ -282,7 +282,7 @@ public class SearchFilterBean {
 	 * 
 	 * @return the account number
 	 */
-	public Integer getAccountNumber() {
+	public Long getAccountNumber() {
 		return accountNumber;
 	}
 

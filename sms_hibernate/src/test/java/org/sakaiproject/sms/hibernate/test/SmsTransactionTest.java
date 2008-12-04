@@ -109,8 +109,7 @@ public class SmsTransactionTest extends TestCase {
 			SearchFilterBean bean = new SearchFilterBean();
 			bean.setTransactionType(insertSmsTransaction
 					.getTransactionTypeCode());
-			bean.setAccountNumber(insertSmsTransaction.getSmsAccount().getId()
-					.intValue());
+			bean.setAccountNumber(insertSmsTransaction.getSmsAccount().getId());
 			bean.setDateFrom(DateUtil.getDateString(new Date()));
 			bean.setDateTo(DateUtil.getDateString(new Date()));
 			bean.setSender(insertSmsTransaction.getSakaiUserId());

@@ -29,14 +29,10 @@
         <property name="deliveryGroupName" type="string" column="DELIVERY_GROUP_NAME" not-null="false" length="50"/>
         <property name="groupSizeEstimate" type="integer" column="GROUP_SIZE_ESTIMATE" not-null="false"/>
         <property name="groupSizeActual" type="integer" column="GROUP_SIZE_ACTUAL" not-null="false"/>
-        <!--<set name="smsMessages" table="SMS_MESSAGE">  
-        	<key column="MESSAGE_ID"/>  
-        	<one-to-many class="org.sakaiproject.sms.hibernate.model.SmsMessage" not-found="exception"/>  
-        </set> -->
         <set name="smsMessages" inverse="true" cascade="all-delete-orphan">
             <key column="MESSAGE_ID" not-null="true"/>            
             <one-to-many class="org.sakaiproject.sms.hibernate.model.SmsMessage" not-found="ignore"/>
-            </set>
+        </set>
     </class>
     
     
@@ -67,19 +63,24 @@
         <property name="messageTypeCode" type="string" column="MESSAGE_TYPE_CODE" not-null="true" length="5"/>
         <property name="overdraftLimit" type="float" column="OVERDRAFT_LIMIT" not-null="false"/>
         <property name="balance" type="float" column="BALANCE" not-null="true"/>
+        <set name="smsTransactions" inverse="true" cascade="all-delete-orphan">
+            <key column="SMS_ACCOUNT_ID" not-null="true"/>            
+            <one-to-many class="org.sakaiproject.sms.hibernate.model.SmsTransaction" not-found="ignore"/>
+        </set>
    	</class>	
    	
    	<class name="org.sakaiproject.sms.hibernate.model.SmsTransaction" table="SMS_TRANSACTION">
         <id name="id" type="long" column="TRANSACTION_ID">
             <generator class="increment"/>
         </id>
-        <property name="smsAccountId" type="integer" column="SMS_ACCOUNT_ID" not-null="true" />
-        <property name="sakaiUserId" type="string" column="SAKAI_USER_ID" not-null="true" length="99"/>
+        <!--<property name="smsAccountId" type="integer" column="SMS_ACCOUNT_ID" not-null="true" />
+        --><property name="sakaiUserId" type="string" column="SAKAI_USER_ID" not-null="true" length="99"/>
         <property name="transactionTypeCode" type="string" column="TRANSACTION_TYPE_CODE" not-null="true" length="5"/>
         <property name="transactionDate" type="timestamp" column="TRANSACTION_DATE" not-null="false" />
         <property name="transactionCredits" type="integer" column="TRANSACTION_CREDITS" not-null="true" />
         <property name="transactionAmount" type="float" column="TRANSACTION_AMOUNT" not-null="true"/>
         <property name="balance" type="float" column="BALANCE" not-null="true"/>
+        <many-to-one name="smsAccount" class="org.sakaiproject.sms.hibernate.model.SmsAccount" column="SMS_ACCOUNT_ID" not-null="true"/>
    	</class>
    	
    	<class name="org.sakaiproject.sms.hibernate.model.SmsConfig" table="SMS_CONFIG">

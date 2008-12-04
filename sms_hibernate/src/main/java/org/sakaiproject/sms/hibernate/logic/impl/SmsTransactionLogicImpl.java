@@ -102,7 +102,7 @@ public class SmsTransactionLogicImpl extends SmsDao implements
 			SearchFilterBean searchBean) throws SmsSearchException {
 
 		Criteria crit = HibernateUtil.currentSession().createCriteria(
-				SmsTransaction.class);
+				SmsTransaction.class).createAlias("smsAccount", "smsAccount");
 
 		List<SmsTransaction> transactions = new ArrayList<SmsTransaction>();
 
@@ -116,7 +116,7 @@ public class SmsTransactionLogicImpl extends SmsDao implements
 
 			// Account number
 			if (searchBean.getAccountNumber() != null) {
-				crit.add(Restrictions.like("smsAccountId", searchBean
+				crit.add(Restrictions.like("smsAccount.id", searchBean
 						.getAccountNumber()));
 			}
 
