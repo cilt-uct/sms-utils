@@ -227,10 +227,10 @@ public class SmsCoreTest extends TestCase {
 			assertEquals(true, smsTask3.getMessagesWithSmscStatus(
 					SmsConst_SmscDeliveryStatus.ENROUTE).size() == 0);
 
-			smsCoreImpl.getSmsTaskLogic().deleteSmsTask(smsTask1);
-			smsCoreImpl.getSmsTaskLogic().deleteSmsTask(smsTask2);
-			smsCoreImpl.getSmsTaskLogic().deleteSmsTask(smsTask3);
-			smsCoreImpl.getSmsTaskLogic().deleteSmsTask(smsTask4);
+			// smsCoreImpl.getSmsTaskLogic().deleteSmsTask(smsTask1);
+			// smsCoreImpl.getSmsTaskLogic().deleteSmsTask(smsTask2);
+			// smsCoreImpl.getSmsTaskLogic().deleteSmsTask(smsTask3);
+			// smsCoreImpl.getSmsTaskLogic().deleteSmsTask(smsTask4);
 		}
 	}
 }

@@ -24,7 +24,7 @@ public class SmsDatabaseStressTest extends AbstractBaseTestCase {
 	}
 
 	/** The number of messages to insert, change as required. */
-	private static int messageCount = 50;
+	private static int messageCount = 5000;
 
 	/** The task logic. */
 	private static SmsTaskLogicImpl taskLogic = null;
@@ -89,7 +89,6 @@ public class SmsDatabaseStressTest extends AbstractBaseTestCase {
 	 * Test get task messages.
 	 */
 	public void testGetTaskMessages() {
-		// HibernateUtil.closeSession();
 		SmsTask theSmsTask = taskLogic.getSmsTask(smsTaskID);
 		firstMessageID = ((SmsMessage) theSmsTask.getSmsMessages().toArray()[0])
 				.getId();

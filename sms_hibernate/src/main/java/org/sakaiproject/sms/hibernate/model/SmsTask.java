@@ -119,6 +119,7 @@ public class SmsTask extends BaseModel {
 	 */
 	public SmsTask() {
 		setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
+		setMessageTypeId(0);// outgoing, 1=incoming
 	}
 
 	/**
@@ -137,6 +138,7 @@ public class SmsTask extends BaseModel {
 	 */
 	public SmsTask(String sakaiSiteID, String deliveryUserID,
 			String deliveryGroupID, int accountID, String messageBody) {
+		this();
 		this.sakaiSiteId = sakaiSiteID;
 		this.deliveryUserId = deliveryUserID;
 		this.deliveryGroupId = deliveryGroupID;

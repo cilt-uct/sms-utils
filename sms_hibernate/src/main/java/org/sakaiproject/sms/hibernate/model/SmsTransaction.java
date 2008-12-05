@@ -73,6 +73,7 @@ public class SmsTransaction extends BaseModel {
 		this.transactionCredits = transactionCredits;
 		this.transactionDate = transactionDate;
 		this.transactionTypeCode = transactionTypeCode;
+
 	}
 
 	/**
