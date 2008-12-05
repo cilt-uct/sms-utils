@@ -30,12 +30,12 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.sakaiproject.sms.hibernate.bean.SearchFilterBean;
-import org.sakaiproject.sms.hibernate.dao.HibernateUtil;
 import org.sakaiproject.sms.hibernate.dao.SmsDao;
 import org.sakaiproject.sms.hibernate.logic.SmsMessageLogic;
 import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsSearchException;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.util.DateUtil;
+import org.sakaiproject.sms.hibernate.util.HibernateUtil;
 
 /**
  * The data service will handle all sms Message database transactions for the

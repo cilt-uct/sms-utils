@@ -4,16 +4,15 @@ import java.sql.Timestamp;
 
 import junit.extensions.TestSetup;
 import junit.framework.Test;
-import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import org.hibernate.Session;
-import org.sakaiproject.sms.hibernate.dao.HibernateUtil;
 import org.sakaiproject.sms.hibernate.logic.impl.SmsMessageLogicImpl;
 import org.sakaiproject.sms.hibernate.logic.impl.SmsTaskLogicImpl;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
+import org.sakaiproject.sms.hibernate.util.HibernateUtil;
 
 /**
  * The Class smsHibernateStressTest. We work with many messages to see how the
@@ -22,7 +21,7 @@ import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
  * its messages, 4) read back one of the messages, 5)remove the task and its
  * messages
  */
-public class SmsDatabaseStressTest extends TestCase {
+public class SmsDatabaseStressTest extends AbstractBaseTestCase {
 
 	/**
 	 * This is used for one time setup and tear down per test case.

@@ -5,18 +5,17 @@ import java.util.List;
 
 import junit.extensions.TestSetup;
 import junit.framework.Test;
-import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import org.sakaiproject.sms.hibernate.dao.HibernateUtil;
 import org.sakaiproject.sms.hibernate.logic.impl.SmsAccountLogicImpl;
 import org.sakaiproject.sms.hibernate.model.SmsAccount;
 import org.sakaiproject.sms.hibernate.model.SmsTransaction;
+import org.sakaiproject.sms.hibernate.util.HibernateUtil;
 
 /**
  * The Class SmsAccountTest. Do some basic crud functions on the account table.
  */
-public class SmsAccountTest extends TestCase {
+public class SmsAccountTest extends AbstractBaseTestCase {
 
 	/**
 	 * This is used for one time setup and tear down per test case.

@@ -1,9 +1,7 @@
-package org.sakaiproject.sms.hibernate.dao;
+package org.sakaiproject.sms.hibernate.util;
 
 import java.io.IOException;
 import java.util.Properties;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
@@ -29,13 +27,20 @@ public class HibernateUtil {
 
 	/**
 	 * Hibernate mappings file name.
+	 * 
+	 * private static final String HIB_MAPPINGS_FILE_NAME =
+	 * "/hibernate-mappings.hbm.xml";
 	 */
-	private static final String HIB_MAPPINGS_FILE_NAME = "/hibernate-mappings.hbm.xml";
 
 	/**
 	 * Hibernate configuration file name.
 	 */
 	private static final String HIB_PROPERTIES_FILE_NAME = "/hibernate.properties";
+
+	/**
+	 * The Constant HIB_TEST_PROPERTIES_FILE_NAME.
+	 */
+	private static final String HIB_TEST_PROPERTIES_FILE_NAME = "/hibernate-test.properties";
 
 	/**
 	 * Location of hibernate.cfg.xml file.
@@ -52,10 +57,8 @@ public class HibernateUtil {
 	 */
 	private static Session session = null;
 
-	/**
-	 * URI of the local database (extracted from the JDBC connect string).
-	 */
-	private static String localDbUri = null;
+	/** The test configuration. */
+	private static boolean testConfiguration = false;
 
 	/**
 	 * Loads the given properties file from the classpath.
@@ -85,8 +88,13 @@ public class HibernateUtil {
 		// load bean mappings
 		configuration.configure(CONFIG_FILE_LOCATION);
 
-		// load hibernate properties
-		Properties properties = loadPropertiesFromClasspath(HIB_PROPERTIES_FILE_NAME);
+		// load hibernate propeties
+		Properties properties = null;
+		if (testConfiguration) {
+			properties = loadPropertiesFromClasspath(HIB_TEST_PROPERTIES_FILE_NAME);
+		} else {
+			properties = loadPropertiesFromClasspath(HIB_PROPERTIES_FILE_NAME);
+		}
 		configuration.setProperties(properties);
 
 		return configuration;
@@ -114,14 +122,16 @@ public class HibernateUtil {
 				 * localDbUri = getConnUriFromJdbcConnString(properties
 				 * .getProperty("hibernate.connection.url"));
 				 */
-				Properties properties = configuration.getProperties();
+				// Properties properties = configuration.getProperties();
 				sessionFactory = configuration.buildSessionFactory();
 
 				// extract local db uri (which is then used to attach a server
 				// to it)
 
-				localDbUri = getConnUriFromJdbcConnString(properties
-						.getProperty("hibernate.connection.url"));
+				/*
+				 * localDbUri = getConnUriFromJdbcConnString(properties
+				 * .getProperty("hibernate.connection.url"));
+				 */
 
 			} catch (IOException e) {
 				throw new HibernateException(
@@ -129,10 +139,12 @@ public class HibernateUtil {
 						e);
 			}
 		}
-
 		return sessionFactory;
 	}
 
+	/**
+	 * Creates a database schema
+	 */
 	public static void createSchema() {
 		try {
 			currentSession();
@@ -187,26 +199,13 @@ public class HibernateUtil {
 	}
 
 	/**
-	 * Extracts the connection URI from the JDBC connection string.
+	 * Sets the test configuration.
 	 * 
-	 * @param connString
-	 *            JDBC connection string
-	 * 
-	 * @return connection URI or <code>null</code> if no connection URI can be
-	 *         found in the given string
+	 * @param testConfiguration
+	 *            the new test configuration
 	 */
-	private static final String getConnUriFromJdbcConnString(String connString) {
-		String uri = null;
-
-		if (connString != null) {
-			Pattern pattern = Pattern.compile("(.+):(.+):(.+:.+)");
-			Matcher matcher = pattern.matcher(connString);
-
-			if (matcher.lookingAt()) {
-				uri = matcher.group(3);
-			}
-		}
-		return uri;
+	public static void setTestConfiguration(boolean testConfiguration) {
+		HibernateUtil.testConfiguration = testConfiguration;
 	}
 
 }

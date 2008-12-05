@@ -24,11 +24,11 @@ import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.sakaiproject.sms.hibernate.bean.SearchFilterBean;
-import org.sakaiproject.sms.hibernate.dao.HibernateUtil;
 import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsSearchException;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.hibernate.model.SmsTransaction;
+import org.sakaiproject.sms.hibernate.util.HibernateUtil;
 
 /**
  * The data service will handle all sms Message database transactions for the sms tool in

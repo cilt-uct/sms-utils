@@ -6,11 +6,9 @@ import java.util.List;
 
 import junit.extensions.TestSetup;
 import junit.framework.Test;
-import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import org.sakaiproject.sms.hibernate.bean.SearchFilterBean;
-import org.sakaiproject.sms.hibernate.dao.HibernateUtil;
 import org.sakaiproject.sms.hibernate.logic.SmsAccountLogic;
 import org.sakaiproject.sms.hibernate.logic.SmsTransactionLogic;
 import org.sakaiproject.sms.hibernate.logic.impl.SmsAccountLogicImpl;
@@ -19,8 +17,9 @@ import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsSearchException;
 import org.sakaiproject.sms.hibernate.model.SmsAccount;
 import org.sakaiproject.sms.hibernate.model.SmsTransaction;
 import org.sakaiproject.sms.hibernate.util.DateUtil;
+import org.sakaiproject.sms.hibernate.util.HibernateUtil;
 
-public class SmsTransactionTest extends TestCase {
+public class SmsTransactionTest extends AbstractBaseTestCase {
 
 	/**
 	 * This is used for one time setup and tear down per test case.

@@ -5,6 +5,7 @@ import org.hibernate.ObjectNotFoundException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.sakaiproject.sms.hibernate.model.BaseModel;
+import org.sakaiproject.sms.hibernate.util.HibernateUtil;
 
 /**
  * Implements the database transactions and convenience methods that are common

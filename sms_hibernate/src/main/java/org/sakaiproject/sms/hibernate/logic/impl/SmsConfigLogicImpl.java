@@ -23,10 +23,10 @@ import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.sakaiproject.sms.hibernate.dao.HibernateUtil;
 import org.sakaiproject.sms.hibernate.dao.SmsDao;
 import org.sakaiproject.sms.hibernate.logic.SmsConfigLogic;
 import org.sakaiproject.sms.hibernate.model.SmsConfig;
+import org.sakaiproject.sms.hibernate.util.HibernateUtil;
 
 /**
  * The data service will handle all sms config database transactions for the sms

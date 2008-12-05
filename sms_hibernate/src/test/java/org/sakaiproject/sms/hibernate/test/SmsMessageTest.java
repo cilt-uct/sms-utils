@@ -6,11 +6,9 @@ import java.util.List;
 
 import junit.extensions.TestSetup;
 import junit.framework.Test;
-import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import org.sakaiproject.sms.hibernate.bean.SearchFilterBean;
-import org.sakaiproject.sms.hibernate.dao.HibernateUtil;
 import org.sakaiproject.sms.hibernate.logic.impl.SmsMessageLogicImpl;
 import org.sakaiproject.sms.hibernate.logic.impl.SmsTaskLogicImpl;
 import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsSearchException;
@@ -18,11 +16,12 @@ import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
 import org.sakaiproject.sms.hibernate.util.DateUtil;
+import org.sakaiproject.sms.hibernate.util.HibernateUtil;
 
 /**
  * The Class SmsMessageTest.
  */
-public class SmsMessageTest extends TestCase {
+public class SmsMessageTest extends AbstractBaseTestCase {
 
 	/**
 	 * This is used for one time setup and tear down per test case.

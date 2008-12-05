@@ -4,17 +4,16 @@ import java.util.List;
 
 import junit.extensions.TestSetup;
 import junit.framework.Test;
-import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import org.sakaiproject.sms.hibernate.dao.HibernateUtil;
 import org.sakaiproject.sms.hibernate.logic.impl.SmsConfigLogicImpl;
 import org.sakaiproject.sms.hibernate.model.SmsConfig;
+import org.sakaiproject.sms.hibernate.util.HibernateUtil;
 
 /**
  * Some basic crud tests on sms tool configuration.
  */
-public class SmsConfigTest extends TestCase {
+public class SmsConfigTest extends AbstractBaseTestCase {
 
 	/**
 	 * This is used for one time setup and tear down per test case.
