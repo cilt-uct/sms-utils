@@ -18,7 +18,6 @@ public class SmsTestSuite {
 	public static Test suite() {
 		HibernateUtil.setTestConfiguration(true);
 		HibernateUtil.createSchema();
-
 		TestSuite suite = new TestSuite(
 				"Test for org.sakaiproject.sms.hibernate.test");
 		// $JUnit-BEGIN$

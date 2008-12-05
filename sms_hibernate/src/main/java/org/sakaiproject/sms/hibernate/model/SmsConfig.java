@@ -47,7 +47,7 @@ public class SmsConfig extends BaseModel {
 	private String sakaiToolId;
 
 	/** Enable or disable sms functionality for the site or tool. */
-	private Boolean smsEnabled;
+	private String smsEnabled;
 
 	/**
 	 * Instantiates a new sms configuration.
@@ -94,10 +94,12 @@ public class SmsConfig extends BaseModel {
 
 	/**
 	 * Gets the sms enabled.
+	 * <p>
+	 * NB: Used only by Hibernate
 	 * 
 	 * @return the sms enabled
 	 */
-	public Boolean getSmsEnabled() {
+	private String getSmsEnabled() {
 		return smsEnabled;
 	}
 
@@ -143,12 +145,39 @@ public class SmsConfig extends BaseModel {
 
 	/**
 	 * Sets sms enabled/disabled.
+	 * <p>
+	 * NB: Used only by Hibernate
 	 * 
 	 * @param smsEnabled
 	 *            the new sms enabled/disabled
 	 */
-	public void setSmsEnabled(Boolean smsEnabled) {
+	private void setSmsEnabled(String smsEnabled) {
 		this.smsEnabled = smsEnabled;
+	}
+
+	/**
+	 * Sets the sms enabled.
+	 * 
+	 * @param smsEnabled
+	 *            the new sms enabled
+	 */
+	public void setSendSmsEnabled(Boolean smsEnabled) {
+		this.smsEnabled = smsEnabled ? "1" : "0";
+	}
+
+	/**
+	 * Gets the sms enabled.
+	 * 
+	 * @param smsEnabled
+	 *            the sms enabled
+	 * 
+	 * @return the sms enabled
+	 */
+	public Boolean isSendSmsEnabled() {
+		if (this.smsEnabled != null) {
+			return this.smsEnabled.equals("1") ? true : false;
+		}
+		return null;
 	}
 
 	@Override

@@ -26,7 +26,7 @@ public class SmsConfigTest extends AbstractBaseTestCase {
 		insertSmsConfig.setSakaiSiteId("sakaiSiteId");
 		insertSmsConfig.setSakaiToolId("sakaiToolId");
 		insertSmsConfig.setNotificationEmail("notification@Email.Address");
-		insertSmsConfig.setSmsEnabled(false);
+		insertSmsConfig.setSendSmsEnabled(false);
 	}
 
 	/**
@@ -63,7 +63,7 @@ public class SmsConfigTest extends AbstractBaseTestCase {
 		assertNotNull(getSmsConfig);
 		assertEquals(insertSmsConfig, getSmsConfig);
 		assertTrue("Boolean property problem",
-				getSmsConfig.getSmsEnabled() == false);
+				getSmsConfig.isSendSmsEnabled() == false);
 	}
 
 	/**
@@ -93,7 +93,7 @@ public class SmsConfigTest extends AbstractBaseTestCase {
 		insertSmsConfig.setSakaiSiteId(testId);
 		insertSmsConfig.setSakaiToolId("testGetSmsConfigBySakiaSiteId");
 		insertSmsConfig.setNotificationEmail("notification@Email.Address");
-		insertSmsConfig.setSmsEnabled(false);
+		insertSmsConfig.setSendSmsEnabled(false);
 		logic.persistSmsConfig(insertSmsConfig);
 		assertTrue("Object not created correclty", insertSmsConfig.exists());
 
@@ -117,7 +117,7 @@ public class SmsConfigTest extends AbstractBaseTestCase {
 		insertSmsConfig.setSakaiSiteId("testGetSmsConfigBySakiaToolId");
 		insertSmsConfig.setSakaiToolId(testId);
 		insertSmsConfig.setNotificationEmail("notification@Email.Address");
-		insertSmsConfig.setSmsEnabled(false);
+		insertSmsConfig.setSendSmsEnabled(false);
 		logic.persistSmsConfig(insertSmsConfig);
 		assertTrue("Object not created correclty", insertSmsConfig.exists());
 

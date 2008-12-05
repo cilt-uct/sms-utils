@@ -137,11 +137,12 @@ public class SmsAccountTest extends AbstractBaseTestCase {
 	 * Test delete sms account.
 	 */
 	public void testDeleteSmsAccount() {
-		/*
-		 * logic.deleteSmsAccount(insertSmsAccount); SmsAccount getSmsAccount =
-		 * logic .getSmsAccount(insertSmsAccount.getId());
-		 * assertNull(getSmsAccount); assertNull("Object not removed",
-		 * getSmsAccount);
-		 */
+
+		logic.deleteSmsAccount(insertSmsAccount);
+		SmsAccount getSmsAccount = logic
+				.getSmsAccount(insertSmsAccount.getId());
+		assertNull(getSmsAccount);
+		assertNull("Object not removed", getSmsAccount);
+
 	}
 }
