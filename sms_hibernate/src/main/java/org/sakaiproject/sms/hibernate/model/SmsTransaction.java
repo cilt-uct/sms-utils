@@ -208,15 +208,10 @@ public class SmsTransaction extends BaseModel {
 		return transactionAmount;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = 1;
+		int result = super.hashCode();
 		result = prime * result + ((balance == null) ? 0 : balance.hashCode());
 		result = prime * result
 				+ ((sakaiUserId == null) ? 0 : sakaiUserId.hashCode());
@@ -241,7 +236,7 @@ public class SmsTransaction extends BaseModel {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
+		if (!super.equals(obj))
 			return false;
 		if (!(obj instanceof SmsTransaction))
 			return false;
@@ -278,5 +273,4 @@ public class SmsTransaction extends BaseModel {
 			return false;
 		return true;
 	}
-
 }

@@ -532,15 +532,48 @@ public class SmsTask extends BaseModel {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#hashCode()
-	 */
+	public void setStatusForMessages(String oldStatus, String newStatus) {
+		Iterator<SmsMessage> it = getSmsMessages().iterator();
+		while (it.hasNext()) {
+			SmsMessage message = it.next();
+			if (message.getStatusCode().equals(oldStatus)) {
+				message.setStatusCode(newStatus);
+			}
+		}
+	}
+
+	public Set<SmsMessage> getMessagesWithSmscStatus(int smscStatus) {
+		Set<SmsMessage> filtered = new HashSet<SmsMessage>();
+		Iterator<SmsMessage> it = getSmsMessages().iterator();
+		while (it.hasNext()) {
+			SmsMessage message = it.next();
+			if (message.getSmscDeliveryStatusCode() == smscStatus) {
+				filtered.add(message);
+			}
+		}
+		return filtered;
+
+	}
+
+	public Set<SmsMessage> getMessagesWithStatus(String status) {
+		Set<SmsMessage> filtered = new HashSet<SmsMessage>();
+		Iterator<SmsMessage> it = getSmsMessages().iterator();
+		while (it.hasNext()) {
+			SmsMessage message = it.next();
+			if (message.getStatusCode().equals(status)) {
+				filtered.add(message);
+			}
+		}
+		return filtered;
+
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = super.hashCode();
+		result = prime * result
+				+ ((attemptCount == null) ? 0 : attemptCount.hashCode());
 		result = prime * result
 				+ ((creditEstimate == null) ? 0 : creditEstimate.hashCode());
 		result = prime * result
@@ -568,8 +601,6 @@ public class SmsTask extends BaseModel {
 		result = prime * result
 				+ ((messageTypeId == null) ? 0 : messageTypeId.hashCode());
 		result = prime * result
-				+ ((attemptCount == null) ? 0 : attemptCount.hashCode());
-		result = prime * result
 				+ ((sakaiSiteId == null) ? 0 : sakaiSiteId.hashCode());
 		result = prime * result
 				+ ((sakaiToolId == null) ? 0 : sakaiToolId.hashCode());
@@ -586,11 +617,6 @@ public class SmsTask extends BaseModel {
 		return result;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -600,6 +626,11 @@ public class SmsTask extends BaseModel {
 		if (!(obj instanceof SmsTask))
 			return false;
 		SmsTask other = (SmsTask) obj;
+		if (attemptCount == null) {
+			if (other.attemptCount != null)
+				return false;
+		} else if (!attemptCount.equals(other.attemptCount))
+			return false;
 		if (creditEstimate == null) {
 			if (other.creditEstimate != null)
 				return false;
@@ -655,11 +686,6 @@ public class SmsTask extends BaseModel {
 				return false;
 		} else if (!messageTypeId.equals(other.messageTypeId))
 			return false;
-		if (attemptCount == null) {
-			if (other.attemptCount != null)
-				return false;
-		} else if (!attemptCount.equals(other.attemptCount))
-			return false;
 		if (sakaiSiteId == null) {
 			if (other.sakaiSiteId != null)
 				return false;
@@ -696,41 +722,5 @@ public class SmsTask extends BaseModel {
 		} else if (!statusCode.equals(other.statusCode))
 			return false;
 		return true;
-	}
-
-	public void setStatusForMessages(String oldStatus, String newStatus) {
-		Iterator<SmsMessage> it = getSmsMessages().iterator();
-		while (it.hasNext()) {
-			SmsMessage message = it.next();
-			if (message.getStatusCode().equals(oldStatus)) {
-				message.setStatusCode(newStatus);
-			}
-		}
-	}
-
-	public Set<SmsMessage> getMessagesWithSmscStatus(int smscStatus) {
-		Set<SmsMessage> filtered = new HashSet<SmsMessage>();
-		Iterator<SmsMessage> it = getSmsMessages().iterator();
-		while (it.hasNext()) {
-			SmsMessage message = it.next();
-			if (message.getSmscDeliveryStatusCode() == smscStatus) {
-				filtered.add(message);
-			}
-		}
-		return filtered;
-
-	}
-
-	public Set<SmsMessage> getMessagesWithStatus(String status) {
-		Set<SmsMessage> filtered = new HashSet<SmsMessage>();
-		Iterator<SmsMessage> it = getSmsMessages().iterator();
-		while (it.hasNext()) {
-			SmsMessage message = it.next();
-			if (message.getStatusCode().equals(status)) {
-				filtered.add(message);
-			}
-		}
-		return filtered;
-
 	}
 }

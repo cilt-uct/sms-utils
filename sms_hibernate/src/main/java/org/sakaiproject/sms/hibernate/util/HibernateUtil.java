@@ -81,9 +81,8 @@ public class HibernateUtil {
 	}
 
 	private static Configuration getConfiguration() throws IOException {
-		Configuration configuration;
 
-		configuration = new Configuration();
+		Configuration configuration = new Configuration();
 
 		// load bean mappings
 		configuration.configure(CONFIG_FILE_LOCATION);
@@ -114,25 +113,8 @@ public class HibernateUtil {
 		// if no session factory exists, create a new one
 		if (sessionFactory == null) {
 			try {
-
 				Configuration configuration = getConfiguration();
-				// extract local db uri (which is then used to attach a server
-				// to it)
-				/*
-				 * localDbUri = getConnUriFromJdbcConnString(properties
-				 * .getProperty("hibernate.connection.url"));
-				 */
-				// Properties properties = configuration.getProperties();
 				sessionFactory = configuration.buildSessionFactory();
-
-				// extract local db uri (which is then used to attach a server
-				// to it)
-
-				/*
-				 * localDbUri = getConnUriFromJdbcConnString(properties
-				 * .getProperty("hibernate.connection.url"));
-				 */
-
 			} catch (IOException e) {
 				throw new HibernateException(
 						"Error reading hibernate properties: " + e.getMessage(),

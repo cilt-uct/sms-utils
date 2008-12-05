@@ -67,7 +67,11 @@ public class SmsMessage extends BaseModel {
 	 */
 	private boolean submitResult;
 
+	/** The smsc delivery status code. */
 	private Integer smscDeliveryStatusCode;
+
+	/** The smsc id. */
+	private String smscId;
 
 	/**
 	 * Instantiates a new sms message.
@@ -281,11 +285,25 @@ public class SmsMessage extends BaseModel {
 		this.smscDeliveryStatusCode = smscDeliveryStatusCode;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * Gets the smsc id.
 	 * 
-	 * @see java.lang.Object#hashCode()
+	 * @return the smsc id
 	 */
+	public String getSmscId() {
+		return smscId;
+	}
+
+	/**
+	 * Sets the smsc id.
+	 * 
+	 * @param smscId
+	 *            the new smsc id
+	 */
+	public void setSmscId(String smscId) {
+		this.smscId = smscId;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -302,6 +320,7 @@ public class SmsMessage extends BaseModel {
 				* result
 				+ ((smscDeliveryStatusCode == null) ? 0
 						: smscDeliveryStatusCode.hashCode());
+		result = prime * result + ((smscId == null) ? 0 : smscId.hashCode());
 		result = prime * result
 				+ ((smscMessageId == null) ? 0 : smscMessageId.hashCode());
 		result = prime * result
@@ -310,11 +329,6 @@ public class SmsMessage extends BaseModel {
 		return result;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -348,6 +362,11 @@ public class SmsMessage extends BaseModel {
 			if (other.smscDeliveryStatusCode != null)
 				return false;
 		} else if (!smscDeliveryStatusCode.equals(other.smscDeliveryStatusCode))
+			return false;
+		if (smscId == null) {
+			if (other.smscId != null)
+				return false;
+		} else if (!smscId.equals(other.smscId))
 			return false;
 		if (smscMessageId == null) {
 			if (other.smscMessageId != null)

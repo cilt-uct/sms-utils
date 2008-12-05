@@ -185,11 +185,6 @@ public class SmsAccount extends BaseModel {
 		this.smsTransactions = smsTransactions;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#hashCode()
-	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -203,14 +198,11 @@ public class SmsAccount extends BaseModel {
 				+ ((sakaiSiteId == null) ? 0 : sakaiSiteId.hashCode());
 		result = prime * result
 				+ ((sakaiUserId == null) ? 0 : sakaiUserId.hashCode());
+		result = prime * result
+				+ ((smsTransactions == null) ? 0 : smsTransactions.hashCode());
 		return result;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -245,7 +237,11 @@ public class SmsAccount extends BaseModel {
 				return false;
 		} else if (!sakaiUserId.equals(other.sakaiUserId))
 			return false;
+		if (smsTransactions == null) {
+			if (other.smsTransactions != null)
+				return false;
+		} else if (!smsTransactions.equals(other.smsTransactions))
+			return false;
 		return true;
 	}
-
 }
