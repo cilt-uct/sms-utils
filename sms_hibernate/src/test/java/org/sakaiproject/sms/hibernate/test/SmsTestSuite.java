@@ -16,7 +16,7 @@ public class SmsTestSuite {
 	 * @return the test
 	 */
 	public static Test suite() {
-
+		HibernateUtil.setTestConfiguration(true);
 		HibernateUtil.createSchema();
 
 		TestSuite suite = new TestSuite(
