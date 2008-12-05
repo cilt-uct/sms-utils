@@ -3,10 +3,6 @@ package org.sakaiproject.sms.hibernate.test;
 import java.sql.Timestamp;
 import java.util.List;
 
-import junit.extensions.TestSetup;
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.sakaiproject.sms.hibernate.logic.impl.SmsAccountLogicImpl;
 import org.sakaiproject.sms.hibernate.model.SmsAccount;
 import org.sakaiproject.sms.hibernate.model.SmsTransaction;
@@ -16,26 +12,6 @@ import org.sakaiproject.sms.hibernate.util.HibernateUtil;
  * The Class SmsAccountTest. Do some basic crud functions on the account table.
  */
 public class SmsAccountTest extends AbstractBaseTestCase {
-
-	/**
-	 * This is used for one time setup and tear down per test case.
-	 * 
-	 * @return the test
-	 */
-	public static Test suite() {
-
-		TestSetup setup = new TestSetup(new TestSuite(SmsAccountTest.class)) {
-
-			protected void setUp() throws Exception {
-				HibernateUtil.createSchema();
-			}
-
-			protected void tearDown() throws Exception {
-
-			}
-		};
-		return setup;
-	}
 
 	/** The logic. */
 	private static SmsAccountLogicImpl logic = null;
@@ -50,6 +26,9 @@ public class SmsAccountTest extends AbstractBaseTestCase {
 	private static SmsTransaction insertSmsTransaction2;
 
 	static {
+
+		HibernateUtil.createSchema();
+
 		logic = new SmsAccountLogicImpl();
 		insertSmsAccount = new SmsAccount();
 		insertSmsAccount.setSakaiUserId("SakaiUSerId");

@@ -2,10 +2,6 @@ package org.sakaiproject.sms.hibernate.test;
 
 import java.sql.Timestamp;
 
-import junit.extensions.TestSetup;
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.hibernate.Session;
 import org.sakaiproject.sms.hibernate.logic.impl.SmsMessageLogicImpl;
 import org.sakaiproject.sms.hibernate.logic.impl.SmsTaskLogicImpl;
@@ -23,25 +19,8 @@ import org.sakaiproject.sms.hibernate.util.HibernateUtil;
  */
 public class SmsDatabaseStressTest extends AbstractBaseTestCase {
 
-	/**
-	 * This is used for one time setup and tear down per test case.
-	 * 
-	 * @return the test
-	 */
-	public static Test suite() {
-
-		TestSetup setup = new TestSetup(new TestSuite(
-				SmsDatabaseStressTest.class)) {
-
-			protected void setUp() throws Exception {
-				HibernateUtil.createSchema();
-			}
-
-			protected void tearDown() throws Exception {
-
-			}
-		};
-		return setup;
+	static {
+		HibernateUtil.createSchema();
 	}
 
 	/** The number of messages to insert, change as required. */

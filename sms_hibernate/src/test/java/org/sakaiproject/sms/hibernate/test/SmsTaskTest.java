@@ -6,10 +6,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import junit.extensions.TestSetup;
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.sakaiproject.sms.hibernate.bean.SearchFilterBean;
 import org.sakaiproject.sms.hibernate.logic.impl.SmsMessageLogicImpl;
 import org.sakaiproject.sms.hibernate.logic.impl.SmsTaskLogicImpl;
@@ -24,26 +20,6 @@ import org.sakaiproject.sms.hibernate.util.HibernateUtil;
  * The Class SmsTaskTest.
  */
 public class SmsTaskTest extends AbstractBaseTestCase {
-
-	/**
-	 * This is used for one time setup and tear down per test case.
-	 * 
-	 * @return the test
-	 */
-	public static Test suite() {
-
-		TestSetup setup = new TestSetup(new TestSuite(SmsTaskTest.class)) {
-
-			protected void setUp() throws Exception {
-				HibernateUtil.createSchema();
-			}
-
-			protected void tearDown() throws Exception {
-
-			}
-		};
-		return setup;
-	}
 
 	/** The logic. */
 	private static SmsTaskLogicImpl logic = null;
@@ -61,6 +37,9 @@ public class SmsTaskTest extends AbstractBaseTestCase {
 	private static SmsMessageLogicImpl messageLogic = null;
 
 	static {
+
+		HibernateUtil.createSchema();
+
 		messageLogic = new SmsMessageLogicImpl();
 		logic = new SmsTaskLogicImpl();
 

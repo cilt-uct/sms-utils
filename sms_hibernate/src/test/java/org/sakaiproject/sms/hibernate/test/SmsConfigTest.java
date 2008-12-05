@@ -2,10 +2,6 @@ package org.sakaiproject.sms.hibernate.test;
 
 import java.util.List;
 
-import junit.extensions.TestSetup;
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 import org.sakaiproject.sms.hibernate.logic.impl.SmsConfigLogicImpl;
 import org.sakaiproject.sms.hibernate.model.SmsConfig;
 import org.sakaiproject.sms.hibernate.util.HibernateUtil;
@@ -15,26 +11,6 @@ import org.sakaiproject.sms.hibernate.util.HibernateUtil;
  */
 public class SmsConfigTest extends AbstractBaseTestCase {
 
-	/**
-	 * This is used for one time setup and tear down per test case.
-	 * 
-	 * @return the test
-	 */
-	public static Test suite() {
-
-		TestSetup setup = new TestSetup(new TestSuite(SmsConfigTest.class)) {
-
-			protected void setUp() throws Exception {
-				HibernateUtil.createSchema();
-			}
-
-			protected void tearDown() throws Exception {
-
-			}
-		};
-		return setup;
-	}
-
 	/** The logic. */
 	private static SmsConfigLogicImpl logic = null;
 
@@ -42,6 +18,8 @@ public class SmsConfigTest extends AbstractBaseTestCase {
 	private static SmsConfig insertSmsConfig;
 
 	static {
+		HibernateUtil.createSchema();
+
 		logic = new SmsConfigLogicImpl();
 
 		insertSmsConfig = new SmsConfig();
