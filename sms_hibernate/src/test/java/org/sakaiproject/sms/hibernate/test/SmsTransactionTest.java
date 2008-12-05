@@ -59,7 +59,6 @@ public class SmsTransactionTest extends AbstractBaseTestCase {
 		insertSmsAccount.setMessageTypeCode("12345");
 		insertSmsAccount.setOverdraftLimit(10000.00f);
 		insertSmsAccount.setBalance(5000.00f);
-		accountLogic.persistSmsAccount(insertSmsAccount);
 
 		insertSmsTransaction = new SmsTransaction();
 		insertSmsTransaction.setBalance(1.32f);
@@ -81,6 +80,7 @@ public class SmsTransactionTest extends AbstractBaseTestCase {
 	}
 
 	public void testInsertSmsTransaction() {
+		accountLogic.persistSmsAccount(insertSmsAccount);
 		logic.persistSmsTransaction(insertSmsTransaction);
 		// Check the record was created on the DB... an id will be assigned.
 		assertTrue("Object not persisted", insertSmsTransaction.exists());
