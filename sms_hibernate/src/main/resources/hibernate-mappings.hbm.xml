@@ -51,9 +51,7 @@
         <property name="dateDelivered" type="timestamp" column="DATE_DELIVERED" not-null="false"/>
         <many-to-one name="smsTask" class="org.sakaiproject.sms.hibernate.model.SmsTask" column="SMS_TASK_ID" not-null="true"/>
     </class>
-    
-    
-    
+ 
     
     <class name="org.sakaiproject.sms.hibernate.model.SmsAccount" table="SMS_ACCOUNT">
         <id name="id" type="long" column="ACCOUNT_ID">
