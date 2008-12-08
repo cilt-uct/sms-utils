@@ -98,7 +98,8 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 	 *            message id
 	 * @return sms message
 	 */
-	public SmsMessage getSmsMessageBySmscMessageId(String smscMessageId) {
+	public synchronized SmsMessage getSmsMessageBySmscMessageId(
+			String smscMessageId) {
 		Session s = HibernateUtil.currentSession();
 		Query query = s
 				.createQuery("from SmsMessage mes where mes.smscMessageId = :smscId ");

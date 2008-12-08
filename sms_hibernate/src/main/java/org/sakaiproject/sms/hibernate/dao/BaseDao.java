@@ -28,7 +28,8 @@ abstract public class BaseDao {
 	 *                if any error occurs while saving or updating data in the
 	 *                database
 	 */
-	protected void persist(BaseModel object) throws HibernateException {
+	protected synchronized void persist(BaseModel object)
+			throws HibernateException {
 		Session session = HibernateUtil.currentSession();
 		Transaction tx = session.beginTransaction();
 		try {
@@ -38,7 +39,7 @@ abstract public class BaseDao {
 			tx.rollback();
 			throw e;
 		} finally {
-			HibernateUtil.closeSession();
+			// HibernateUtil.closeSession();
 		}
 	}
 
