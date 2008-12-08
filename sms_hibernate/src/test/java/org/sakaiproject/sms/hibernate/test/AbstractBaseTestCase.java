@@ -1,5 +1,5 @@
 /***********************************************************************************
- * TestCase.java - created by Sakai App Builder -AZ
+ * AbstractBaseTestCase.java - created by Sakai App Builder -AZ
  * Copyright (c) 2008 Sakai Project/Sakai Foundation
  * 
  * Licensed under the Educational Community License, Version 2.0 (the "License"); 

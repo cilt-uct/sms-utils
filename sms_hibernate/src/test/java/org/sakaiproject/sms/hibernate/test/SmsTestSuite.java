@@ -20,7 +20,7 @@ public class SmsTestSuite {
 		HibernateUtil.createSchema();
 		TestSuite suite = new TestSuite(
 				"Test for org.sakaiproject.sms.hibernate.test");
-		// $JUnit-BEGIN$
+
 		suite.addTestSuite(SmsTransactionTest.class);
 		suite.addTestSuite(SmsTaskTest.class);
 		suite.addTestSuite(SmsConfigTest.class);
@@ -28,7 +28,6 @@ public class SmsTestSuite {
 		suite.addTestSuite(SmsAccountTest.class);
 		suite.addTestSuite(SmsDatabaseStressTest.class);
 
-		// $JUnit-END$
 		return suite;
 	}
 

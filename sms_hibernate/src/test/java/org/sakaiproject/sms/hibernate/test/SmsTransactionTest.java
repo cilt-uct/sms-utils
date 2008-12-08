@@ -15,14 +15,21 @@ import org.sakaiproject.sms.hibernate.model.SmsTransaction;
 import org.sakaiproject.sms.hibernate.util.DateUtil;
 import org.sakaiproject.sms.hibernate.util.HibernateUtil;
 
+/**
+ * The Class SmsTransactionTest.
+ */
 public class SmsTransactionTest extends AbstractBaseTestCase {
 
+	/** The logic. */
 	private static SmsTransactionLogic logic = null;
 
+	/** The account logic. */
 	private static SmsAccountLogic accountLogic;
 
+	/** The insert sms transaction. */
 	private static SmsTransaction insertSmsTransaction;
 
+	/** The insert sms account. */
 	private static SmsAccount insertSmsAccount;
 
 	static {
@@ -50,13 +57,25 @@ public class SmsTransactionTest extends AbstractBaseTestCase {
 		insertSmsTransaction.setSmsAccount(insertSmsAccount);
 	}
 
+	/**
+	 * Instantiates a new sms transaction test.
+	 */
 	public SmsTransactionTest() {
 	}
 
+	/**
+	 * Instantiates a new sms transaction test.
+	 * 
+	 * @param name
+	 *            the name
+	 */
 	public SmsTransactionTest(String name) {
 		super(name);
 	}
 
+	/**
+	 * Test insert sms transaction.
+	 */
 	public void testInsertSmsTransaction() {
 		accountLogic.persistSmsAccount(insertSmsAccount);
 		logic.persistSmsTransaction(insertSmsTransaction);
@@ -64,6 +83,9 @@ public class SmsTransactionTest extends AbstractBaseTestCase {
 		assertTrue("Object not persisted", insertSmsTransaction.exists());
 	}
 
+	/**
+	 * Test get sms transaction by id.
+	 */
 	public void testGetSmsTransactionById() {
 		SmsTransaction getSmsTransaction = logic
 				.getSmsTransaction(insertSmsTransaction.getId());
@@ -72,6 +94,9 @@ public class SmsTransactionTest extends AbstractBaseTestCase {
 		assertEquals(insertSmsTransaction, getSmsTransaction);
 	}
 
+	/**
+	 * Test update sms transaction.
+	 */
 	public void testUpdateSmsTransaction() {
 		SmsTransaction smsTransaction = logic
 				.getSmsTransaction(insertSmsTransaction.getId());
@@ -81,6 +106,9 @@ public class SmsTransactionTest extends AbstractBaseTestCase {
 		assertEquals("newSakaiUserId", smsTransaction.getSakaiUserId());
 	}
 
+	/**
+	 * Test get sms transactions.
+	 */
 	public void testGetSmsTransactions() {
 		List<SmsTransaction> transactions = logic.getAllSmsTransactions();
 		assertNotNull("Returnend collection is null", transactions);
@@ -140,6 +168,9 @@ public class SmsTransactionTest extends AbstractBaseTestCase {
 		}
 	}
 
+	/**
+	 * Test delete sms transaction.
+	 */
 	public void testDeleteSmsTransaction() {
 		insertSmsTransaction.setSmsAccount(null);
 		logic.deleteSmsTransaction(insertSmsTransaction);

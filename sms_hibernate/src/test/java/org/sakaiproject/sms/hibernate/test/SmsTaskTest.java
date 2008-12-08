@@ -52,13 +52,13 @@ public class SmsTaskTest extends AbstractBaseTestCase {
 		insertTask.setAttemptCount(2);
 		insertTask.setMessageBody("messageBody");
 		insertTask.setSenderUserName("senderUserName");
-		//
+
 		insertMessage1 = new SmsMessage();
 		insertMessage1.setMobileNumber("0721998919");
 		insertMessage1.setSmscMessageId("smscMessageId1Task");
 		insertMessage1.setSakaiUserId("sakaiUserId");
 		insertMessage1.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
-		//
+
 		insertMessage2 = new SmsMessage();
 		insertMessage2.setMobileNumber("0823450983");
 		insertMessage2.setSmscMessageId("smscMessageId2Task");
@@ -112,8 +112,30 @@ public class SmsTaskTest extends AbstractBaseTestCase {
 		assertEquals("newSakaiSiteId", smsTask.getSakaiSiteId());
 	}
 
+	/**
+	 * Test add sms messages to task_set messages.
+	 */
 	public void testAddSmsMessagesToTask_setMessages() {
-		Set<SmsMessage> messages = getSmsMessages(insertTask);
+
+		SmsMessage insertMessage1 = new SmsMessage();
+		insertMessage1.setMobileNumber("0721998919");
+		insertMessage1.setSmscMessageId("smscGetID1");
+		insertMessage1.setSakaiUserId("sakaiUserId");
+		insertMessage1.setStatusCode(SmsConst_DeliveryStatus.STATUS_DELIVERED);
+		//
+		SmsMessage insertMessage2 = new SmsMessage();
+		insertMessage2.setMobileNumber("0823450983");
+		insertMessage2.setSmscMessageId("smscGetID2");
+		insertMessage2.setSakaiUserId("sakaiUserId");
+		insertMessage2.setStatusCode(SmsConst_DeliveryStatus.STATUS_DELIVERED);
+
+		insertMessage1.setSmsTask(insertTask);
+		insertMessage2.setSmsTask(insertTask);
+
+		Set<SmsMessage> messages = new HashSet<SmsMessage>();
+		messages.add(insertMessage1);
+		messages.add(insertMessage2);
+
 		insertTask.setSmsMessagesOnTask(messages);
 		logic.persistSmsTask(insertTask);
 	}
@@ -139,11 +161,6 @@ public class SmsTaskTest extends AbstractBaseTestCase {
 	 * Test remove sms messages from task.
 	 */
 	public void testRemoveSmsMessagesFromTask() {
-		/*
-		 * SmsTask getSmsTask = logic.getSmsTask(insertTask.getId());
-		 * assertTrue("Collection size not correct", getSmsTask.getSmsMessages()
-		 * .size() == 4);
-		 */
 		insertTask.setSakaiSiteId("oldSakaiSiteId");
 		insertTask.getSmsMessages().remove(insertMessage1);
 		logic.persistSmsTask(insertTask);
@@ -239,31 +256,4 @@ public class SmsTaskTest extends AbstractBaseTestCase {
 		SmsTask getSmsTask = logic.getSmsTask(insertTask.getId());
 		assertNull("Object not removed", getSmsTask);
 	}
-
-	// ///////////////////////////////////////////////////////////////////////////////////
-	// Helper methods
-	// ///////////////////////////////////////////////////////////////////////////////////
-
-	private Set<SmsMessage> getSmsMessages(SmsTask task) {
-		SmsMessage insertMessage1 = new SmsMessage();
-		insertMessage1.setMobileNumber("0721998919");
-		insertMessage1.setSmscMessageId("smscGetID1");
-		insertMessage1.setSakaiUserId("sakaiUserId");
-		insertMessage1.setStatusCode(SmsConst_DeliveryStatus.STATUS_DELIVERED);
-		//
-		SmsMessage insertMessage2 = new SmsMessage();
-		insertMessage2.setMobileNumber("0823450983");
-		insertMessage2.setSmscMessageId("smscGetID2");
-		insertMessage2.setSakaiUserId("sakaiUserId");
-		insertMessage2.setStatusCode(SmsConst_DeliveryStatus.STATUS_DELIVERED);
-
-		insertMessage1.setSmsTask(task);
-		insertMessage2.setSmsTask(task);
-
-		Set<SmsMessage> messages = new HashSet<SmsMessage>();
-		messages.add(insertMessage1);
-		messages.add(insertMessage2);
-		return messages;
-	}
-
 }

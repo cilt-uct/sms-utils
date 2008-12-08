@@ -109,6 +109,9 @@ public class SmsDatabaseStressTest extends AbstractBaseTestCase {
 		assertNotNull(theMessage);
 	}
 
+	/**
+	 * Test delete tasks.
+	 */
 	public void testDeleteTasks() {
 		HibernateUtil.clearSession();
 		taskLogic.deleteSmsTask(smsTask);

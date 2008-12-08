@@ -86,6 +86,9 @@ public class SmsConfigTest extends AbstractBaseTestCase {
 		assertTrue("No records returned", confs.size() > 0);
 	}
 
+	/**
+	 * Test get sms config by sakia site id.
+	 */
 	public void testGetSmsConfigBySakiaSiteId() {
 		String testId = "testGetSmsConfigBySakiaSiteId";
 
@@ -110,6 +113,9 @@ public class SmsConfigTest extends AbstractBaseTestCase {
 		}
 	}
 
+	/**
+	 * Test get sms config by sakia tool id.
+	 */
 	public void testGetSmsConfigBySakiaToolId() {
 		String testId = "testGetSmsConfigBySakiaToolId";
 
@@ -138,12 +144,10 @@ public class SmsConfigTest extends AbstractBaseTestCase {
 	 * Test delete sms config.
 	 */
 	public void testDeleteSmsConfig() {
-		/*
-		 * logic.deleteSmsCongif(insertSmsConfig); SmsConfig getSmsConfig =
-		 * logic.getSmsConfig(insertSmsConfig.getId());
-		 * assertNull(getSmsConfig); assertNull("Object not removed",
-		 * getSmsConfig);
-		 */
+		logic.deleteSmsCongif(insertSmsConfig);
+		SmsConfig getSmsConfig = logic.getSmsConfig(insertSmsConfig.getId());
+		assertNull(getSmsConfig);
+		assertNull("Object not removed", getSmsConfig);
 	}
 
 }
