@@ -95,6 +95,16 @@ abstract public class BaseDao {
 	 * e) { tx.rollback(); throw e; }finally { HibernateUtil.closeSession(); } }
 	 */
 
+	/**
+	 * Find by id.
+	 * 
+	 * @param className
+	 *            the class name
+	 * @param id
+	 *            the id
+	 * 
+	 * @return the object
+	 */
 	protected Object findById(Class className, Long id) {
 		Object obj = null;
 		try {

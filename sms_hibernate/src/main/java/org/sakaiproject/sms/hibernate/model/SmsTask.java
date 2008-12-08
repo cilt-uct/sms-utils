@@ -534,6 +534,14 @@ public class SmsTask extends BaseModel {
 		}
 	}
 
+	/**
+	 * Sets the status for messages.
+	 * 
+	 * @param oldStatus
+	 *            the old status
+	 * @param newStatus
+	 *            the new status
+	 */
 	public void setStatusForMessages(String oldStatus, String newStatus) {
 		Iterator<SmsMessage> it = getSmsMessages().iterator();
 		while (it.hasNext()) {
@@ -544,6 +552,14 @@ public class SmsTask extends BaseModel {
 		}
 	}
 
+	/**
+	 * Gets the messages with smsc status.
+	 * 
+	 * @param smscStatus
+	 *            the smsc status
+	 * 
+	 * @return the messages with smsc status
+	 */
 	public Set<SmsMessage> getMessagesWithSmscStatus(int smscStatus) {
 		Set<SmsMessage> filtered = new HashSet<SmsMessage>();
 		Iterator<SmsMessage> it = getSmsMessages().iterator();
@@ -557,6 +573,14 @@ public class SmsTask extends BaseModel {
 
 	}
 
+	/**
+	 * Gets the messages with status.
+	 * 
+	 * @param status
+	 *            the status
+	 * 
+	 * @return the messages with status
+	 */
 	public Set<SmsMessage> getMessagesWithStatus(String status) {
 		Set<SmsMessage> filtered = new HashSet<SmsMessage>();
 		Iterator<SmsMessage> it = getSmsMessages().iterator();

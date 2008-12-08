@@ -18,8 +18,8 @@
 package org.sakaiproject.sms.hibernate.logic.impl.exception;
 
 /**
- * General search exception that will be thrown when hibernate search
- * criteria objects with invalid values of some sort.
+ * General search exception that will be thrown when hibernate search criteria
+ * objects with invalid values of some sort.
  * 
  * @author julian@psybergate.com
  * @version 1.0
@@ -27,15 +27,31 @@ package org.sakaiproject.sms.hibernate.logic.impl.exception;
  */
 public class SmsSearchException extends Exception {
 
+	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Instantiates a new sms search exception.
+	 */
 	public SmsSearchException() {
 	}
-	
+
+	/**
+	 * Instantiates a new sms search exception.
+	 * 
+	 * @param msg
+	 *            the msg
+	 */
 	public SmsSearchException(String msg) {
 		super(msg);
 	}
-	
+
+	/**
+	 * Instantiates a new sms search exception.
+	 * 
+	 * @param e
+	 *            the e
+	 */
 	public SmsSearchException(Exception e) {
 		super(e);
 	}
