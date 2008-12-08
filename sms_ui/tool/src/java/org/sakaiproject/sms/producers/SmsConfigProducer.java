@@ -61,7 +61,7 @@ public class SmsConfigProducer implements ViewComponentProducer, NavigationCaseR
 				
 		UISelect combo = UISelect.make(smsConfigform, "sms-config-enabled");
 		combo.selection = new UIInput();
-		combo.selection.valuebinding = new ELReference(smsConfigOTP + ".smsEnabled");
+		combo.selection.valuebinding = new ELReference(smsConfigOTP + ".sendSmsEnabled");
 		UIBoundList comboValues = new UIBoundList();
 		comboValues.setValue(new String[] {"true", "false"});
 		combo.optionlist = comboValues;
