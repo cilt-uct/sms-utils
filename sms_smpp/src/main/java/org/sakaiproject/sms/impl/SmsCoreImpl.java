@@ -20,19 +20,15 @@ package org.sakaiproject.sms.impl;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 
+import org.apache.log4j.Level;
 import org.sakaiproject.sms.api.SmsCore;
 import org.sakaiproject.sms.api.SmsSmpp;
-import org.sakaiproject.sms.hibernate.logic.SmsMessageLogic;
 import org.sakaiproject.sms.hibernate.logic.SmsTaskLogic;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
-import org.sakaiproject.sms.hibernate.model.constants.SmsConst_SmscDeliveryStatus;
-import org.sakaiproject.sms.model.SmsDeliveryReport;
 
 public class SmsCoreImpl implements SmsCore {
 
@@ -40,17 +36,12 @@ public class SmsCoreImpl implements SmsCore {
 
 	public static final int RESCHEDULE_TIMEOUT = 15;
 
-	SmsSmpp smsSmpp = null;
-	SmsTaskLogic smsTaskLogic = null;
-	SmsMessageLogic smsMessageLogic = null;
+	private final static org.apache.log4j.Logger LOG = org.apache.log4j.Logger
+			.getLogger(SmsCoreImpl.class);
 
-	public SmsMessageLogic getSmsMessageLogic() {
-		return smsMessageLogic;
-	}
+	public SmsSmpp smsSmpp = null;
 
-	public void setSmsMessageLogic(SmsMessageLogic smsMessageLogic) {
-		this.smsMessageLogic = smsMessageLogic;
-	}
+	public SmsTaskLogic smsTaskLogic = null;
 
 	public void setSmsSmpp(SmsSmpp smsSmpp) {
 		this.smsSmpp = smsSmpp;
@@ -177,6 +168,8 @@ public class SmsCoreImpl implements SmsCore {
 				smsTask.setSmsMessagesOnTask(getDeliveryGroup(smsTask
 						.getSakaiSiteId(), smsTask.getDeliveryGroupId(),
 						smsTask));
+				LOG.info("Total messages on task:="
+						+ smsTask.getSmsMessages().size());
 				smsTaskLogic.persistSmsTask(smsTask);
 			}
 			String submissionStatus = smsSmpp
@@ -202,26 +195,16 @@ public class SmsCoreImpl implements SmsCore {
 		smsTaskLogic.persistSmsTask(smsTask);
 	}
 
-	public boolean processDeliveryReports() {
-		List<SmsDeliveryReport> deliveryReports = this.smsSmpp
-				.getDeliveryNotifications();
-		Iterator<SmsDeliveryReport> it = deliveryReports.iterator();
-		while (it.hasNext()) {
-			SmsDeliveryReport smsDeliveryReport = it.next();
-			SmsMessage smsMessage = smsMessageLogic
-					.getSmsMessageBySmscMessageId(smsDeliveryReport.getSmscID());
-			if (smsMessage != null) {
-				smsMessage.setSmscDeliveryStatusCode(smsDeliveryReport
-						.getDeliveryStatus());
-				if (smsDeliveryReport.getDeliveryStatus() != SmsConst_SmscDeliveryStatus.DELIVERED) {
-					smsMessage
-							.setStatusCode(SmsConst_DeliveryStatus.STATUS_FAIL);
-				}
-				smsMessageLogic.persistSmsMessage(smsMessage);
-			}
+	/**
+	 * Enables or disables the debug Information
+	 * 
+	 * @param debug
+	 */
+	public void enableDebugInformation(boolean debug) {
+		if (debug) {
+			LOG.setLevel(Level.ALL);
+		} else {
+			LOG.setLevel(Level.OFF);
 		}
-		deliveryReports.clear();
-		return false;
 	}
-
 }

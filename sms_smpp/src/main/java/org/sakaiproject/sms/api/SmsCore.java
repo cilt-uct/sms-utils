@@ -22,7 +22,6 @@ import java.util.Set;
 
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
-import org.sakaiproject.sms.model.SmsDeliveryReport;
 
 /**
  * The SMS service will handle all logic regarding the queueing, sending and
@@ -44,13 +43,6 @@ public interface SmsCore {
 	 */
 	public Set getDeliveryGroup(String sakaiSiteID, String sakaiGroupID,
 			SmsTask smsTask);
-
-	/**
-	 * Get all buffered gateway delivery reports from SMPP service. And update
-	 * status in SMS_MESSAGE table according to delivery codes.
-	 * 
-	 */
-	public boolean processDeliveryReports();
 
 	/**
 	 * Find the next sms task to process from the task queue. Determine tasks

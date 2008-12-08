@@ -50,11 +50,18 @@ public class SmsStatusBridge {
 	}
 
 	public static int getSmsDeliveryStatus(
-			DeliveryReceiptState deliveryReceiptState) {
-		if (!isSmsDeliveryStatusPopulated) {
-			setupHashMap();
-		}
-		return smsDeliveryStatus.get(deliveryReceiptState);
-	}
 
+	DeliveryReceiptState deliveryReceiptState) {
+		int la = 0;
+		try {
+			if (!isSmsDeliveryStatusPopulated) {
+				setupHashMap();
+			}
+			la = smsDeliveryStatus.get(deliveryReceiptState);
+		} catch (Exception e) {
+			System.out.println("aalalalalalalallalal");
+		}
+
+		return la;
+	}
 }

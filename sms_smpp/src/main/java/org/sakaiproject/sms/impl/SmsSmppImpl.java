@@ -21,10 +21,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
@@ -59,10 +58,11 @@ import org.jsmpp.util.AbsoluteTimeFormatter;
 import org.jsmpp.util.InvalidDeliveryReceiptException;
 import org.jsmpp.util.TimeFormatter;
 import org.sakaiproject.sms.api.SmsSmpp;
+import org.sakaiproject.sms.hibernate.logic.SmsMessageLogic;
+import org.sakaiproject.sms.hibernate.logic.SmsTaskLogic;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_SmscDeliveryStatus;
-import org.sakaiproject.sms.model.SmsDeliveryReport;
 import org.sakaiproject.sms.model.SmsStatusBridge;
 
 public class SmsSmppImpl implements SmsSmpp {
@@ -79,7 +79,6 @@ public class SmsSmppImpl implements SmsSmpp {
 	private BindThread bindTest;
 	private int bindThreadTimer;
 	private byte dataCoding;
-	private ArrayList<SmsDeliveryReport> deliveryReports = new ArrayList<SmsDeliveryReport>();
 	private byte destAddressNPI;
 	private byte destAddressTON;
 	private boolean disconnectGateWayCalled;
@@ -101,6 +100,24 @@ public class SmsSmppImpl implements SmsSmpp {
 	private String systemType;
 	private String userName;
 	private String addressRange;
+	public SmsMessageLogic smsMessageLogic = null;
+	public SmsTaskLogic smsTaskLogic = null;
+
+	public void setSmsTaskLogic(SmsTaskLogic smsTaskLogic) {
+		this.smsTaskLogic = smsTaskLogic;
+	}
+
+	public SmsTaskLogic getSmsTaskLogic() {
+		return smsTaskLogic;
+	}
+
+	public SmsMessageLogic getSmsMessageLogic() {
+		return smsMessageLogic;
+	}
+
+	public void setSmsMessageLogic(SmsMessageLogic smsMessageLogic) {
+		this.smsMessageLogic = smsMessageLogic;
+	}
 
 	private class BindThread implements Runnable {
 
@@ -157,19 +174,44 @@ public class SmsSmppImpl implements SmsSmpp {
 					.getEsmClass())) {
 				// this message is delivery receipt
 				try {
-					DeliveryReceipt delReceipt = deliverSm
+
+					DeliveryReceipt deliveryReceipt = deliverSm
 							.getShortMessageAsDeliveryReceipt();
 					LOG.info("Receiving delivery receipt for message '"
-							+ delReceipt.getId() + " ' from "
+							+ deliveryReceipt.getId() + " ' from "
 							+ deliverSm.getSourceAddr() + " to "
-							+ deliverSm.getDestAddress() + " : " + delReceipt);
-					SmsDeliveryReport receivedDeliveryReport = new SmsDeliveryReport();
-					receivedDeliveryReport.setSmscID(delReceipt.getId());
-					receivedDeliveryReport
-							.setDeliveryStatus(SmsStatusBridge
-									.getSmsDeliveryStatus((delReceipt
-											.getFinalStatus())));
-					deliveryReports.add(receivedDeliveryReport);
+							+ deliverSm.getDestAddress() + " : "
+							+ deliveryReceipt);
+					SmsMessage smsMessage = smsMessageLogic
+							.getSmsMessageBySmscMessageId(deliveryReceipt
+									.getId());
+					if (smsMessage == null) {
+						try {
+							Thread.sleep(2000);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+						smsMessage = smsMessageLogic
+								.getSmsMessageBySmscMessageId(deliveryReceipt
+										.getId());
+					}
+					if (smsMessage != null) {
+						smsMessage.setSmscDeliveryStatusCode(SmsStatusBridge
+								.getSmsDeliveryStatus((deliveryReceipt
+										.getFinalStatus())));
+						smsMessage.setDateDelivered(new Timestamp(
+								deliveryReceipt.getSubmitDate().getTime()));
+						if (SmsStatusBridge
+								.getSmsDeliveryStatus((deliveryReceipt
+										.getFinalStatus())) != SmsConst_SmscDeliveryStatus.DELIVERED) {
+							smsMessage
+									.setStatusCode(SmsConst_DeliveryStatus.STATUS_FAIL);
+						}
+
+						smsMessageLogic.persistSmsMessage(smsMessage);
+
+					}
+
 				} catch (InvalidDeliveryReceiptException e) {
 					LOG.error("Failed getting delivery receipt" + e);
 
@@ -291,14 +333,6 @@ public class SmsSmppImpl implements SmsSmpp {
 		}
 
 		return gatewayBound;
-	}
-
-	/**
-	 * Return the buffered list of notifications and clear the buffer.
-	 */
-	public List<SmsDeliveryReport> getDeliveryNotifications() {
-		return deliveryReports;
-
 	}
 
 	/**
@@ -506,7 +540,6 @@ public class SmsSmppImpl implements SmsSmpp {
 								true, MessageClass.CLASS1,
 								Alphabet.ALPHA_DEFAULT), smDefaultMsgId,
 						message.getMessageBody().getBytes());
-
 				message.setSmscMessageId(messageId);
 				message.setDebugInfo("Message submitted, message_id is "
 						+ messageId);
@@ -515,6 +548,7 @@ public class SmsSmppImpl implements SmsSmpp {
 				message
 						.setSmscDeliveryStatusCode(SmsConst_SmscDeliveryStatus.ENROUTE);
 
+				smsMessageLogic.persistSmsMessage(message);
 				LOG.info("Message submitted, message_id is " + messageId);
 			} catch (PDUException e) {
 				// Invalid PDU parameter
@@ -548,6 +582,7 @@ public class SmsSmppImpl implements SmsSmpp {
 
 			}
 		} else {
+			LOG.error("Sms Gateway is not bound sending failed");
 			message.setDebugInfo("Sms Gateway is not bound");
 			message.setStatusCode(SmsConst_DeliveryStatus.STATUS_ERROR);
 		}
