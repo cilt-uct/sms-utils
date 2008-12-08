@@ -123,7 +123,7 @@ public class SmsMessageTest extends AbstractBaseTestCase {
 	 */
 	public void testGetSmsMessages() {
 		List<SmsMessage> messages = logic.getAllSmsMessages();
-		assertNotNull("Returnend collection is null", messages);
+		assertNotNull("Returned collection is null", messages);
 		assertTrue("No records returned", messages.size() > 0);
 	}
 
@@ -167,7 +167,7 @@ public class SmsMessageTest extends AbstractBaseTestCase {
 
 		// We know there are messages for this task that have status codes other
 		// than the one specifies above
-		// So assert that the method only retured ones with the spedified
+		// So assert that the method only returned ones with the specified
 		// status.
 		for (SmsMessage message : messages) {
 			assertTrue("Incorrect value returned for object", message
@@ -217,7 +217,7 @@ public class SmsMessageTest extends AbstractBaseTestCase {
 					messages.size() > 0);
 
 			for (SmsMessage message : messages) {
-				// We know that only one message should be returned becuase
+				// We know that only one message should be returned because
 				// we only added one with status ERROR.
 				assertEquals(message, insertMessage);
 			}

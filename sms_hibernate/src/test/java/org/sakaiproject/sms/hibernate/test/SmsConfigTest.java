@@ -98,7 +98,7 @@ public class SmsConfigTest extends AbstractBaseTestCase {
 		insertSmsConfig.setNotificationEmail("notification@Email.Address");
 		insertSmsConfig.setSendSmsEnabled(false);
 		logic.persistSmsConfig(insertSmsConfig);
-		assertTrue("Object not created correclty", insertSmsConfig.exists());
+		assertTrue("Object not created correctly", insertSmsConfig.exists());
 
 		try {
 			SmsConfig conf = logic.getSmsConfigBySakaiSiteId(testId);
@@ -125,7 +125,7 @@ public class SmsConfigTest extends AbstractBaseTestCase {
 		insertSmsConfig.setNotificationEmail("notification@Email.Address");
 		insertSmsConfig.setSendSmsEnabled(false);
 		logic.persistSmsConfig(insertSmsConfig);
-		assertTrue("Object not created correclty", insertSmsConfig.exists());
+		assertTrue("Object not created correctly", insertSmsConfig.exists());
 
 		try {
 			SmsConfig conf = logic.getSmsConfigBySakaiToolId(testId);

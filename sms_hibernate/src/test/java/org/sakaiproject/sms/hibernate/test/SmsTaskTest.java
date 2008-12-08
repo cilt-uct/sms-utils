@@ -17,7 +17,11 @@ import org.sakaiproject.sms.hibernate.util.DateUtil;
 import org.sakaiproject.sms.hibernate.util.HibernateUtil;
 
 /**
- * The Class SmsTaskTest.
+ * A task consists of a series of rules and must be executed on the scheduled
+ * date-time. For example: Send message x to group y at time z. When the task is
+ * executed (real-time or scheduled), the corresponding messages will be
+ * inserted into SMS_MESSAGE with status PENDING. As delivery reports come in,
+ * the message statuses will be updated.
  */
 public class SmsTaskTest extends AbstractBaseTestCase {
 
@@ -184,8 +188,8 @@ public class SmsTaskTest extends AbstractBaseTestCase {
 	}
 
 	/**
-	 * Test get next sms task. Checks if it is the oldest task to process
-	 * (beeing the next task to process)
+	 * Test get next sms task. Checks if it is the oldest task to process (Being
+	 * the next task to process)
 	 */
 	public void testGetNextSmsTask() {
 		/*
