@@ -90,7 +90,7 @@ public class TaskListResultsRenderer implements SearchResultsRenderer{
 			for (SmsTask smsTask : smsTaskList) {
 
 				UIBranchContainer row = UIBranchContainer.make(searchResultsTable, "dataset:");
-
+				
 				UIOutput.make(row, "row-data-group", smsTask.getDeliveryGroupName());
 				UIOutput.make(row, "row-data-size-estimate", NullHandling.safeToString(smsTask.getGroupSizeEstimate()));
 				UIOutput.make(row, "row-data-size-actual", NullHandling.safeToString(smsTask.getGroupSizeActual()));

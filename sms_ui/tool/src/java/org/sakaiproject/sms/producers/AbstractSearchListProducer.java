@@ -70,7 +70,7 @@ public abstract class AbstractSearchListProducer implements ViewComponentProduce
 			sortParams.sortBy = getDefaultSortColumn(); // default
 		}
 		if (sortParams.sortDir == null) {
-			sortParams.sortDir = SMSConstants.SORT_ASC; // default
+			sortParams.sortDir = SMSConstants.SORT_DESC; // default
 		}
 		
 		searchCriteriaRenderer.createSearchCriteria(tofill, "searchCriteria:", getViewID());

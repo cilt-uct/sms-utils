@@ -14,6 +14,7 @@
     <param-value>
       classpath:conf/rsf-config.xml,
       classpath:conf/blank-applicationContext.xml,
+      classpath:conf/components-applicationContext.xml,
      /WEB-INF/applicationContext.xml</param-value>
   </context-param>
   
@@ -24,6 +25,7 @@
     <param-name>requestContextConfigLocation</param-name>
     <param-value>classpath:conf/rsf-requestscope-config.xml,
                   classpath:conf/blank-requestContext.xml,
+                  classpath:conf/components-requestContext.xml
                  /WEB-INF/requestContext.xml</param-value>
   </context-param>
 	

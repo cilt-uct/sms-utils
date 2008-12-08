@@ -33,6 +33,6 @@ public class TaskListProducer extends AbstractSearchListProducer {
 
 	@Override
 	public String getDefaultSortColumn() {
-		return "deliveryGroupName";
+		return "dateProcessed";
 	}
 }

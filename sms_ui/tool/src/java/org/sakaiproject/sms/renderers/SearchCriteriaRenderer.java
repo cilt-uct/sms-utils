@@ -29,13 +29,19 @@ import uk.org.ponder.rsf.components.UIInput;
 import uk.org.ponder.rsf.components.UIJointContainer;
 import uk.org.ponder.rsf.components.UIOutput;
 import uk.org.ponder.rsf.components.UISelect;
+import uk.org.ponder.rsf.evolvers.FormatAwareDateInputEvolver;
 
 public class SearchCriteriaRenderer{
 
 	private String labelID;
 	private String labelDropDown;
 	private String searchBeanName;
+	private FormatAwareDateInputEvolver dateEvolver;
 	
+	public void setDateEvolver(FormatAwareDateInputEvolver dateEvolver) {
+		this.dateEvolver = dateEvolver;
+	}
+
 	public void setSearchBeanName(String searchBeanName) {
 		this.searchBeanName = searchBeanName;
 	}
@@ -47,6 +53,7 @@ public class SearchCriteriaRenderer{
 	public void setLabelDropDown(String labelDropDown) {
 		this.labelDropDown = labelDropDown;
 	}
+	
 	
 	public void init(){
 		Assert.notNull(labelID);
