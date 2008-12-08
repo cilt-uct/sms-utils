@@ -22,8 +22,10 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
@@ -63,6 +65,7 @@ import org.sakaiproject.sms.hibernate.logic.SmsTaskLogic;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_SmscDeliveryStatus;
+import org.sakaiproject.sms.model.SmsDeliveryReport;
 import org.sakaiproject.sms.model.SmsStatusBridge;
 
 public class SmsSmppImpl implements SmsSmpp {
@@ -594,4 +597,11 @@ public class SmsSmppImpl implements SmsSmpp {
 
 	}
 
+	// for testing purposes
+	public List<SmsDeliveryReport> getDeliveryNotifications() {
+		ArrayList<SmsDeliveryReport> delReports = new ArrayList<SmsDeliveryReport>();
+		SmsDeliveryReport receivedDelReport = new SmsDeliveryReport();
+		delReports.add(receivedDelReport);
+		return delReports;
+	}
 }

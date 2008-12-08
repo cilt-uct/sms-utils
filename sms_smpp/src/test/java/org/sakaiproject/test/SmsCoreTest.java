@@ -26,7 +26,6 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import org.apache.log4j.Level;
-import org.sakaiproject.sms.hibernate.logic.impl.SmsMessageLogicImpl;
 import org.sakaiproject.sms.hibernate.logic.impl.SmsTaskLogicImpl;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
@@ -53,7 +52,7 @@ public class SmsCoreTest extends TestCase {
 				smsSmppImpl.init();
 				smsCoreImpl.setSmsSmpp(smsSmppImpl);
 				smsCoreImpl.setSmsTaskLogic(new SmsTaskLogicImpl());
-				smsCoreImpl.setSmsMessageLogic(new SmsMessageLogicImpl());
+				// smsCoreImpl.setSmsMessageLogic(new SmsMessageLogicImpl());
 			}
 
 			protected void tearDown() throws Exception {
@@ -215,7 +214,7 @@ public class SmsCoreTest extends TestCase {
 					waitForDeliveries = false;
 
 				}
-				smsCoreImpl.processDeliveryReports();
+				// smsCoreImpl.processDeliveryReports();
 			}
 
 			assertEquals(true, smsCoreImpl.getSmsSmpp()

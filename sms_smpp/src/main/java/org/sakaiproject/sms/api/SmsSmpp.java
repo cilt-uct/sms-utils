@@ -1,8 +1,10 @@
 package org.sakaiproject.sms.api;
 
+import java.util.List;
 import java.util.Set;
 
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
+import org.sakaiproject.sms.model.SmsDeliveryReport;
 
 /**
  * This service will contain the necessary logic to communicate with a standard
@@ -64,4 +66,6 @@ public interface SmsSmpp {
 	 */
 	public SmsMessage sendMessageToGateway(SmsMessage message);
 
+	// for testing
+	public List<SmsDeliveryReport> getDeliveryNotifications();
 }
