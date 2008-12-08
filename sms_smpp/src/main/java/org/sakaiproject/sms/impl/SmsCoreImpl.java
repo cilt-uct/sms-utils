@@ -159,6 +159,9 @@ public class SmsCoreImpl implements SmsCore {
 	 * attempt was unsuccessful due to gateway connection problems. A retry will
 	 * be re-scheduled some time in the future. When the max retry attempts are
 	 * reached or if credits are insufficient, the task is marked as failed.
+	 * 
+	 * The task will also fail if it cannot be processed in a specified time.
+	 * See http://jira.sakaiproject.org/jira/browse/SMS-9
 	 */
 	public void processTask(SmsTask smsTask) {
 		smsTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_BUSY);
