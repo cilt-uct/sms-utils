@@ -212,7 +212,8 @@ public class SmsMessageTest extends AbstractBaseTestCase {
 			bean.setSender(insertTask.getSenderUserName());
 			bean.setMobileNumber(insertMessage.getMobileNumber());
 
-			List<SmsMessage> messages = logic.getSmsMessagesForCriteria(bean);
+			List<SmsMessage> messages = logic.getSmsMessagesForCriteria(bean)
+					.getPageResults();
 			assertTrue("Collection returned has no objects",
 					messages.size() > 0);
 
