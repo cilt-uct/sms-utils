@@ -17,7 +17,7 @@
  **********************************************************************************/
 package org.sakaiproject.sms.validators;
 
-import org.sakaiproject.sms.constants.SMSConstants;
+import org.sakaiproject.sms.constants.SmsUiConstants;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
@@ -55,7 +55,7 @@ public class SmsMessageValidator implements Validator {
 
 		if (msg.getMessageBody() != null && !"".equals(msg.getMessageBody())) {
 			// Check length of messageBody
-			if (msg.getMessageBody().length() > SMSConstants.MAX_SMS_LENGTH) {
+			if (msg.getMessageBody().length() > SmsUiConstants.MAX_SMS_LENGTH) {
 				err
 						.rejectValue("messageBody",
 								"sms.errors.messageBody.tooLong");
@@ -65,7 +65,7 @@ public class SmsMessageValidator implements Validator {
 		if (msg.getMobileNumber() != null && !"".equals(msg.getMobileNumber())) {
 			String trimmedNumber = msg.getMobileNumber().trim();
 			// Check length of mobile number
-			if (trimmedNumber.length() > SMSConstants.MAX_MOBILE_NR_LENGTH) {
+			if (trimmedNumber.length() > SmsUiConstants.MAX_MOBILE_NR_LENGTH) {
 				err.rejectValue("mobileNumber",
 						"sms.errors.mobileNumber.tooLong");
 			}

@@ -19,7 +19,8 @@
 
 package org.sakaiproject.sms.renderers;
 
-import org.sakaiproject.sms.constants.SMSConstants;
+import org.sakaiproject.sms.constants.SmsUiConstants;
+import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
 
 import uk.org.ponder.rsf.components.UIContainer;
 import uk.org.ponder.rsf.components.UIInternalLink;
@@ -52,13 +53,13 @@ public class SortHeaderRenderer {
     	//Link Text
     	UIMessage.make(joint, "text", link_text);
     	if (params.sortBy.equals(sort_by)){
-    		UILink.make(joint, "arrow", (params.sortDir.equals(SMSConstants.SORT_ASC) ? BULLET_UP_IMG_SRC : BULLET_DOWN_IMG_SRC));
+    		UILink.make(joint, "arrow", (params.sortDir.equals(SmsHibernateConstants.SORT_ASC) ? BULLET_UP_IMG_SRC : BULLET_DOWN_IMG_SRC));
     	}
 
     	//Add Link and modify params
-    	String newSortDir = (params.sortBy.equals(sort_by) ? (params.sortDir.equals(SMSConstants.SORT_ASC) 
-    			? SMSConstants.SORT_DESC
-    			: SMSConstants.SORT_ASC) : SMSConstants.SORT_ASC);
+    	String newSortDir = (params.sortBy.equals(sort_by) ? (params.sortDir.equals(SmsHibernateConstants.SORT_ASC) 
+    			? SmsHibernateConstants.SORT_DESC
+    			: SmsHibernateConstants.SORT_ASC) : SmsHibernateConstants.SORT_ASC);
     	
     	ViewParameters new_params = viewparams.copyBase();
     	((SortPagerViewParams)new_params).sortBy = sort_by;

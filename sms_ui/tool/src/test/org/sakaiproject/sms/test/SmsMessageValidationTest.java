@@ -19,7 +19,7 @@ package org.sakaiproject.sms.test;
 
 import junit.framework.TestCase;
 
-import org.sakaiproject.sms.constants.SMSConstants;
+import org.sakaiproject.sms.constants.SmsUiConstants;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.validators.SmsMessageValidator;
 import org.springframework.validation.BindException;
@@ -83,7 +83,7 @@ public class SmsMessageValidationTest extends TestCase {
 	public void testMessageBody_tooLong() {
 		msg.setMobileNumber(VALID_MOBILE_NR);
 		msg.setMessageBody(VALID_MSG_BODY + VALID_MSG_BODY);
-		assertTrue(msg.getMessageBody().length() > SMSConstants.MAX_SMS_LENGTH);
+		assertTrue(msg.getMessageBody().length() > SmsUiConstants.MAX_SMS_LENGTH);
 		validator.validate(msg, errors);
 		assertTrue(errors.hasFieldErrors(MSG_BODY_FIELD));
 		assertEquals("sms.errors.messageBody.tooLong", errors.getFieldError()
@@ -156,7 +156,7 @@ public class SmsMessageValidationTest extends TestCase {
 	 */
 	public void testMobileNumber_tooLong() {
 		msg.setMobileNumber("012345678901234567890123456789");
-		assertTrue(msg.getMobileNumber().length() > SMSConstants.MAX_MOBILE_NR_LENGTH);
+		assertTrue(msg.getMobileNumber().length() > SmsUiConstants.MAX_MOBILE_NR_LENGTH);
 		msg.setMessageBody(VALID_MSG_BODY);
 		validator.validate(msg, errors);
 		assertTrue(errors.hasFieldErrors(MOBILE_NR_FIELD));

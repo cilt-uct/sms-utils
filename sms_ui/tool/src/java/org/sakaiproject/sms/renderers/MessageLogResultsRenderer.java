@@ -35,12 +35,12 @@ import uk.org.ponder.rsf.components.UIOutput;
 
 public class MessageLogResultsRenderer implements SearchResultsRenderer {
 
-	private final static org.apache.log4j.Logger LOG = org.apache.log4j.Logger.getLogger(MessageLogResultsRenderer.class);
-	
+	private final static org.apache.log4j.Logger LOG = org.apache.log4j.Logger
+			.getLogger(MessageLogResultsRenderer.class);
+
 	private SearchFilterBean searchFilterBean;
 	private SortHeaderRenderer sortHeaderRenderer;
 	private SmsMessageLogic smsMessageLogic;
-	
 
 	public void setSmsMessageLogic(SmsMessageLogic smsMessageLogic) {
 		this.smsMessageLogic = smsMessageLogic;
@@ -49,54 +49,86 @@ public class MessageLogResultsRenderer implements SearchResultsRenderer {
 	public void setSearchFilterBean(SearchFilterBean searchFilterBean) {
 		this.searchFilterBean = searchFilterBean;
 	}
-	
-	public void init(){
+
+	public void init() {
 		sortHeaderRenderer = new SortHeaderRenderer();
 		Assert.notNull(smsMessageLogic);
 	}
 
 	public void createTable(UIContainer tofill, String divID,
 			SortPagerViewParams sortViewParams, String viewID) {
-		
+
 		init();
-		
+
 		searchFilterBean.setOrderBy(sortViewParams.sortBy);
 		searchFilterBean.setSortDirection(sortViewParams.sortDir);
-		searchFilterBean.setCurrentPage(sortViewParams.current_start);		
-		
+		searchFilterBean.setCurrentPage(sortViewParams.current_start);
+
 		List<SmsMessage> smsMessageList = null;
 		boolean fail = false;
 		try {
-			smsMessageList = smsMessageLogic.getSmsMessagesForCriteria(searchFilterBean);
+			smsMessageList = smsMessageLogic.getSmsMessagesForCriteria(
+					searchFilterBean).getPageResults();
 		} catch (SmsSearchException e) {
 			LOG.error(e);
 			fail = true;
 		}
-		
-		UIJointContainer searchResultsTable = new UIJointContainer(tofill, divID,  "message-log-search-results-component:");
-		if(fail)
+
+		UIJointContainer searchResultsTable = new UIJointContainer(tofill,
+				divID, "message-log-search-results-component:");
+		if (fail)
 			UIMessage.make(searchResultsTable, "warning", "GeneralActionError");
-		else{
-			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-group:", sortViewParams, "smsTask.deliveryGroupName", "sms.message-log-search-results.account.group");
-			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-tool-name:", sortViewParams, "smsTask.sakaiToolName", "sms.message-log-search-results.account.tool.name");
-			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-sender:", sortViewParams, "smsTask.senderUserName", "sms.message-log-search-results.account.sender");
-			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-receiver:", sortViewParams, "smsTask.deliveryGroupName", "sms.message-log-search-results.account.reciver");
-			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-mobile-number:", sortViewParams, "mobileNumber", "sms.message-log-search-results.account.mobile.number");
-			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-date-processed:", sortViewParams, "smsTask.dateProcessed", "sms.message-log-search-results.account.date.processesd");
-			sortHeaderRenderer.makeSortingLink(searchResultsTable, "tableheader-status:", sortViewParams, "smsTask.statusCode", "sms.message-log-search-results.account.Status");
+		else {
+			sortHeaderRenderer.makeSortingLink(searchResultsTable,
+					"tableheader-group:", sortViewParams,
+					"smsTask.deliveryGroupName",
+					"sms.message-log-search-results.account.group");
+			sortHeaderRenderer.makeSortingLink(searchResultsTable,
+					"tableheader-tool-name:", sortViewParams,
+					"smsTask.sakaiToolName",
+					"sms.message-log-search-results.account.tool.name");
+			sortHeaderRenderer.makeSortingLink(searchResultsTable,
+					"tableheader-sender:", sortViewParams,
+					"smsTask.senderUserName",
+					"sms.message-log-search-results.account.sender");
+			sortHeaderRenderer.makeSortingLink(searchResultsTable,
+					"tableheader-receiver:", sortViewParams,
+					"smsTask.deliveryGroupName",
+					"sms.message-log-search-results.account.reciver");
+			sortHeaderRenderer.makeSortingLink(searchResultsTable,
+					"tableheader-mobile-number:", sortViewParams,
+					"mobileNumber",
+					"sms.message-log-search-results.account.mobile.number");
+			sortHeaderRenderer.makeSortingLink(searchResultsTable,
+					"tableheader-date-processed:", sortViewParams,
+					"smsTask.dateProcessed",
+					"sms.message-log-search-results.account.date.processesd");
+			sortHeaderRenderer.makeSortingLink(searchResultsTable,
+					"tableheader-status:", sortViewParams,
+					"smsTask.statusCode",
+					"sms.message-log-search-results.account.Status");
 
 			for (SmsMessage smsMessage : smsMessageList) {
 
-				//smsMessage.
-				UIBranchContainer row = UIBranchContainer.make(searchResultsTable, "dataset:");
+				// smsMessage.
+				UIBranchContainer row = UIBranchContainer.make(
+						searchResultsTable, "dataset:");
 
-				UIOutput.make(row, "row-data-group", smsMessage.getSmsTask().getDeliveryGroupName());
-				UIOutput.make(row, "row-data-tool-name", smsMessage.getSmsTask().getSakaiToolName());
-				UIOutput.make(row, "row-data-sender", smsMessage.getSmsTask().getSenderUserName());
-				UIOutput.make(row, "row-data-receiver", smsMessage.getSmsTask().getDeliveryGroupName());
-				UIOutput.make(row, "row-data-mobile-number", smsMessage.getMobileNumber());
-				UIOutput.make(row, "row-data-date-processed", NullHandling.safeToString(smsMessage.getSmsTask().getDateProcessed()));
-				UIOutput.make(row, "row-data-status", smsMessage.getStatusCode());
+				UIOutput.make(row, "row-data-group", smsMessage.getSmsTask()
+						.getDeliveryGroupName());
+				UIOutput.make(row, "row-data-tool-name", smsMessage
+						.getSmsTask().getSakaiToolName());
+				UIOutput.make(row, "row-data-sender", smsMessage.getSmsTask()
+						.getSenderUserName());
+				UIOutput.make(row, "row-data-receiver", smsMessage.getSmsTask()
+						.getDeliveryGroupName());
+				UIOutput.make(row, "row-data-mobile-number", smsMessage
+						.getMobileNumber());
+				UIOutput.make(row, "row-data-date-processed", NullHandling
+						.safeToString(smsMessage.getSmsTask()
+								.getDateProcessed()));
+				UIOutput.make(row, "row-data-status", smsMessage
+						.getStatusCode());
 			}
 		}
 	}

@@ -17,7 +17,7 @@
  **********************************************************************************/
 package org.sakaiproject.sms.producers;
 
-import org.sakaiproject.sms.constants.SMSConstants;
+import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
 import org.sakaiproject.sms.renderers.SearchCriteriaRenderer;
 import org.sakaiproject.sms.renderers.SearchResultsRenderer;
 import org.sakaiproject.sms.renderers.SortPagerViewParams;
@@ -34,61 +34,70 @@ import uk.org.ponder.rsf.view.ViewComponentProducer;
 import uk.org.ponder.rsf.viewstate.ViewParameters;
 import uk.org.ponder.rsf.viewstate.ViewParamsReporter;
 
-public abstract class AbstractSearchListProducer implements ViewComponentProducer, ViewParamsReporter{
-	
+public abstract class AbstractSearchListProducer implements
+		ViewComponentProducer, ViewParamsReporter {
+
 	private SearchCriteriaRenderer searchCriteriaRenderer;
 	private SearchResultsRenderer searchResultsRenderer;
 	private TablePagerRenderer tablePagerRenderer;
-	
+
 	public abstract String getViewID();
+
 	public abstract String getTitleMessage();
+
 	public abstract String getDefaultSortColumn();
-	
-	public void setSearchResultsRenderer(SearchResultsRenderer searchResultsRenderer) {
+
+	public void setSearchResultsRenderer(
+			SearchResultsRenderer searchResultsRenderer) {
 		this.searchResultsRenderer = searchResultsRenderer;
 	}
 
-	public void setSearchCriteriaRenderer(SearchCriteriaRenderer searchCriteriaRender) {
+	public void setSearchCriteriaRenderer(
+			SearchCriteriaRenderer searchCriteriaRender) {
 		this.searchCriteriaRenderer = searchCriteriaRender;
 	}
-	
-	public void init(){		
+
+	public void init() {
 		Assert.notNull(searchCriteriaRenderer);
 		Assert.notNull(searchResultsRenderer);
 	}
-	
+
 	public void fillComponents(UIContainer tofill, ViewParameters viewparams,
 			ComponentChecker checker) {
 
 		init();
-		
+
 		tablePagerRenderer = new TablePagerRenderer();
-		
-		SortPagerViewParams sortParams = (SortPagerViewParams) viewparams;		
-	
+
+		SortPagerViewParams sortParams = (SortPagerViewParams) viewparams;
+
 		if (sortParams.sortBy == null) {
 			sortParams.sortBy = getDefaultSortColumn(); // default
 		}
 		if (sortParams.sortDir == null) {
-			sortParams.sortDir = SMSConstants.SORT_DESC; // default
+			sortParams.sortDir = SmsHibernateConstants.SORT_ASC; // default
 		}
-		
-		searchCriteriaRenderer.createSearchCriteria(tofill, "searchCriteria:", getViewID());
+
+		searchCriteriaRenderer.createSearchCriteria(tofill, "searchCriteria:",
+				getViewID());
 		UIMessage.make(tofill, "table-caption", getTitleMessage());
-		searchResultsRenderer.createTable(tofill, "searchResults:", sortParams, getViewID());
-	
-		tablePagerRenderer.createPager(tofill, "searchPager:", sortParams, getViewID());
+		searchResultsRenderer.createTable(tofill, "searchResults:", sortParams,
+				getViewID());
+
+		tablePagerRenderer.createPager(tofill, "searchPager:", sortParams,
+				getViewID());
 		exportToCSV(tofill);
 	}
 
 	private void exportToCSV(UIContainer tofill) {
-		UIBranchContainer exportToCSV = UIJointContainer.make(tofill, "export:",  "search-results:");
-		UICommand.make(exportToCSV, "export-to-csv", "#{csvActionBean.fireAction}");
+		UIBranchContainer exportToCSV = UIJointContainer.make(tofill,
+				"export:", "search-results:");
+		UICommand.make(exportToCSV, "export-to-csv",
+				"#{csvActionBean.fireAction}");
 	}
-
 
 	public ViewParameters getViewParameters() {
 		return new SortPagerViewParams();
 	}
-	
+
 }
