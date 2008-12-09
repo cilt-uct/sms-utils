@@ -22,10 +22,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
@@ -61,11 +59,9 @@ import org.jsmpp.util.InvalidDeliveryReceiptException;
 import org.jsmpp.util.TimeFormatter;
 import org.sakaiproject.sms.api.SmsSmpp;
 import org.sakaiproject.sms.hibernate.logic.SmsMessageLogic;
-import org.sakaiproject.sms.hibernate.logic.SmsTaskLogic;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_SmscDeliveryStatus;
-import org.sakaiproject.sms.model.SmsDeliveryReport;
 import org.sakaiproject.sms.model.SmsStatusBridge;
 
 public class SmsSmppImpl implements SmsSmpp {
@@ -104,15 +100,6 @@ public class SmsSmppImpl implements SmsSmpp {
 	private String userName;
 	private String addressRange;
 	public SmsMessageLogic smsMessageLogic = null;
-	public SmsTaskLogic smsTaskLogic = null;
-
-	public void setSmsTaskLogic(SmsTaskLogic smsTaskLogic) {
-		this.smsTaskLogic = smsTaskLogic;
-	}
-
-	public SmsTaskLogic getSmsTaskLogic() {
-		return smsTaskLogic;
-	}
 
 	public SmsMessageLogic getSmsMessageLogic() {
 		return smsMessageLogic;
@@ -526,7 +513,8 @@ public class SmsSmppImpl implements SmsSmpp {
 	/**
 	 * Send one message to the SMS gateway. Return result code to caller.
 	 */
-	public SmsMessage sendMessageToGateway(SmsMessage message) {
+	public synchronized SmsMessage sendMessageToGateway(SmsMessage message) {
+
 		if (gatewayBound) {
 			try {
 
@@ -550,7 +538,6 @@ public class SmsSmppImpl implements SmsSmpp {
 				message.setStatusCode(SmsConst_DeliveryStatus.STATUS_SENT);
 				message
 						.setSmscDeliveryStatusCode(SmsConst_SmscDeliveryStatus.ENROUTE);
-
 				smsMessageLogic.persistSmsMessage(message);
 				LOG.info("Message submitted, message_id is " + messageId);
 			} catch (PDUException e) {
@@ -595,13 +582,5 @@ public class SmsSmppImpl implements SmsSmpp {
 	public void setLogLevel(Level level) {
 		LOG.setLevel(level);
 
-	}
-
-	// for testing purposes
-	public List<SmsDeliveryReport> getDeliveryNotifications() {
-		ArrayList<SmsDeliveryReport> delReports = new ArrayList<SmsDeliveryReport>();
-		SmsDeliveryReport receivedDelReport = new SmsDeliveryReport();
-		delReports.add(receivedDelReport);
-		return delReports;
 	}
 }
