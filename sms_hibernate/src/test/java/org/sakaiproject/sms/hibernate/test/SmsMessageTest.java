@@ -315,6 +315,9 @@ public class SmsMessageTest extends AbstractBaseTestCase {
 		assertNull("Object not removed", getSmsTask);
 	}
 
+	/**
+	 * Test get new test sms message instance.
+	 */
 	public void testGetNewTestSmsMessageInstance() {
 		SmsMessage message = logic.getNewTestSmsMessageInstance("0721999988",
 				"Message body");
