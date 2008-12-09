@@ -56,7 +56,6 @@ public class SearchCriteriaRenderer{
 		this.labelDropDown = labelDropDown;
 	}
 	
-	
 	public void init(){
 		Assert.notNull(labelID);
 		Assert.notNull(labelDropDown);
@@ -80,8 +79,8 @@ public class SearchCriteriaRenderer{
 		if(labelDropDown.indexOf("Task") == -1)
 		UIInput.make(searchForm, "id", createSearchELString("id"));
 		
-		UIInput dateFrom = UIInput.make(searchForm, "date-from:", createSearchELString("dateFrom"));		
-		dateEvolver.evolveDateInput(dateFrom, new Date());
+		UIInput dateFrom = UIInput.make(searchForm, "date-from:", searchBeanName + "." + "dateFrom");		
+		dateEvolver.evolveDateInput(dateFrom);
 			
 		UIInput.make(searchForm, "tool-name", createSearchELString("toolName"));
 		
@@ -111,6 +110,7 @@ public class SearchCriteriaRenderer{
 	private String createSearchELString(String field){
 		return "#{" + searchBeanName + "."  + field + "}";
 	}
+
 	
 		
 }
