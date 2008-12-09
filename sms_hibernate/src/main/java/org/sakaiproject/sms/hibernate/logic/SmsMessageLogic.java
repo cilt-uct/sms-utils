@@ -16,27 +16,22 @@
  *
  **********************************************************************************/
 
-
 package org.sakaiproject.sms.hibernate.logic;
 
 import java.util.List;
 
-import org.hibernate.Query;
-import org.hibernate.Session;
 import org.sakaiproject.sms.hibernate.bean.SearchFilterBean;
+import org.sakaiproject.sms.hibernate.bean.SearchResultContainer;
 import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsSearchException;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
-import org.sakaiproject.sms.hibernate.model.SmsTask;
-import org.sakaiproject.sms.hibernate.model.SmsTransaction;
-import org.sakaiproject.sms.hibernate.util.HibernateUtil;
 
 /**
- * The data service will handle all sms Message database transactions for the sms tool in
- * Sakai.
+ * The data service will handle all sms Message database transactions for the
+ * sms tool in Sakai.
  * 
  * @author julian@psybergate.com
  * @version 1.0
- * @created 25-Nov-2008 
+ * @created 25-Nov-2008
  */
 public interface SmsMessageLogic {
 	/**
@@ -47,7 +42,8 @@ public interface SmsMessageLogic {
 	/**
 	 * Gets a SmsMessage entity for the given id
 	 * 
-	 * @param Long sms Message id
+	 * @param Long
+	 *            sms Message id
 	 * @return sms Message
 	 */
 	public SmsMessage getSmsMessage(Long smsMessageId);
@@ -62,36 +58,45 @@ public interface SmsMessageLogic {
 	/**
 	 * This method will persists the given object.
 	 * 
-	 * If the object is a new entity then it will be created on the DB. 
-	 * If it is an existing entity then the record will be updated on the DB.
+	 * If the object is a new entity then it will be created on the DB. If it is
+	 * an existing entity then the record will be updated on the DB.
 	 * 
-	 * @param sms Message to be persisted
+	 * @param sms
+	 *            Message to be persisted
 	 */
 	public void persistSmsMessage(SmsMessage smsMessage);
-	
+
 	/**
 	 * Returns a message for the given smsc message id or null if nothing found
 	 * 
-	 * @param smsc message id
+	 * @param smsc
+	 *            message id
 	 * @return sms message
 	 */
 	public SmsMessage getSmsMessageBySmscMessageId(String smscMessageId);
-	
+
 	/**
-	 * Gets a list of SmsMessage objects for the specified and specified status code(s)
+	 * Gets a list of SmsMessage objects for the specified and specified status
+	 * code(s)
 	 * 
-	 * @param sms task id
-	 * @param statusCode(s)
-	 * @return List<SmsMessage> - sms messages 
+	 * @param sms
+	 *            task id
+	 * @param statusCode
+	 *            (s)
+	 * @return List<SmsMessage> - sms messages
 	 */
-	public List<SmsMessage> getSmsMessagesWithStatus(Long smsTaskId, String... statusCodes);
-	
+	public List<SmsMessage> getSmsMessagesWithStatus(Long smsTaskId,
+			String... statusCodes);
+
 	/**
-	 * Gets a list of SmsMessage objects for the specified search criteria
+	 * Gets a search results container housing the result set for a particular
+	 * displayed page
 	 * 
-	 * @param search Bean containing the search criteria
-	 * @return List of SmsMessages
+	 * @param searchBean
+	 * @return Search result container
+	 * @throws SmsSearchException
 	 */
-	public List<SmsMessage> getSmsMessagesForCriteria(SearchFilterBean searchBean) throws SmsSearchException;
+	public SearchResultContainer<SmsMessage> getSmsMessagesForCriteria(
+			SearchFilterBean searchBean) throws SmsSearchException;
 
 }

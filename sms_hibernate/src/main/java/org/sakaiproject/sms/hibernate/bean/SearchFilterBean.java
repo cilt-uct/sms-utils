@@ -17,6 +17,8 @@
  **********************************************************************************/
 package org.sakaiproject.sms.hibernate.bean;
 
+import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
+
 // TODO: Auto-generated Javadoc
 /**
  * Generic search filter bean object. Will be used for the search screens as a
@@ -27,12 +29,6 @@ package org.sakaiproject.sms.hibernate.bean;
  * @created 19-Nov-2008
  */
 public class SearchFilterBean {
-
-	/** The Constant SORT_ASC. */
-	public static final String SORT_ASC = "asc";
-
-	/** The Constant SORT_DESC. */
-	public static final String SORT_DESC = "desc";
 
 	/** The id. */
 	private String id;
@@ -359,7 +355,7 @@ public class SearchFilterBean {
 	 */
 	public boolean sortAsc() {
 		if (sortDirection != null && !sortDirection.trim().equals("")) {
-			return sortDirection.equals(SORT_ASC);
+			return sortDirection.equals(SmsHibernateConstants.SORT_ASC);
 		}
 		// default to asc
 		return true;

@@ -30,6 +30,7 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.sakaiproject.sms.hibernate.bean.SearchFilterBean;
+import org.sakaiproject.sms.hibernate.bean.SearchResultContainer;
 import org.sakaiproject.sms.hibernate.dao.SmsDao;
 import org.sakaiproject.sms.hibernate.logic.SmsMessageLogic;
 import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsSearchException;
@@ -157,15 +158,14 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 	}
 
 	/**
-	 * Gets a list of SmsMessage objects for the specified search criteria
+	 * Gets a search results container housing the result set for a particular
+	 * displayed page
 	 * 
-	 * @param search
-	 *            Bean containing the search criteria
-	 * @return LList of SmsMessages
+	 * @param searchBean
+	 * @return Search result container
 	 * @throws SmsSearchException
-	 *             when an invalid search criteria is specified
 	 */
-	public List<SmsMessage> getSmsMessagesForCriteria(
+	public SearchResultContainer<SmsMessage> getSmsMessagesForCriteria(
 			SearchFilterBean searchBean) throws SmsSearchException {
 
 		Criteria crit = HibernateUtil.currentSession().createCriteria(
@@ -231,9 +231,12 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 			throw new SmsSearchException(e);
 		}
 
+		SearchResultContainer<SmsMessage> con = new SearchResultContainer<SmsMessage>();
 		messages = crit.list();
-		HibernateUtil.closeSession();
-		return messages;
-	}
+		con.setTotalResultSetSize(new Long(messages.size()));
+		con.calculateAndSetPageResults(messages, searchBean.getCurrentPage());
 
+		HibernateUtil.closeSession();
+		return con;
+	}
 }
