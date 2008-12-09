@@ -69,8 +69,6 @@ public class BillingAdminProducer implements ViewComponentProducer {
 		UIMessage.make(tofill, "balance-title",
 				"sms.billing-admin.balance-title");
 
-		// TODO: Change to retrieve from SmsAccount service
-		// List<SmsAccount> accounts = retrieveMockAccounts();
 		List<SmsAccount> accounts = smsAccountLogic.getAllSmsAccounts();
 
 		// get number format for default locale
@@ -86,6 +84,7 @@ public class BillingAdminProducer implements ViewComponentProducer {
 					+ account.getId(), new SimpleViewParameters(
 					SmsTestProducer.VIEW_ID));
 			UIOutput.make(entry, "account-no", account.getId().toString());
+			// TODO: Use Sakai services to get site and username
 			UIOutput.make(entry, "sakai-site", account.getSakaiSiteId());
 			UIOutput.make(entry, "sakai-user", account.getSakaiUserId());
 			UIOutput.make(entry, "overdraft-limit", nf.format(
