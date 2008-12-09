@@ -17,21 +17,30 @@
  **********************************************************************************/
 package org.sakaiproject.test;
 
+import java.sql.Timestamp;
+
 import net.sourceforge.groboutils.junit.v1.TestRunnable;
 
 import org.apache.log4j.Level;
+import org.sakaiproject.sms.hibernate.logic.impl.SmsMessageLogicImpl;
+import org.sakaiproject.sms.hibernate.logic.impl.SmsTaskLogicImpl;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
+import org.sakaiproject.sms.hibernate.model.SmsTask;
+import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
 import org.sakaiproject.sms.impl.SmsSmppImpl;
 
 /**
  * The Class SmppSession.
  */
 class SmppThread extends TestRunnable {
+
+	private static SmsTaskLogicImpl smsTaskLogicImpl = new SmsTaskLogicImpl();
+
 	private static final org.apache.log4j.Logger LOG = org.apache.log4j.Logger
 			.getLogger(SmppThread.class);
 	private int delay_between_messages;
 	/** some private stuff for each thread. */
-	public int reportsReceivedAfterSleep, sent_count, message_count;
+	public int reportsRemainingAfterSleep, sent_count, message_count;
 
 	/** The session name. */
 	private String sessionName;
@@ -50,6 +59,7 @@ class SmppThread extends TestRunnable {
 	public SmppThread(String sessionName, int messageCount, int messageDelay) {
 		this.sessionName = sessionName;
 		this.smsSmppImpl = new SmsSmppImpl();
+		this.smsSmppImpl.setSmsMessageLogic(new SmsMessageLogicImpl());
 		this.smsSmppImpl.init();
 		this.smsSmppImpl.setLogLevel(Level.WARN);
 		this.LOG.setLevel(Level.ALL);
@@ -58,23 +68,45 @@ class SmppThread extends TestRunnable {
 	}
 
 	/**
+	 * This is an helper method to insert a dummy smsTask into the Database. The
+	 * sakaiID is used to identify the temp task.
+	 */
+	public SmsTask insertNewTask(String sakaiID, String status,
+			Timestamp dateToSend, int attemptCount) {
+		SmsTask insertTask = new SmsTask();
+		insertTask.setSakaiSiteId(sakaiID);
+		insertTask.setSmsAccountId(0);
+		insertTask.setDateCreated(new Timestamp(System.currentTimeMillis()));
+		insertTask.setDateToSend(dateToSend);
+		insertTask.setStatusCode(status);
+		insertTask.setAttemptCount(0);
+		insertTask.setMessageBody("testing1234567");
+		insertTask.setSenderUserName("administrator");
+		smsTaskLogicImpl.persistSmsTask(insertTask);
+		return insertTask;
+	}
+
+	/**
 	 * Send x messages to gateway inside a separate thread
 	 */
 	public void runTest() throws Throwable {
 		LOG.info(sessionName + ": sending " + message_count + " to gateway...");
+		SmsTask insertTask = insertNewTask(this.sessionName,
+				SmsConst_DeliveryStatus.STATUS_PENDING, new Timestamp(System
+						.currentTimeMillis()), 0);
 		for (int i = 0; i < message_count; i++) {
-			SmsMessage smsMessage = new SmsMessage("+270731876135",
-					"Junit testing forloop num:" + i);
-			smsMessage.setId(new Long(i));
-			smsMessage = smsSmppImpl.sendMessageToGateway(smsMessage);
-			if (smsMessage.isSubmitResult()) {
+			SmsMessage message = new SmsMessage();
+			message.setMobileNumber("0721998919");
+			message.setSakaiUserId(this.sessionName);
+			message.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
+			message.setSmsTask(insertTask);
+			smsSmppImpl.sendMessageToGateway(message);
+			if (message.isSubmitResult()) {
 				sent_count++;
 			}
 			Thread.sleep(delay_between_messages);
 		}
 		LOG.info(sessionName + ": sent " + sent_count + " to gateway");
-
-		boolean waitForDeliveries = true;
 
 		// waiting for a-synchronise delivery reports to arrive. Every 10
 		// secondes we check to see if new messages came in.If the
@@ -82,25 +114,23 @@ class SmppThread extends TestRunnable {
 		// assume all
 		// reports was
 		// received from the simulator.
-		while (waitForDeliveries) {
-			int reportsReceivedBeforeSleep = smsSmppImpl
-					.getDeliveryNotifications().size();
-			LOG
-					.info(sessionName + ": waiting for delivery reports ("
-							+ reportsReceivedBeforeSleep + " of "
-							+ message_count + ")");
-			Thread.sleep(10000);
-			reportsReceivedAfterSleep = smsSmppImpl.getDeliveryNotifications()
-					.size();
-			if (reportsReceivedAfterSleep == reportsReceivedBeforeSleep) {
-				reportsReceivedAfterSleep = smsSmppImpl
-						.getDeliveryNotifications().size();
-				waitForDeliveries = false;
 
-			}
-		}
-		smsSmppImpl.disconnectGateWay();
-		LOG.info(sessionName + " ended, received " + reportsReceivedAfterSleep
+		// while (waitForDeliveries) {
+		//
+		// Thread.sleep(10000);
+		// reportsRemainingAfterSleep = insertTask.getMessagesWithSmscStatus(
+		// SmsConst_SmscDeliveryStatus.ENROUTE).size();
+		// if (reportsRemainingAfterSleep == 0) {
+		// waitForDeliveries = false;
+		//
+		// } else {
+		// LOG.info(sessionName + ": waiting for delivery reports ("
+		// + reportsRemainingAfterSleep + " of " + message_count
+		// + ")");
+		// }
+		// }
+		// smsSmppImpl.disconnectGateWay();
+		LOG.info(sessionName + " ended, received " + reportsRemainingAfterSleep
 				+ " reports");
 	}
 }

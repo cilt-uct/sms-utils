@@ -26,6 +26,7 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import org.apache.log4j.Level;
+import org.sakaiproject.sms.hibernate.logic.impl.SmsMessageLogicImpl;
 import org.sakaiproject.sms.hibernate.logic.impl.SmsTaskLogicImpl;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
@@ -49,10 +50,13 @@ public class SmsCoreTest extends TestCase {
 			protected void setUp() throws Exception {
 				smsCoreImpl = new SmsCoreImpl();
 				smsSmppImpl = new SmsSmppImpl();
+				smsSmppImpl.setSmsMessageLogic(new SmsMessageLogicImpl());
+				// smsSmppImpl.setSmsTaskLogic(new SmsTaskLogicImpl());
 				smsSmppImpl.init();
 				smsCoreImpl.setSmsSmpp(smsSmppImpl);
 				smsCoreImpl.setSmsTaskLogic(new SmsTaskLogicImpl());
-				// smsCoreImpl.setSmsMessageLogic(new SmsMessageLogicImpl());
+				smsCoreImpl.enableDebugInformation(true);
+				LOG.setLevel(Level.ALL);
 			}
 
 			protected void tearDown() throws Exception {
@@ -83,7 +87,7 @@ public class SmsCoreTest extends TestCase {
 	}
 
 	/*
-	 * In this test the populating of the task messages are tested. The test
+	 * In this test the populating of the task messages is tested. The test
 	 * succeeds if the smsTask's message count is > 0.
 	 */
 	public void testGetDeliveryGroup() {
@@ -107,6 +111,8 @@ public class SmsCoreTest extends TestCase {
 				SmsConst_DeliveryStatus.STATUS_PENDING, new Timestamp(System
 						.currentTimeMillis()), 1);
 		smsSmppImpl.setLogLevel(Level.OFF);
+		LOG.info("Disconnecting from server for fail test ");
+		smsSmppImpl.disconnectGateWay();
 		for (int i = 0; i < 5; i++) {
 			smsCoreImpl.processTask(smsTask);
 			try {
@@ -119,6 +125,8 @@ public class SmsCoreTest extends TestCase {
 				SmsConst_DeliveryStatus.STATUS_FAIL));
 		assertEquals(true, smsTask.getAttemptCount() == 5);
 		smsCoreImpl.getSmsTaskLogic().deleteSmsTask(smsTask);
+		LOG.info("Reconnecting to server after fail test ");
+		smsSmppImpl.connectToGateway();
 	}
 
 	/*
@@ -151,9 +159,7 @@ public class SmsCoreTest extends TestCase {
 							SmsConst_DeliveryStatus.STATUS_SENT).size());
 			assertEquals(true, smsTask.getMessagesWithStatus(
 					SmsConst_DeliveryStatus.STATUS_PENDING).size() == 0);
-			assertEquals(true, smsTask.getMessagesWithStatus(
-					SmsConst_DeliveryStatus.STATUS_SENT).size() == smsTask
-					.getSmsMessages().size());
+
 			smsCoreImpl.getSmsTaskLogic().deleteSmsTask(smsTask);
 		}
 	}
@@ -197,39 +203,32 @@ public class SmsCoreTest extends TestCase {
 					.getId());
 			smsCoreImpl.processNextTask();
 			assertEquals(true, smsCoreImpl.getNextSmsTask() == null);
-			boolean waitForDeliveries = true;
-			while (waitForDeliveries) {
-				int reportsReceived = smsSmppImpl.getDeliveryNotifications()
-						.size();
-				try {
-					Thread.sleep(10000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-				int delivery_count = smsSmppImpl.getDeliveryNotifications()
-						.size();
-				if (delivery_count == reportsReceived) {
-					delivery_count = smsSmppImpl.getDeliveryNotifications()
-							.size();
-					waitForDeliveries = false;
 
-				}
-				// smsCoreImpl.processDeliveryReports();
+			// we give the delivery reports time to get back.
+			try {
+				Thread.sleep(25000);
+
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
 
-			assertEquals(true, smsCoreImpl.getSmsSmpp()
-					.getDeliveryNotifications().size() == 0);
 			assertEquals(true, smsTask1.getMessagesWithSmscStatus(
 					SmsConst_SmscDeliveryStatus.ENROUTE).size() == 0);
+			assertEquals(true, smsTask1.getMessagesWithStatus(
+					SmsConst_DeliveryStatus.STATUS_PENDING).size() == 0);
 			assertEquals(true, smsTask2.getMessagesWithSmscStatus(
 					SmsConst_SmscDeliveryStatus.ENROUTE).size() == 0);
+			assertEquals(true, smsTask2.getMessagesWithStatus(
+					SmsConst_DeliveryStatus.STATUS_PENDING).size() == 0);
 			assertEquals(true, smsTask3.getMessagesWithSmscStatus(
 					SmsConst_SmscDeliveryStatus.ENROUTE).size() == 0);
+			assertEquals(true, smsTask3.getMessagesWithStatus(
+					SmsConst_DeliveryStatus.STATUS_PENDING).size() == 0);
 
-			// smsCoreImpl.getSmsTaskLogic().deleteSmsTask(smsTask1);
-			// smsCoreImpl.getSmsTaskLogic().deleteSmsTask(smsTask2);
-			// smsCoreImpl.getSmsTaskLogic().deleteSmsTask(smsTask3);
-			// smsCoreImpl.getSmsTaskLogic().deleteSmsTask(smsTask4);
+			smsCoreImpl.getSmsTaskLogic().deleteSmsTask(smsTask1);
+			smsCoreImpl.getSmsTaskLogic().deleteSmsTask(smsTask2);
+			smsCoreImpl.getSmsTaskLogic().deleteSmsTask(smsTask3);
+			smsCoreImpl.getSmsTaskLogic().deleteSmsTask(smsTask4);
 		}
 	}
 }
