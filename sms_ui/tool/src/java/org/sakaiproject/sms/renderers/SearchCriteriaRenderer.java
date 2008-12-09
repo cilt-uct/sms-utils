@@ -17,8 +17,6 @@
  **********************************************************************************/
 package org.sakaiproject.sms.renderers;
 
-import java.util.Date;
-
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
 import org.springframework.util.Assert;
 
@@ -101,7 +99,7 @@ public class SearchCriteriaRenderer{
 		combo.optionnames = comboNames;
 		
 		UIInput dateTo = UIInput.make(searchForm, "date-to:", searchBeanName + "." + "dateTo");
-		dateEvolver.evolveDateInput(dateTo, new Date());
+		dateEvolver.evolveDateInput(dateTo);
 		
 		UIInput.make(searchForm, "sender", createSearchELString("sender"));
 		UICommand.make(searchForm, "search", createSearchELString("fireAction"));
