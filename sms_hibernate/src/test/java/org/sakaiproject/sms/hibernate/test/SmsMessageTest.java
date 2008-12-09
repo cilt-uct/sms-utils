@@ -314,4 +314,13 @@ public class SmsMessageTest extends AbstractBaseTestCase {
 		SmsTask getSmsTask = taskLogic.getSmsTask(insertTask.getId());
 		assertNull("Object not removed", getSmsTask);
 	}
+
+	public void testGetNewTestSmsMessageInstance() {
+		SmsMessage message = logic.getNewTestSmsMessageInstance("0721999988",
+				"Message body");
+		assertNotNull("Message returned was null", message);
+		assertNotNull("", message.getSmsTask());
+		assertTrue("Associated SmsTask not created successfully", message
+				.getSmsTask().exists());
+	}
 }

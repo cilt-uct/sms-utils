@@ -27,6 +27,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.sakaiproject.sms.hibernate.bean.SearchFilterBean;
@@ -35,6 +36,8 @@ import org.sakaiproject.sms.hibernate.dao.SmsDao;
 import org.sakaiproject.sms.hibernate.logic.SmsMessageLogic;
 import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsSearchException;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
+import org.sakaiproject.sms.hibernate.model.SmsTask;
+import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
 import org.sakaiproject.sms.hibernate.util.DateUtil;
 import org.sakaiproject.sms.hibernate.util.HibernateUtil;
 
@@ -99,18 +102,35 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 	 *            message id
 	 * @return sms message
 	 */
-	public synchronized SmsMessage getSmsMessageBySmscMessageId(
-			String smscMessageId) {
-		Session s = HibernateUtil.currentSession();
-		Query query = s
-				.createQuery("from SmsMessage mes where mes.smscMessageId = :smscId ");
-		query.setParameter("smscId", smscMessageId, Hibernate.STRING);
-		List<SmsMessage> messages = query.list();
-		HibernateUtil.closeSession();
-		if (messages != null && messages.size() > 0) {
-			return messages.get(0);
+	public SmsMessage getSmsMessageBySmscMessageId(String smscMessageId) {
+		Session session = HibernateUtil.getSessionFactory().openSession();
+		try {
+
+			Transaction tx = null;
+			tx = session.beginTransaction();
+			Query query = session
+					.createQuery("from SmsMessage mes where mes.smscMessageId = :smscId ");
+			query.setParameter("smscId", smscMessageId, Hibernate.STRING);
+			List<SmsMessage> messages = query.list();
+			tx.commit();
+
+			if (messages != null && messages.size() > 0) {
+				return messages.get(0);
+			}
+		} finally {
+			session.close();
 		}
 		return null;
+
+		/*
+		 * Session s = HibernateUtil.currentSession(); Query query = s
+		 * .createQuery
+		 * ("from SmsMessage mes where mes.smscMessageId = :smscId ");
+		 * query.setParameter("smscId", smscMessageId, Hibernate.STRING);
+		 * List<SmsMessage> messages = query.list();
+		 * HibernateUtil.closeSession(); if (messages != null && messages.size()
+		 * > 0) { return messages.get(0); } return null;
+		 */
 	}
 
 	/**
@@ -236,5 +256,45 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 
 		HibernateUtil.closeSession();
 		return con;
+	}
+
+	/**
+	 * Gets the new sms message instance test.
+	 * 
+	 * This method will instantiate and persist a SmsTask and return a
+	 * SmsMessage with the associated SmsTask object set on it.
+	 * <p>
+	 * The message will not be persisted so this will need to be done manually.
+	 * 
+	 * @param mobileNumber
+	 *            the mobile number
+	 * @param messageBody
+	 *            the message body
+	 * 
+	 * @return the new sms message instance test
+	 */
+	public SmsMessage getNewTestSmsMessageInstance(String mobileNumber,
+			String messageBody) {
+		SmsTask smsTask = new SmsTask();
+		smsTask.setSakaiSiteId("sakaiSiteId");
+		smsTask.setSmsAccountId(1);
+		smsTask.setDateCreated(new Timestamp(System.currentTimeMillis()));
+		smsTask.setDateToSend(new Timestamp(System.currentTimeMillis()));
+		smsTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
+		smsTask.setAttemptCount(2);
+		smsTask.setMessageBody("messageBody");
+		smsTask.setSenderUserName("senderUserName");
+
+		getTaskLogic().persistSmsTask(smsTask);
+
+		SmsMessage smsMessage = new SmsMessage();
+		smsMessage.setSmsTask(smsTask);
+		smsMessage.setMobileNumber(mobileNumber);
+		smsMessage.setMessageBody(messageBody);
+		smsMessage.setSmscMessageId("smscMessageId");
+		smsMessage.setSakaiUserId("sakaiUserId");
+		smsMessage.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
+
+		return smsMessage;
 	}
 }

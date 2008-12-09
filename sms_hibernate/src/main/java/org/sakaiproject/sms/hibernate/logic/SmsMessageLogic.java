@@ -99,4 +99,22 @@ public interface SmsMessageLogic {
 	public SearchResultContainer<SmsMessage> getSmsMessagesForCriteria(
 			SearchFilterBean searchBean) throws SmsSearchException;
 
+	/**
+	 * Gets the new sms message instance test.
+	 * 
+	 * This method will instantiate and persist a SmsTask and return a
+	 * SmsMessage with the associated SmsTask object set on it.
+	 * <p>
+	 * The message will not be persisted so this will need to be done manually.
+	 * 
+	 * @param mobileNumber
+	 *            the mobile number
+	 * @param messageBody
+	 *            the message body
+	 * 
+	 * @return the new sms message instance test
+	 */
+	public SmsMessage getNewTestSmsMessageInstance(String mobileNumber,
+			String messageBody);
+
 }
