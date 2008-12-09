@@ -121,8 +121,7 @@ public class SmsTransactionLogicImpl extends SmsDao implements
 			}
 
 			// Transaction date start
-			if (searchBean.getDateFrom() != null
-					&& !searchBean.getDateFrom().trim().equals("")) {
+			if (searchBean.getDateFrom() != null) {
 				Timestamp date = DateUtil
 						.getTimestampFromStartDateString(searchBean
 								.getDateFrom());
@@ -130,8 +129,7 @@ public class SmsTransactionLogicImpl extends SmsDao implements
 			}
 
 			// Transaction date end
-			if (searchBean.getDateTo() != null
-					&& !searchBean.getDateTo().trim().equals("")) {
+			if (searchBean.getDateTo() != null) {
 				Timestamp date = DateUtil
 						.getTimestampFromEndDateString(searchBean.getDateTo());
 				crit.add(Restrictions.le("transactionDate", date));

@@ -17,6 +17,8 @@
  **********************************************************************************/
 package org.sakaiproject.sms.renderers;
 
+import java.util.Date;
+
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
 import org.springframework.util.Assert;
 
@@ -59,6 +61,7 @@ public class SearchCriteriaRenderer{
 		Assert.notNull(labelID);
 		Assert.notNull(labelDropDown);
 		Assert.notNull(searchBeanName);
+		dateEvolver.setStyle(FormatAwareDateInputEvolver.DATE_INPUT);
 	}
 
 	public void createSearchCriteria(UIContainer tofill, String divID, String viewID) {
@@ -77,7 +80,9 @@ public class SearchCriteriaRenderer{
 		if(labelDropDown.indexOf("Task") == -1)
 		UIInput.make(searchForm, "id", createSearchELString("id"));
 		
-		UIInput.make(searchForm, "date-from", createSearchELString("dateFrom"));
+		UIInput dateFrom = UIInput.make(searchForm, "date-from:", createSearchELString("dateFrom"));		
+		dateEvolver.evolveDateInput(dateFrom, new Date());
+			
 		UIInput.make(searchForm, "tool-name", createSearchELString("toolName"));
 		
 		UISelect combo = UISelect.make(searchForm, "task-status");
@@ -96,8 +101,9 @@ public class SearchCriteriaRenderer{
 		comboNames.setValue(new String[] {"All", "Retry", "Sent", "Busy", "Incomplete", "Failed"});
 		combo.optionnames = comboNames;
 		
-		UIInput.make(searchForm, "date-to", createSearchELString("dateTo"));
-
+		UIInput dateTo = UIInput.make(searchForm, "date-to:", searchBeanName + "." + "dateTo");
+		dateEvolver.evolveDateInput(dateTo, new Date());
+		
 		UIInput.make(searchForm, "sender", createSearchELString("sender"));
 		UICommand.make(searchForm, "search", createSearchELString("fireAction"));
 	}

@@ -12,7 +12,6 @@ import org.sakaiproject.sms.hibernate.logic.impl.SmsTransactionLogicImpl;
 import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsSearchException;
 import org.sakaiproject.sms.hibernate.model.SmsAccount;
 import org.sakaiproject.sms.hibernate.model.SmsTransaction;
-import org.sakaiproject.sms.hibernate.util.DateUtil;
 import org.sakaiproject.sms.hibernate.util.HibernateUtil;
 
 /**
@@ -148,8 +147,8 @@ public class SmsTransactionTest extends AbstractBaseTestCase {
 			bean.setTransactionType(insertSmsTransaction
 					.getTransactionTypeCode());
 			bean.setAccountNumber(insertSmsTransaction.getSmsAccount().getId());
-			bean.setDateFrom(DateUtil.getDateString(new Date()));
-			bean.setDateTo(DateUtil.getDateString(new Date()));
+			bean.setDateFrom(new Date());
+			bean.setDateTo(new Date());
 			bean.setSender(insertSmsTransaction.getSakaiUserId());
 
 			List<SmsTransaction> transactions = logic

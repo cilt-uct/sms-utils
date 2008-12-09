@@ -54,6 +54,22 @@ public class DateUtil {
 	}
 
 	/**
+	 * Creates a Timestamp object from the startDate parameter for use in start
+	 * dates searches
+	 * 
+	 * @param start
+	 *            date
+	 * @return time stamp for start date
+	 * @throws ParseException
+	 */
+	public static Timestamp getTimestampFromStartDateString(Date startDate)
+			throws ParseException {
+		String sStartDate =  getDateString(startDate)  +(" 00:00:00");
+		return new Timestamp(sdf.parse(sStartDate).getTime());
+	}
+	
+	
+	/**
 	 * Creates a Timestamp object from the endDate parameter for use in end
 	 * dates searches
 	 * 
@@ -67,6 +83,23 @@ public class DateUtil {
 		endDate = endDate.concat(" 23:59:59");
 		return new Timestamp(sdf.parse(endDate).getTime());
 	}
+	
+	/**
+	 * Creates a Timestamp object from the endDate parameter for use in end
+	 * dates searches
+	 * 
+	 * @param end
+	 *            date
+	 * @return time stamp for end date
+	 * @throws ParseException
+	 */
+	public static Timestamp getTimestampFromEndDateString(Date endDate)
+			throws ParseException {
+		String sEndDate =  getDateString(endDate)  + (" 23:59:59");
+		return new Timestamp(sdf.parse(sEndDate).getTime());
+	}
+	
+	
 
 	/**
 	 * Get string representing the specified date.

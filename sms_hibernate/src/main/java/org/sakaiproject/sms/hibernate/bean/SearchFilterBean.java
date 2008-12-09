@@ -17,7 +17,10 @@
  **********************************************************************************/
 package org.sakaiproject.sms.hibernate.bean;
 
+import java.util.Date;
+
 import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
+
 
 // TODO: Auto-generated Javadoc
 /**
@@ -37,10 +40,10 @@ public class SearchFilterBean {
 	private String status;
 
 	/** The date from. */
-	private String dateFrom;
+	private Date dateFrom;
 
 	/** The date to. */
-	private String dateTo;
+	private Date dateTo;
 
 	/** The tool name. */
 	private String toolName;
@@ -71,6 +74,8 @@ public class SearchFilterBean {
 	 */
 	public SearchFilterBean() {
 		super();
+		dateFrom = new Date();
+		dateTo = new Date();
 		currentPage = new Integer(1);
 	}
 
@@ -96,8 +101,8 @@ public class SearchFilterBean {
 	 * @param sortDirection
 	 *            the sort direction
 	 */
-	public SearchFilterBean(String id, String status, String dateFrom,
-			String dateTo, String toolName, String sender, Integer currentPage,
+	public SearchFilterBean(String id, String status, Date dateFrom,
+			Date dateTo, String toolName, String sender, Integer currentPage,
 			String orderBy, String sortDirection) {
 		super();
 		this.id = id;
@@ -154,7 +159,7 @@ public class SearchFilterBean {
 	 * 
 	 * @return the date from
 	 */
-	public String getDateFrom() {
+	public Date getDateFrom() {
 		return dateFrom;
 	}
 
@@ -164,7 +169,7 @@ public class SearchFilterBean {
 	 * @param dateFrom
 	 *            the new date from
 	 */
-	public void setDateFrom(String dateFrom) {
+	public void setDateFrom(Date dateFrom) {
 		this.dateFrom = dateFrom;
 	}
 
@@ -173,7 +178,7 @@ public class SearchFilterBean {
 	 * 
 	 * @return the date to
 	 */
-	public String getDateTo() {
+	public Date getDateTo() {
 		return dateTo;
 	}
 
@@ -183,7 +188,7 @@ public class SearchFilterBean {
 	 * @param dateTo
 	 *            the new date to
 	 */
-	public void setDateTo(String dateTo) {
+	public void setDateTo(Date dateTo) {
 		this.dateTo = dateTo;
 	}
 

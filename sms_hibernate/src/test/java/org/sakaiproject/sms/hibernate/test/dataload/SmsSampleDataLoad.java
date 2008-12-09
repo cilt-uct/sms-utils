@@ -18,7 +18,7 @@ import org.sakaiproject.sms.hibernate.model.SmsTransaction;
 public class SmsSampleDataLoad{
 	
 	
-	public static final int NUMBER_OF_REPETITIONS = 10;
+	public static final int NUMBER_OF_REPETITIONS = 5;
 	
 	private SmsTransactionLogic smsTransactionLogic;
 	private SmsAccountLogic smsAccountLogic;
@@ -123,7 +123,7 @@ public class SmsSampleDataLoad{
 	}
 
 	private  void deleteSmsAccounts(SmsAccountLogic smsAccountLogic) {
-		System.out.println("Deleting SmsAccounts");
+		System.out.println("Deleting SmsAccounts:");
 		List<SmsAccount> smsAccounts = smsAccountLogic.getAllSmsAccounts();
 		
 		for (SmsAccount smsAccount : smsAccounts) {
@@ -133,7 +133,7 @@ public class SmsSampleDataLoad{
 
 	private  void deleteSmsTransactions(
 			SmsTransactionLogic smsTransactionLogic) {
-		System.out.println("Deleting SmsTransactions");
+		System.out.println("Deleting SmsTransactions:");
 		List<SmsTransaction> smsTransactionsToDelete = smsTransactionLogic
 				.getAllSmsTransactions();
 
@@ -143,7 +143,7 @@ public class SmsSampleDataLoad{
 	}
 
 	private  void deleteSmsTasks(SmsTaskLogic smsTaskLogic) {
-		System.out.println("Deleting SmsTasks");
+		System.out.println("Deleting SmsTasks:");
 		List<SmsTask> smsTasksToDelete = smsTaskLogic.getAllSmsTask();
 
 		for (SmsTask smsTask : smsTasksToDelete) {
@@ -152,7 +152,7 @@ public class SmsSampleDataLoad{
 	}
 
 	private  void deleteSmsMessages(SmsMessageLogic smsMessageLogic) {
-		System.out.println("Deleting SmsMessages");
+		System.out.println("Deleting SmsMessages:");
 		List<SmsMessage> smsMessagesToDelete = smsMessageLogic
 				.getAllSmsMessages();
 

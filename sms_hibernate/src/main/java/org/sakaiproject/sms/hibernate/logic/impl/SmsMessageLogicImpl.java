@@ -188,8 +188,7 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 			}
 
 			// Date to send start
-			if (searchBean.getDateFrom() != null
-					&& !searchBean.getDateFrom().trim().equals("")) {
+			if (searchBean.getDateFrom() != null) {
 				Timestamp date = DateUtil
 						.getTimestampFromStartDateString(searchBean
 								.getDateFrom());
@@ -197,8 +196,7 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 			}
 
 			// Date to send end
-			if (searchBean.getDateTo() != null
-					&& !searchBean.getDateTo().trim().equals("")) {
+			if (searchBean.getDateTo() != null) {
 				Timestamp date = DateUtil
 						.getTimestampFromEndDateString(searchBean.getDateTo());
 				crit.add(Restrictions.le("smsTask.dateToSend", date));

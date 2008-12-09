@@ -128,6 +128,7 @@ public class SmsTaskLogicImpl extends SmsDao implements SmsTaskLogic {
 	 * @return List of SmsTask objetcs
 	 * @deprecated Currently no use for this method.
 	 */
+	@Deprecated
 	public List<SmsTask> getSmsTasksFilteredByMessageStatus(
 			String... messageStatusCodes) {
 
@@ -185,8 +186,7 @@ public class SmsTaskLogicImpl extends SmsDao implements SmsTaskLogic {
 			}
 
 			// Date to send start
-			if (searchBean.getDateFrom() != null
-					&& !searchBean.getDateFrom().trim().equals("")) {
+			if (searchBean.getDateFrom() != null) {
 				Timestamp date = DateUtil
 						.getTimestampFromStartDateString(searchBean
 								.getDateFrom());
@@ -194,8 +194,7 @@ public class SmsTaskLogicImpl extends SmsDao implements SmsTaskLogic {
 			}
 
 			// Date to send end
-			if (searchBean.getDateTo() != null
-					&& !searchBean.getDateTo().trim().equals("")) {
+			if (searchBean.getDateTo() != null) {
 				Timestamp date = DateUtil
 						.getTimestampFromEndDateString(searchBean.getDateTo());
 				crit.add(Restrictions.le("dateToSend", date));

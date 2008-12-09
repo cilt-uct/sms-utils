@@ -13,7 +13,6 @@ import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsSearchException;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
-import org.sakaiproject.sms.hibernate.util.DateUtil;
 import org.sakaiproject.sms.hibernate.util.HibernateUtil;
 
 /**
@@ -233,8 +232,8 @@ public class SmsTaskTest extends AbstractBaseTestCase {
 
 			SearchFilterBean bean = new SearchFilterBean();
 			bean.setStatus(insertTask.getStatusCode());
-			bean.setDateFrom(DateUtil.getDateString(new Date()));
-			bean.setDateTo(DateUtil.getDateString(new Date()));
+			bean.setDateFrom(new Date());
+			bean.setDateTo(new Date());
 			bean.setToolName(insertTask.getSakaiToolName());
 			bean.setSender(insertTask.getSenderUserName());
 

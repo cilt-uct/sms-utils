@@ -22,10 +22,10 @@
 		<td><input id="mobileNumber" onkeyup="checkNumbers()" type="text" rsf:id="id"></input></td>
 		<td>Date From:</td>
 		<td>
-			<input readonly="readonly" rsf:id="date-from" id="date-from" type="text" value="" />
-		</td>
-		<td>	
-			<img src="../images/calendar.gif" onclick="GetDate(document.getElementById('searchCriteria::date-from'));"/>
+			<span rsf:id="date-from:"> <input type="text"
+			id="start_date_dummy" name="start_date_dummy" value="MM/DD/YYYY"
+			size="12" maxlength="10" /> <img src="../images/calendar.gif"
+			alt="calendar" /> </span>
 		</td>
 		<td>Tool Name:</td>
 		<td><input id="toolName" type="text" rsf:id="tool-name"/></td>
@@ -39,10 +39,10 @@
 		</td>
 		<td>Date To:</td>
 		<td>
-			<input readonly="readonly" rsf:id="date-to" id="date-to" type="text" value="" />
-		</td>
-		<td>	
-			<img src="../images/calendar.gif" onclick="GetDate(document.getElementById('searchCriteria::date-to'))"/>
+			<span rsf:id="date-to:"> <input type="text"
+			id="start_date_dummy" name="start_date_dummy" value="MM/DD/YYYY"
+			size="12" maxlength="10" /> <img src="../images/calendar.gif"
+			alt="calendar" /> </span>
 		</td>
 		<td>Sender:</td>
 		<td><input id="sender" type="text" rsf:id="sender"/></td>
