@@ -18,7 +18,6 @@
 package org.sakaiproject.sms.producers;
 
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.sakaiproject.sms.hibernate.logic.SmsAccountLogic;
@@ -38,17 +37,6 @@ public class BillingAdminProducer implements ViewComponentProducer {
 	public static final String VIEW_ID = "billing_admin";
 
 	private SmsAccountLogic smsAccountLogic;
-
-	// Temporary: used for mocking Creates the sms account.
-	private SmsAccount createSmsAccount() {
-		SmsAccount account = new SmsAccount();
-		account.setBalance(200f);
-		account.setId(123l);
-		account.setOverdraftLimit(100f);
-		account.setSakaiSiteId("mocked site");
-		account.setSakaiUserId("mocked user id");
-		return account;
-	}
 
 	/**
 	 * @see uk.org.ponder.rsf.view.ComponentProducer#fillComponents(uk.org.ponder.rsf.components.UIContainer,
@@ -82,8 +70,8 @@ public class BillingAdminProducer implements ViewComponentProducer {
 				"sms.billing-admin.balance-title");
 
 		// TODO: Change to retrieve from SmsAccount service
-		List<SmsAccount> accounts = retrieveMockAccounts();
-		// List<SmsAccount> accounts = smsAccountLogic.getAllSmsAccounts();
+		// List<SmsAccount> accounts = retrieveMockAccounts();
+		List<SmsAccount> accounts = smsAccountLogic.getAllSmsAccounts();
 
 		// get number format for default locale
 		NumberFormat nf = NumberFormat.getInstance();
@@ -94,8 +82,9 @@ public class BillingAdminProducer implements ViewComponentProducer {
 					"account-entry:");
 
 			// TODO: Change link to go to edit account
-			UIInternalLink.make(entry, "account-name-link", "mocked name",
-					new SimpleViewParameters(SmsTestProducer.VIEW_ID));
+			UIInternalLink.make(entry, "account-name-link", "Mock name "
+					+ account.getId(), new SimpleViewParameters(
+					SmsTestProducer.VIEW_ID));
 			UIOutput.make(entry, "account-no", account.getId().toString());
 			UIOutput.make(entry, "sakai-site", account.getSakaiSiteId());
 			UIOutput.make(entry, "sakai-user", account.getSakaiUserId());
@@ -104,7 +93,6 @@ public class BillingAdminProducer implements ViewComponentProducer {
 			UIOutput.make(entry, "balance", nf.format(account.getBalance())
 					.toString());
 		}
-
 	}
 
 	/**
@@ -112,15 +100,6 @@ public class BillingAdminProducer implements ViewComponentProducer {
 	 */
 	public String getViewID() {
 		return VIEW_ID;
-	}
-
-	// Temporary: used for mocking
-	private List<SmsAccount> retrieveMockAccounts() {
-		List<SmsAccount> accounts = new ArrayList<SmsAccount>();
-		for (int i = 0; i < 10; i++) {
-			accounts.add(createSmsAccount());
-		}
-		return accounts;
 	}
 
 	public void setSmsAccountLogic(SmsAccountLogic smsAccountLogic) {
