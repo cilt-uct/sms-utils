@@ -87,7 +87,9 @@
   </bean>
   
   <!-- Locators -->
-  <bean id="SmsMessageLocator" class="org.sakaiproject.sms.otp.SmsMessageLocator" />
+  <bean id="SmsMessageLocator" class="org.sakaiproject.sms.otp.SmsMessageLocator" >
+  	<property name="smsMessageLogic" ref="smsMessageLogic" />
+  </bean>
   <bean id="SmsConfigLocator" class="org.sakaiproject.sms.otp.SmsConfigLocator">
   	<property name="smsConfigLogic" ref="smsConfigLogic"/>
   </bean>
