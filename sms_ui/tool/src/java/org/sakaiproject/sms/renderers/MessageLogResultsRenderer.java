@@ -140,12 +140,12 @@ public class MessageLogResultsRenderer implements SearchResultsRenderer {
 	private void setCurrentPage(SearchFilterBean searchBean, SortPagerViewParams sortViewParams) {
 		
 		//new search
-		if((searchBean.getCurrentPage() == 1) &&  (searchBean.getCurrentPage() + 1 != sortViewParams.current_start)){
+		if(searchBean.isNewSearch()){
 			sortViewParams.current_start = 1;
+			searchBean.setNewSearch(false);
 		}
 		else//paging
-			searchBean.setCurrentPage(sortViewParams.current_start);
-			
+			searchBean.setCurrentPage(sortViewParams.current_start);	
 	}
 
 }

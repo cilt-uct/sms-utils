@@ -68,12 +68,15 @@ public class SearchFilterBean {
 
 	/** The sort direction. */
 	private String sortDirection;
+	
+	private boolean newSearch;
 
 	/**
 	 * Instantiates a new search filter bean.
 	 */
 	public SearchFilterBean() {
 		super();
+		newSearch = true;
 		dateFrom = new Date();
 		dateTo = new Date();
 		currentPage = new Integer(1);
@@ -351,6 +354,7 @@ public class SearchFilterBean {
 	 */
 	public boolean fireAction() {
 		setCurrentPage(1);
+		setNewSearch(true);
 		return true;
 	}
 
@@ -365,5 +369,23 @@ public class SearchFilterBean {
 		}
 		// default to asc
 		return true;
+	}
+
+	/**
+	 * A boolean to differentiate between a new search or paging
+	 * 
+	 * @return new search
+	 */
+	public boolean isNewSearch() {
+		return newSearch;
+	}
+
+	/**
+	 * Set if the search is new
+	 * 
+	 * @param newSearch
+	 */
+	public void setNewSearch(boolean newSearch) {
+		this.newSearch = newSearch;
 	}
 }
