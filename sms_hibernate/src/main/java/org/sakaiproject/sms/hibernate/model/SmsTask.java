@@ -565,7 +565,7 @@ public class SmsTask extends BaseModel {
 		Iterator<SmsMessage> it = getSmsMessages().iterator();
 		while (it.hasNext()) {
 			SmsMessage message = it.next();
-			if (message.getSmscDeliveryStatusCode() == smscStatus) {
+			if (message.getSmscDeliveryStatusCode().equals(smscStatus)) {
 				filtered.add(message);
 			}
 		}
