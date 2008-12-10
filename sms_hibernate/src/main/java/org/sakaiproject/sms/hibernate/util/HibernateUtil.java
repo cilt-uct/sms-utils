@@ -25,6 +25,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
+import org.sakaiproject.sms.hibernate.model.BaseModel;
 
 /**
  * Configures hibernate with mapping definitions and configuration properties
@@ -67,11 +68,12 @@ public class HibernateUtil {
 	/**
 	 * Hibernate session factory - singleton.
 	 */
+	private static SessionFactory sessionFactory;
 
 	/**
 	 * Container for thread-scoped sessions.
 	 */
-	public static final ThreadLocal session = new ThreadLocal();
+	private static final ThreadLocal session = new ThreadLocal();
 
 	/** The test configuration. */
 	private static boolean testConfiguration = false;
@@ -110,7 +112,6 @@ public class HibernateUtil {
 
 		// load bean mappings
 		configuration.configure(CONFIG_FILE_LOCATION);
-
 		// load hibernate propeties
 		Properties properties = null;
 		if (testConfiguration) {
@@ -133,16 +134,21 @@ public class HibernateUtil {
 	 *                if any error occurs reading the hibernate configuration
 	 *                files
 	 */
-	private static final SessionFactory sessionFactory;
 
-	static {
+	private static SessionFactory getSessionFactory() {
 		try {
-			sessionFactory = new Configuration().configure()
-					.buildSessionFactory();
+			if (sessionFactory == null) {
+				sessionFactory = getConfiguration().buildSessionFactory();
+			}
 		} catch (HibernateException ex) {
 			throw new RuntimeException("Exception building SessionFactory: "
 					+ ex.getMessage(), ex);
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new HibernateException("Error reading hibernate properties: "
+					+ e.getMessage(), e);
 		}
+		return sessionFactory;
 	}
 
 	/**
@@ -150,9 +156,9 @@ public class HibernateUtil {
 	 */
 	public static void createSchema() {
 		try {
-			currentSession();
+			// currentSession();
 			new SchemaExport(getConfiguration()).create(false, true);
-			closeSession();
+			// closeSession();
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new HibernateException("Error reading hibernate properties: "
@@ -172,7 +178,7 @@ public class HibernateUtil {
 		Session s = (Session) session.get();
 		// Open a new Session, if this Thread has none yet
 		if (s == null) {
-			s = sessionFactory.openSession();
+			s = getSessionFactory().openSession();
 			session.set(s);
 		}
 		return s;
@@ -185,8 +191,6 @@ public class HibernateUtil {
 			s.close();
 	}
 
-	
-
 	/**
 	 * Sets the test configuration.
 	 * 
@@ -195,6 +199,22 @@ public class HibernateUtil {
 	 */
 	public static void setTestConfiguration(boolean testConfiguration) {
 		HibernateUtil.testConfiguration = testConfiguration;
+	}
+
+	/**
+	 * Clears the session cache
+	 */
+	public static void clear() {
+		((Session) session.get()).clear();
+	}
+
+	/**
+	 * Evicts the object from the session
+	 * 
+	 * @param model
+	 */
+	public static void evict(BaseModel model) {
+		((Session) session.get()).evict(model);
 	}
 
 }
