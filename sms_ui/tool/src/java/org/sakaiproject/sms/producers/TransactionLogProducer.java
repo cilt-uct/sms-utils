@@ -33,7 +33,7 @@ public class TransactionLogProducer extends AbstractSearchListProducer {
 
 	@Override
 	public String getDefaultSortColumn() {
-		return "smsAccount";
+		return "transactionDate";
 	}
 
 }

@@ -34,7 +34,7 @@ public class MessageLogProducer extends AbstractSearchListProducer{
 
 	@Override
 	public String getDefaultSortColumn() {
-		return "smsTask.deliveryGroupName";
+		return "smsTask.dateProcessed";
 	}
 
 }
