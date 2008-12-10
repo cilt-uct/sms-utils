@@ -27,7 +27,6 @@ import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.sakaiproject.sms.hibernate.bean.SearchFilterBean;
@@ -103,34 +102,16 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 	 * @return sms message
 	 */
 	public SmsMessage getSmsMessageBySmscMessageId(String smscMessageId) {
-		Session session = HibernateUtil.getSessionFactory().openSession();
-		try {
-
-			Transaction tx = null;
-			tx = session.beginTransaction();
-			Query query = session
-					.createQuery("from SmsMessage mes where mes.smscMessageId = :smscId ");
-			query.setParameter("smscId", smscMessageId, Hibernate.STRING);
-			List<SmsMessage> messages = query.list();
-			tx.commit();
-
-			if (messages != null && messages.size() > 0) {
-				return messages.get(0);
-			}
-		} finally {
-			session.close();
+		Session s = HibernateUtil.currentSession();
+		Query query = s
+				.createQuery("from SmsMessage mes where mes.smscMessageId = :smscId ");
+		query.setParameter("smscId", smscMessageId, Hibernate.STRING);
+		List<SmsMessage> messages = query.list();
+		HibernateUtil.closeSession();
+		if (messages != null && messages.size() > 0) {
+			return messages.get(0);
 		}
 		return null;
-
-		/*
-		 * Session s = HibernateUtil.currentSession(); Query query = s
-		 * .createQuery
-		 * ("from SmsMessage mes where mes.smscMessageId = :smscId ");
-		 * query.setParameter("smscId", smscMessageId, Hibernate.STRING);
-		 * List<SmsMessage> messages = query.list();
-		 * HibernateUtil.closeSession(); if (messages != null && messages.size()
-		 * > 0) { return messages.get(0); } return null;
-		 */
 	}
 
 	/**
