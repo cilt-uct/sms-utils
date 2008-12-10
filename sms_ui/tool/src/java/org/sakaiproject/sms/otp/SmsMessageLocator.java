@@ -20,10 +20,10 @@ package org.sakaiproject.sms.otp;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.sakaiproject.sms.hibernate.logic.SmsMessageLogic;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 
 import uk.org.ponder.beanutil.BeanLocator;
-
 
 /**
  * The Class SmsMessageLocator.
@@ -41,6 +41,8 @@ public class SmsMessageLocator implements BeanLocator {
 	/** The delivered map (used to store beans). */
 	private final Map<String, SmsMessage> delivered = new HashMap<String, SmsMessage>();
 
+	private SmsMessageLogic smsMessageLogic;
+
 	/**
 	 * Retrieves SmsMessage bean
 	 * 
@@ -50,7 +52,7 @@ public class SmsMessageLocator implements BeanLocator {
 		SmsMessage togo = delivered.get(name);
 		if (togo == null) {
 			if (name.startsWith(NEW_PREFIX)) {
-				togo = new SmsMessage("", "");
+				togo = smsMessageLogic.getNewTestSmsMessageInstance("", "");
 			} else {
 				// TODO: Retrieve it from database
 			}
@@ -58,5 +60,8 @@ public class SmsMessageLocator implements BeanLocator {
 		}
 		return togo;
 	}
-}
 
+	public void setSmsMessageLogic(SmsMessageLogic smsMessageLogic) {
+		this.smsMessageLogic = smsMessageLogic;
+	}
+}
