@@ -86,14 +86,25 @@ public abstract class AbstractSearchListProducer implements
 
 		tablePagerRenderer.createPager(tofill, "searchPager:", sortParams,
 				getViewID());
-		exportToCSV(tofill);
+		UIBranchContainer branchContainer = exportToCSV(tofill);
+		addAddtionalButtons(branchContainer);
 	}
 
-	private void exportToCSV(UIContainer tofill) {
-		UIBranchContainer exportToCSV = UIJointContainer.make(tofill,
+	/**
+	 * A Extension point for implementations
+	 * 
+	 * @param tofill
+	 */
+	protected void addAddtionalButtons(UIBranchContainer branch) {
+		
+	}
+
+	private UIBranchContainer exportToCSV(UIContainer tofill) {
+		UIBranchContainer branchContainer = UIJointContainer.make(tofill,
 				"export:", "search-results:");
-		UICommand.make(exportToCSV, "export-to-csv",
+		UICommand.make(branchContainer, "export-to-csv",
 				"#{csvActionBean.fireAction}");
+		return branchContainer;
 	}
 
 	public ViewParameters getViewParameters() {
