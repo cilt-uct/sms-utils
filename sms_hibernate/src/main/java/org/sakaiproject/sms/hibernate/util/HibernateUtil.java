@@ -67,11 +67,12 @@ public class HibernateUtil {
 	/**
 	 * Hibernate session factory - singleton.
 	 */
+	private static SessionFactory sessionFactory = null;
 
 	/**
 	 * Container for thread-scoped sessions.
 	 */
-	public static final ThreadLocal session = new ThreadLocal();
+	private static Session session = null;
 
 	/** The test configuration. */
 	private static boolean testConfiguration = false;
@@ -133,16 +134,19 @@ public class HibernateUtil {
 	 *                if any error occurs reading the hibernate configuration
 	 *                files
 	 */
-	private static final SessionFactory sessionFactory;
-
-	static {
-		try {
-			sessionFactory = new Configuration().configure()
-					.buildSessionFactory();
-		} catch (HibernateException ex) {
-			throw new RuntimeException("Exception building SessionFactory: "
-					+ ex.getMessage(), ex);
+	private static SessionFactory getSessionFactory() throws HibernateException {
+		// if no session factory exists, create a new one
+		if (sessionFactory == null) {
+			try {
+				Configuration configuration = getConfiguration();
+				sessionFactory = configuration.buildSessionFactory();
+			} catch (IOException e) {
+				throw new HibernateException(
+						"Error reading hibernate properties: " + e.getMessage(),
+						e);
+			}
 		}
+		return sessionFactory;
 	}
 
 	/**
@@ -169,20 +173,23 @@ public class HibernateUtil {
 	 *                if any error occurs opening the hibernate session
 	 */
 	public static Session currentSession() throws HibernateException {
-		Session s = (Session) session.get();
-		// Open a new Session, if this Thread has none yet
-		if (s == null) {
-			s = sessionFactory.openSession();
-			session.set(s);
+		if (session == null) {
+			session = getSessionFactory().openSession();
 		}
-		return s;
+		return session;
 	}
 
+	/**
+	 * Closes the current thread's hibernate session.
+	 * 
+	 * @exception HibernateException
+	 *                if any error occurs closing the current thread's hibernate
+	 *                session
+	 */
 	public static void closeSession() throws HibernateException {
-		Session s = (Session) session.get();
-		session.set(null);
-		if (s != null)
-			s.close();
+		if (session != null) {
+			session.flush();
+		}
 	}
 
 	/**
@@ -192,6 +199,11 @@ public class HibernateUtil {
 	 *                if any error occurs clearing the current thread's
 	 *                hibernate session
 	 */
+	public static void clearSession() throws HibernateException {
+		if (session != null) {
+			session.clear();
+		}
+	}
 
 	/**
 	 * Sets the test configuration.
