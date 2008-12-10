@@ -108,7 +108,7 @@ public class SmppAPITest extends TestCase {
 
 		for (int i = 0; i < 10; i++) {
 			SmsMessage message = new SmsMessage();
-			message.setMobileNumber("0721998919");
+			message.setMobileNumber("072199891" + i);
 			message.setSakaiUserId("sakaiUserId");
 			message.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
 			message.setSmsTask(insertTask);
@@ -116,6 +116,7 @@ public class SmppAPITest extends TestCase {
 
 		}
 		insertTask.setSmsMessagesOnTask(smsMessages);
+		smsTaskLogicImpl.persistSmsTask(insertTask);
 		assertEquals(true, smsSmppImpl.sendMessagesToGateway(smsMessages)
 				.equals(SmsConst_DeliveryStatus.STATUS_SENT));
 		try {
@@ -123,10 +124,11 @@ public class SmppAPITest extends TestCase {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		SmsTask insertTask3 = smsTaskLogicImpl.getSmsTask(insertTask.getId());
-		assertEquals(true, insertTask3.getMessagesWithSmscStatus(
+		insertTask = smsTaskLogicImpl.getSmsTask(insertTask.getId());
+		insertTask.getSmsMessages().size();
+		assertEquals(true, insertTask.getMessagesWithSmscStatus(
 				SmsConst_SmscDeliveryStatus.ENROUTE).size() == 0);
-		smsTaskLogicImpl.deleteSmsTask(insertTask3);
+		smsTaskLogicImpl.deleteSmsTask(insertTask);
 	}
 
 	/**
@@ -140,12 +142,13 @@ public class SmppAPITest extends TestCase {
 						.currentTimeMillis()), 0);
 		Set<SmsMessage> smsMessages = new HashSet<SmsMessage>();
 		SmsMessage insertMessage1 = new SmsMessage();
-		insertMessage1.setMobileNumber("0721998919");
+		insertMessage1.setMobileNumber("0731998919");
 		insertMessage1.setSakaiUserId("sakaiUserId");
 		insertMessage1.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
 		insertMessage1.setSmsTask(insertTask);
 		smsMessages.add(insertMessage1);
 		insertTask.setSmsMessagesOnTask(smsMessages);
+		smsTaskLogicImpl.persistSmsTask(insertTask);
 		assertEquals(true, smsSmppImpl.sendMessageToGateway(insertMessage1)
 				.getSmscMessageId() != null);
 		try {
