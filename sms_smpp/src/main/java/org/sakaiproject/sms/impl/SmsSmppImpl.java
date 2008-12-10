@@ -513,7 +513,7 @@ public class SmsSmppImpl implements SmsSmpp {
 	/**
 	 * Send one message to the SMS gateway. Return result code to caller.
 	 */
-	public synchronized SmsMessage sendMessageToGateway(SmsMessage message) {
+	public SmsMessage sendMessageToGateway(SmsMessage message) {
 
 		if (gatewayBound) {
 			try {

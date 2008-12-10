@@ -150,7 +150,7 @@ public class SmsCoreImpl implements SmsCore {
 	public void processNextTask() {
 		SmsTask smsTask = smsTaskLogic.getNextSmsTask();
 		if (smsTask != null) {
-			this.processTask(smsTaskLogic.getNextSmsTask());
+			this.processTask(smsTask);
 		}
 	}
 
@@ -168,7 +168,7 @@ public class SmsCoreImpl implements SmsCore {
 		smsTask.setAttemptCount((smsTask.getAttemptCount()) + 1);
 		if (smsTask.getAttemptCount() < MAX_RETRY) {
 			if (smsTask.getAttemptCount() <= 1) {
-				smsTask.setSmsMessagesOnTask(getDeliveryGroup(smsTask
+				smsTask.setSmsMessagesOnTask(this.getDeliveryGroup(smsTask
 						.getSakaiSiteId(), smsTask.getDeliveryGroupId(),
 						smsTask));
 				LOG.info("Total messages on task:="
