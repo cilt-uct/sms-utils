@@ -29,10 +29,11 @@
         <property name="deliveryGroupName" type="string" column="DELIVERY_GROUP_NAME" not-null="false" length="50"/>
         <property name="groupSizeEstimate" type="integer" column="GROUP_SIZE_ESTIMATE" not-null="false"/>
         <property name="groupSizeActual" type="integer" column="GROUP_SIZE_ACTUAL" not-null="false"/>
-        <set name="smsMessages" inverse="true" cascade="all-delete-orphan">
+        <set name="smsMessages" inverse="true" cascade="all-delete-orphan" lazy="false">
             <key column="MESSAGE_ID" not-null="true"/>            
             <one-to-many class="org.sakaiproject.sms.hibernate.model.SmsMessage" not-found="ignore"/>
         </set>
+        
     </class>
     
     

@@ -77,7 +77,6 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 		Session s = HibernateUtil.currentSession();
 		Query query = s.createQuery("from SmsMessage");
 		List<SmsMessage> messages = query.list();
-		HibernateUtil.closeSession();
 		return messages;
 	}
 
@@ -107,11 +106,11 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 				.createQuery("from SmsMessage mes where mes.smscMessageId = :smscId ");
 		query.setParameter("smscId", smscMessageId, Hibernate.STRING);
 		List<SmsMessage> messages = query.list();
-		HibernateUtil.closeSession();
 		if (messages != null && messages.size() > 0) {
 			return messages.get(0);
 		}
 		return null;
+
 	}
 
 	/**
@@ -235,7 +234,7 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 		con.setTotalResultSetSize(new Long(messages.size()));
 		con.calculateAndSetPageResults(messages, searchBean.getCurrentPage());
 
-		HibernateUtil.closeSession();
+		//HibernateUtil.closeSession();
 		return con;
 	}
 

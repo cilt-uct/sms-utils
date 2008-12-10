@@ -71,7 +71,7 @@ abstract public class BaseDao {
 			tx.rollback();
 			throw e;
 		} finally {
-			HibernateUtil.closeSession();
+			// HibernateUtil.closeSession();
 		}
 	}
 
@@ -115,7 +115,7 @@ abstract public class BaseDao {
 		} catch (ObjectNotFoundException ex) {
 			obj = null;
 		} finally {
-			HibernateUtil.closeSession();
+			// HibernateUtil.closeSession();
 		}
 		return obj;
 	}

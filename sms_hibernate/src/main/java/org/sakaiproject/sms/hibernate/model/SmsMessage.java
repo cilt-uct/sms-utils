@@ -333,9 +333,7 @@ public class SmsMessage extends BaseModel {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (!super.equals(obj))
-			return false;
-		if (!(obj instanceof SmsMessage))
+		if (getClass() != obj.getClass())
 			return false;
 		SmsMessage other = (SmsMessage) obj;
 		if (DebugInfo == null) {

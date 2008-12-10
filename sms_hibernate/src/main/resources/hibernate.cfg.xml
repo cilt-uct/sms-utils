@@ -6,7 +6,7 @@
 <hibernate-configuration>
 
 	<session-factory>
-
+<property name="hibernate.current_session_context_class">org.hibernate.context.ThreadLocalSessionContext</property>
 		<!-- Hibernate properties are read from hibernate.properties -->
 		<!-- Only specify location of mapping files here-->
 		

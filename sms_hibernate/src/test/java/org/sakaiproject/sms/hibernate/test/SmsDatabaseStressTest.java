@@ -104,7 +104,7 @@ public class SmsDatabaseStressTest extends AbstractBaseTestCase {
 	 * Test get task message.
 	 */
 	public void testGetTaskMessage() {
-		HibernateUtil.clearSession();
+
 		SmsMessage theMessage = messageLogic.getSmsMessage(firstMessageID);
 		assertNotNull(theMessage);
 	}
@@ -113,7 +113,7 @@ public class SmsDatabaseStressTest extends AbstractBaseTestCase {
 	 * Test delete tasks.
 	 */
 	public void testDeleteTasks() {
-		HibernateUtil.clearSession();
+
 		taskLogic.deleteSmsTask(smsTask);
 		SmsTask getSmsTask = taskLogic.getSmsTask(smsTaskID);
 		assertNull("Task not removed", getSmsTask);
