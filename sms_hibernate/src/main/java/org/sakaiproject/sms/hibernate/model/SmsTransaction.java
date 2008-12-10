@@ -20,6 +20,8 @@ package org.sakaiproject.sms.hibernate.model;
 
 import java.sql.Timestamp;
 
+import org.sakaiproject.sms.hibernate.util.DateUtil;
+
 /**
  * Transactions linked to a specific sms account. When a sms task is created, a
  * transaction will be inserted indicating that credits are reserved. When the
@@ -168,7 +170,7 @@ public class SmsTransaction extends BaseModel {
 	 *            the new transaction date
 	 */
 	public void setTransactionDate(Timestamp transactionDate) {
-		this.transactionDate = transactionDate;
+		this.transactionDate = DateUtil.getUsableTimeStamp(transactionDate);
 	}
 
 	/**
@@ -212,7 +214,8 @@ public class SmsTransaction extends BaseModel {
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = super.hashCode();
+		// int result = super.hashCode();
+		int result = 43;
 		result = prime * result + ((balance == null) ? 0 : balance.hashCode());
 		result = prime * result
 				+ ((sakaiUserId == null) ? 0 : sakaiUserId.hashCode());
@@ -237,8 +240,6 @@ public class SmsTransaction extends BaseModel {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (!super.equals(obj))
-			return false;
 		if (!(obj instanceof SmsTransaction))
 			return false;
 		SmsTransaction other = (SmsTransaction) obj;

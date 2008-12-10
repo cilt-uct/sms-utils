@@ -52,6 +52,9 @@ public class SmsAccount extends BaseModel {
 	/** The sms transactions. */
 	private Set<SmsTransaction> smsTransactions = new HashSet<SmsTransaction>();
 
+	/** The account name. */
+	private String accountName;
+
 	/**
 	 * Instantiates a new sms account.
 	 */
@@ -185,10 +188,30 @@ public class SmsAccount extends BaseModel {
 		this.smsTransactions = smsTransactions;
 	}
 
+	/**
+	 * Gets the account name.
+	 * 
+	 * @return the account name
+	 */
+	public String getAccountName() {
+		return accountName;
+	}
+
+	/**
+	 * Sets the account name.
+	 * 
+	 * @param accountName
+	 *            the new account name
+	 */
+	public void setAccountName(String accountName) {
+		this.accountName = accountName;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = super.hashCode();
+		// int result = super.hashCode();
+		int result = 43;
 		result = prime * result + ((balance == null) ? 0 : balance.hashCode());
 		result = prime * result
 				+ ((messageTypeCode == null) ? 0 : messageTypeCode.hashCode());
@@ -198,8 +221,6 @@ public class SmsAccount extends BaseModel {
 				+ ((sakaiSiteId == null) ? 0 : sakaiSiteId.hashCode());
 		result = prime * result
 				+ ((sakaiUserId == null) ? 0 : sakaiUserId.hashCode());
-		result = prime * result
-				+ ((smsTransactions == null) ? 0 : smsTransactions.hashCode());
 		return result;
 	}
 
@@ -207,8 +228,6 @@ public class SmsAccount extends BaseModel {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (!super.equals(obj))
-			return false;
 		if (!(obj instanceof SmsAccount))
 			return false;
 		SmsAccount other = (SmsAccount) obj;
@@ -237,11 +256,7 @@ public class SmsAccount extends BaseModel {
 				return false;
 		} else if (!sakaiUserId.equals(other.sakaiUserId))
 			return false;
-		if (smsTransactions == null) {
-			if (other.smsTransactions != null)
-				return false;
-		} else if (!smsTransactions.equals(other.smsTransactions))
-			return false;
 		return true;
 	}
+
 }

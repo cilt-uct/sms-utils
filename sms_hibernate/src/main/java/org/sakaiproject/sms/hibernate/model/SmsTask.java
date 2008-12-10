@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
+import org.sakaiproject.sms.hibernate.util.DateUtil;
 
 /**
  * A sms task that needs to be processed. For example: send message X to sakai
@@ -348,7 +349,7 @@ public class SmsTask extends BaseModel {
 	 *            the new date created
 	 */
 	public void setDateCreated(Timestamp dateCreated) {
-		this.dateCreated = dateCreated;
+		this.dateCreated = DateUtil.getUsableTimeStamp(dateCreated);
 	}
 
 	/**
@@ -358,7 +359,7 @@ public class SmsTask extends BaseModel {
 	 *            the new date processed
 	 */
 	public void setDateProcessed(Timestamp dateProcessed) {
-		this.dateProcessed = dateProcessed;
+		this.dateProcessed = DateUtil.getUsableTimeStamp(dateProcessed);
 	}
 
 	/**
@@ -368,7 +369,7 @@ public class SmsTask extends BaseModel {
 	 *            the new date to send
 	 */
 	public void setDateToSend(Timestamp dateToSend) {
-		this.dateToSend = dateToSend;
+		this.dateToSend = DateUtil.getUsableTimeStamp(dateToSend);
 	}
 
 	/**
@@ -597,7 +598,8 @@ public class SmsTask extends BaseModel {
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = super.hashCode();
+		// int result = super.hashCode();
+		int result = 43;
 		result = prime * result
 				+ ((attemptCount == null) ? 0 : attemptCount.hashCode());
 		result = prime * result
@@ -647,8 +649,6 @@ public class SmsTask extends BaseModel {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (!super.equals(obj))
-			return false;
 		if (!(obj instanceof SmsTask))
 			return false;
 		SmsTask other = (SmsTask) obj;

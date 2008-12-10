@@ -21,6 +21,7 @@ package org.sakaiproject.sms.hibernate.model;
 import java.sql.Timestamp;
 
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
+import org.sakaiproject.sms.hibernate.util.DateUtil;
 
 /**
  * A single sms message. One or more messages is linked to a sms task. When a
@@ -184,7 +185,7 @@ public class SmsMessage extends BaseModel {
 	 *            the new date delivered
 	 */
 	public void setDateDelivered(Timestamp dateDelivered) {
-		this.dateDelivered = dateDelivered;
+		this.dateDelivered = DateUtil.getUsableTimeStamp(dateDelivered);
 	}
 
 	/**
@@ -307,7 +308,8 @@ public class SmsMessage extends BaseModel {
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = super.hashCode();
+		// int result = super.hashCode();
+		int result = 43;
 		result = prime * result
 				+ ((DebugInfo == null) ? 0 : DebugInfo.hashCode());
 		result = prime * result
@@ -333,7 +335,7 @@ public class SmsMessage extends BaseModel {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (getClass() != obj.getClass())
+		if (!(obj instanceof SmsMessage))
 			return false;
 		SmsMessage other = (SmsMessage) obj;
 		if (DebugInfo == null) {
