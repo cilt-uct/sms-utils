@@ -18,6 +18,7 @@ public class SmsConfigTest extends AbstractBaseTestCase {
 	private static SmsConfig insertSmsConfig;
 
 	static {
+		HibernateUtil.setTestConfiguration(true);
 		HibernateUtil.createSchema();
 
 		logic = new SmsConfigLogicImpl();

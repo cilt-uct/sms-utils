@@ -171,7 +171,6 @@ public class SmsTransactionTest extends AbstractBaseTestCase {
 	 * Test delete sms transaction.
 	 */
 	public void testDeleteSmsTransaction() {
-		insertSmsTransaction.setSmsAccount(null);
 		logic.deleteSmsTransaction(insertSmsTransaction);
 		SmsTransaction getSmsTransaction = logic
 				.getSmsTransaction(insertSmsTransaction.getId());
