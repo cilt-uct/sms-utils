@@ -107,11 +107,6 @@ public class SmppAPITest extends TestCase {
 		assertTrue("Task for message not created", insertTask.exists());
 
 		for (int i = 0; i < 10; i++) {
-			try {
-				Thread.sleep(10);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
 			SmsMessage message = new SmsMessage();
 			message.setMobileNumber("0721998919");
 			message.setSakaiUserId("sakaiUserId");
@@ -120,18 +115,18 @@ public class SmppAPITest extends TestCase {
 			smsMessages.add(message);
 
 		}
-
+		insertTask.setSmsMessagesOnTask(smsMessages);
 		assertEquals(true, smsSmppImpl.sendMessagesToGateway(smsMessages)
 				.equals(SmsConst_DeliveryStatus.STATUS_SENT));
-
 		try {
 			Thread.sleep(10000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		assertEquals(true, insertTask.getMessagesWithSmscStatus(
+		SmsTask insertTask3 = smsTaskLogicImpl.getSmsTask(insertTask.getId());
+		assertEquals(true, insertTask3.getMessagesWithSmscStatus(
 				SmsConst_SmscDeliveryStatus.ENROUTE).size() == 0);
-		smsTaskLogicImpl.deleteSmsTask(insertTask);
+		smsTaskLogicImpl.deleteSmsTask(insertTask3);
 	}
 
 	/**
@@ -143,20 +138,22 @@ public class SmppAPITest extends TestCase {
 		SmsTask insertTask = insertNewTask("testSendMessageToGateway",
 				SmsConst_DeliveryStatus.STATUS_PENDING, new Timestamp(System
 						.currentTimeMillis()), 0);
-
+		Set<SmsMessage> smsMessages = new HashSet<SmsMessage>();
 		SmsMessage insertMessage1 = new SmsMessage();
 		insertMessage1.setMobileNumber("0721998919");
 		insertMessage1.setSakaiUserId("sakaiUserId");
 		insertMessage1.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
 		insertMessage1.setSmsTask(insertTask);
-
+		smsMessages.add(insertMessage1);
+		insertTask.setSmsMessagesOnTask(smsMessages);
 		assertEquals(true, smsSmppImpl.sendMessageToGateway(insertMessage1)
 				.getSmscMessageId() != null);
 		try {
-			Thread.sleep(3000);
+			Thread.sleep(5000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		insertTask = smsTaskLogicImpl.getSmsTask(insertTask.getId());
 		assertEquals(true, insertTask.getMessagesWithSmscStatus(
 				SmsConst_SmscDeliveryStatus.ENROUTE).size() == 0);
 		smsTaskLogicImpl.deleteSmsTask(insertTask);
