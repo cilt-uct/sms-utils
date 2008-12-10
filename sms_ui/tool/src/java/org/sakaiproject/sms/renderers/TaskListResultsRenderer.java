@@ -18,6 +18,7 @@
 
 package org.sakaiproject.sms.renderers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.sakaiproject.sms.hibernate.bean.SearchFilterBean;
@@ -67,7 +68,12 @@ public class TaskListResultsRenderer implements SearchResultsRenderer{
 		List<SmsTask> smsTaskList = null;
 		boolean fail = false;
 		try {
-			smsTaskList = smsTaskLogic.getSmsTasksForCriteria(searchFilterBean);
+			if(NullHandling.safeDateCheck(searchFilterBean.getDateFrom(), searchFilterBean.getDateTo())){
+				smsTaskList = smsTaskLogic.getSmsTasksForCriteria(searchFilterBean);
+			}
+			else{
+				smsTaskList = new ArrayList<SmsTask>();
+			}
 		} catch (SmsSearchException e) {
 			LOG.error(e);
 			fail = true;

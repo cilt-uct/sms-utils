@@ -55,6 +55,14 @@
 	<property name="guard"><bean class="org.sakaiproject.sms.validators.SmsConfigValidator" /></property>
   </bean>
   
+  <!--  
+  <bean id="smsTaskListGaurd" parent="writeGuardParent">
+  	<property name="guardedPath" value="searchTaskList"/>
+	<property name="guard"><bean class="org.sakaiproject.sms.validators.SmsTaskListValidator" /></property>
+  </bean>
+  -->
+ 
+  
   <!--
 	Override this definition from RSF-evolvers, to reflect the fact we are
 	serving the RSF components templates from our own webapp (as provided

@@ -38,12 +38,12 @@ public class TablePagerRenderer {
 		
 		ViewParameters new_params = sortParams.copyBase();
 		
-		if(currentStart != 0){
+		if(currentStart > 1){
 			((SortPagerViewParams)new_params).current_start -= 1;
 			UIInternalLink.make(joint, "prev", new_params);
 		}
 		
-		UIOutput.make(joint, "page-count", " Page " + (currentStart+1)  + " of " + (currentCount+1) + " ");
+		UIOutput.make(joint, "page-count", " Page " + (currentStart)  + " of " + (currentCount) + " ");
 
 		if(currentStart != currentCount){
 			new_params = sortParams.copyBase();		

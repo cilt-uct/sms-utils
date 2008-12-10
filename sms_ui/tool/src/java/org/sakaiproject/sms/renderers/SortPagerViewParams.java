@@ -48,6 +48,7 @@ public class SortPagerViewParams extends PagerViewParams {
     }
     
     
+	@Override
 	public String getParseSpec() {
 		// include a comma delimited list of the public properties in this class
 		return super.getParseSpec() + ",sortBy,sortDir,viewtype,currentStart,currentCount";

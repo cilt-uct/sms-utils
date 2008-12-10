@@ -1,6 +1,7 @@
 package org.sakaiproject.sms.util;
 
 import java.sql.Timestamp;
+import java.util.Date;
 
 public class NullHandling {
 
@@ -18,6 +19,17 @@ public class NullHandling {
 			return "N/A";
 		else
 			return timestamp.toString();
+	}
+	
+	public static boolean safeDateCheck(Date from, Date to){
+		
+		if(from == null || to == null)
+			return false;
+		
+		if(from.compareTo(to) > 0)
+			return false;
+		
+		return true;
 	}
 	
 }

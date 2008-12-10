@@ -18,6 +18,7 @@
 
 package org.sakaiproject.sms.renderers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.sakaiproject.sms.hibernate.bean.SearchFilterBean;
@@ -67,8 +68,14 @@ public class TransactionLogResultsRenderer implements SearchResultsRenderer {
 		List<SmsTransaction> smsTransactions = null;
 		boolean fail = false;
 		try {
-			smsTransactions = smsTransactionLogic
-					.getSmsTransactionsForCriteria(searchFilterBean);
+			if(NullHandling.safeDateCheck(searchFilterBean.getDateFrom(), searchFilterBean.getDateTo())){
+				smsTransactions = smsTransactionLogic.getSmsTransactionsForCriteria(searchFilterBean);
+			}
+			else{
+				smsTransactions = new ArrayList<SmsTransaction>();
+			}
+			
+			
 		} catch (SmsSearchException e) {
 			LOG.error(e);
 			fail = true;

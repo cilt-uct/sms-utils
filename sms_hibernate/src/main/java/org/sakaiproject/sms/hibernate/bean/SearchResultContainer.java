@@ -58,6 +58,16 @@ public class SearchResultContainer<T extends BaseModel> {
 	public Long getTotalResultSetSize() {
 		return totalResultSetSize;
 	}
+	
+	/**
+	 * Get the number of pages the user can view
+	 * 
+	 * @return the number of pages
+	 */
+	public int getNumberOfPages(){
+		return (int) Math.round((((float) totalResultSetSize.longValue())/ (float) SmsHibernateConstants.DEFAULT_PAGE_SIZE) + 0.5);
+	}
+	
 
 	/**
 	 * Sets the total result set size.

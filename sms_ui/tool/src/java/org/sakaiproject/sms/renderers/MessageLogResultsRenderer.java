@@ -18,9 +18,8 @@
 
 package org.sakaiproject.sms.renderers;
 
-import java.util.List;
-
 import org.sakaiproject.sms.hibernate.bean.SearchFilterBean;
+import org.sakaiproject.sms.hibernate.bean.SearchResultContainer;
 import org.sakaiproject.sms.hibernate.logic.SmsMessageLogic;
 import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsSearchException;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
@@ -63,12 +62,19 @@ public class MessageLogResultsRenderer implements SearchResultsRenderer {
 		searchFilterBean.setOrderBy(sortViewParams.sortBy);
 		searchFilterBean.setSortDirection(sortViewParams.sortDir);
 		searchFilterBean.setCurrentPage(sortViewParams.current_start);
+		
 
-		List<SmsMessage> smsMessageList = null;
+		SearchResultContainer<SmsMessage> smsMessageList = null;
 		boolean fail = false;
 		try {
-			smsMessageList = smsMessageLogic.getSmsMessagesForCriteria(
-					searchFilterBean).getPageResults();
+			if(NullHandling.safeDateCheck(searchFilterBean.getDateFrom(), searchFilterBean.getDateTo())){
+				smsMessageList = smsMessageLogic.getSmsMessagesForCriteria(searchFilterBean);
+				sortViewParams.current_count = smsMessageList.getNumberOfPages();
+			}
+			else{
+				smsMessageList = new SearchResultContainer<SmsMessage>();
+				sortViewParams.current_count = 1;
+			}
 		} catch (SmsSearchException e) {
 			LOG.error(e);
 			fail = true;
@@ -108,7 +114,7 @@ public class MessageLogResultsRenderer implements SearchResultsRenderer {
 					"smsTask.statusCode",
 					"sms.message-log-search-results.account.Status");
 
-			for (SmsMessage smsMessage : smsMessageList) {
+			for (SmsMessage smsMessage : smsMessageList.getPageResults()) {
 
 				// smsMessage.
 				UIBranchContainer row = UIBranchContainer.make(

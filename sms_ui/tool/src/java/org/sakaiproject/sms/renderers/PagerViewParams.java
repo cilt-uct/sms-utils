@@ -24,7 +24,7 @@ import uk.org.ponder.rsf.viewstate.SimpleViewParameters;
 
 public class PagerViewParams extends SimpleViewParameters {
 
-	public int current_start = 0;
+	public int current_start = 1;
 	public int current_count = SmsHibernateConstants.DEFAULT_PAGE_SIZE;
 
 	public PagerViewParams() {
@@ -40,6 +40,7 @@ public class PagerViewParams extends SimpleViewParameters {
 		this.current_count = currentCount;
 	}
 
+	@Override
 	public String getParseSpec() {
 		// include a comma delimited list of the public properties in this class
 		return super.getParseSpec() + ",current_start,current_count";
