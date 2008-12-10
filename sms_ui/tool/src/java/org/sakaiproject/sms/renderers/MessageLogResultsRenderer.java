@@ -86,7 +86,7 @@ public class MessageLogResultsRenderer implements SearchResultsRenderer {
 		else {
 			sortHeaderRenderer.makeSortingLink(searchResultsTable,
 					"tableheader-group:", sortViewParams,
-					"smsTask.deliveryGroupName",
+					"smsTask.deliveryGroupId",
 					"sms.message-log-search-results.account.group");
 			sortHeaderRenderer.makeSortingLink(searchResultsTable,
 					"tableheader-tool-name:", sortViewParams,
@@ -99,7 +99,7 @@ public class MessageLogResultsRenderer implements SearchResultsRenderer {
 			sortHeaderRenderer.makeSortingLink(searchResultsTable,
 					"tableheader-receiver:", sortViewParams,
 					"smsTask.deliveryGroupName",
-					"sms.message-log-search-results.account.reciver");
+					"sms.message-log-search-results.account.reciever");
 			sortHeaderRenderer.makeSortingLink(searchResultsTable,
 					"tableheader-mobile-number:", sortViewParams,
 					"mobileNumber",
@@ -118,8 +118,7 @@ public class MessageLogResultsRenderer implements SearchResultsRenderer {
 				UIBranchContainer row = UIBranchContainer.make(
 						searchResultsTable, "dataset:");
 
-				UIOutput.make(row, "row-data-group", smsMessage.getSmsTask()
-						.getDeliveryGroupName());
+				UIOutput.make(row, "row-data-group", smsMessage.getSmsTask().getDeliveryGroupId());
 				UIOutput.make(row, "row-data-tool-name", smsMessage
 						.getSmsTask().getSakaiToolName());
 				UIOutput.make(row, "row-data-sender", smsMessage.getSmsTask()
