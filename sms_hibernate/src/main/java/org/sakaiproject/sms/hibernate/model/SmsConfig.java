@@ -183,7 +183,8 @@ public class SmsConfig extends BaseModel {
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = super.hashCode();
+		// int result = super.hashCode();
+		int result = 43;
 		result = prime
 				* result
 				+ ((gateWayReportTimeout == null) ? 0 : gateWayReportTimeout
@@ -205,8 +206,6 @@ public class SmsConfig extends BaseModel {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (!super.equals(obj))
-			return false;
 		if (!(obj instanceof SmsConfig))
 			return false;
 		SmsConfig other = (SmsConfig) obj;
