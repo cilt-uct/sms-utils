@@ -20,6 +20,7 @@ package org.sakaiproject.sms.hibernate.util;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -50,7 +51,7 @@ public class DateUtil {
 	public static Timestamp getTimestampFromStartDateString(String startDate)
 			throws ParseException {
 		startDate = startDate.concat(" 00:00:00");
-		return new Timestamp(sdf.parse(startDate).getTime());
+		return getUsableTimeStamp(new Timestamp(sdf.parse(startDate).getTime()));
 	}
 
 	/**
@@ -64,11 +65,10 @@ public class DateUtil {
 	 */
 	public static Timestamp getTimestampFromStartDateString(Date startDate)
 			throws ParseException {
-		String sStartDate =  getDateString(startDate)  +(" 00:00:00");
-		return new Timestamp(sdf.parse(sStartDate).getTime());
+		String sStartDate = getDateString(startDate) + (" 00:00:00");
+		return getUsableTimeStamp(new Timestamp(sdf.parse(sStartDate).getTime()));
 	}
-	
-	
+
 	/**
 	 * Creates a Timestamp object from the endDate parameter for use in end
 	 * dates searches
@@ -81,9 +81,9 @@ public class DateUtil {
 	public static Timestamp getTimestampFromEndDateString(String endDate)
 			throws ParseException {
 		endDate = endDate.concat(" 23:59:59");
-		return new Timestamp(sdf.parse(endDate).getTime());
+		return getUsableTimeStamp(new Timestamp(sdf.parse(endDate).getTime()));
 	}
-	
+
 	/**
 	 * Creates a Timestamp object from the endDate parameter for use in end
 	 * dates searches
@@ -95,11 +95,9 @@ public class DateUtil {
 	 */
 	public static Timestamp getTimestampFromEndDateString(Date endDate)
 			throws ParseException {
-		String sEndDate =  getDateString(endDate)  + (" 23:59:59");
-		return new Timestamp(sdf.parse(sEndDate).getTime());
+		String sEndDate = getDateString(endDate) + (" 23:59:59");
+		return getUsableTimeStamp(new Timestamp(sdf.parse(sEndDate).getTime()));
 	}
-	
-	
 
 	/**
 	 * Get string representing the specified date.
@@ -111,6 +109,29 @@ public class DateUtil {
 	public static String getDateString(Date date) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT_STRING);
 		return dateFormat.format(date);
+	}
+
+	/**
+	 * Gets a usable time stamp.
+	 * <p>
+	 * When hibernate save a model class to the DB, MySql zero's the
+	 * milliseconds. This caused inconsistensies in the equeals methods of the
+	 * model classes. We zero the millisecond because it makes things consistent
+	 * and becuase it's insignificant for our use.
+	 * 
+	 * @param dateCreated
+	 *            the date created
+	 * 
+	 * @return the usable time stamp
+	 */
+	public static Timestamp getUsableTimeStamp(Timestamp timeStamp) {
+		if (timeStamp != null) {
+			Calendar cal = Calendar.getInstance();
+			cal.setTimeInMillis(timeStamp.getTime());
+			cal.set(Calendar.MILLISECOND, 0);
+			return new Timestamp(cal.getTimeInMillis());
+		}
+		return null;
 	}
 
 }
