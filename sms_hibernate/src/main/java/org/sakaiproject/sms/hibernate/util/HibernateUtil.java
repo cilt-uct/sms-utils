@@ -73,7 +73,7 @@ public class HibernateUtil {
 	/**
 	 * Container for thread-scoped sessions.
 	 */
-	private static final ThreadLocal session = new ThreadLocal();
+	private static final ThreadLocal<Session> session = new ThreadLocal<Session>();
 
 	/** The test configuration. */
 	private static boolean testConfiguration = false;
@@ -134,7 +134,6 @@ public class HibernateUtil {
 	 *                if any error occurs reading the hibernate configuration
 	 *                files
 	 */
-
 	private static SessionFactory getSessionFactory() {
 		try {
 			if (sessionFactory == null) {
@@ -175,7 +174,7 @@ public class HibernateUtil {
 	 *                if any error occurs opening the hibernate session
 	 */
 	public static Session currentSession() throws HibernateException {
-		Session s = (Session) session.get();
+		Session s = session.get();
 		// Open a new Session, if this Thread has none yet
 		if (s == null) {
 			s = getSessionFactory().openSession();
@@ -185,7 +184,7 @@ public class HibernateUtil {
 	}
 
 	public static void closeSession() throws HibernateException {
-		Session s = (Session) session.get();
+		Session s = session.get();
 		session.set(null);
 		if (s != null)
 			s.close();
@@ -205,7 +204,7 @@ public class HibernateUtil {
 	 * Clears the session cache
 	 */
 	public static void clear() {
-		((Session) session.get()).clear();
+		session.get().clear();
 	}
 
 	/**
@@ -214,7 +213,7 @@ public class HibernateUtil {
 	 * @param model
 	 */
 	public static void evict(BaseModel model) {
-		((Session) session.get()).evict(model);
+		session.get().evict(model);
 	}
 
 }
