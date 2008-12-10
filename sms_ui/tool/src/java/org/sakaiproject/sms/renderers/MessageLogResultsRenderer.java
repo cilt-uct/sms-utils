@@ -61,8 +61,7 @@ public class MessageLogResultsRenderer implements SearchResultsRenderer {
 
 		searchFilterBean.setOrderBy(sortViewParams.sortBy);
 		searchFilterBean.setSortDirection(sortViewParams.sortDir);
-		searchFilterBean.setCurrentPage(sortViewParams.current_start);
-		
+		setCurrentPage(searchFilterBean, sortViewParams);
 
 		SearchResultContainer<SmsMessage> smsMessageList = null;
 		boolean fail = false;
@@ -116,7 +115,6 @@ public class MessageLogResultsRenderer implements SearchResultsRenderer {
 
 			for (SmsMessage smsMessage : smsMessageList.getPageResults()) {
 
-				// smsMessage.
 				UIBranchContainer row = UIBranchContainer.make(
 						searchResultsTable, "dataset:");
 
@@ -137,6 +135,17 @@ public class MessageLogResultsRenderer implements SearchResultsRenderer {
 						.getStatusCode());
 			}
 		}
+	}
+
+	private void setCurrentPage(SearchFilterBean searchBean, SortPagerViewParams sortViewParams) {
+		
+		//new search
+		if((searchBean.getCurrentPage() == 1) &&  (searchBean.getCurrentPage() + 1 != sortViewParams.current_start)){
+			sortViewParams.current_start = 1;
+		}
+		else//paging
+			searchBean.setCurrentPage(sortViewParams.current_start);
+			
 	}
 
 }

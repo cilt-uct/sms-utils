@@ -345,11 +345,12 @@ public class SearchFilterBean {
 	}
 
 	/**
-	 * Fire action.
+	 * Fire action. Denotes a new search
 	 * 
 	 * @return true, if successful
 	 */
 	public boolean fireAction() {
+		setCurrentPage(1);
 		return true;
 	}
 
