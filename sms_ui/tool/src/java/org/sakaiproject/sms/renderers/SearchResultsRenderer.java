@@ -25,4 +25,5 @@ public interface SearchResultsRenderer {
 
 	public void createTable(UIContainer tofill, String divID, SortPagerViewParams sortViewParams, String viewID);
 	public void setSearchFilterBean(SearchFilterBean searchFilterBean);
+	public int getNumberOfRowsDisplayed();
 }

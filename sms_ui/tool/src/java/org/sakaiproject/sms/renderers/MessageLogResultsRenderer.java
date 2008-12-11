@@ -37,6 +37,8 @@ public class MessageLogResultsRenderer implements SearchResultsRenderer {
 	private final static org.apache.log4j.Logger LOG = org.apache.log4j.Logger
 			.getLogger(MessageLogResultsRenderer.class);
 
+	private SearchResultContainer<SmsMessage> smsMessageList = new SearchResultContainer<SmsMessage>();
+	
 	private SearchFilterBean searchFilterBean;
 	private SortHeaderRenderer sortHeaderRenderer;
 	private SmsMessageLogic smsMessageLogic;
@@ -63,7 +65,6 @@ public class MessageLogResultsRenderer implements SearchResultsRenderer {
 		searchFilterBean.setSortDirection(sortViewParams.sortDir);
 		setCurrentPage(searchFilterBean, sortViewParams);
 
-		SearchResultContainer<SmsMessage> smsMessageList = null;
 		boolean fail = false;
 		try {
 			if(NullHandling.safeDateCheck(searchFilterBean.getDateFrom(), searchFilterBean.getDateTo())){
@@ -71,7 +72,6 @@ public class MessageLogResultsRenderer implements SearchResultsRenderer {
 				sortViewParams.current_count = smsMessageList.getNumberOfPages();
 			}
 			else{
-				smsMessageList = new SearchResultContainer<SmsMessage>();
 				sortViewParams.current_count = 1;
 			}
 		} catch (SmsSearchException e) {
@@ -123,8 +123,7 @@ public class MessageLogResultsRenderer implements SearchResultsRenderer {
 						.getSmsTask().getSakaiToolName());
 				UIOutput.make(row, "row-data-sender", smsMessage.getSmsTask()
 						.getSenderUserName());
-				UIOutput.make(row, "row-data-receiver", smsMessage.getSmsTask()
-						.getDeliveryGroupName());
+				UIOutput.make(row, "row-data-receiver", smsMessage.getSakaiUserId());
 				UIOutput.make(row, "row-data-mobile-number", smsMessage
 						.getMobileNumber());
 				UIOutput.make(row, "row-data-date-processed", NullHandling
@@ -145,6 +144,10 @@ public class MessageLogResultsRenderer implements SearchResultsRenderer {
 		}
 		else//paging
 			searchBean.setCurrentPage(sortViewParams.current_start);	
+	}
+
+	public int getNumberOfRowsDisplayed() {
+		return smsMessageList.getPageResults().size();
 	}
 
 }

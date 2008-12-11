@@ -39,6 +39,8 @@ public class TransactionLogResultsRenderer implements SearchResultsRenderer {
 	private final static org.apache.log4j.Logger LOG = org.apache.log4j.Logger
 			.getLogger(TransactionLogResultsRenderer.class);
 
+	private List<SmsTransaction> smsTransactions = new ArrayList<SmsTransaction>();
+
 	private SearchFilterBean searchFilterBean;
 	private SortHeaderRenderer sortHeaderRenderer;
 	private SmsTransactionLogic smsTransactionLogic;
@@ -65,17 +67,12 @@ public class TransactionLogResultsRenderer implements SearchResultsRenderer {
 		searchFilterBean.setSortDirection(sortViewParams.sortDir);
 		searchFilterBean.setCurrentPage(sortViewParams.current_start);
 
-		List<SmsTransaction> smsTransactions = null;
+		smsTransactions = null;
 		boolean fail = false;
 		try {
 			if(NullHandling.safeDateCheck(searchFilterBean.getDateFrom(), searchFilterBean.getDateTo())){
 				smsTransactions = smsTransactionLogic.getSmsTransactionsForCriteria(searchFilterBean);
 			}
-			else{
-				smsTransactions = new ArrayList<SmsTransaction>();
-			}
-			
-			
 		} catch (SmsSearchException e) {
 			LOG.error(e);
 			fail = true;
@@ -129,6 +126,10 @@ public class TransactionLogResultsRenderer implements SearchResultsRenderer {
 						.safeToString(smsTransaction.getBalance()));
 			}
 		}
+	}
+
+	public int getNumberOfRowsDisplayed() {
+		return smsTransactions.size();
 	}
 
 }

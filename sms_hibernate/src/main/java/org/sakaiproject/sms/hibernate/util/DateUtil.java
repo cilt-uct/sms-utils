@@ -35,10 +35,28 @@ public class DateUtil {
 	private static final String DATE_TIME_FORMAT_STRING = "MM/dd/yyyy HH:mm:ss";
 
 	private static final String DATE_FORMAT_STRING = "MM/dd/yyyy";
+	
+	private static final long MILLS_PER_WEEK = 10080000;
 
 	private static SimpleDateFormat sdf = new SimpleDateFormat(
 			DATE_TIME_FORMAT_STRING);
 
+	/**
+	 * Calculate the date one week before the current date
+	 * 
+	 * 
+	 * @param date
+	 * @return the date a week before
+	 */
+	public static Date getDateOneWeekBeforeNow(){
+		Calendar date1 = Calendar.getInstance();
+		date1.add(Calendar.DAY_OF_YEAR, -7);
+		Date weekBefore = date1.getTime();
+		return weekBefore;
+	}
+	
+	
+	
 	/**
 	 * Creates a Timestamp object from the startDate parameter for use in start
 	 * dates searches

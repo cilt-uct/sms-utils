@@ -20,6 +20,7 @@ package org.sakaiproject.sms.hibernate.bean;
 import java.util.Date;
 
 import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
+import org.sakaiproject.sms.hibernate.util.DateUtil;
 
 
 // TODO: Auto-generated Javadoc
@@ -77,7 +78,7 @@ public class SearchFilterBean {
 	public SearchFilterBean() {
 		super();
 		newSearch = true;
-		dateFrom = new Date();
+		dateFrom = DateUtil.getDateOneWeekBeforeNow();
 		dateTo = new Date();
 		currentPage = new Integer(1);
 	}

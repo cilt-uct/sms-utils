@@ -38,6 +38,8 @@ public class TaskListResultsRenderer implements SearchResultsRenderer{
 
 	private final static org.apache.log4j.Logger LOG = org.apache.log4j.Logger.getLogger(TaskListResultsRenderer.class);
 	
+	private List<SmsTask> smsTaskList = new ArrayList<SmsTask>();
+	
 	private SearchFilterBean searchFilterBean;
 	private SortHeaderRenderer sortHeaderRenderer;
 	private SmsTaskLogic smsTaskLogic;
@@ -65,7 +67,6 @@ public class TaskListResultsRenderer implements SearchResultsRenderer{
 		searchFilterBean.setCurrentPage(sortViewParams.current_start);		
 		
 
-		List<SmsTask> smsTaskList = null;
 		boolean fail = false;
 		try {
 			if(NullHandling.safeDateCheck(searchFilterBean.getDateFrom(), searchFilterBean.getDateTo())){
@@ -107,5 +108,9 @@ public class TaskListResultsRenderer implements SearchResultsRenderer{
 				UIOutput.make(row, "row-data-status", smsTask.getStatusCode());		
 			}
 		}
+	}
+
+	public int getNumberOfRowsDisplayed() {
+		return smsTaskList.size();
 	}
 }

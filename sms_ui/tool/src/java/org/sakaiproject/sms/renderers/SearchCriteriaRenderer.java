@@ -69,18 +69,30 @@ public class SearchCriteriaRenderer{
 		
 		UIForm searchForm =  UIForm.make(searchCriteria, "search-criteria");
 		
+		//No Id field for Task
 		if(labelDropDown.indexOf("Task") == -1)
-			UIOutput.make(searchForm, "label-id", labelID);
-		
-		UIOutput.make(searchForm, "label-dropdown", labelDropDown);		
+			UIOutput.make(searchForm, "label-id", labelID);		
 		
 		if(labelDropDown.indexOf("Task") == -1)
 		UIInput.make(searchForm, "id", createSearchELString("id"));
 		
 		UIInput dateFrom = UIInput.make(searchForm, "date-from:", searchBeanName + "." + "dateFrom");		
 		dateEvolver.evolveDateInput(dateFrom);
-			
 		UIInput.make(searchForm, "tool-name", createSearchELString("toolName"));
+		
+		//No drop down for Transaction log
+		if(labelDropDown.indexOf("Type") == -1)
+			createDropDown(searchForm);
+		
+		UIInput dateTo = UIInput.make(searchForm, "date-to:", searchBeanName + "." + "dateTo");
+		dateEvolver.evolveDateInput(dateTo);
+		
+		UIInput.make(searchForm, "sender", createSearchELString("sender"));
+		UICommand.make(searchForm, "search", createSearchELString("fireAction"));
+	}
+
+	private void createDropDown(UIForm searchForm) {
+		UIOutput.make(searchForm, "label-dropdown", labelDropDown);
 		
 		UISelect combo = UISelect.make(searchForm, "task-status");
 		combo.selection = new UIInput();
@@ -90,19 +102,14 @@ public class SearchCriteriaRenderer{
 										   SmsConst_DeliveryStatus.STATUS_RETRY, 
 										   SmsConst_DeliveryStatus.STATUS_SENT, 
 										   SmsConst_DeliveryStatus.STATUS_BUSY,
+										   SmsConst_DeliveryStatus.STATUS_PENDING,
 										   SmsConst_DeliveryStatus.STATUS_INCOMPLETE,
 										   SmsConst_DeliveryStatus.STATUS_FAIL,
 										});
 		combo.optionlist = comboValues;
 		UIBoundList comboNames = new UIBoundList();
-		comboNames.setValue(new String[] {"All", "Retry", "Sent", "Busy", "Incomplete", "Failed"});
+		comboNames.setValue(new String[] {"All", "Retry", "Sent", "Busy", "Pending", "Incomplete", "Failed"});
 		combo.optionnames = comboNames;
-		
-		UIInput dateTo = UIInput.make(searchForm, "date-to:", searchBeanName + "." + "dateTo");
-		dateEvolver.evolveDateInput(dateTo);
-		
-		UIInput.make(searchForm, "sender", createSearchELString("sender"));
-		UICommand.make(searchForm, "search", createSearchELString("fireAction"));
 	}
 	
 	private String createSearchELString(String field){

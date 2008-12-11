@@ -29,12 +29,14 @@ public class TablePagerRenderer {
 	public Integer currentStart = 1;
 	public Integer currentCount = 1;
 	
-	public void createPager(UIContainer tofill, String divID, SortPagerViewParams sortParams, String viewId) {	
+	public void createPager(UIContainer tofill, String divID, SortPagerViewParams sortParams, String viewId, int numberOfRows) {	
 		
 		this.currentStart = sortParams.current_start;
 		this.currentCount = sortParams.current_count;
 		
 		UIJointContainer joint = new UIJointContainer(tofill, divID, "table-pager-component:", ""+1);
+	
+		UIOutput.make(joint, "number-of-rows", "Number of rows: " + numberOfRows);	
 		
 		ViewParameters new_params = sortParams.copyBase();
 		
@@ -51,6 +53,4 @@ public class TablePagerRenderer {
 			UIInternalLink.make(joint, "next", new_params);
 		}
 	}
-	
-
 }

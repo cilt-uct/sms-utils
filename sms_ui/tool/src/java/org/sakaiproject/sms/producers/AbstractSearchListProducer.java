@@ -85,7 +85,7 @@ public abstract class AbstractSearchListProducer implements
 				getViewID());
 
 		tablePagerRenderer.createPager(tofill, "searchPager:", sortParams,
-				getViewID());
+				getViewID(), searchResultsRenderer.getNumberOfRowsDisplayed());
 		UIBranchContainer branchContainer = exportToCSV(tofill);
 		addAddtionalButtons(branchContainer);
 	}
