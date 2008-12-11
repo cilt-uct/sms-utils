@@ -26,6 +26,7 @@ import java.util.Set;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
 import org.sakaiproject.sms.hibernate.util.DateUtil;
 
+// TODO: Auto-generated Javadoc
 /**
  * A sms task that needs to be processed. For example: send message X to sakai
  * group Y at time Z. When a sms task is processed, a record is inserted into
@@ -66,9 +67,7 @@ public class SmsTask extends BaseModel {
 	/** The friendly name of the Sakai group. */
 	private String deliveryGroupName;
 
-	/**
-	 * Will be used for incoming messages. For phase II.
-	 */
+	/** Will be used for incoming messages. For phase II. */
 	private String deliveryUserId;
 
 	/** The actual Sakai group size. Calculated when the task is processed. */
@@ -114,6 +113,20 @@ public class SmsTask extends BaseModel {
 
 	/** Current status of this task. See SmsConst_TaskDeliveryStatus */
 	private String statusCode;
+
+	/**
+	 * The max time to live.
+	 * <p>
+	 * NB: This is in minutes
+	 */
+	private Integer maxTimeToLive;
+
+	/**
+	 * The delivery report timeout duration.
+	 * <p>
+	 * NB: This is in minutes
+	 */
+	private Integer delReportTimeoutDuration;
 
 	/**
 	 * Instantiates a new sms task.
@@ -180,9 +193,10 @@ public class SmsTask extends BaseModel {
 	}
 
 	/**
-	 * Reschedules the date to send the message
+	 * Reschedules the date to send the message.
 	 * 
 	 * @param dateToSend
+	 *            the date to send
 	 */
 	public void rescheduleDateToSend(Timestamp dateToSend) {
 		this.setDateToSend(dateToSend);
@@ -523,9 +537,10 @@ public class SmsTask extends BaseModel {
 	}
 
 	/**
-	 * Sets the sms messages on a this SmsTask object
+	 * Sets the sms messages on a this SmsTask object.
 	 * 
 	 * @param smsMessages
+	 *            the sms messages
 	 */
 	public void setSmsMessagesOnTask(Set<SmsMessage> smsMessages) {
 		if (smsMessages != null) {
@@ -592,9 +607,59 @@ public class SmsTask extends BaseModel {
 			}
 		}
 		return filtered;
-
 	}
 
+	/**
+	 * Gets the max time to live.
+	 * <p>
+	 * NB: This is in minutes
+	 * 
+	 * @return the max time to live
+	 */
+	public Integer getMaxTimeToLive() {
+		return maxTimeToLive;
+	}
+
+	/**
+	 * Sets the max time to live.
+	 * <p>
+	 * NB: This is in minutes
+	 * 
+	 * @param maxTimeToLive
+	 *            the new max time to live
+	 */
+	public void setMaxTimeToLive(Integer maxTimeToLive) {
+		this.maxTimeToLive = maxTimeToLive;
+	}
+
+	/**
+	 * Gets the delivery report timeout duration.
+	 * <p>
+	 * NB: This is in minutes
+	 * 
+	 * @return the del report timeout duration
+	 */
+	public Integer getDelReportTimeoutDuration() {
+		return delReportTimeoutDuration;
+	}
+
+	/**
+	 * Sets the delivery report timeout duration.
+	 * <p>
+	 * NB: This is in minutes
+	 * 
+	 * @param delReportTimeoutDuration
+	 *            the new del report timeout duration
+	 */
+	public void setDelReportTimeoutDuration(Integer delReportTimeoutDuration) {
+		this.delReportTimeoutDuration = delReportTimeoutDuration;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#hashCode()
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -642,9 +707,20 @@ public class SmsTask extends BaseModel {
 				+ ((smsMessages == null) ? 0 : smsMessages.hashCode());
 		result = prime * result
 				+ ((statusCode == null) ? 0 : statusCode.hashCode());
+		result = prime * result
+				+ ((maxTimeToLive == null) ? 0 : maxTimeToLive.hashCode());
+		result = prime
+				* result
+				+ ((delReportTimeoutDuration == null) ? 0
+						: delReportTimeoutDuration.hashCode());
 		return result;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -747,6 +823,20 @@ public class SmsTask extends BaseModel {
 				return false;
 		} else if (!statusCode.equals(other.statusCode))
 			return false;
+
+		if (maxTimeToLive == null) {
+			if (other.maxTimeToLive != null)
+				return false;
+		} else if (!maxTimeToLive.equals(other.maxTimeToLive))
+			return false;
+		if (delReportTimeoutDuration == null) {
+			if (other.delReportTimeoutDuration != null)
+				return false;
+		} else if (!delReportTimeoutDuration
+				.equals(other.delReportTimeoutDuration))
+			return false;
+
 		return true;
 	}
+
 }

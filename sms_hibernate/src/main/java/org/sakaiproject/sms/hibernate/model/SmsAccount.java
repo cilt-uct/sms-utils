@@ -221,6 +221,8 @@ public class SmsAccount extends BaseModel {
 				+ ((sakaiSiteId == null) ? 0 : sakaiSiteId.hashCode());
 		result = prime * result
 				+ ((sakaiUserId == null) ? 0 : sakaiUserId.hashCode());
+		result = prime * result
+				+ ((accountName == null) ? 0 : accountName.hashCode());
 		return result;
 	}
 
@@ -255,6 +257,11 @@ public class SmsAccount extends BaseModel {
 			if (other.sakaiUserId != null)
 				return false;
 		} else if (!sakaiUserId.equals(other.sakaiUserId))
+			return false;
+		if (accountName == null) {
+			if (other.accountName != null)
+				return false;
+		} else if (!accountName.equals(other.accountName))
 			return false;
 		return true;
 	}
