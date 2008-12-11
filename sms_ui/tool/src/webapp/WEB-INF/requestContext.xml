@@ -52,7 +52,7 @@
   <bean class="org.sakaiproject.sms.producers.AccountProducer" />
   
   <bean class="org.sakaiproject.sms.producers.BillingAdminProducer" >
-  	<property name="smsAccountLogic" ref="org.sakaiproject.sms.hibernate.logic.SmsAccountLogic" />
+  	<property name="smsAccountLogic" ref="SmsAccountLogic" />
   </bean>	
   
   <bean id="taskListProducer" class="org.sakaiproject.sms.producers.TaskListProducer">
@@ -95,10 +95,10 @@
   </bean>
   
   <!-- Entity Bean Locators -->	
-<!--  <bean id="SmsAccount" parent="entityBeanLocatorParent">-->
-<!--  	<property name="entityClass" value="org.sakaiproject.sms.hibernate.model.SmsAccount"/>-->
-<!--  	<property name="fetchMethod" value="org.sakaiproject.sms.hibernate.logic.SmsAccountLogic.getSmsAccount"/>-->
-<!--  	<property name="saveMethod" value="org.sakaiproject.sms.hibernate.logic.SmsAccountLogic.persistSmsAccount"/>-->
-<!--  </bean>-->
+  <bean id="SmsAccount" parent="entityBeanLocatorParent">
+  	<property name="entityClass" value="org.sakaiproject.sms.hibernate.model.SmsAccount"/>
+  	<property name="fetchMethod" value="SmsAccountLogic.getSmsAccount"/>
+  	<property name="saveMethod" value="SmsAccountLogic.persistSmsAccount"/>
+  </bean>
 
 </beans>

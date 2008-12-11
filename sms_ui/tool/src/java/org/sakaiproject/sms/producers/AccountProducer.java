@@ -17,25 +17,72 @@
  **********************************************************************************/
 package org.sakaiproject.sms.producers;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.sakaiproject.sms.beans.ActionResults;
+import org.sakaiproject.sms.constants.SmsUiConstants;
+
+import uk.org.ponder.rsf.components.UICommand;
 import uk.org.ponder.rsf.components.UIContainer;
+import uk.org.ponder.rsf.components.UIELBinding;
+import uk.org.ponder.rsf.components.UIForm;
+import uk.org.ponder.rsf.components.UIInput;
 import uk.org.ponder.rsf.components.UIMessage;
+import uk.org.ponder.rsf.flow.jsfnav.NavigationCase;
+import uk.org.ponder.rsf.flow.jsfnav.NavigationCaseReporter;
 import uk.org.ponder.rsf.view.ComponentChecker;
 import uk.org.ponder.rsf.view.ViewComponentProducer;
+import uk.org.ponder.rsf.viewstate.SimpleViewParameters;
 import uk.org.ponder.rsf.viewstate.ViewParameters;
 
-public class AccountProducer implements ViewComponentProducer {
+public class AccountProducer implements ViewComponentProducer,
+		NavigationCaseReporter {
 
 	public static final String VIEW_ID = "account";
 
 	public void fillComponents(UIContainer tofill, ViewParameters viewparams,
 			ComponentChecker checker) {
+
 		UIMessage.make(tofill, "page-title", "sms.sms-account.title");
 		UIMessage.make(tofill, "sms-account-heading", "sms.sms-account.title");
+
+		String accountOTP = "SmsAccount.new 1";
+
+		UIForm form = UIForm.make(tofill, "account-form");
+
+		UIMessage.make(form, "account-name-label",
+				"sms.sms-account.account-name");
+		UIInput.make(form, "account-name", accountOTP + ".accountName");
+		UIMessage.make(form, "sakai-site-id-label",
+				"sms.sms-account.sakai-site-id");
+		UIInput.make(form, "sakai-site-id", accountOTP + ".sakaiSiteId");
+		UIMessage.make(form, "sakai-user-id-label",
+				"sms.sms-account.sakai-user-id");
+		UIInput.make(form, "sakai-user-id", accountOTP + ".sakaiUserId");
+		UIMessage.make(form, "overdraft-limit-label",
+				"sms.sms-account.overdraft-limit");
+		UIInput.make(form, "overdraft-limit", accountOTP + ".overdraftLimit");
+		UIMessage.make(form, "balance-label", "sms.sms-account.balance");
+		UIInput.make(form, "balance", accountOTP + ".balance");
+
+		form.addParameter(new UIELBinding(accountOTP + ".messageTypeCode",
+				SmsUiConstants.MESSAGE_TYPE_CODE));
+
+		UICommand.make(form, "save-btn", "SmsAccount.saveAll");
+		UICommand.make(form, "cancel-btn").setReturn(ActionResults.CANCEL);
 
 	}
 
 	public String getViewID() {
 		return VIEW_ID;
+	}
+
+	public List reportNavigationCases() {
+		List<NavigationCase> list = new ArrayList<NavigationCase>();
+		list.add(new NavigationCase(ActionResults.CANCEL,
+				new SimpleViewParameters(BillingAdminProducer.VIEW_ID)));
+		return list;
 	}
 
 }

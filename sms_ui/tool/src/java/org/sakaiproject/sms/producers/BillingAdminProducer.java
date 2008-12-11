@@ -80,8 +80,8 @@ public class BillingAdminProducer implements ViewComponentProducer {
 					"account-entry:");
 
 			// TODO: Change link to go to edit account
-			UIInternalLink.make(entry, "account-name-link", "Mock name "
-					+ account.getId(), new SimpleViewParameters(
+			UIInternalLink.make(entry, "account-name-link", account
+					.getAccountName(), new SimpleViewParameters(
 					SmsTestProducer.VIEW_ID));
 			UIOutput.make(entry, "account-no", account.getId().toString());
 			// TODO: Use Sakai services to get site and username

@@ -6,7 +6,7 @@
 <beans>
 
 	<bean id="smsConfigLogic" class="org.sakaiproject.sms.hibernate.logic.impl.SmsConfigLogicImpl"/>
-	<bean id="org.sakaiproject.sms.hibernate.logic.SmsAccountLogic" class="org.sakaiproject.sms.hibernate.logic.impl.SmsAccountLogicImpl" />
+	<bean id="SmsAccountLogic" class="org.sakaiproject.sms.hibernate.logic.impl.SmsAccountLogicImpl" />
 	<bean id="smsTaskLogic" class="org.sakaiproject.sms.hibernate.logic.impl.SmsTaskLogicImpl"/>
 	<bean id="smsTransactionLogic" class="org.sakaiproject.sms.hibernate.logic.impl.SmsTransactionLogicImpl"/>
 	<bean id="smsMessageLogic" class="org.sakaiproject.sms.hibernate.logic.impl.SmsMessageLogicImpl" />

@@ -16,7 +16,7 @@ public class SmsMessageLocatorTest extends TestCase {
 		smsMsgLocator.setSmsMessageLogic(new SmsMessageLogicStub());
 	}
 
-	public void testLocateNewSmsConfig() {
+	public void testLocateNewSmsMsg() {
 		Object obj = smsMsgLocator.locateBean(SmsMessageLocator.NEW_1);
 		assertNotNull(obj); // Should retrieve something
 		try {

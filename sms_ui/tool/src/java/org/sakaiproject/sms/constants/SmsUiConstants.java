@@ -34,4 +34,7 @@ public class SmsUiConstants {
 	public static final String SORT_BY_HOUSE = "house";
 	public static final String SORT_BY_STREET = "street";
 
+	// Message Type code for Sms accounts
+	public static final String MESSAGE_TYPE_CODE = "SO";
+
 }
