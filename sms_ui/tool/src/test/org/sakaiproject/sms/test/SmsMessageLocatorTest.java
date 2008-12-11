@@ -4,7 +4,7 @@ import junit.framework.TestCase;
 
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.otp.SmsMessageLocator;
-
+import org.sakaiproject.sms.test.stubs.SmsMessageLogicStub;
 
 public class SmsMessageLocatorTest extends TestCase {
 
@@ -13,10 +13,10 @@ public class SmsMessageLocatorTest extends TestCase {
 	@Override
 	public void setUp() {
 		smsMsgLocator = new SmsMessageLocator();
+		smsMsgLocator.setSmsMessageLogic(new SmsMessageLogicStub());
 	}
-	
-	
-	public void testLocateNewSmsConfig(){
+
+	public void testLocateNewSmsConfig() {
 		Object obj = smsMsgLocator.locateBean(SmsMessageLocator.NEW_1);
 		assertNotNull(obj); // Should retrieve something
 		try {
