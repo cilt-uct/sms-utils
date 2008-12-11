@@ -33,7 +33,7 @@ public class SmsHibernateConstants {
 	public static final String SORT_DESC = "desc";
 
 	/** The Constant DEFAULT_PAGE_SIZE. */
-	public static final int DEFAULT_PAGE_SIZE = 5;
+	public static final int DEFAULT_PAGE_SIZE = 20;
 
 	/** The Constant READ_LIMIT. */
 	public static final int READ_LIMIT = 100;

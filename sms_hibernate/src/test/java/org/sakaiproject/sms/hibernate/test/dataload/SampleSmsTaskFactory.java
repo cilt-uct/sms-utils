@@ -30,6 +30,8 @@ public class SampleSmsTaskFactory implements Listable {
 		// task.setDateToSend(randomUtils.getBoundRandomDate(2008));
 		task.setDateProcessed(randomUtils.getBoundRandomDate(2008));
 		task.setSakaiToolName("Sakai tool");
+		task.setMaxTimeToLive(1000);
+		task.setDelReportTimeoutDuration(1000);
 		return task;
 	}
 

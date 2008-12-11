@@ -15,11 +15,10 @@ import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.hibernate.model.SmsTransaction;
 
-public class SmsSampleDataLoad{
-	
-	
-	public static final int NUMBER_OF_REPETITIONS = 10;
-	
+public class SmsSampleDataLoad {
+
+	public static final int NUMBER_OF_REPETITIONS = 100;
+
 	private SmsTransactionLogic smsTransactionLogic;
 	private SmsAccountLogic smsAccountLogic;
 	private SmsTaskLogic smsTaskLogic;
@@ -29,23 +28,22 @@ public class SmsSampleDataLoad{
 	private SampleSmsMessageFactory messageFactory;
 	private SampleSmsTransactionFactory testSMSTransactionFactory;
 	private SampleSmsAccountFactorty sampleSmsAccountFactorty;
-	
+
 	public static void main(String[] args) {
 		SmsSampleDataLoad sampleDataLoad = new SmsSampleDataLoad();
-		
+
 		sampleDataLoad.persistSmsMessages();
 		sampleDataLoad.persistSmsTransactions();
 		System.out.println("Done");
 	}
-	
+
 	public SmsSampleDataLoad() {
 		super();
 		smsTransactionLogic = new SmsTransactionLogicImpl();
-		smsAccountLogic = new SmsAccountLogicImpl(); 
+		smsAccountLogic = new SmsAccountLogicImpl();
 		smsTaskLogic = new SmsTaskLogicImpl();
 		smsMessageLogic = new SmsMessageLogicImpl();
 	}
-
 
 	private void persistSmsTransactions() {
 		testSMSTransactionFactory = new SampleSmsTransactionFactory();
@@ -54,42 +52,42 @@ public class SmsSampleDataLoad{
 		deleteSmsTransactions(smsTransactionLogic);
 
 		System.out.println("Inserting SmsAccounts:");
-		
+
 		persistsSmsAccounts(smsAccountLogic);
 
-		List<SmsAccount> persistedSmsAccounts = smsAccountLogic.getAllSmsAccounts();
-		
+		List<SmsAccount> persistedSmsAccounts = smsAccountLogic
+				.getAllSmsAccounts();
+
 		System.out.println("Inserting SmsTransactions:");
 
-		
 		int index = 0;
 		for (int i = 0; i < NUMBER_OF_REPETITIONS; i++) {
 			List<SmsTransaction> smsTransactions = testSMSTransactionFactory
-			.getAllSmsTransaction();
-		
+					.getAllSmsTransaction();
+
 			for (SmsTransaction smsTransaction : smsTransactions) {
 
-				smsTransaction.setSmsAccount(persistedSmsAccounts.get(index));
+				smsTransaction.setSmsAccount(persistedSmsAccounts.get(0));
 				smsTransactionLogic.persistSmsTransaction(smsTransaction);
 				index++;
 			}
 			testSMSTransactionFactory.refreshList();
 		}
 	}
-	
+
 	private void persistSmsMessages() {
 		taskFactory = new SampleSmsTaskFactory();
-		messageFactory = new SampleSmsMessageFactory();		
-		
-		deleteSmsMessages(smsMessageLogic);
-		deleteSmsTasks(smsTaskLogic);
-		
+		messageFactory = new SampleSmsMessageFactory();
+
+		// deleteSmsMessages(smsMessageLogic);
+		// deleteSmsTasks(smsTaskLogic);
+
 		System.out.println("Inserting SmsMessages and Tasks:");
-		
-		
+
 		for (int i = 0; i < NUMBER_OF_REPETITIONS; i++) {
 
-			List<SmsMessage> smsMessages = messageFactory.getAllTestSmsMessages();
+			List<SmsMessage> smsMessages = messageFactory
+					.getAllTestSmsMessages();
 			List<SmsTask> smsTasks = taskFactory.getAllTestSmsTasks();
 
 			for (SmsTask smsTask : smsTasks) {
@@ -102,37 +100,37 @@ public class SmsSampleDataLoad{
 				smsMessageLogic.persistSmsMessage(smsMessage);
 				index++;
 			}
-		
+
 			messageFactory.refreshList();
 			taskFactory.refreshList();
 		}
 	}
-		
+
 	private void persistsSmsAccounts(SmsAccountLogic smsAccountLogic) {
 		sampleSmsAccountFactorty = new SampleSmsAccountFactorty();
 
-		for (int i = 0; i < NUMBER_OF_REPETITIONS; i++) {
-			
-			List<SmsAccount> smsAccountsToAdd = sampleSmsAccountFactorty.getAllTestSmsMessages();
+		for (int i = 0; i < 1; i++) {
+
+			List<SmsAccount> smsAccountsToAdd = sampleSmsAccountFactorty
+					.getAllTestSmsMessages();
 			for (SmsAccount smsAccount : smsAccountsToAdd) {
 				smsAccountLogic.persistSmsAccount(smsAccount);
 			}
-			
+
 			sampleSmsAccountFactorty.refreshList();
 		}
 	}
 
-	private  void deleteSmsAccounts(SmsAccountLogic smsAccountLogic) {
+	private void deleteSmsAccounts(SmsAccountLogic smsAccountLogic) {
 		System.out.println("Deleting SmsAccounts:");
 		List<SmsAccount> smsAccounts = smsAccountLogic.getAllSmsAccounts();
-		
+
 		for (SmsAccount smsAccount : smsAccounts) {
 			smsAccountLogic.deleteSmsAccount(smsAccount);
 		}
 	}
 
-	private  void deleteSmsTransactions(
-			SmsTransactionLogic smsTransactionLogic) {
+	private void deleteSmsTransactions(SmsTransactionLogic smsTransactionLogic) {
 		System.out.println("Deleting SmsTransactions:");
 		List<SmsTransaction> smsTransactionsToDelete = smsTransactionLogic
 				.getAllSmsTransactions();
@@ -142,7 +140,7 @@ public class SmsSampleDataLoad{
 		}
 	}
 
-	private  void deleteSmsTasks(SmsTaskLogic smsTaskLogic) {
+	private void deleteSmsTasks(SmsTaskLogic smsTaskLogic) {
 		System.out.println("Deleting SmsTasks:");
 		List<SmsTask> smsTasksToDelete = smsTaskLogic.getAllSmsTask();
 
@@ -151,7 +149,7 @@ public class SmsSampleDataLoad{
 		}
 	}
 
-	private  void deleteSmsMessages(SmsMessageLogic smsMessageLogic) {
+	private void deleteSmsMessages(SmsMessageLogic smsMessageLogic) {
 		System.out.println("Deleting SmsMessages:");
 		List<SmsMessage> smsMessagesToDelete = smsMessageLogic
 				.getAllSmsMessages();

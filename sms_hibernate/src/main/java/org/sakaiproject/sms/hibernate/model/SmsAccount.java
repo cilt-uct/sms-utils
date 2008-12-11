@@ -65,13 +65,15 @@ public class SmsAccount extends BaseModel {
 	 * Instantiates a new sms account.
 	 */
 	public SmsAccount(Float balance, String messageTypeCode,
-			Float overdraftLimit, String sakaiSiteId, String sakaiUserId) {
+			Float overdraftLimit, String sakaiSiteId, String sakaiUserId,
+			String accountName) {
 		super();
 		this.balance = balance;
 		this.messageTypeCode = messageTypeCode;
 		this.overdraftLimit = overdraftLimit;
 		this.sakaiSiteId = sakaiSiteId;
 		this.sakaiUserId = sakaiUserId;
+		this.accountName = accountName;
 	}
 
 	/**
