@@ -100,6 +100,7 @@ public class SmsSmppImpl implements SmsSmpp {
 	private String userName;
 	private String addressRange;
 	public SmsMessageLogic smsMessageLogic = null;
+	public int transactionTimer;
 
 	public SmsMessageLogic getSmsMessageLogic() {
 		return smsMessageLogic;
@@ -242,6 +243,7 @@ public class SmsSmppImpl implements SmsSmpp {
 				}
 				gatewayBound = true;
 				session.setEnquireLinkTimer(enquireLinkTimeOut);
+				session.setTransactionTimer(transactionTimer);
 				session
 						.setMessageReceiverListener(new MessageReceiverListenerImpl());
 				session.addSessionStateListener(new SessionStateListener() {
@@ -384,6 +386,9 @@ public class SmsSmppImpl implements SmsSmpp {
 			bindThreadTimer = Integer.parseInt(properties
 					.getProperty("bindThreadTimerSecondes")) * 1000;
 			addressRange = properties.getProperty("addressRange");
+
+			transactionTimer = Integer.parseInt(properties
+					.getProperty("transactionTimer")) * 1000;
 
 		} catch (Exception e) {
 			LOG.error("Properies faild to load" + e);

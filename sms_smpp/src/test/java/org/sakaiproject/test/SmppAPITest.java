@@ -26,7 +26,6 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import org.apache.log4j.Level;
 import org.sakaiproject.sms.hibernate.logic.impl.SmsMessageLogicImpl;
 import org.sakaiproject.sms.hibernate.logic.impl.SmsTaskLogicImpl;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
@@ -98,7 +97,7 @@ public class SmppAPITest extends TestCase {
 	 * status is STATUS_SENT and all the delivery reports are returned.
 	 */
 	public void testSendMessagesToGateway() {
-		smsSmppImpl.setLogLevel(Level.ALL);
+
 		Set<SmsMessage> smsMessages = new HashSet<SmsMessage>();
 
 		SmsTask insertTask = insertNewTask("testSendMessagesToGateway",
@@ -125,7 +124,7 @@ public class SmppAPITest extends TestCase {
 			e.printStackTrace();
 		}
 		SmsTask insertTask2 = smsTaskLogicImpl.getSmsTask(insertTask.getId());
-		insertTask.getSmsMessages().size();
+		insertTask2.getSmsMessages().size();
 		assertEquals(true, insertTask2.getMessagesWithSmscStatus(
 				SmsConst_SmscDeliveryStatus.ENROUTE).size() == 0);
 		smsTaskLogicImpl.deleteSmsTask(insertTask2);
@@ -157,6 +156,7 @@ public class SmppAPITest extends TestCase {
 			e.printStackTrace();
 		}
 		SmsTask insertTask2 = smsTaskLogicImpl.getSmsTask(insertTask1.getId());
+		// insertTask2.getSmsMessages()
 		assertEquals(true, insertTask2.getMessagesWithSmscStatus(
 				SmsConst_SmscDeliveryStatus.ENROUTE).size() == 0);
 		smsTaskLogicImpl.deleteSmsTask(insertTask2);

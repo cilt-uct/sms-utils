@@ -27,6 +27,7 @@ import org.sakaiproject.sms.hibernate.logic.impl.SmsTaskLogicImpl;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
+import org.sakaiproject.sms.hibernate.model.constants.SmsConst_SmscDeliveryStatus;
 import org.sakaiproject.sms.impl.SmsSmppImpl;
 
 /**
@@ -101,6 +102,7 @@ class SmppThread extends TestRunnable {
 			message.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
 			message.setSmsTask(insertTask);
 			smsSmppImpl.sendMessageToGateway(message);
+
 			if (message.isSubmitResult()) {
 				sent_count++;
 			}
@@ -108,29 +110,38 @@ class SmppThread extends TestRunnable {
 		}
 		LOG.info(sessionName + ": sent " + sent_count + " to gateway");
 
-		// waiting for a-synchronise delivery reports to arrive. Every 10
-		// secondes we check to see if new messages came in.If the
-		// reportsReceivedAfterSleep == reportsReceivedBeforeSleep, then we
-		// assume all
-		// reports was
-		// received from the simulator.
+		// waiting for a-synchronise delivery reports to arrive. Every
+		// second we check to see if new messages came in.If the
+		// reportsReceivedAfterSleep == 0, then we
+		// know all the reports were received from the simulator.
+		SmsTask updatedSmsTask = null;
+		boolean waitForDeliveries = true;
+		while (waitForDeliveries) {
 
-		// while (waitForDeliveries) {
-		//
-		// Thread.sleep(10000);
-		// reportsRemainingAfterSleep = insertTask.getMessagesWithSmscStatus(
-		// SmsConst_SmscDeliveryStatus.ENROUTE).size();
-		// if (reportsRemainingAfterSleep == 0) {
-		// waitForDeliveries = false;
-		//
-		// } else {
-		// LOG.info(sessionName + ": waiting for delivery reports ("
-		// + reportsRemainingAfterSleep + " of " + message_count
-		// + ")");
-		// }
-		// }
-		// smsSmppImpl.disconnectGateWay();
-		LOG.info(sessionName + " ended, received " + reportsRemainingAfterSleep
+			Thread.sleep(1000);
+			updatedSmsTask = smsTaskLogicImpl.getSmsTask(insertTask.getId());
+			reportsRemainingAfterSleep = updatedSmsTask
+					.getMessagesWithSmscStatus(
+							SmsConst_SmscDeliveryStatus.ENROUTE).size();
+			if (reportsRemainingAfterSleep == 0) {
+				waitForDeliveries = false;
+
+			} else {
+				LOG.info(sessionName + ": waiting for delivery reports ("
+						+ (message_count - reportsRemainingAfterSleep) + " of "
+						+ message_count + ")");
+			}
+		}
+		smsSmppImpl.disconnectGateWay();
+		LOG.info(sessionName
+				+ " ended, received "
+				+ (updatedSmsTask.getSmsMessages().size() - updatedSmsTask
+						.getMessagesWithSmscStatus(
+								SmsConst_SmscDeliveryStatus.ENROUTE).size())
 				+ " reports");
+		assertTrue(updatedSmsTask.getMessagesWithSmscStatus(
+				SmsConst_SmscDeliveryStatus.ENROUTE).size() == 0);
+		assertTrue(updatedSmsTask.getSmsMessages().size() == message_count);
+		smsTaskLogicImpl.deleteSmsTask(updatedSmsTask);
 	}
 }
