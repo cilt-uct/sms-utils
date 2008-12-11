@@ -29,7 +29,9 @@
         <property name="dateProcessed" type="timestamp" column="DATE_PROCESSED" not-null="false"/>
         <property name="deliveryGroupName" type="string" column="DELIVERY_GROUP_NAME" not-null="false" length="50"/>
         <property name="groupSizeEstimate" type="integer" column="GROUP_SIZE_ESTIMATE" not-null="false"/>
-        <property name="groupSizeActual" type="integer" column="GROUP_SIZE_ACTUAL" not-null="false"/>      
+        <property name="groupSizeActual" type="integer" column="GROUP_SIZE_ACTUAL" not-null="false"/>
+        <property name="maxTimeToLive" type="integer" column="MAX_TIME_TO_LIVE" not-null="true"/>
+        <property name="delReportTimeoutDuration" type="integer" column="DEL_REPORT_TIMEOUT_DURATION" not-null="true"/>      
         <set name="smsMessages"  lazy="false" inverse="true" cascade="all-delete-orphan" >
             <key column="TASK_ID" not-null="true"/>            
             <one-to-many class="org.sakaiproject.sms.hibernate.model.SmsMessage" not-found="ignore"/>
@@ -63,6 +65,7 @@
         <property name="messageTypeCode" type="string" column="MESSAGE_TYPE_CODE" not-null="true" length="5"/>
         <property name="overdraftLimit" type="float" column="OVERDRAFT_LIMIT" not-null="false"/>
         <property name="balance" type="float" column="BALANCE" not-null="true"/>
+        <property name="accountName" type="string" column="ACCOUNT_NAME" not-null="true" length="99"/>
         <set name="smsTransactions" lazy="false" inverse="true" cascade="all-delete-orphan">
             <key column="SMS_ACCOUNT_ID" not-null="true"/>            
             <one-to-many class="org.sakaiproject.sms.hibernate.model.SmsTransaction" not-found="ignore"/>

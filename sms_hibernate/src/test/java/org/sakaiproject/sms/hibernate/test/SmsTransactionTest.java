@@ -9,7 +9,6 @@ import org.sakaiproject.sms.hibernate.logic.SmsAccountLogic;
 import org.sakaiproject.sms.hibernate.logic.SmsTransactionLogic;
 import org.sakaiproject.sms.hibernate.logic.impl.SmsAccountLogicImpl;
 import org.sakaiproject.sms.hibernate.logic.impl.SmsTransactionLogicImpl;
-import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsSearchException;
 import org.sakaiproject.sms.hibernate.model.SmsAccount;
 import org.sakaiproject.sms.hibernate.model.SmsTransaction;
 import org.sakaiproject.sms.hibernate.util.HibernateUtil;
@@ -43,6 +42,7 @@ public class SmsTransactionTest extends AbstractBaseTestCase {
 		insertSmsAccount.setMessageTypeCode("12345");
 		insertSmsAccount.setOverdraftLimit(10000.00f);
 		insertSmsAccount.setBalance(5000.00f);
+		insertSmsAccount.setAccountName("accountname");
 
 		insertSmsTransaction = new SmsTransaction();
 		insertSmsTransaction.setBalance(1.32f);
@@ -125,11 +125,11 @@ public class SmsTransactionTest extends AbstractBaseTestCase {
 		insertSmsAccount.setMessageTypeCode("12345");
 		insertSmsAccount.setOverdraftLimit(10000.00f);
 		insertSmsAccount.setBalance(5000.00f);
+		insertSmsAccount.setAccountName("accountName");
 
 		SmsTransaction insertSmsTransaction = new SmsTransaction();
 		insertSmsTransaction.setBalance(1.32f);
 		insertSmsTransaction.setSakaiUserId("sakaiUserId");
-
 		insertSmsTransaction.setTransactionDate(new Timestamp(System
 				.currentTimeMillis()));
 		insertSmsTransaction.setTransactionTypeCode("TTC");
@@ -138,9 +138,10 @@ public class SmsTransactionTest extends AbstractBaseTestCase {
 
 		insertSmsTransaction.setSmsAccount(insertSmsAccount);
 		insertSmsAccount.getSmsTransactions().add(insertSmsTransaction);
+
 		try {
 			accountLogic.persistSmsAccount(insertSmsAccount);
-			assertTrue("Object not created successfullyu", insertSmsTransaction
+			assertTrue("Object not created successfully", insertSmsTransaction
 					.exists());
 
 			SearchFilterBean bean = new SearchFilterBean();
@@ -160,11 +161,13 @@ public class SmsTransactionTest extends AbstractBaseTestCase {
 				// We know that only one transaction should be returned
 				assertEquals(transaction, insertSmsTransaction);
 			}
-		} catch (SmsSearchException se) {
+		} catch (Exception se) {
 			fail(se.getMessage());
-		} finally {
-			accountLogic.deleteSmsAccount(insertSmsAccount);
 		}
+		SmsAccount account = accountLogic.getSmsAccount(insertSmsAccount
+				.getId());
+		accountLogic.deleteSmsAccount(account);
+		// accountLogic.deleteSmsAccount(insertSmsAccount);
 	}
 
 	/**

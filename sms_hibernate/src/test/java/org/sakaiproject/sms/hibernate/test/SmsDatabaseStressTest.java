@@ -62,6 +62,8 @@ public class SmsDatabaseStressTest extends AbstractBaseTestCase {
 		smsTask.setAttemptCount(2);
 		smsTask.setMessageBody("messageBody");
 		smsTask.setSenderUserName("senderUserName");
+		smsTask.setMaxTimeToLive(1);
+		smsTask.setDelReportTimeoutDuration(1);
 	}
 
 	/**

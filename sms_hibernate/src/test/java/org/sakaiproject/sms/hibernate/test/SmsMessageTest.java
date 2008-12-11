@@ -50,6 +50,8 @@ public class SmsMessageTest extends AbstractBaseTestCase {
 		insertTask.setAttemptCount(2);
 		insertTask.setMessageBody("messageBody");
 		insertTask.setSenderUserName("senderUserName");
+		insertTask.setMaxTimeToLive(1);
+		insertTask.setDelReportTimeoutDuration(1);
 		taskLogic = new SmsTaskLogicImpl();
 		// Insert the task so we can play with messages
 
@@ -200,6 +202,8 @@ public class SmsMessageTest extends AbstractBaseTestCase {
 		insertTask.setMessageBody("messageCrit");
 		insertTask.setSenderUserName("messageCrit");
 		insertTask.setSakaiToolName("sakaiToolName");
+		insertTask.setMaxTimeToLive(1);
+		insertTask.setDelReportTimeoutDuration(1);
 
 		SmsMessage insertMessage = new SmsMessage();
 		insertMessage.setMobileNumber("0721998919");
@@ -259,6 +263,8 @@ public class SmsMessageTest extends AbstractBaseTestCase {
 		insertTask.setMessageBody("messageCrit");
 		insertTask.setSenderUserName("messageCrit");
 		insertTask.setSakaiToolName("sakaiToolName");
+		insertTask.setMaxTimeToLive(1);
+		insertTask.setDelReportTimeoutDuration(1);
 
 		for (int i = 0; i < recordsToInsert; i++) {
 			SmsMessage insertMessage = new SmsMessage();

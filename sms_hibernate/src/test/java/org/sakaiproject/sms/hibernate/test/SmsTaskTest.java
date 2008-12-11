@@ -55,6 +55,8 @@ public class SmsTaskTest extends AbstractBaseTestCase {
 		insertTask.setAttemptCount(2);
 		insertTask.setMessageBody("messageBody");
 		insertTask.setSenderUserName("senderUserName");
+		insertTask.setMaxTimeToLive(1);
+		insertTask.setDelReportTimeoutDuration(1);
 
 		insertMessage1 = new SmsMessage();
 		insertMessage1.setMobileNumber("0721998919");
@@ -226,6 +228,8 @@ public class SmsTaskTest extends AbstractBaseTestCase {
 		insertTask.setMessageBody("taskCrit");
 		insertTask.setSenderUserName("taskCrit");
 		insertTask.setSakaiToolName("sakaiToolName");
+		insertTask.setMaxTimeToLive(1);
+		insertTask.setDelReportTimeoutDuration(1);
 
 		try {
 			logic.persistSmsTask(insertTask);
