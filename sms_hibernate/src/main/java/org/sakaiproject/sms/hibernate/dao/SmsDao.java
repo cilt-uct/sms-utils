@@ -75,7 +75,7 @@ public class SmsDao extends BaseDao {
 	 * 
 	 * @return the message logic
 	 */
-	public SmsMessageLogic getMessageLogic() {
+	protected SmsMessageLogic getMessageLogic() {
 		if (messageLogic == null) {
 			messageLogic = new SmsMessageLogicImpl();
 		}
@@ -87,7 +87,7 @@ public class SmsDao extends BaseDao {
 	 * 
 	 * @return the task logic
 	 */
-	public SmsTaskLogic getTaskLogic() {
+	protected SmsTaskLogic getTaskLogic() {
 		if (taskLogic == null) {
 			taskLogic = new SmsTaskLogicImpl();
 		}
@@ -99,7 +99,7 @@ public class SmsDao extends BaseDao {
 	 * 
 	 * @return the account logic
 	 */
-	public SmsAccountLogic getAccountLogic() {
+	protected SmsAccountLogic getAccountLogic() {
 		if (accountLogic == null) {
 			accountLogic = new SmsAccountLogicImpl();
 		}
@@ -111,7 +111,7 @@ public class SmsDao extends BaseDao {
 	 * 
 	 * @return the transaction logic
 	 */
-	public SmsTransactionLogic getTransactionLogic() {
+	protected SmsTransactionLogic getTransactionLogic() {
 		if (transactionLogic == null) {
 			transactionLogic = new SmsTransactionLogicImpl();
 		}
@@ -123,7 +123,7 @@ public class SmsDao extends BaseDao {
 	 * 
 	 * @return the config logic
 	 */
-	public SmsConfigLogic getConfigLogic() {
+	protected SmsConfigLogic getConfigLogic() {
 		if (configLogic == null) {
 			configLogic = new SmsConfigLogicImpl();
 		}
