@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.sakaiproject.sms.hibernate.logic.impl.SmsConfigLogicImpl;
 import org.sakaiproject.sms.hibernate.model.SmsConfig;
+import org.sakaiproject.sms.hibernate.util.AbstractBaseTestCase;
 import org.sakaiproject.sms.hibernate.util.HibernateUtil;
 
 /**

@@ -13,6 +13,7 @@ import org.sakaiproject.sms.hibernate.logic.impl.SmsTransactionLogicImpl;
 import org.sakaiproject.sms.hibernate.model.SmsAccount;
 import org.sakaiproject.sms.hibernate.model.SmsTransaction;
 import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
+import org.sakaiproject.sms.hibernate.util.AbstractBaseTestCase;
 import org.sakaiproject.sms.hibernate.util.HibernateUtil;
 
 /**

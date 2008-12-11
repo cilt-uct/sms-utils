@@ -6,6 +6,7 @@ import java.util.List;
 import org.sakaiproject.sms.hibernate.logic.impl.SmsAccountLogicImpl;
 import org.sakaiproject.sms.hibernate.model.SmsAccount;
 import org.sakaiproject.sms.hibernate.model.SmsTransaction;
+import org.sakaiproject.sms.hibernate.util.AbstractBaseTestCase;
 import org.sakaiproject.sms.hibernate.util.HibernateUtil;
 
 /**

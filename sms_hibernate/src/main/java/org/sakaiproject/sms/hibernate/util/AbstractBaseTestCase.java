@@ -15,11 +15,10 @@
  * limitations under the License.
  *
  **********************************************************************************/
-package org.sakaiproject.sms.hibernate.test;
+package org.sakaiproject.sms.hibernate.util;
 
 import junit.framework.TestCase;
 
-import org.sakaiproject.sms.hibernate.util.HibernateUtil;
 
 // TODO: Auto-generated Javadoc
 /**
