@@ -18,6 +18,7 @@
 
 package org.sakaiproject.sms.hibernate.model;
 
+// TODO: Auto-generated Javadoc
 /**
  * Some site specific configuration info for the sms tool. COnfiguration info
  * could also be set up for a specific tool in a specific site or for all sites.
@@ -48,6 +49,24 @@ public class SmsConfig extends BaseModel {
 
 	/** Enable or disable sms functionality for the site or tool. */
 	private String smsEnabled;
+
+	/** The sms retry max count. */
+	private Integer smsRetryMaxCount;
+
+	/** The sms retry schedule interval. */
+	private Integer smsRetryScheduleInterval;
+
+	/** The sms task max life time. */
+	private Integer smsTaskMaxLifeTime;
+
+	/** The notification email billing. */
+	private String notificationEmailBilling;
+
+	/** The notification email sent. */
+	private String notificationEmailSent;
+
+	/** The paging size. */
+	private Integer pagingSize;
 
 	/**
 	 * Instantiates a new sms configuration.
@@ -168,9 +187,6 @@ public class SmsConfig extends BaseModel {
 	/**
 	 * Gets the sms enabled.
 	 * 
-	 * @param smsEnabled
-	 *            the sms enabled
-	 * 
 	 * @return the sms enabled
 	 */
 	public Boolean isSendSmsEnabled() {
@@ -180,11 +196,124 @@ public class SmsConfig extends BaseModel {
 		return null;
 	}
 
+	/**
+	 * Gets the sms retry max count.
+	 * 
+	 * @return the sms retry max count
+	 */
+	public Integer getSmsRetryMaxCount() {
+		return smsRetryMaxCount;
+	}
+
+	/**
+	 * Sets the sms retry max count.
+	 * 
+	 * @param smsRetryMaxCount
+	 *            the new sms retry max count
+	 */
+	public void setSmsRetryMaxCount(Integer smsRetryMaxCount) {
+		this.smsRetryMaxCount = smsRetryMaxCount;
+	}
+
+	/**
+	 * Gets the sms retry schedule interval.
+	 * 
+	 * @return the sms retry schedule interval
+	 */
+	public Integer getSmsRetryScheduleInterval() {
+		return smsRetryScheduleInterval;
+	}
+
+	/**
+	 * Sets the sms retry schedule interval.
+	 * 
+	 * @param smsRetryScheduleInterval
+	 *            the new sms retry schedule interval
+	 */
+	public void setSmsRetryScheduleInterval(Integer smsRetryScheduleInterval) {
+		this.smsRetryScheduleInterval = smsRetryScheduleInterval;
+	}
+
+	/**
+	 * Gets the sms task max life time.
+	 * 
+	 * @return the sms task max life time
+	 */
+	public Integer getSmsTaskMaxLifeTime() {
+		return smsTaskMaxLifeTime;
+	}
+
+	/**
+	 * Sets the sms task max life time.
+	 * 
+	 * @param smsTaskMaxLifeTime
+	 *            the new sms task max life time
+	 */
+	public void setSmsTaskMaxLifeTime(Integer smsTaskMaxLifeTime) {
+		this.smsTaskMaxLifeTime = smsTaskMaxLifeTime;
+	}
+
+	/**
+	 * Gets the notification email billing.
+	 * 
+	 * @return the notification email billing
+	 */
+	public String getNotificationEmailBilling() {
+		return notificationEmailBilling;
+	}
+
+	/**
+	 * Sets the notification email billing.
+	 * 
+	 * @param notificationEmailBilling
+	 *            the new notification email billing
+	 */
+	public void setNotificationEmailBilling(String notificationEmailBilling) {
+		this.notificationEmailBilling = notificationEmailBilling;
+	}
+
+	/**
+	 * Gets the notification email sent.
+	 * 
+	 * @return the notification email sent
+	 */
+	public String getNotificationEmailSent() {
+		return notificationEmailSent;
+	}
+
+	/**
+	 * Sets the notification email sent.
+	 * 
+	 * @param notificationEmailSent
+	 *            the new notification email sent
+	 */
+	public void setNotificationEmailSent(String notificationEmailSent) {
+		this.notificationEmailSent = notificationEmailSent;
+	}
+
+	/**
+	 * Gets the paging size.
+	 * 
+	 * @return the paging size
+	 */
+	public Integer getPagingSize() {
+		return pagingSize;
+	}
+
+	/**
+	 * Sets the paging size.
+	 * 
+	 * @param pagingSize
+	 *            the new paging size
+	 */
+	public void setPagingSize(Integer pagingSize) {
+		this.pagingSize = pagingSize;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		// int result = super.hashCode();
-		int result = 43;
+		int result = 1;
 		result = prime
 				* result
 				+ ((gateWayReportTimeout == null) ? 0 : gateWayReportTimeout
@@ -193,12 +322,33 @@ public class SmsConfig extends BaseModel {
 				* result
 				+ ((notificationEmail == null) ? 0 : notificationEmail
 						.hashCode());
+		result = prime
+				* result
+				+ ((notificationEmailBilling == null) ? 0
+						: notificationEmailBilling.hashCode());
+		result = prime
+				* result
+				+ ((notificationEmailSent == null) ? 0 : notificationEmailSent
+						.hashCode());
+		result = prime * result
+				+ ((pagingSize == null) ? 0 : pagingSize.hashCode());
 		result = prime * result
 				+ ((sakaiSiteId == null) ? 0 : sakaiSiteId.hashCode());
 		result = prime * result
 				+ ((sakaiToolId == null) ? 0 : sakaiToolId.hashCode());
 		result = prime * result
 				+ ((smsEnabled == null) ? 0 : smsEnabled.hashCode());
+		result = prime
+				* result
+				+ ((smsRetryMaxCount == null) ? 0 : smsRetryMaxCount.hashCode());
+		result = prime
+				* result
+				+ ((smsRetryScheduleInterval == null) ? 0
+						: smsRetryScheduleInterval.hashCode());
+		result = prime
+				* result
+				+ ((smsTaskMaxLifeTime == null) ? 0 : smsTaskMaxLifeTime
+						.hashCode());
 		return result;
 	}
 
@@ -206,6 +356,8 @@ public class SmsConfig extends BaseModel {
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
+		if (obj == null)
+			return false;
 		if (!(obj instanceof SmsConfig))
 			return false;
 		SmsConfig other = (SmsConfig) obj;
@@ -218,6 +370,22 @@ public class SmsConfig extends BaseModel {
 			if (other.notificationEmail != null)
 				return false;
 		} else if (!notificationEmail.equals(other.notificationEmail))
+			return false;
+		if (notificationEmailBilling == null) {
+			if (other.notificationEmailBilling != null)
+				return false;
+		} else if (!notificationEmailBilling
+				.equals(other.notificationEmailBilling))
+			return false;
+		if (notificationEmailSent == null) {
+			if (other.notificationEmailSent != null)
+				return false;
+		} else if (!notificationEmailSent.equals(other.notificationEmailSent))
+			return false;
+		if (pagingSize == null) {
+			if (other.pagingSize != null)
+				return false;
+		} else if (!pagingSize.equals(other.pagingSize))
 			return false;
 		if (sakaiSiteId == null) {
 			if (other.sakaiSiteId != null)
@@ -234,6 +402,58 @@ public class SmsConfig extends BaseModel {
 				return false;
 		} else if (!smsEnabled.equals(other.smsEnabled))
 			return false;
+		if (smsRetryMaxCount == null) {
+			if (other.smsRetryMaxCount != null)
+				return false;
+		} else if (!smsRetryMaxCount.equals(other.smsRetryMaxCount))
+			return false;
+		if (smsRetryScheduleInterval == null) {
+			if (other.smsRetryScheduleInterval != null)
+				return false;
+		} else if (!smsRetryScheduleInterval
+				.equals(other.smsRetryScheduleInterval))
+			return false;
+		if (smsTaskMaxLifeTime == null) {
+			if (other.smsTaskMaxLifeTime != null)
+				return false;
+		} else if (!smsTaskMaxLifeTime.equals(other.smsTaskMaxLifeTime))
+			return false;
 		return true;
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#hashCode()
+	 * 
+	 * @Override public int hashCode() { final int prime = 31; // int result =
+	 * super.hashCode(); int result = 43; result = prime result +
+	 * ((gateWayReportTimeout == null) ? 0 : gateWayReportTimeout .hashCode());
+	 * result = prime result + ((notificationEmail == null) ? 0 :
+	 * notificationEmail .hashCode()); result = prime result + ((sakaiSiteId ==
+	 * null) ? 0 : sakaiSiteId.hashCode()); result = prime result +
+	 * ((sakaiToolId == null) ? 0 : sakaiToolId.hashCode()); result = prime
+	 * result + ((smsEnabled == null) ? 0 : smsEnabled.hashCode()); return
+	 * result; }
+	 * 
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 * 
+	 * @Override public boolean equals(Object obj) { if (this == obj) return
+	 * true; if (!(obj instanceof SmsConfig)) return false; SmsConfig other =
+	 * (SmsConfig) obj; if (gateWayReportTimeout == null) { if
+	 * (other.gateWayReportTimeout != null) return false; } else if
+	 * (!gateWayReportTimeout.equals(other.gateWayReportTimeout)) return false;
+	 * if (notificationEmail == null) { if (other.notificationEmail != null)
+	 * return false; } else if
+	 * (!notificationEmail.equals(other.notificationEmail)) return false; if
+	 * (sakaiSiteId == null) { if (other.sakaiSiteId != null) return false; }
+	 * else if (!sakaiSiteId.equals(other.sakaiSiteId)) return false; if
+	 * (sakaiToolId == null) { if (other.sakaiToolId != null) return false; }
+	 * else if (!sakaiToolId.equals(other.sakaiToolId)) return false; if
+	 * (smsEnabled == null) { if (other.smsEnabled != null) return false; } else
+	 * if (!smsEnabled.equals(other.smsEnabled)) return false; return true; }
+	 */
+
 }
