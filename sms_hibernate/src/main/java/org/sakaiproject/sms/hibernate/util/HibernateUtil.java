@@ -148,9 +148,8 @@ public class HibernateUtil {
 	private static SessionFactory getSessionFactory() {
 		try {
 			if (sessionFactory == null) {
-				configuration = new Configuration();
-				sessionFactory = configuration.configure()
-						.buildSessionFactory();
+				// configuration = new Configuration();
+				sessionFactory = getConfiguration().buildSessionFactory();
 			}
 			// We could also let Hibernate bind it to JNDI:
 			// configuration.configure().buildSessionFactory()
