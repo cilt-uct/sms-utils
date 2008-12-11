@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.sakaiproject.sms.beans.ActionResults;
 import org.sakaiproject.sms.constants.SmsUiConstants;
+import org.sakaiproject.sms.params.IdParams;
 
 import uk.org.ponder.rsf.components.UICommand;
 import uk.org.ponder.rsf.components.UIContainer;
@@ -35,9 +36,10 @@ import uk.org.ponder.rsf.view.ComponentChecker;
 import uk.org.ponder.rsf.view.ViewComponentProducer;
 import uk.org.ponder.rsf.viewstate.SimpleViewParameters;
 import uk.org.ponder.rsf.viewstate.ViewParameters;
+import uk.org.ponder.rsf.viewstate.ViewParamsReporter;
 
 public class AccountProducer implements ViewComponentProducer,
-		NavigationCaseReporter {
+		NavigationCaseReporter, ViewParamsReporter {
 
 	public static final String VIEW_ID = "account";
 
@@ -47,7 +49,14 @@ public class AccountProducer implements ViewComponentProducer,
 		UIMessage.make(tofill, "page-title", "sms.sms-account.title");
 		UIMessage.make(tofill, "sms-account-heading", "sms.sms-account.title");
 
-		String accountOTP = "SmsAccount.new 1";
+		String accountOTP = "SmsAccount.";
+
+		IdParams params = (IdParams) viewparams;
+		if (params.id == null || "".equals(params.id)) {
+			accountOTP += SmsUiConstants.NEW_1;
+		} else {
+			accountOTP += params.id;
+		}
 
 		UIForm form = UIForm.make(tofill, "account-form");
 
@@ -76,6 +85,10 @@ public class AccountProducer implements ViewComponentProducer,
 
 	public String getViewID() {
 		return VIEW_ID;
+	}
+
+	public ViewParameters getViewParameters() {
+		return new IdParams();
 	}
 
 	public List reportNavigationCases() {

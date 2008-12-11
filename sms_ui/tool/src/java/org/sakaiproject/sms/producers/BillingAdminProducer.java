@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.sakaiproject.sms.hibernate.logic.SmsAccountLogic;
 import org.sakaiproject.sms.hibernate.model.SmsAccount;
+import org.sakaiproject.sms.params.IdParams;
 
 import uk.org.ponder.rsf.components.UIBranchContainer;
 import uk.org.ponder.rsf.components.UIContainer;
@@ -81,8 +82,8 @@ public class BillingAdminProducer implements ViewComponentProducer {
 
 			// TODO: Change link to go to edit account
 			UIInternalLink.make(entry, "account-name-link", account
-					.getAccountName(), new SimpleViewParameters(
-					SmsTestProducer.VIEW_ID));
+					.getAccountName(), new IdParams(AccountProducer.VIEW_ID,
+					account.getId().toString()));
 			UIOutput.make(entry, "account-no", account.getId().toString());
 			// TODO: Use Sakai services to get site and username
 			UIOutput.make(entry, "sakai-site", account.getSakaiSiteId());
