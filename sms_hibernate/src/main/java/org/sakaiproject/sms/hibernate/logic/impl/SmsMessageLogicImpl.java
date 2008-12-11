@@ -37,6 +37,7 @@ import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsSearchException;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
+import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
 import org.sakaiproject.sms.hibernate.util.DateUtil;
 import org.sakaiproject.sms.hibernate.util.HibernateUtil;
 
@@ -223,7 +224,7 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 						.getOrderBy()) : Order.desc(searchBean.getOrderBy())));
 			}
 
-			// crit.setFetchSize(SmsHibernateConstants.READ_LIMIT);
+			crit.setMaxResults(SmsHibernateConstants.READ_LIMIT);
 
 		} catch (ParseException e) {
 			throw new SmsSearchException(e);

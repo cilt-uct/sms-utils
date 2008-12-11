@@ -5,12 +5,14 @@ import java.util.Date;
 import java.util.List;
 
 import org.sakaiproject.sms.hibernate.bean.SearchFilterBean;
+import org.sakaiproject.sms.hibernate.bean.SearchResultContainer;
 import org.sakaiproject.sms.hibernate.logic.SmsAccountLogic;
 import org.sakaiproject.sms.hibernate.logic.SmsTransactionLogic;
 import org.sakaiproject.sms.hibernate.logic.impl.SmsAccountLogicImpl;
 import org.sakaiproject.sms.hibernate.logic.impl.SmsTransactionLogicImpl;
 import org.sakaiproject.sms.hibernate.model.SmsAccount;
 import org.sakaiproject.sms.hibernate.model.SmsTransaction;
+import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
 import org.sakaiproject.sms.hibernate.util.HibernateUtil;
 
 /**
@@ -153,7 +155,7 @@ public class SmsTransactionTest extends AbstractBaseTestCase {
 			bean.setSender(insertSmsTransaction.getSakaiUserId());
 
 			List<SmsTransaction> transactions = logic
-					.getSmsTransactionsForCriteria(bean);
+					.getSmsTransactionsForCriteria(bean).getPageResults();
 			assertTrue("Collection returned has no objects", transactions
 					.size() > 0);
 
@@ -168,6 +170,76 @@ public class SmsTransactionTest extends AbstractBaseTestCase {
 				.getId());
 		accountLogic.deleteSmsAccount(account);
 		// accountLogic.deleteSmsAccount(insertSmsAccount);
+	}
+
+	/**
+	 * Test get tasks for criteria_ paging.
+	 */
+	public void testGetTasksForCriteria_Paging() {
+
+		int recordsToInsert = 93;
+
+		SmsAccount smsAccount = new SmsAccount();
+		smsAccount.setSakaiUserId("SakaiUSerId");
+		smsAccount.setSakaiSiteId("SakaiSiteId");
+		smsAccount.setMessageTypeCode("12345");
+		smsAccount.setOverdraftLimit(10000.00f);
+		smsAccount.setBalance(5000.00f);
+		smsAccount.setAccountName("accountname");
+		accountLogic.persistSmsAccount(smsAccount);
+
+		for (int i = 0; i < recordsToInsert; i++) {
+
+			SmsTransaction smsTransaction = new SmsTransaction();
+			smsTransaction.setBalance(1.32f);
+			smsTransaction.setSakaiUserId("sakaiUserId");
+			smsTransaction.setTransactionDate(new Timestamp(System
+					.currentTimeMillis()));
+			smsTransaction.setTransactionTypeCode("TC");
+			smsTransaction.setTransactionCredits(i);
+			smsTransaction.setTransactionAmount(1000.00f);
+			smsTransaction.setSmsAccount(smsAccount);
+
+			logic.persistSmsTransaction(smsTransaction);
+		}
+
+		try {
+
+			SearchFilterBean bean = new SearchFilterBean();
+			bean.setAccountNumber(smsAccount.getId());
+			bean.setDateFrom(new Date());
+			bean.setDateTo(new Date());
+			bean.setTransactionType("TC");
+			bean.setSender("sakaiUserId");
+
+			bean.setCurrentPage(2);
+
+			SearchResultContainer<SmsTransaction> con = logic
+					.getSmsTransactionsForCriteria(bean);
+			List<SmsTransaction> tasks = con.getPageResults();
+			assertTrue("Incorrect collection size returned",
+					tasks.size() == SmsHibernateConstants.DEFAULT_PAGE_SIZE);
+
+			// Test last page. We know there are 124 records to this should
+			// return a list of 4
+			int pages = recordsToInsert
+					/ SmsHibernateConstants.DEFAULT_PAGE_SIZE;
+			// set to last page
+			if (recordsToInsert % SmsHibernateConstants.DEFAULT_PAGE_SIZE == 0) {
+				bean.setCurrentPage(pages);
+			} else {
+				bean.setCurrentPage(pages + 1);
+			}
+
+			con = logic.getSmsTransactionsForCriteria(bean);
+			tasks = con.getPageResults();
+			int lastPageRecordCount = recordsToInsert % pages;
+			assertTrue("Incorrect collection size returned",
+					tasks.size() == lastPageRecordCount);
+
+		} catch (Exception se) {
+			fail(se.getMessage());
+		}
 	}
 
 	/**

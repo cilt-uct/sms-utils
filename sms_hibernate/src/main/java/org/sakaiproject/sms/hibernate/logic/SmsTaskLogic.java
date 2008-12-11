@@ -21,6 +21,7 @@ package org.sakaiproject.sms.hibernate.logic;
 import java.util.List;
 
 import org.sakaiproject.sms.hibernate.bean.SearchFilterBean;
+import org.sakaiproject.sms.hibernate.bean.SearchResultContainer;
 import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsSearchException;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 
@@ -75,12 +76,15 @@ public interface SmsTaskLogic {
 	public void persistSmsTask(SmsTask smsTask);
 
 	/**
-	 * Gets a list of SmsTask objects for the specified search criteria
+	 * Gets a search results container housing the result set for a particular
+	 * displayed page
 	 * 
-	 * @param search Bean containing the search criteria
-	 * @return List of SmsTasks
+	 * @param searchBean
+	 * @return Search result container
+	 * @throws SmsSearchException
 	 */
-	public List<SmsTask> getSmsTasksForCriteria(SearchFilterBean searchBean) throws SmsSearchException;
+	public SearchResultContainer<SmsTask> getSmsTasksForCriteria(
+			SearchFilterBean searchBean) throws SmsSearchException;
 
 	/**
 	 * Gets the sms tasks filtered by one or more message statuses.

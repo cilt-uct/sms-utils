@@ -251,7 +251,7 @@ public class SmsMessageTest extends AbstractBaseTestCase {
 	 */
 	public void testGetMessagesForCriteria_Paging() {
 
-		int recordsToInsert = 124;
+		int recordsToInsert = 93;
 
 		SmsTask insertTask = new SmsTask();
 		insertTask.setSakaiSiteId("sakaiSiteId");

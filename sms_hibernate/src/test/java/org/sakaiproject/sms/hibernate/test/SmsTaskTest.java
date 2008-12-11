@@ -7,14 +7,17 @@ import java.util.List;
 import java.util.Set;
 
 import org.sakaiproject.sms.hibernate.bean.SearchFilterBean;
+import org.sakaiproject.sms.hibernate.bean.SearchResultContainer;
 import org.sakaiproject.sms.hibernate.logic.impl.SmsMessageLogicImpl;
 import org.sakaiproject.sms.hibernate.logic.impl.SmsTaskLogicImpl;
 import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsSearchException;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
+import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
 import org.sakaiproject.sms.hibernate.util.HibernateUtil;
 
+// TODO: Auto-generated Javadoc
 /**
  * A task consists of a series of rules and must be executed on the scheduled
  * date-time. For example: Send message x to group y at time z. When the task is
@@ -36,7 +39,7 @@ public class SmsTaskTest extends AbstractBaseTestCase {
 	/** The insert message2. */
 	private static SmsMessage insertMessage2;
 
-	/** The message logic */
+	/** The message logic. */
 	private static SmsMessageLogicImpl messageLogic = null;
 
 	static {
@@ -215,7 +218,7 @@ public class SmsTaskTest extends AbstractBaseTestCase {
 	}
 
 	/**
-	 * Tests the getMessagesForCriteria method
+	 * Tests the getMessagesForCriteria method.
 	 */
 	public void testGetTasksForCriteria() {
 		SmsTask insertTask = new SmsTask();
@@ -241,7 +244,8 @@ public class SmsTaskTest extends AbstractBaseTestCase {
 			bean.setToolName(insertTask.getSakaiToolName());
 			bean.setSender(insertTask.getSenderUserName());
 
-			List<SmsTask> tasks = logic.getSmsTasksForCriteria(bean);
+			List<SmsTask> tasks = logic.getSmsTasksForCriteria(bean)
+					.getPageResults();
 			assertTrue("Collection returned has no objects", tasks.size() > 0);
 
 			for (SmsTask task : tasks) {
@@ -252,6 +256,70 @@ public class SmsTaskTest extends AbstractBaseTestCase {
 			fail(se.getMessage());
 		} finally {
 			logic.deleteSmsTask(insertTask);
+		}
+	}
+
+	/**
+	 * Test get tasks for criteria_ paging.
+	 */
+	public void testGetTasksForCriteria_Paging() {
+
+		int recordsToInsert = 93;
+
+		for (int i = 0; i < recordsToInsert; i++) {
+			SmsTask insertTask = new SmsTask();
+			insertTask.setSakaiSiteId("sakaiSiteId");
+			insertTask.setSmsAccountId(1);
+			insertTask
+					.setDateCreated(new Timestamp(System.currentTimeMillis()));
+			insertTask.setDateToSend(new Timestamp(System.currentTimeMillis()));
+			insertTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_FAIL);
+			insertTask.setAttemptCount(2);
+			insertTask.setMessageBody("taskCrit");
+			insertTask.setSenderUserName("taskCrit");
+			insertTask.setSakaiToolName("sakaiToolName");
+			insertTask.setMaxTimeToLive(1);
+			insertTask.setDelReportTimeoutDuration(i);
+			logic.persistSmsTask(insertTask);
+		}
+
+		try {
+
+			SearchFilterBean bean = new SearchFilterBean();
+			bean.setStatus(SmsConst_DeliveryStatus.STATUS_FAIL);
+			bean.setDateFrom(new Date());
+			bean.setDateTo(new Date());
+			bean.setToolName("sakaiToolName");
+			bean.setSender("taskCrit");
+
+			bean.setCurrentPage(2);
+
+			SearchResultContainer<SmsTask> con = logic
+					.getSmsTasksForCriteria(bean);
+			List<SmsTask> tasks = con.getPageResults();
+			assertTrue("Incorrect collection size returned",
+					tasks.size() == SmsHibernateConstants.DEFAULT_PAGE_SIZE);
+
+			// Test last page. We know there are 124 records to this should
+			// return a list of 4
+
+			int pages = recordsToInsert
+					/ SmsHibernateConstants.DEFAULT_PAGE_SIZE;
+			// set to last page
+			if (recordsToInsert % SmsHibernateConstants.DEFAULT_PAGE_SIZE == 0) {
+				bean.setCurrentPage(pages);
+			} else {
+				bean.setCurrentPage(pages + 1);
+			}
+
+			con = logic.getSmsTasksForCriteria(bean);
+			tasks = con.getPageResults();
+			int lastPageRecordCount = recordsToInsert % pages;
+			assertTrue("Incorrect collection size returned",
+					tasks.size() == lastPageRecordCount);
+
+		} catch (Exception se) {
+			fail(se.getMessage());
 		}
 	}
 

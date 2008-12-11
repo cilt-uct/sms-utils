@@ -100,7 +100,7 @@ public class SmsTransactionLogicImpl extends SmsDao implements
 	 * @throws SmsSearchException
 	 *             when an invalid search criteria is specified
 	 */
-	public List<SmsTransaction> getSmsTransactionsForCriteria(
+	public SearchResultContainer<SmsTransaction> getSmsTransactionsForCriteria(
 			SearchFilterBean searchBean) throws SmsSearchException {
 
 		Criteria crit = HibernateUtil.getSession().createCriteria(
@@ -151,7 +151,7 @@ public class SmsTransactionLogicImpl extends SmsDao implements
 						.getOrderBy()) : Order.desc(searchBean.getOrderBy())));
 			}
 
-			crit.setFetchSize(SmsHibernateConstants.READ_LIMIT);
+			crit.setMaxResults(SmsHibernateConstants.READ_LIMIT);
 
 		} catch (ParseException e) {
 			throw new SmsSearchException(e);
@@ -165,7 +165,7 @@ public class SmsTransactionLogicImpl extends SmsDao implements
 				.getCurrentPage());
 
 		HibernateUtil.closeSession();
-		return transactions;
+		return con;
 	}
 
 }

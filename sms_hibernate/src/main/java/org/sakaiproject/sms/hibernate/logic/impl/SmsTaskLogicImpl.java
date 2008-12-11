@@ -155,16 +155,15 @@ public class SmsTaskLogicImpl extends SmsDao implements SmsTaskLogic {
 	}
 
 	/**
-	 * Gets a list of SmsTask objects for the specified search criteria
+	 * Gets a search results container housing the result set for a particular
+	 * displayed page
 	 * 
-	 * @param search
-	 *            Bean containing the search criteria
-	 * @return LList of SmsTasks
+	 * @param searchBean
+	 * @return Search result container
 	 * @throws SmsSearchException
-	 *             when an invalid search criteria is specified
 	 */
-	public List<SmsTask> getSmsTasksForCriteria(SearchFilterBean searchBean)
-			throws SmsSearchException {
+	public SearchResultContainer<SmsTask> getSmsTasksForCriteria(
+			SearchFilterBean searchBean) throws SmsSearchException {
 
 		Criteria crit = HibernateUtil.getSession()
 				.createCriteria(SmsTask.class);
@@ -215,7 +214,7 @@ public class SmsTaskLogicImpl extends SmsDao implements SmsTaskLogic {
 						.getOrderBy()) : Order.desc(searchBean.getOrderBy())));
 			}
 
-			crit.setFetchSize(SmsHibernateConstants.READ_LIMIT);
+			crit.setMaxResults(SmsHibernateConstants.READ_LIMIT);
 
 		} catch (ParseException e) {
 			throw new SmsSearchException(e);
@@ -230,7 +229,7 @@ public class SmsTaskLogicImpl extends SmsDao implements SmsTaskLogic {
 		con.calculateAndSetPageResults(tasks, searchBean.getCurrentPage());
 
 		HibernateUtil.closeSession();
-		return tasks;
+		return con;
 	}
 
 }

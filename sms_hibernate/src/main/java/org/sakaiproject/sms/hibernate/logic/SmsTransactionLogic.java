@@ -21,12 +21,13 @@ package org.sakaiproject.sms.hibernate.logic;
 import java.util.List;
 
 import org.sakaiproject.sms.hibernate.bean.SearchFilterBean;
+import org.sakaiproject.sms.hibernate.bean.SearchResultContainer;
 import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsSearchException;
 import org.sakaiproject.sms.hibernate.model.SmsTransaction;
 
 /**
- * The data service will handle all sms Account database transactions for the sms tool in
- * Sakai.
+ * The data service will handle all sms Account database transactions for the
+ * sms tool in Sakai.
  * 
  * @author julian@psybergate.com
  * @version 1.0
@@ -41,7 +42,8 @@ public interface SmsTransactionLogic {
 	/**
 	 * Gets a SmsTransaction entity for the given id
 	 * 
-	 * @param Long sms transaction id
+	 * @param Long
+	 *            sms transaction id
 	 * @return sms congiguration
 	 */
 	public SmsTransaction getSmsTransaction(Long smsTransactionId);
@@ -56,19 +58,22 @@ public interface SmsTransactionLogic {
 	/**
 	 * This method will persists the given object.
 	 * 
-	 * If the object is a new entity then it will be created on the DB. 
-	 * If it is an existing entity then the record will be updates on the DB.
+	 * If the object is a new entity then it will be created on the DB. If it is
+	 * an existing entity then the record will be updates on the DB.
 	 * 
-	 * @param sms confuguration to be persisted
+	 * @param sms
+	 *            confuguration to be persisted
 	 */
 	public void persistSmsTransaction(SmsTransaction smsTransaction);
-	
 
 	/**
-	 * Gets a list of SmsTransaction objects for the specified search criteria
+	 * Gets a search results container housing the result set for a particular
+	 * displayed page
 	 * 
-	 * @param search Bean containing the search criteria
-	 * @return List of SmsTransactions
+	 * @param searchBean
+	 * @return Search result container
+	 * @throws SmsSearchException
 	 */
-	public List<SmsTransaction> getSmsTransactionsForCriteria(SearchFilterBean searchBean) throws SmsSearchException;
+	public SearchResultContainer<SmsTransaction> getSmsTransactionsForCriteria(
+			SearchFilterBean searchBean) throws SmsSearchException;
 }
