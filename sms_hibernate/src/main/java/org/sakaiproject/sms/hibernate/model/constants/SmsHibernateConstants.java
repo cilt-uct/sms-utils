@@ -38,4 +38,9 @@ public class SmsHibernateConstants {
 	/** The Constant READ_LIMIT. */
 	public static final int READ_LIMIT = 100;
 
+	/** The Constant MESSAGE_TYPE_OUTGOING. */
+	public static final Integer MESSAGE_TYPE_OUTGOING = 0;
+
+	/** The Constant MESSAGE_TYPE_INCOMING. */
+	public static final Integer MESSAGE_TYPE_INCOMING = 1;
 }
