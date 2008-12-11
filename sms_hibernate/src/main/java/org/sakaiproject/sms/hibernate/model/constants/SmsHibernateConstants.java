@@ -35,4 +35,7 @@ public class SmsHibernateConstants {
 	/** The Constant DEFAULT_PAGE_SIZE. */
 	public static final int DEFAULT_PAGE_SIZE = 5;
 
+	/** The Constant READ_LIMIT. */
+	public static final int READ_LIMIT = 100;
+
 }
