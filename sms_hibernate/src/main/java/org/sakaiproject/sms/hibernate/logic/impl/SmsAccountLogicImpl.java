@@ -61,7 +61,7 @@ public class SmsAccountLogicImpl extends SmsDao implements SmsAccountLogic {
 	 * @return List of SmsAccount objects
 	 */
 	public List<SmsAccount> getAllSmsAccounts() {
-		Session s = HibernateUtil.currentSession();
+		Session s = HibernateUtil.getSession();
 		Query query = s.createQuery("from SmsAccount");
 		return query.list();
 	}

@@ -3,7 +3,6 @@ package org.sakaiproject.sms.hibernate.dao;
 import org.hibernate.HibernateException;
 import org.hibernate.ObjectNotFoundException;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.sakaiproject.sms.hibernate.model.BaseModel;
 import org.sakaiproject.sms.hibernate.util.HibernateUtil;
 
@@ -30,13 +29,13 @@ abstract public class BaseDao {
 	 */
 	protected synchronized void persist(BaseModel object)
 			throws HibernateException {
-		Session session = HibernateUtil.currentSession();
-		Transaction tx = session.beginTransaction();
+		Session session = HibernateUtil.getSession();
 		try {
+			HibernateUtil.beginTransaction();
 			session.saveOrUpdate(object);
-			tx.commit();
+			HibernateUtil.commitTransaction();
 		} catch (HibernateException e) {
-			tx.rollback();
+			HibernateUtil.rollbackTransaction();
 			throw e;
 		} finally {
 			HibernateUtil.closeSession();
@@ -51,24 +50,13 @@ abstract public class BaseDao {
 	 *                database
 	 */
 	protected void delete(Object object) throws HibernateException {
-		Session session = HibernateUtil.currentSession();
-		Transaction tx = session.beginTransaction();
+		Session session = HibernateUtil.getSession();
 		try {
-			/*
-			 * if (object instanceof Loggable) { Loggable log =
-			 * (Loggable)object; BaseModel baseModel = (BaseModel)object;
-			 * if(baseModel.getDateDeleted() == null){
-			 * baseModel.setDateDeleted(new Date()); }
-			 * if(baseModel.getUserDeletedId() == null){
-			 * baseModel.setUserDeletedId(currentUser.getId()); }
-			 * session.save(new LogEntry(baseModel.getUserDeletedId(),
-			 * baseModel.getDateDeleted(), log.getLogMessage(), true,
-			 * log.getObjectType())); }
-			 */
+			HibernateUtil.beginTransaction();
 			session.delete(object);
-			tx.commit();
+			HibernateUtil.commitTransaction();
 		} catch (HibernateException e) {
-			tx.rollback();
+			HibernateUtil.rollbackTransaction();
 			throw e;
 		} finally {
 			HibernateUtil.closeSession();
@@ -84,17 +72,9 @@ abstract public class BaseDao {
 	 *                if any error occurs during database shutdown.
 	 */
 	protected void dbShutdown() throws HibernateException {
-		Session session = HibernateUtil.currentSession();
+		Session session = HibernateUtil.getSession();
 		session.createSQLQuery("SHUTDOWN").executeUpdate();
 	}
-
-	/*
-	 * protected void save(Object object) throws HibernateException { Session
-	 * session = HibernateUtil.currentSession(); session.flush(); Transaction tx
-	 * = session.beginTransaction(); try { session.replicate(object,
-	 * ReplicationMode.LATEST_VERSION); tx.commit(); } catch (HibernateException
-	 * e) { tx.rollback(); throw e; }finally { HibernateUtil.closeSession(); } }
-	 */
 
 	/**
 	 * Find by id.
@@ -109,8 +89,7 @@ abstract public class BaseDao {
 	protected Object findById(Class className, Long id) {
 		Object obj = null;
 		try {
-			Session session = HibernateUtil.currentSession();
-			// obj = session.load(className, id);
+			Session session = HibernateUtil.getSession();
 			obj = session.get(className, id);
 		} catch (ObjectNotFoundException ex) {
 			obj = null;
@@ -119,5 +98,4 @@ abstract public class BaseDao {
 		}
 		return obj;
 	}
-
 }

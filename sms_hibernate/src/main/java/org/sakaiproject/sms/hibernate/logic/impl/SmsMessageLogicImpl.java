@@ -74,7 +74,7 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 	 * @return List of SmsMessage objects
 	 */
 	public List<SmsMessage> getAllSmsMessages() {
-		Session s = HibernateUtil.currentSession();
+		Session s = HibernateUtil.getSession();
 		Query query = s.createQuery("from SmsMessage");
 		List<SmsMessage> messages = query.list();
 		return messages;
@@ -101,7 +101,7 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 	 * @return sms message
 	 */
 	public SmsMessage getSmsMessageBySmscMessageId(String smscMessageId) {
-		Session s = HibernateUtil.currentSession();
+		Session s = HibernateUtil.getSession();
 		Query query = s
 				.createQuery("from SmsMessage mes where mes.smscMessageId = :smscId ");
 		query.setParameter("smscId", smscMessageId, Hibernate.STRING);
@@ -142,8 +142,8 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 
 			log.debug("getSmsTasksFilteredByMessageStatus() HQL: "
 					+ hql.toString());
-			Query query = HibernateUtil.currentSession().createQuery(
-					hql.toString());
+			Query query = HibernateUtil.getSession()
+					.createQuery(hql.toString());
 			query
 					.setParameterList("statusCodes", statusCodes,
 							Hibernate.STRING);
@@ -168,7 +168,7 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 	public SearchResultContainer<SmsMessage> getSmsMessagesForCriteria(
 			SearchFilterBean searchBean) throws SmsSearchException {
 
-		Criteria crit = HibernateUtil.currentSession().createCriteria(
+		Criteria crit = HibernateUtil.getSession().createCriteria(
 				SmsMessage.class).createAlias("smsTask", "smsTask");
 
 		List<SmsMessage> messages = new ArrayList<SmsMessage>();
@@ -234,7 +234,7 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 		con.setTotalResultSetSize(new Long(messages.size()));
 		con.calculateAndSetPageResults(messages, searchBean.getCurrentPage());
 
-		//HibernateUtil.closeSession();
+		// HibernateUtil.closeSession();
 		return con;
 	}
 

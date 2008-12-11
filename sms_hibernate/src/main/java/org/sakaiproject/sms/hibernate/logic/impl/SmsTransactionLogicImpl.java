@@ -71,7 +71,7 @@ public class SmsTransactionLogicImpl extends SmsDao implements
 	 * @return List of SmsTransaction objects
 	 */
 	public List<SmsTransaction> getAllSmsTransactions() {
-		Session s = HibernateUtil.currentSession();
+		Session s = HibernateUtil.getSession();
 		Query query = s.createQuery("from SmsTransaction");
 		return query.list();
 	}
@@ -101,7 +101,7 @@ public class SmsTransactionLogicImpl extends SmsDao implements
 	public List<SmsTransaction> getSmsTransactionsForCriteria(
 			SearchFilterBean searchBean) throws SmsSearchException {
 
-		Criteria crit = HibernateUtil.currentSession().createCriteria(
+		Criteria crit = HibernateUtil.getSession().createCriteria(
 				SmsTransaction.class).createAlias("smsAccount", "smsAccount");
 
 		List<SmsTransaction> transactions = new ArrayList<SmsTransaction>();

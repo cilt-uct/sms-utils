@@ -20,12 +20,15 @@ package org.sakaiproject.sms.hibernate.util;
 import java.io.IOException;
 import java.util.Properties;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hibernate.HibernateException;
+import org.hibernate.Interceptor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
-import org.sakaiproject.sms.hibernate.model.BaseModel;
 
 /**
  * Configures hibernate with mapping definitions and configuration properties
@@ -70,13 +73,20 @@ public class HibernateUtil {
 	 */
 	private static SessionFactory sessionFactory;
 
+	private static Configuration configuration;
 	/**
 	 * Container for thread-scoped sessions.
 	 */
-	private static final ThreadLocal<Session> session = new ThreadLocal<Session>();
+	private static final ThreadLocal<Session> threadSession = new ThreadLocal<Session>();
+
+	private static final ThreadLocal<Transaction> threadTransaction = new ThreadLocal<Transaction>();
+
+	private static final ThreadLocal<Interceptor> threadInterceptor = new ThreadLocal<Interceptor>();
 
 	/** The test configuration. */
 	private static boolean testConfiguration = false;
+
+	private static Log LOG = LogFactory.getLog(HibernateUtil.class);
 
 	/**
 	 * Loads the given properties file from the classpath.
@@ -90,6 +100,7 @@ public class HibernateUtil {
 	 *             if any error occurs locating and/or reading the given file
 	 *             from the classpath
 	 */
+
 	private static Properties loadPropertiesFromClasspath(String file)
 			throws IOException {
 		Properties properties = new Properties();
@@ -137,15 +148,17 @@ public class HibernateUtil {
 	private static SessionFactory getSessionFactory() {
 		try {
 			if (sessionFactory == null) {
-				sessionFactory = getConfiguration().buildSessionFactory();
+				configuration = new Configuration();
+				sessionFactory = configuration.configure()
+						.buildSessionFactory();
 			}
-		} catch (HibernateException ex) {
-			throw new RuntimeException("Exception building SessionFactory: "
-					+ ex.getMessage(), ex);
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw new HibernateException("Error reading hibernate properties: "
-					+ e.getMessage(), e);
+			// We could also let Hibernate bind it to JNDI:
+			// configuration.configure().buildSessionFactory()
+		} catch (Throwable ex) {
+			// We have to catch Throwable, otherwise we will miss
+			// NoClassDefFoundError and other subclasses of Error
+
+			throw new ExceptionInInitializerError(ex);
 		}
 		return sessionFactory;
 	}
@@ -155,9 +168,7 @@ public class HibernateUtil {
 	 */
 	public static void createSchema() {
 		try {
-			// currentSession();
 			new SchemaExport(getConfiguration()).create(false, true);
-			// closeSession();
 		} catch (IOException e) {
 			e.printStackTrace();
 			throw new HibernateException("Error reading hibernate properties: "
@@ -170,24 +181,53 @@ public class HibernateUtil {
 	 * 
 	 * @return the hibernate session for the current thread
 	 * 
-	 * @exception HibernateException
-	 *                if any error occurs opening the hibernate session
 	 */
-	public static Session currentSession() throws HibernateException {
-		Session s = session.get();
-		// Open a new Session, if this Thread has none yet
-		if (s == null) {
-			s = getSessionFactory().openSession();
-			session.set(s);
+	public static Session getSession() {
+		Session s = threadSession.get();
+		try {
+			if (s == null) {
+				if (getInterceptor() != null) {
+					s = getSessionFactory().openSession(getInterceptor());
+				} else {
+					s = getSessionFactory().openSession();
+				}
+				threadSession.set(s);
+			}
+		} catch (HibernateException ex) {
+			LOG.error("HibernateException: " + ex);
 		}
 		return s;
+
 	}
 
-	public static void closeSession() throws HibernateException {
-		Session s = session.get();
-		session.set(null);
-		if (s != null)
-			s.close();
+	/**
+	 * Rebuild the SessionFactory with the given Hibernate Configuration.
+	 * 
+	 * @param cfg
+	 */
+	public static void rebuildSessionFactory(Configuration cfg) {
+
+		synchronized (sessionFactory) {
+			try {
+				sessionFactory = cfg.buildSessionFactory();
+				configuration = cfg;
+			} catch (Exception ex) {
+				LOG.error("HibernateException: " + ex);
+			}
+		}
+	}
+
+	public static void closeSession() {
+		try {
+			Session s = threadSession.get();
+			threadSession.set(null);
+			if (s != null && s.isOpen()) {
+				s.close();
+			}
+		} catch (HibernateException ex) {
+			LOG.error("HibernateException: " + ex);
+		}
+
 	}
 
 	/**
@@ -201,19 +241,100 @@ public class HibernateUtil {
 	}
 
 	/**
-	 * Clears the session cache
+	 * Register a Hibernate interceptor with the current thread.
+	 * <p>
+	 * Every Session opened is opened with this interceptor after registration.
+	 * Has no effect if the current Session of the thread is already open,
+	 * effective on next close()/getSession().
 	 */
-	public static void clear() {
-		session.get().clear();
+	public static void registerInterceptor(Interceptor interceptor) {
+		threadInterceptor.set(interceptor);
+	}
+
+	private static Interceptor getInterceptor() {
+		Interceptor interceptor = threadInterceptor.get();
+		return interceptor;
 	}
 
 	/**
-	 * Evicts the object from the session
+	 * Start a new database transaction.
 	 * 
-	 * @param model
 	 */
-	public static void evict(BaseModel model) {
-		session.get().evict(model);
+	public static void beginTransaction() {
+		Transaction tx = threadTransaction.get();
+		try {
+			if (tx == null) {
+				tx = getSession().beginTransaction();
+				threadTransaction.set(tx);
+			}
+		} catch (HibernateException ex) {
+			LOG.error("HibernateException: " + ex);
+		}
+	}
+
+	/**
+	 * Commit the database transaction.
+	 */
+	public static void commitTransaction() {
+		Transaction tx = threadTransaction.get();
+		try {
+			if (tx != null && !tx.wasCommitted() && !tx.wasRolledBack()) {
+				tx.commit();
+			}
+			threadTransaction.set(null);
+		} catch (HibernateException ex) {
+			rollbackTransaction();
+			LOG.error("HibernateException: " + ex);
+		}
+	}
+
+	/**
+	 * Rollback the database transaction.
+	 */
+	public static void rollbackTransaction() {
+		Transaction tx = threadTransaction.get();
+		try {
+			threadTransaction.set(null);
+			if (tx != null && !tx.wasCommitted() && !tx.wasRolledBack()) {
+				tx.rollback();
+			}
+		} catch (HibernateException ex) {
+			LOG.error("HibernateException: " + ex);
+		} finally {
+			closeSession();
+		}
+	}
+
+	/**
+	 * Reconnects a Hibernate Session to the current Thread.
+	 * 
+	 * @param session
+	 *            The Hibernate Session to be reconnected.
+	 */
+	public static void reconnect(Session session) {
+		try {
+			session.reconnect();
+			threadSession.set(session);
+		} catch (HibernateException ex) {
+			LOG.error("HibernateException: " + ex);
+		}
+	}
+
+	/**
+	 * Disconnect and return Session from current Thread.
+	 * 
+	 * @return Session the disconnected Session
+	 */
+	public static Session disconnectSession() {
+		Session session = getSession();
+		try {
+			threadSession.set(null);
+			if (session.isConnected() && session.isOpen())
+				session.disconnect();
+		} catch (HibernateException ex) {
+			LOG.error("HibernateException: " + ex);
+		}
+		return session;
 	}
 
 }

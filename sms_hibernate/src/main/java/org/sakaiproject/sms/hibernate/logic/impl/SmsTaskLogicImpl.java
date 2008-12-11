@@ -72,7 +72,7 @@ public class SmsTaskLogicImpl extends SmsDao implements SmsTaskLogic {
 	 * @return List of SmsTask objects
 	 */
 	public List<SmsTask> getAllSmsTask() {
-		Session s = HibernateUtil.currentSession();
+		Session s = HibernateUtil.getSession();
 		Query query = s.createQuery("from SmsTask");
 		List<SmsTask> tasks = query.list();
 		HibernateUtil.closeSession();
@@ -102,8 +102,7 @@ public class SmsTaskLogicImpl extends SmsDao implements SmsTaskLogic {
 		hql.append(" from SmsTask task where task.dateToSend <= :today ");
 		hql.append(" and task.statusCode IN (:statusCodes) ");
 		hql.append(" order by task.dateToSend ");
-		Query query = HibernateUtil.currentSession()
-				.createQuery(hql.toString());
+		Query query = HibernateUtil.getSession().createQuery(hql.toString());
 		query.setParameter("today", getTimestampCurrent(), Hibernate.TIMESTAMP);
 		query.setParameterList("statusCodes", new Object[] {
 				SmsConst_DeliveryStatus.STATUS_PENDING,
@@ -143,8 +142,8 @@ public class SmsTaskLogicImpl extends SmsDao implements SmsTaskLogic {
 
 			log.debug("getSmsTasksFilteredByMessageStatus() HQL: "
 					+ hql.toString());
-			Query query = HibernateUtil.currentSession().createQuery(
-					hql.toString());
+			Query query = HibernateUtil.getSession()
+					.createQuery(hql.toString());
 			query.setParameterList("statusCodes", messageStatusCodes,
 					Hibernate.STRING);
 			tasks = query.list();
@@ -165,8 +164,8 @@ public class SmsTaskLogicImpl extends SmsDao implements SmsTaskLogic {
 	public List<SmsTask> getSmsTasksForCriteria(SearchFilterBean searchBean)
 			throws SmsSearchException {
 
-		Criteria crit = HibernateUtil.currentSession().createCriteria(
-				SmsTask.class);
+		Criteria crit = HibernateUtil.getSession()
+				.createCriteria(SmsTask.class);
 
 		List<SmsTask> tasks = new ArrayList<SmsTask>();
 

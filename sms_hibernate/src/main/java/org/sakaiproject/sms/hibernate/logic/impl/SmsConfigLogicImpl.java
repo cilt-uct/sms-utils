@@ -63,7 +63,7 @@ public class SmsConfigLogicImpl extends SmsDao implements SmsConfigLogic {
 	 */
 	public List<SmsConfig> getAllSmsConfig() {
 		List<SmsConfig> configs = new ArrayList<SmsConfig>();
-		Session s = HibernateUtil.currentSession();
+		Session s = HibernateUtil.getSession();
 		Query query = s.createQuery("from SmsConfig");
 		configs = query.list();
 		HibernateUtil.closeSession();
@@ -94,7 +94,7 @@ public class SmsConfigLogicImpl extends SmsDao implements SmsConfigLogic {
 	public SmsConfig getSmsConfigBySakaiSiteId(String id) {
 		List<SmsConfig> configs = new ArrayList<SmsConfig>();
 		SmsConfig config = null;
-		Session s = HibernateUtil.currentSession();
+		Session s = HibernateUtil.getSession();
 		Query query = s
 				.createQuery("from SmsConfig conf where conf.sakaiSiteId = :id");
 		query.setParameter("id", id);
@@ -117,7 +117,7 @@ public class SmsConfigLogicImpl extends SmsDao implements SmsConfigLogic {
 	public SmsConfig getSmsConfigBySakaiToolId(String id) {
 		List<SmsConfig> configs = new ArrayList<SmsConfig>();
 		SmsConfig config = null;
-		Session s = HibernateUtil.currentSession();
+		Session s = HibernateUtil.getSession();
 		Query query = s
 				.createQuery("from SmsConfig conf where conf.sakaiToolId = :id");
 		query.setParameter("id", id);

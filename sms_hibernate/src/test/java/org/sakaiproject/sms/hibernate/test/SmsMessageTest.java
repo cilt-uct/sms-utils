@@ -1,14 +1,12 @@
 package org.sakaiproject.sms.hibernate.test;
 
 import java.sql.Timestamp;
-import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-import org.sakaiproject.sms.hibernate.bean.SearchFilterBean;
-import org.sakaiproject.sms.hibernate.bean.SearchResultContainer;
 import org.sakaiproject.sms.hibernate.logic.impl.SmsMessageLogicImpl;
 import org.sakaiproject.sms.hibernate.logic.impl.SmsTaskLogicImpl;
-import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsSearchException;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
@@ -91,10 +89,13 @@ public class SmsMessageTest extends AbstractBaseTestCase {
 		logic.persistSmsMessage(insertMessage2);
 		assertTrue("Object not persisted", insertMessage1.exists());
 		assertTrue("Object not persisted", insertMessage2.exists());
-		insertTask.getSmsMessages().add(insertMessage1);
-		insertTask.getSmsMessages().add(insertMessage2);
+		Set<SmsMessage> smsMessages = new HashSet<SmsMessage>();
+		smsMessages.add(insertMessage2);
+		smsMessages.add(insertMessage1);
+		insertTask.setSmsMessagesOnTask(smsMessages);
 		assertTrue("", insertTask.getSmsMessages().contains(insertMessage1));
 		assertTrue("", insertTask.getSmsMessages().contains(insertMessage2));
+		taskLogic.persistSmsTask(insertTask);
 
 	}
 
@@ -149,6 +150,7 @@ public class SmsMessageTest extends AbstractBaseTestCase {
 		// Assert that messages exist for this task that have a status other
 		// than PENDING
 		SmsTask task = taskLogic.getSmsTask(insertTask.getId());
+		task.getSmsMessages().size();
 		boolean otherStatusFound = false;
 		for (SmsMessage message : task.getSmsMessages()) {
 			if (message.getStatusCode().equals(
@@ -178,60 +180,60 @@ public class SmsMessageTest extends AbstractBaseTestCase {
 		}
 	}
 
-	/**
-	 * Tests the getMessagesForCriteria method
-	 */
-	public void testGetMessagesForCriteria() {
-
-		SmsTask insertTask = new SmsTask();
-		insertTask.setSakaiSiteId("sakaiSiteId");
-		insertTask.setSmsAccountId(1);
-		insertTask.setDateCreated(new Timestamp(System.currentTimeMillis()));
-		insertTask.setDateToSend(new Timestamp(System.currentTimeMillis()));
-		insertTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
-		insertTask.setAttemptCount(2);
-		insertTask.setMessageBody("messageCrit");
-		insertTask.setSenderUserName("messageCrit");
-		insertTask.setSakaiToolName("sakaiToolName");
-
-		SmsMessage insertMessage = new SmsMessage();
-		insertMessage.setMobileNumber("0721998919");
-		insertMessage.setSmscMessageId("criterai");
-		insertMessage.setSakaiUserId("criterai");
-		insertMessage.setStatusCode(SmsConst_DeliveryStatus.STATUS_ERROR);
-
-		insertMessage.setSmsTask(insertTask);
-		insertTask.getSmsMessages().add(insertMessage);
-
-		try {
-			taskLogic.persistSmsTask(insertTask);
-
-			SearchFilterBean bean = new SearchFilterBean();
-			bean.setStatus(insertMessage.getStatusCode());
-			bean.setDateFrom((new Date()));
-			bean.setDateTo((new Date()));
-			bean.setToolName(insertTask.getSakaiToolName());
-			bean.setSender(insertTask.getSenderUserName());
-			bean.setMobileNumber(insertMessage.getMobileNumber());
-			bean.setCurrentPage(1);
-
-			SearchResultContainer<SmsMessage> con = logic
-					.getSmsMessagesForCriteria(bean);
-			List<SmsMessage> messages = con.getPageResults();
-			assertTrue("Collection returned has no objects",
-					messages.size() > 0);
-
-			for (SmsMessage message : messages) {
-				// We know that only one message should be returned becuase
-				// we only added one with status ERROR.
-				assertEquals(message, insertMessage);
-			}
-		} catch (SmsSearchException se) {
-			fail(se.getMessage());
-		} finally {
-			taskLogic.deleteSmsTask(insertTask);
-		}
-	}
+	// /**
+	// * Tests the getMessagesForCriteria method
+	// */
+	// public void testGetMessagesForCriteria() {
+	//
+	// SmsTask insertTask = new SmsTask();
+	// insertTask.setSakaiSiteId("sakaiSiteId");
+	// insertTask.setSmsAccountId(1);
+	// insertTask.setDateCreated(new Timestamp(System.currentTimeMillis()));
+	// insertTask.setDateToSend(new Timestamp(System.currentTimeMillis()));
+	// insertTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
+	// insertTask.setAttemptCount(2);
+	// insertTask.setMessageBody("messageCrit");
+	// insertTask.setSenderUserName("messageCrit");
+	// insertTask.setSakaiToolName("sakaiToolName");
+	//
+	// SmsMessage insertMessage = new SmsMessage();
+	// insertMessage.setMobileNumber("0721998919");
+	// insertMessage.setSmscMessageId("criterai");
+	// insertMessage.setSakaiUserId("criterai");
+	// insertMessage.setStatusCode(SmsConst_DeliveryStatus.STATUS_ERROR);
+	//
+	// insertMessage.setSmsTask(insertTask);
+	// insertTask.getSmsMessages().add(insertMessage);
+	//
+	// try {
+	// taskLogic.persistSmsTask(insertTask);
+	//
+	// SearchFilterBean bean = new SearchFilterBean();
+	// bean.setStatus(insertMessage.getStatusCode());
+	// bean.setDateFrom((new Date()));
+	// bean.setDateTo((new Date()));
+	// bean.setToolName(insertTask.getSakaiToolName());
+	// bean.setSender(insertTask.getSenderUserName());
+	// bean.setMobileNumber(insertMessage.getMobileNumber());
+	// bean.setCurrentPage(1);
+	//
+	// SearchResultContainer<SmsMessage> con = logic
+	// .getSmsMessagesForCriteria(bean);
+	// List<SmsMessage> messages = con.getPageResults();
+	// assertTrue("Collection returned has no objects",
+	// messages.size() > 0);
+	//
+	// for (SmsMessage message : messages) {
+	// // We know that only one message should be returned becuase
+	// // we only added one with status ERROR.
+	// assertEquals(message, insertMessage);
+	// }
+	// } catch (SmsSearchException se) {
+	// fail(se.getMessage());
+	// } finally {
+	// taskLogic.deleteSmsTask(insertTask);
+	// }
+	// }
 
 	/**
 	 * Tests the getMessagesForCriteria method
