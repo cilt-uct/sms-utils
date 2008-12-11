@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Timestamp;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.Properties;
 import java.util.Set;
 
@@ -190,8 +189,8 @@ public class SmsSmppImpl implements SmsSmpp {
 						smsMessage.setSmscDeliveryStatusCode(SmsStatusBridge
 								.getSmsDeliveryStatus((deliveryReceipt
 										.getFinalStatus())));
-						smsMessage.setDateDelivered(new Timestamp(
-								deliveryReceipt.getSubmitDate().getTime()));
+						smsMessage.setDateDelivered(new Timestamp(System
+								.currentTimeMillis()));
 						if (SmsStatusBridge
 								.getSmsDeliveryStatus((deliveryReceipt
 										.getFinalStatus())) != SmsConst_SmscDeliveryStatus.DELIVERED) {
@@ -494,13 +493,12 @@ public class SmsSmppImpl implements SmsSmpp {
 			return SmsConst_DeliveryStatus.STATUS_RETRY;
 
 		}
-		Iterator<SmsMessage> it = messages.iterator();
-		while (it.hasNext()) {
+
+		for (SmsMessage message : messages) {
 			if (!gatewayBound) {
 				return (SmsConst_DeliveryStatus.STATUS_INCOMPLETE);
 
 			}
-			SmsMessage message = it.next();
 			message = sendMessageToGateway(message);
 			if (!message.getStatusCode().equals(
 					SmsConst_DeliveryStatus.STATUS_SENT)) {
