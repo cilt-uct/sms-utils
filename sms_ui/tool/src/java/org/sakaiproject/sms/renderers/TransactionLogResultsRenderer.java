@@ -70,8 +70,11 @@ public class TransactionLogResultsRenderer implements SearchResultsRenderer {
 		smsTransactions = null;
 		boolean fail = false;
 		try {
-			if(NullHandling.safeDateCheck(searchFilterBean.getDateFrom(), searchFilterBean.getDateTo())){
-				smsTransactions = smsTransactionLogic.getSmsTransactionsForCriteria(searchFilterBean);
+			if (NullHandling.safeDateCheck(searchFilterBean.getDateFrom(),
+					searchFilterBean.getDateTo())) {
+				smsTransactions = smsTransactionLogic
+						.getSmsTransactionsForCriteria(searchFilterBean)
+						.getPageResults();
 			}
 		} catch (SmsSearchException e) {
 			LOG.error(e);
