@@ -18,6 +18,8 @@
 package org.sakaiproject.sms.renderers;
 
 
+import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
+
 import uk.org.ponder.rsf.components.UIContainer;
 import uk.org.ponder.rsf.components.UIInternalLink;
 import uk.org.ponder.rsf.components.UIJointContainer;
@@ -29,14 +31,20 @@ public class TablePagerRenderer {
 	public Integer currentStart = 1;
 	public Integer currentCount = 1;
 	
-	public void createPager(UIContainer tofill, String divID, SortPagerViewParams sortParams, String viewId, int numberOfRows) {	
+	public void createPager(UIContainer tofill, String divID, SortPagerViewParams sortParams, String viewId, Long totalnumberOfRowsReturned) {	
 		
 		this.currentStart = sortParams.current_start;
 		this.currentCount = sortParams.current_count;
 		
 		UIJointContainer joint = new UIJointContainer(tofill, divID, "table-pager-component:", ""+1);
 	
-		UIOutput.make(joint, "number-of-rows", "Number of rows: " + numberOfRows);	
+		if(totalnumberOfRowsReturned.intValue() >= SmsHibernateConstants.READ_LIMIT){
+			UIOutput.make(joint, "number-of-rows", "Number of rows: " + totalnumberOfRowsReturned 
+					+" (Limited to first " + SmsHibernateConstants.READ_LIMIT  + " rows)");
+		}
+		else{
+			UIOutput.make(joint, "number-of-rows", "Number of rows: " + totalnumberOfRowsReturned);	
+		}
 		
 		ViewParameters new_params = sortParams.copyBase();
 		

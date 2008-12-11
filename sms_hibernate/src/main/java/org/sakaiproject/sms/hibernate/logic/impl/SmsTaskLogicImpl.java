@@ -223,13 +223,13 @@ public class SmsTaskLogicImpl extends SmsDao implements SmsTaskLogic {
 		}
 
 		log.debug(crit.toString());
-		SearchResultContainer<SmsTask> con = new SearchResultContainer<SmsTask>();
+		SearchResultContainer<SmsTask> container = new SearchResultContainer<SmsTask>();
 		tasks = crit.list();
-		con.setTotalResultSetSize(new Long(tasks.size()));
-		con.calculateAndSetPageResults(tasks, searchBean.getCurrentPage());
+		container.setTotalResultSetSize(new Long(tasks.size()));
+		container.calculateAndSetPageResults(tasks, searchBean.getCurrentPage());
 
 		HibernateUtil.closeSession();
-		return con;
+		return container;
 	}
 
 }

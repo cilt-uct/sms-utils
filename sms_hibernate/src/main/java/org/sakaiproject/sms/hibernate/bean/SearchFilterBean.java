@@ -35,7 +35,7 @@ import org.sakaiproject.sms.hibernate.util.DateUtil;
 public class SearchFilterBean {
 
 	/** The id. */
-	private String id;
+	private String number;
 
 	/** The status. */
 	private String status;
@@ -57,12 +57,6 @@ public class SearchFilterBean {
 
 	/** The order by. */
 	private String orderBy;
-
-	/** The mobile number. */
-	private String mobileNumber;
-
-	/** The account number. */
-	private Long accountNumber;
 
 	/** The transaction type. */
 	private String transactionType;
@@ -105,11 +99,11 @@ public class SearchFilterBean {
 	 * @param sortDirection
 	 *            the sort direction
 	 */
-	public SearchFilterBean(String id, String status, Date dateFrom,
+	public SearchFilterBean(String number, String status, Date dateFrom,
 			Date dateTo, String toolName, String sender, Integer currentPage,
 			String orderBy, String sortDirection) {
 		super();
-		this.id = id;
+		this.number = number;
 		this.status = status;
 		this.dateFrom = dateFrom;
 		this.dateTo = dateTo;
@@ -121,22 +115,21 @@ public class SearchFilterBean {
 	}
 
 	/**
-	 * Gets the id.
+	 * Sets the number
 	 * 
-	 * @return the id
+	 * @return
 	 */
-	public String getId() {
-		return id;
+	public String getNumber() {
+		return number;
 	}
-
+	
 	/**
-	 * Sets the id.
+	 * Gets the number
 	 * 
-	 * @param id
-	 *            the new id
+	 * @param number
 	 */
-	public void setId(String id) {
-		this.id = id;
+	public void setNumber(String number) {
+		this.number = number;
 	}
 
 	/**
@@ -254,44 +247,6 @@ public class SearchFilterBean {
 	}
 
 	/**
-	 * Gets the mobile number.
-	 * 
-	 * @return the mobileNumber
-	 */
-	public String getMobileNumber() {
-		return mobileNumber;
-	}
-
-	/**
-	 * Sets the mobile number.
-	 * 
-	 * @param mobileNumber
-	 *            the mobileNumber to set
-	 */
-	public void setMobileNumber(String mobileNumber) {
-		this.mobileNumber = mobileNumber;
-	}
-
-	/**
-	 * Sets the account number.
-	 * 
-	 * @param accountNumber
-	 *            the new account number
-	 */
-	public void setAccountNumber(Long accountNumber) {
-		this.accountNumber = accountNumber;
-	}
-
-	/**
-	 * Gets the account number.
-	 * 
-	 * @return the account number
-	 */
-	public Long getAccountNumber() {
-		return accountNumber;
-	}
-
-	/**
 	 * Gets the order by.
 	 * 
 	 * @return the order by
@@ -389,4 +344,5 @@ public class SearchFilterBean {
 	public void setNewSearch(boolean newSearch) {
 		this.newSearch = newSearch;
 	}
+
 }

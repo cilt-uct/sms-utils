@@ -65,7 +65,11 @@ public class SearchResultContainer<T extends BaseModel> {
 	 * @return the number of pages
 	 */
 	public int getNumberOfPages(){
-		return (int) Math.round((((float) totalResultSetSize.longValue())/ (float) SmsHibernateConstants.DEFAULT_PAGE_SIZE) + 0.5);
+		int paratialPage = 0;
+		if((totalResultSetSize.longValue() % SmsHibernateConstants.DEFAULT_PAGE_SIZE) > 0){
+			paratialPage = 1;
+		}
+		return (int) (totalResultSetSize.longValue() / SmsHibernateConstants.DEFAULT_PAGE_SIZE) + paratialPage;
 	}
 	
 

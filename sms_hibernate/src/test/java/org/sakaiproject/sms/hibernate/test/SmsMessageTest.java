@@ -223,7 +223,7 @@ public class SmsMessageTest extends AbstractBaseTestCase {
 			bean.setDateTo((new Date()));
 			bean.setToolName(insertTask.getSakaiToolName());
 			bean.setSender(insertTask.getSenderUserName());
-			bean.setMobileNumber(insertMessage.getMobileNumber());
+			bean.setNumber(insertMessage.getMobileNumber());
 			bean.setCurrentPage(1);
 
 			SearchResultContainer<SmsMessage> con = logic
@@ -286,7 +286,7 @@ public class SmsMessageTest extends AbstractBaseTestCase {
 			bean.setDateTo(new Date());
 			bean.setToolName(insertTask.getSakaiToolName());
 			bean.setSender(insertTask.getSenderUserName());
-			bean.setMobileNumber("0721998919");
+			bean.setNumber("0721998919");
 
 			bean.setCurrentPage(2);
 

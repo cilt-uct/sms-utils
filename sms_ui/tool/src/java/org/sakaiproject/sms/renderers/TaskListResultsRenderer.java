@@ -18,10 +18,8 @@
 
 package org.sakaiproject.sms.renderers;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.sakaiproject.sms.hibernate.bean.SearchFilterBean;
+import org.sakaiproject.sms.hibernate.bean.SearchResultContainer;
 import org.sakaiproject.sms.hibernate.logic.SmsTaskLogic;
 import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsSearchException;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
@@ -39,7 +37,7 @@ public class TaskListResultsRenderer implements SearchResultsRenderer {
 	private final static org.apache.log4j.Logger LOG = org.apache.log4j.Logger
 			.getLogger(TaskListResultsRenderer.class);
 
-	private List<SmsTask> smsTaskList = new ArrayList<SmsTask>();
+	private SearchResultContainer<SmsTask> smsTaskList = new SearchResultContainer<SmsTask>();
 
 	private SearchFilterBean searchFilterBean;
 	private SortHeaderRenderer sortHeaderRenderer;
@@ -65,16 +63,15 @@ public class TaskListResultsRenderer implements SearchResultsRenderer {
 
 		searchFilterBean.setOrderBy(sortViewParams.sortBy);
 		searchFilterBean.setSortDirection(sortViewParams.sortDir);
-		searchFilterBean.setCurrentPage(sortViewParams.current_start);
-
+		setCurrentPage(searchFilterBean, sortViewParams);
+		
 		boolean fail = false;
 		try {
-			if (NullHandling.safeDateCheck(searchFilterBean.getDateFrom(),
-					searchFilterBean.getDateTo())) {
-				smsTaskList = smsTaskLogic.getSmsTasksForCriteria(
-						searchFilterBean).getPageResults();
+			if (NullHandling.safeDateCheck(searchFilterBean.getDateFrom(), searchFilterBean.getDateTo())) {
+				smsTaskList = smsTaskLogic.getSmsTasksForCriteria(searchFilterBean);
+				sortViewParams.current_count = smsTaskList.getNumberOfPages();
 			} else {
-				smsTaskList = new ArrayList<SmsTask>();
+				sortViewParams.current_count = 1;
 			}
 		} catch (SmsSearchException e) {
 			LOG.error(e);
@@ -115,7 +112,7 @@ public class TaskListResultsRenderer implements SearchResultsRenderer {
 					"tableheader-status:", sortViewParams, "statusCode",
 					"sms.task-list-search-results.status");
 
-			for (SmsTask smsTask : smsTaskList) {
+			for (SmsTask smsTask : smsTaskList.getPageResults()) {
 
 				UIBranchContainer row = UIBranchContainer.make(
 						searchResultsTable, "dataset:");
@@ -138,8 +135,19 @@ public class TaskListResultsRenderer implements SearchResultsRenderer {
 			}
 		}
 	}
+	
+	private void setCurrentPage(SearchFilterBean searchBean, SortPagerViewParams sortViewParams) {
 
-	public int getNumberOfRowsDisplayed() {
-		return smsTaskList.size();
+		//new search
+		if(searchBean.isNewSearch()){
+			sortViewParams.current_start = 1;
+			searchBean.setNewSearch(false);
+		}
+		else//paging
+			searchBean.setCurrentPage(sortViewParams.current_start);	
+	}
+
+	public Long getTotalNumberOfRowsReturned() {
+		return smsTaskList.getTotalResultSetSize();
 	}
 }

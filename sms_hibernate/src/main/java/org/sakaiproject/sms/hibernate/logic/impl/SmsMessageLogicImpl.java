@@ -211,10 +211,10 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 			}
 
 			// Mobile number
-			if (searchBean.getMobileNumber() != null
-					&& !searchBean.getMobileNumber().trim().equals("")) {
+			if (searchBean.getNumber() != null
+					&& !searchBean.getNumber().trim().equals("")) {
 				crit.add(Restrictions.ilike("mobileNumber", searchBean
-						.getMobileNumber()));
+						.getNumber()));
 			}
 
 			// Ordering

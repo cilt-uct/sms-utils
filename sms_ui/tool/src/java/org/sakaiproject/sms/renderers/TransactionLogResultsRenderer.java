@@ -18,10 +18,8 @@
 
 package org.sakaiproject.sms.renderers;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.sakaiproject.sms.hibernate.bean.SearchFilterBean;
+import org.sakaiproject.sms.hibernate.bean.SearchResultContainer;
 import org.sakaiproject.sms.hibernate.logic.SmsTransactionLogic;
 import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsSearchException;
 import org.sakaiproject.sms.hibernate.model.SmsTransaction;
@@ -39,7 +37,7 @@ public class TransactionLogResultsRenderer implements SearchResultsRenderer {
 	private final static org.apache.log4j.Logger LOG = org.apache.log4j.Logger
 			.getLogger(TransactionLogResultsRenderer.class);
 
-	private List<SmsTransaction> smsTransactions = new ArrayList<SmsTransaction>();
+	private SearchResultContainer<SmsTransaction> smsTransactions = new SearchResultContainer<SmsTransaction>();
 
 	private SearchFilterBean searchFilterBean;
 	private SortHeaderRenderer sortHeaderRenderer;
@@ -65,16 +63,19 @@ public class TransactionLogResultsRenderer implements SearchResultsRenderer {
 
 		searchFilterBean.setOrderBy(sortViewParams.sortBy);
 		searchFilterBean.setSortDirection(sortViewParams.sortDir);
-		searchFilterBean.setCurrentPage(sortViewParams.current_start);
+		setCurrentPage(searchFilterBean, sortViewParams);
+		
+		if(searchFilterBean.getNumber() != null && searchFilterBean.getNumber().trim().equals(""))
+			searchFilterBean.setNumber(null);
 
 		smsTransactions = null;
 		boolean fail = false;
 		try {
-			if (NullHandling.safeDateCheck(searchFilterBean.getDateFrom(),
-					searchFilterBean.getDateTo())) {
-				smsTransactions = smsTransactionLogic
-						.getSmsTransactionsForCriteria(searchFilterBean)
-						.getPageResults();
+			if (NullHandling.safeDateCheck(searchFilterBean.getDateFrom(), searchFilterBean.getDateTo())) {
+				smsTransactions = smsTransactionLogic.getSmsTransactionsForCriteria(searchFilterBean);
+				sortViewParams.current_count = smsTransactions.getNumberOfPages();
+			}else{
+				sortViewParams.current_count = 1;				
 			}
 		} catch (SmsSearchException e) {
 			LOG.error(e);
@@ -110,7 +111,7 @@ public class TransactionLogResultsRenderer implements SearchResultsRenderer {
 					"tableheader-account-balance:", sortViewParams, "balance",
 					"sms.transaction-log-search-results.account.balanace");
 
-			for (SmsTransaction smsTransaction : smsTransactions) {
+			for (SmsTransaction smsTransaction : smsTransactions.getPageResults()) {
 
 				UIBranchContainer row = UIBranchContainer.make(
 						searchResultsTable, "dataset:");
@@ -130,9 +131,20 @@ public class TransactionLogResultsRenderer implements SearchResultsRenderer {
 			}
 		}
 	}
+	
+	private void setCurrentPage(SearchFilterBean searchBean, SortPagerViewParams sortViewParams) {
 
-	public int getNumberOfRowsDisplayed() {
-		return smsTransactions.size();
+		//new search
+		if(searchBean.isNewSearch()){
+			sortViewParams.current_start = 1;
+			searchBean.setNewSearch(false);
+		}
+		else//paging
+			searchBean.setCurrentPage(sortViewParams.current_start);	
+	}
+
+	public Long getTotalNumberOfRowsReturned() {
+		return smsTransactions.getTotalResultSetSize();
 	}
 
 }

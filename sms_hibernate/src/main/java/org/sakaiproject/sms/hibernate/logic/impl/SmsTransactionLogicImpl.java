@@ -117,9 +117,9 @@ public class SmsTransactionLogicImpl extends SmsDao implements
 			}
 
 			// Account number
-			if (searchBean.getAccountNumber() != null) {
-				crit.add(Restrictions.like("smsAccount.id", searchBean
-						.getAccountNumber()));
+			if (searchBean.getNumber() != null) {
+				crit.add(Restrictions.like("smsAccount.id", new Long(searchBean
+						.getNumber())));
 			}
 
 			// Transaction date start

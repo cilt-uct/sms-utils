@@ -149,7 +149,7 @@ public class SmsTransactionTest extends AbstractBaseTestCase {
 			SearchFilterBean bean = new SearchFilterBean();
 			bean.setTransactionType(insertSmsTransaction
 					.getTransactionTypeCode());
-			bean.setAccountNumber(insertSmsTransaction.getSmsAccount().getId());
+			bean.setNumber(insertSmsTransaction.getSmsAccount().getId().toString());
 			bean.setDateFrom(new Date());
 			bean.setDateTo(new Date());
 			bean.setSender(insertSmsTransaction.getSakaiUserId());
@@ -206,7 +206,7 @@ public class SmsTransactionTest extends AbstractBaseTestCase {
 		try {
 
 			SearchFilterBean bean = new SearchFilterBean();
-			bean.setAccountNumber(smsAccount.getId());
+			bean.setNumber(smsAccount.getId().toString());
 			bean.setDateFrom(new Date());
 			bean.setDateTo(new Date());
 			bean.setTransactionType("TC");

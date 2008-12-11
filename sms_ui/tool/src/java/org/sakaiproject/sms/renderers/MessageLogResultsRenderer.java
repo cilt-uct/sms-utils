@@ -146,8 +146,8 @@ public class MessageLogResultsRenderer implements SearchResultsRenderer {
 			searchBean.setCurrentPage(sortViewParams.current_start);	
 	}
 
-	public int getNumberOfRowsDisplayed() {
-		return smsMessageList.getPageResults().size();
+	public Long getTotalNumberOfRowsReturned() {
+		return smsMessageList.getTotalResultSetSize();
 	}
 
 }
