@@ -9,7 +9,7 @@
 	<!-- SMS Task mapping -->
     <class name="org.sakaiproject.sms.hibernate.model.SmsTask" table="SMS_TASK">
         <id name="id" type="long" column="TASK_ID">
-            <generator class="increment"/>
+            <generator class="native"/>
         </id>
         
         <property name="sakaiSiteId" type="string" column="SAKAI_SITE_ID" not-null="true" length="99"/>
@@ -43,7 +43,7 @@
     <!-- SMS Message mapping -->
     <class name="org.sakaiproject.sms.hibernate.model.SmsMessage" table="SMS_MESSAGE">
         <id name="id" type="long" column="MESSAGE_ID">
-            <generator class="increment"/>
+            <generator class="native"/>
         </id>
         <property name="smscMessageId" type="string" column="SMSC_MESSAGE_ID" not-null="false" length="20" unique-key="true"/>
         <property name="smscId" type="string" column="SMSC_ID" not-null="false" length="20" unique-key="true"/>
@@ -58,7 +58,7 @@
     
     <class name="org.sakaiproject.sms.hibernate.model.SmsAccount" table="SMS_ACCOUNT">
         <id name="id" type="long" column="ACCOUNT_ID">
-            <generator class="increment" />
+            <generator class="native" />
         </id>
         <property name="sakaiUserId" type="string" column="SAKAI_USER_ID" not-null="true" length="99"/>
         <property name="sakaiSiteId" type="string" column="SAKAI_SITE_ID" not-null="true" length="99"/>
@@ -74,7 +74,7 @@
    	
    	<class name="org.sakaiproject.sms.hibernate.model.SmsTransaction" table="SMS_TRANSACTION">
         <id name="id" type="long" column="TRANSACTION_ID">
-            <generator class="increment"/>
+            <generator class="native"/>
         </id>
 		<property name="sakaiUserId" type="string" column="SAKAI_USER_ID" not-null="true" length="99"/>
         <property name="transactionTypeCode" type="string" column="TRANSACTION_TYPE_CODE" not-null="true" length="5"/>
@@ -87,7 +87,7 @@
    	
    	<class name="org.sakaiproject.sms.hibernate.model.SmsConfig" table="SMS_CONFIG">
         <id name="id" type="long" column="CONFIG_ID">
-            <generator class="increment"/>
+            <generator class="native"/>
         </id>
         <property name="sakaiSiteId" type="string" column="SAKAI_SITE_ID" not-null="false" length="99" unique="true"/>
         <property name="sakaiToolId" type="string" column="SAKAI_TOOL_ID" not-null="false"  length="99" unique="true"/>
