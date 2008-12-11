@@ -149,8 +149,10 @@ public class SmsTask extends BaseModel {
 	 *            the account id
 	 * @param messageBody
 	 *            the message body
+	 * @Depricated Use default constructor and setter methods instead
+	 * 
 	 */
-	public SmsTask(String sakaiSiteID, String deliveryUserID,
+	private SmsTask(String sakaiSiteID, String deliveryUserID,
 			String deliveryGroupID, int accountID, String messageBody) {
 		this();
 		this.sakaiSiteId = sakaiSiteID;

@@ -89,9 +89,10 @@ public class SmsMessage extends BaseModel {
 	 *            the mobile number
 	 * @param messageBody
 	 *            the message body
+	 * @depricated Do not use
 	 */
 	public SmsMessage(String mobileNumber, String messageBody) {
-		smsTask = new SmsTask("", "", "", 0, messageBody);
+		// smsTask = new SmsTask("", "", "", 0, messageBody);
 		this.mobileNumber = mobileNumber;
 		this.statusCode = SmsConst_DeliveryStatus.STATUS_PENDING;
 
