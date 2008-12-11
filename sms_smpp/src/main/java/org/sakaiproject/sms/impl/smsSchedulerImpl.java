@@ -14,7 +14,7 @@ public class smsSchedulerImpl extends TimerTask implements SmsScheduler {
 	static int schedulerInterval = 10; // seconds
 	static SmsCoreImpl smsCoreImpl = new SmsCoreImpl();
 	static SmsSmppImpl smsSmppImpl = new SmsSmppImpl();
-	private final static org.apache.log4j.Logger LOG = org.apache.log4j.Logger
+	private static final org.apache.log4j.Logger LOG = org.apache.log4j.Logger
 			.getLogger(SmsSmppImpl.class);
 
 	public static void main(String... arguments) {

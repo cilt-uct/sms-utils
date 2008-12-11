@@ -37,7 +37,7 @@ public interface SmsBilling {
 	 * @param accountID
 	 * @param creditCount
 	 */
-	public void allocateCredits(int accountID, int creditCount);
+	void allocateCredits(int accountID, int creditCount);
 
 	/**
 	 * Return true of the account has the required credits available. Take into
@@ -120,7 +120,7 @@ public interface SmsBilling {
 	 * reservation must be rolled back with another transaction.
 	 * 
 	 * @param accountID
-	 * @param creditAmount
+	 * @param credits
 	 */
 	public void reserveCredits(int accountID, int credits);
 

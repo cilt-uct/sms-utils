@@ -36,7 +36,7 @@ public class SmsCoreImpl implements SmsCore {
 
 	public static final int RESCHEDULE_TIMEOUT = 15;
 
-	private final static org.apache.log4j.Logger LOG = org.apache.log4j.Logger
+	private static final org.apache.log4j.Logger LOG = org.apache.log4j.Logger
 			.getLogger(SmsCoreImpl.class);
 
 	public SmsSmpp smsSmpp = null;
@@ -76,8 +76,8 @@ public class SmsCoreImpl implements SmsCore {
 	 */
 	private Set<SmsMessage> getDummyDeliveryGroup(SmsTask smsTask) {
 		Set<SmsMessage> messages = new HashSet<SmsMessage>();
-		String users[] = new String[100];
-		String celnumbers[] = new String[100];
+		String[] users = new String[100];
+		String[] celnumbers = new String[100];
 		for (int i = 0; i < users.length; i++) {
 			users[i] = "SakaiUser" + i;
 			celnumbers[i] = "+2773"

@@ -71,7 +71,7 @@ public class SmsSmppImpl implements SmsSmpp {
 	 * checked before sending a message, and a auto-bind will be made if the
 	 * connection is lost.
 	 */
-	private final static org.apache.log4j.Logger LOG = org.apache.log4j.Logger
+	private static final org.apache.log4j.Logger LOG = org.apache.log4j.Logger
 			.getLogger(SmsSmppImpl.class);
 	private static TimeFormatter timeFormatter = new AbsoluteTimeFormatter();
 	private BindThread bindTest;
@@ -429,7 +429,7 @@ public class SmsSmppImpl implements SmsSmpp {
 	public SmsMessage[] sendBulkMessagesToGateway(SmsMessage[] messages) {
 
 		String messageBody = "";
-		Address addresses[] = new Address[messages.length];
+		Address[] addresses = new Address[messages.length];
 		String[] mobileNumbers = new String[messages.length];
 		for (int i = 0; i < messages.length; i++) {
 			messageBody = messages[i].getMessageBody();
