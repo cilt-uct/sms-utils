@@ -18,6 +18,7 @@
 
 package org.sakaiproject.sms.api;
 
+import java.sql.Timestamp;
 import java.util.Set;
 
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
@@ -67,8 +68,18 @@ public interface SmsCore {
 	 * Add a new task to the sms task list, for eg. send message to all
 	 * administrators at 10:00, or get latest announcements and send to mobile
 	 * numbers of Sakai group x (phase II).
+	 * 
+	 * @param deliverGroupId
+	 *            the deliver group id
+	 * @param dateToSend
+	 *            the date to send
+	 * @param messageBody
+	 *            the message body
+	 * @param sakaiToolId
+	 *            the sakai tool id
 	 */
-	public void insertNewTask(SmsTask smsTask);
+	public void insertNewTask(String deliverGroupId, Timestamp dateToSend,
+			String messageBody, String sakaiToolId);
 
 	/**
 	 * Try to process an incoming message in real-time by inserting it into the

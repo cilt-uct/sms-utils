@@ -23,12 +23,15 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.log4j.Level;
+import org.sakaiproject.sms.api.SmsBilling;
 import org.sakaiproject.sms.api.SmsCore;
 import org.sakaiproject.sms.api.SmsSmpp;
 import org.sakaiproject.sms.hibernate.logic.SmsTaskLogic;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
+import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
+import org.sakaiproject.sms.hibernate.util.DateUtil;
 
 public class SmsCoreImpl implements SmsCore {
 
@@ -62,6 +65,8 @@ public class SmsCoreImpl implements SmsCore {
 	/**
 	 * Get the group list from Sakai
 	 */
+	// TODO Why pass three args when they can all come from the SmsTask?? Only 1
+	// arg needed.. smsTask
 	public Set<SmsMessage> getDeliveryGroup(String sakaiSiteID,
 			String sakaiGroupID, SmsTask smsTask) {
 		return getDummyDeliveryGroup(smsTask);
@@ -124,10 +129,45 @@ public class SmsCoreImpl implements SmsCore {
 	 * Add a new task to the sms task list, for eg. send message to all
 	 * administrators at 10:00, or get latest announcements and send to mobile
 	 * numbers of Sakai group x (phase II).
+	 * 
+	 * @param deliverGroupId
+	 *            the deliver group id
+	 * @param dateToSend
+	 *            the date to send
+	 * @param messageBody
+	 *            the message body
+	 * @param sakaiToolId
+	 *            the sakai tool id
 	 */
-	public void insertNewTask(SmsTask smsTask) {
+	public void insertNewTask(String deliverGroupId, Timestamp dateToSend,
+			String messageBody, String sakaiToolId) {
+		SmsBilling billing = new SmsBillingImpl();
+		SmsTask smsTask = new SmsTask();
+		smsTask.setDateCreated(DateUtil.getCurrentTimestamp());
+		smsTask.setSmsAccountId(billing.getAccountId());
+		smsTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
+		smsTask.setSakaiSiteId("sakaiSiteId");// TODO Populate from Sakai
+		smsTask.setMessageTypeId(SmsHibernateConstants.MESSAGE_TYPE_OUTGOING);
+		smsTask.setSakaiToolId("sakaiToolId");// TODO Populate from Sakai
+		smsTask.setSenderUserName("senderUserName");// TODO Populate from Sakai
+		smsTask.setDeliveryGroupName("deliveryGroupName");// TODO Populate from
+		// Sakai
+		calculateGroupSize(smsTask);
 		smsTaskLogic.persistSmsTask(smsTask);
 
+	}
+
+	/**
+	 * Calculate group size.
+	 * 
+	 * @param smsTask
+	 *            the sms task
+	 */
+	private void calculateGroupSize(SmsTask smsTask) {
+		Set<SmsMessage> deliverGroupMessages = getDeliveryGroup(smsTask
+				.getSakaiSiteId(), smsTask.getDeliveryGroupId(), smsTask);
+		smsTask.setGroupSizeEstimate(deliverGroupMessages.size());
+		smsTask.setCreditEstimate(deliverGroupMessages.size());
 	}
 
 	/**
