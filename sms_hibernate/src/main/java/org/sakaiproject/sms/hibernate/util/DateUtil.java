@@ -35,7 +35,7 @@ public class DateUtil {
 	private static final String DATE_TIME_FORMAT_STRING = "MM/dd/yyyy HH:mm:ss";
 
 	private static final String DATE_FORMAT_STRING = "MM/dd/yyyy";
-	
+
 	private static final long MILLS_PER_WEEK = 10080000;
 
 	private static SimpleDateFormat sdf = new SimpleDateFormat(
@@ -48,15 +48,13 @@ public class DateUtil {
 	 * @param date
 	 * @return the date a week before
 	 */
-	public static Date getDateOneWeekBeforeNow(){
+	public static Date getDateOneWeekBeforeNow() {
 		Calendar date1 = Calendar.getInstance();
 		date1.add(Calendar.DAY_OF_YEAR, -7);
 		Date weekBefore = date1.getTime();
 		return weekBefore;
 	}
-	
-	
-	
+
 	/**
 	 * Creates a Timestamp object from the startDate parameter for use in start
 	 * dates searches
@@ -150,6 +148,15 @@ public class DateUtil {
 			return new Timestamp(cal.getTimeInMillis());
 		}
 		return null;
+	}
+
+	/**
+	 * Gets usable timestamp with the current date and time.
+	 * 
+	 * @return the current timestamp
+	 */
+	public static Timestamp getCurrentTimestamp() {
+		return getUsableTimeStamp(new Timestamp(System.currentTimeMillis()));
 	}
 
 }
