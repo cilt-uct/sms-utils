@@ -20,7 +20,7 @@
 				<enabled>false</enabled>
 			</releases>
 		</repository>
-			<repository>
+		<repository>
 			<id>Source Forge</id>
 			<name>Source Forge Maven Repo</name>
 			<url>http://source.sakaiproject.org/maven2</url>
@@ -111,8 +111,8 @@
 				<directory>${basedir}/src/test/resources</directory>
 			</testResource>
 		</testResources>
-		
-		
+
+
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -126,12 +126,18 @@
 				<artifactId>hibernate3-maven-plugin</artifactId>
 				<version>2.2-SNAPSHOT</version>
 
-				<!--
-					<executions> <execution> <phase>process-classes</phase> <goals>
-					<goal>hbm2ddl</goal> <goal>hbm2java</goal> </goals> </execution>
 
-					</executions>
-				-->
+				<executions>
+					<execution>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>hbm2ddl</goal>
+							<!--<goal>hbm2java</goal>
+						--></goals>
+					</execution>
+
+				</executions>
+
 				<configuration>
 					<outputDirectory>
 						<!--
@@ -146,13 +152,19 @@
 						</component>
 					</components>
 					<componentProperties>
-						<!-- Can ignore this, it will use the hibernate.properties file automatically -->
+						<!--
+							Can ignore this, it will use the hibernate.properties file
+							automatically
+						-->
 						<!--<propertyFile>target/classes/hibernate.properties</propertyFile>-->
-						<!--<configurationfile>target/classes/hibernate.cfg.xml</configurationfile>
-						--><persistenceunit>Default</persistenceunit>
+						<!--
+							<configurationfile>target/classes/hibernate.cfg.xml</configurationfile>
+						-->
+						<persistenceunit>Default</persistenceunit>
 						<outputfilename>schema.ddl</outputfilename>
-						<drop>true</drop>
+						<drop>false</drop>
 						<create>true</create>
+						<update>true</update>
 						<export>true</export>
 						<format>true</format>
 					</componentProperties>
