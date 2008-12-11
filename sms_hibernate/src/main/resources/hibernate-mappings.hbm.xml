@@ -28,12 +28,13 @@
         <property name="dateProcessed" type="timestamp" column="DATE_PROCESSED" not-null="false"/>
         <property name="deliveryGroupName" type="string" column="DELIVERY_GROUP_NAME" not-null="false" length="50"/>
         <property name="groupSizeEstimate" type="integer" column="GROUP_SIZE_ESTIMATE" not-null="false"/>
-        <property name="groupSizeActual" type="integer" column="GROUP_SIZE_ACTUAL" not-null="false"/>
+        <property name="groupSizeActual" type="integer" column="GROUP_SIZE_ACTUAL" not-null="false"/>      
+        <property name="maxTimeToLive" type="integer" column="MAX_TIME_TO_LIVE" not-null="true"/>
+        <property name="delReportTimeoutDuration" type="integer" column="DEL_REPORT_TIMEOUT_DURATION" not-null="true"/>
         <set name="smsMessages" inverse="true" cascade="all-delete-orphan" lazy="false">
             <key column="MESSAGE_ID" not-null="true"/>            
             <one-to-many class="org.sakaiproject.sms.hibernate.model.SmsMessage" not-found="ignore"/>
         </set>
-        
     </class>
     
     
@@ -63,6 +64,7 @@
         <property name="messageTypeCode" type="string" column="MESSAGE_TYPE_CODE" not-null="true" length="5"/>
         <property name="overdraftLimit" type="float" column="OVERDRAFT_LIMIT" not-null="false"/>
         <property name="balance" type="float" column="BALANCE" not-null="true"/>
+        <property name="accountName" type="string" column="ACCOUNT_NAME" not-null="true" length="99"/>
         <set name="smsTransactions" inverse="true" cascade="all-delete-orphan">
             <key column="SMS_ACCOUNT_ID" not-null="true"/>            
             <one-to-many class="org.sakaiproject.sms.hibernate.model.SmsTransaction" not-found="ignore"/>
@@ -73,8 +75,7 @@
         <id name="id" type="long" column="TRANSACTION_ID">
             <generator class="increment"/>
         </id>
-        <!--<property name="smsAccountId" type="integer" column="SMS_ACCOUNT_ID" not-null="true" />
-        --><property name="sakaiUserId" type="string" column="SAKAI_USER_ID" not-null="true" length="99"/>
+		<property name="sakaiUserId" type="string" column="SAKAI_USER_ID" not-null="true" length="99"/>
         <property name="transactionTypeCode" type="string" column="TRANSACTION_TYPE_CODE" not-null="true" length="5"/>
         <property name="transactionDate" type="timestamp" column="TRANSACTION_DATE" not-null="false" />
         <property name="transactionCredits" type="integer" column="TRANSACTION_CREDITS" not-null="true" />
@@ -89,7 +90,7 @@
         </id>
         <property name="sakaiSiteId" type="string" column="SAKAI_SITE_ID" not-null="false" length="99" unique="true"/>
         <property name="sakaiToolId" type="string" column="SAKAI_TOOL_ID" not-null="false"  length="99" unique="true"/>
-        <property name="smsEnabled" type="string" column="SMS_ENABLED" not-null="false" length="1"/>
+        <property name="smsEnabled" type="string" column="SMS_ENABLED" not-null="false" length="5"/>
         <property name="notificationEmail" type="string" column="NOTIFICATION_EMAIL" not-null="false"  length="100"/>
         <property name="gateWayReportTimeout" type="integer" column="GATEWAY_REPORT_TIMEOUT" not-null="false"/>
    	</class>
