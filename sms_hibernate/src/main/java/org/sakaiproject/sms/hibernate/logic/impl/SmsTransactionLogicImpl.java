@@ -29,10 +29,12 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.sakaiproject.sms.hibernate.bean.SearchFilterBean;
+import org.sakaiproject.sms.hibernate.bean.SearchResultContainer;
 import org.sakaiproject.sms.hibernate.dao.SmsDao;
 import org.sakaiproject.sms.hibernate.logic.SmsTransactionLogic;
 import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsSearchException;
 import org.sakaiproject.sms.hibernate.model.SmsTransaction;
+import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
 import org.sakaiproject.sms.hibernate.util.DateUtil;
 import org.sakaiproject.sms.hibernate.util.HibernateUtil;
 
@@ -149,13 +151,19 @@ public class SmsTransactionLogicImpl extends SmsDao implements
 						.getOrderBy()) : Order.desc(searchBean.getOrderBy())));
 			}
 
+			crit.setFetchSize(SmsHibernateConstants.READ_LIMIT);
+
 		} catch (ParseException e) {
 			throw new SmsSearchException(e);
 		} catch (Exception e) {
 			throw new SmsSearchException(e);
 		}
-
+		SearchResultContainer<SmsTransaction> con = new SearchResultContainer<SmsTransaction>();
 		transactions = crit.list();
+		con.setTotalResultSetSize(new Long(transactions.size()));
+		con.calculateAndSetPageResults(transactions, searchBean
+				.getCurrentPage());
+
 		HibernateUtil.closeSession();
 		return transactions;
 	}

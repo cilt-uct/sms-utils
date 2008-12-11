@@ -223,6 +223,8 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 						.getOrderBy()) : Order.desc(searchBean.getOrderBy())));
 			}
 
+			// crit.setFetchSize(SmsHibernateConstants.READ_LIMIT);
+
 		} catch (ParseException e) {
 			throw new SmsSearchException(e);
 		} catch (Exception e) {
@@ -234,7 +236,7 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 		con.setTotalResultSetSize(new Long(messages.size()));
 		con.calculateAndSetPageResults(messages, searchBean.getCurrentPage());
 
-		// HibernateUtil.closeSession();
+		HibernateUtil.closeSession();
 		return con;
 	}
 
@@ -264,6 +266,8 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 		smsTask.setAttemptCount(2);
 		smsTask.setMessageBody("messageBody");
 		smsTask.setSenderUserName("senderUserName");
+		smsTask.setMaxTimeToLive(1);
+		smsTask.setDelReportTimeoutDuration(1);
 
 		getTaskLogic().persistSmsTask(smsTask);
 

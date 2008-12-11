@@ -30,11 +30,13 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.sakaiproject.sms.hibernate.bean.SearchFilterBean;
+import org.sakaiproject.sms.hibernate.bean.SearchResultContainer;
 import org.sakaiproject.sms.hibernate.dao.SmsDao;
 import org.sakaiproject.sms.hibernate.logic.SmsTaskLogic;
 import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsSearchException;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
+import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
 import org.sakaiproject.sms.hibernate.util.DateUtil;
 import org.sakaiproject.sms.hibernate.util.HibernateUtil;
 
@@ -213,6 +215,8 @@ public class SmsTaskLogicImpl extends SmsDao implements SmsTaskLogic {
 						.getOrderBy()) : Order.desc(searchBean.getOrderBy())));
 			}
 
+			crit.setFetchSize(SmsHibernateConstants.READ_LIMIT);
+
 		} catch (ParseException e) {
 			throw new SmsSearchException(e);
 		} catch (Exception e) {
@@ -220,8 +224,11 @@ public class SmsTaskLogicImpl extends SmsDao implements SmsTaskLogic {
 		}
 
 		log.debug(crit.toString());
-
+		SearchResultContainer<SmsTask> con = new SearchResultContainer<SmsTask>();
 		tasks = crit.list();
+		con.setTotalResultSetSize(new Long(tasks.size()));
+		con.calculateAndSetPageResults(tasks, searchBean.getCurrentPage());
+
 		HibernateUtil.closeSession();
 		return tasks;
 	}
