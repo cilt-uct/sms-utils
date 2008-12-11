@@ -233,7 +233,9 @@ public class SmsTransactionTest extends AbstractBaseTestCase {
 
 			con = logic.getSmsTransactionsForCriteria(bean);
 			tasks = con.getPageResults();
-			int lastPageRecordCount = recordsToInsert % pages;
+			// int lastPageRecordCount = recordsToInsert % pages;
+			int lastPageRecordCount = recordsToInsert
+					- (pages * SmsHibernateConstants.DEFAULT_PAGE_SIZE);
 			assertTrue("Incorrect collection size returned",
 					tasks.size() == lastPageRecordCount);
 
