@@ -74,7 +74,7 @@ public class SearchCriteriaRenderer{
 			UIOutput.make(searchForm, "label-id", labelID);		
 		
 		if(labelDropDown.indexOf("Task") == -1)
-		UIInput.make(searchForm, "id", createSearchELString("id"));
+			UIInput.make(searchForm, "id", createSearchELString("number"));
 		
 		UIInput dateFrom = UIInput.make(searchForm, "date-from:", searchBeanName + "." + "dateFrom");		
 		dateEvolver.evolveDateInput(dateFrom);
