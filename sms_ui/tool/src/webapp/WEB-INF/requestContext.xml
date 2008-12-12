@@ -93,12 +93,9 @@
   <bean id="SmsConfigLocator" class="org.sakaiproject.sms.otp.SmsConfigLocator">
   	<property name="smsConfigLogic" ref="smsConfigLogic"/>
   </bean>
-  
-  <!-- Entity Bean Locators -->	
-  <bean id="SmsAccount" parent="entityBeanLocatorParent">
-  	<property name="entityClass" value="org.sakaiproject.sms.hibernate.model.SmsAccount"/>
-  	<property name="fetchMethod" value="SmsAccountLogic.getSmsAccount"/>
-  	<property name="saveMethod" value="SmsAccountLogic.persistSmsAccount"/>
+   <bean id="SmsAccountLocator" class="org.sakaiproject.sms.otp.SmsAccountLocator">
+  	<property name="smsAccountLogic" ref="SmsAccountLogic"/>
+  	<property name="messages" ref="targettedMessageList" />
   </bean>
-
+  
 </beans>

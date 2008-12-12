@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.sakaiproject.sms.beans.ActionResults;
 import org.sakaiproject.sms.constants.SmsUiConstants;
+import org.sakaiproject.sms.otp.SmsAccountLocator;
 import org.sakaiproject.sms.params.IdParams;
 
 import uk.org.ponder.rsf.components.UICommand;
@@ -49,7 +50,7 @@ public class AccountProducer implements ViewComponentProducer,
 		UIMessage.make(tofill, "page-title", "sms.sms-account.title");
 		UIMessage.make(tofill, "sms-account-heading", "sms.sms-account.title");
 
-		String accountOTP = "SmsAccount.";
+		String accountOTP = SmsAccountLocator.LOCATOR_NAME + ".";
 
 		IdParams params = (IdParams) viewparams;
 		if (params.id == null || "".equals(params.id)) {
@@ -62,7 +63,9 @@ public class AccountProducer implements ViewComponentProducer,
 
 		UIMessage.make(form, "account-name-label",
 				"sms.sms-account.account-name");
-		UIInput.make(form, "account-name", accountOTP + ".accountName");
+		UIInput input = UIInput.make(form, "account-name", accountOTP
+				+ ".accountName");
+
 		UIMessage.make(form, "sakai-site-id-label",
 				"sms.sms-account.sakai-site-id");
 		UIInput.make(form, "sakai-site-id", accountOTP + ".sakaiSiteId");
@@ -78,8 +81,11 @@ public class AccountProducer implements ViewComponentProducer,
 		form.addParameter(new UIELBinding(accountOTP + ".messageTypeCode",
 				SmsUiConstants.MESSAGE_TYPE_CODE));
 
-		UICommand.make(form, "save-btn", "SmsAccount.saveAll");
-		UICommand.make(form, "cancel-btn").setReturn(ActionResults.CANCEL);
+		UICommand.make(form, "save-btn", SmsAccountLocator.LOCATOR_NAME
+				+ ".saveAll");
+		UICommand
+				.make(form, "cancel-btn", UIMessage.make("sms.general.cancel"))
+				.setReturn(ActionResults.CANCEL);
 
 	}
 
@@ -94,6 +100,8 @@ public class AccountProducer implements ViewComponentProducer,
 	public List reportNavigationCases() {
 		List<NavigationCase> list = new ArrayList<NavigationCase>();
 		list.add(new NavigationCase(ActionResults.CANCEL,
+				new SimpleViewParameters(BillingAdminProducer.VIEW_ID)));
+		list.add(new NavigationCase(ActionResults.SUCCESS,
 				new SimpleViewParameters(BillingAdminProducer.VIEW_ID)));
 		return list;
 	}

@@ -33,7 +33,7 @@
     via incoming request URL -->
   <bean parent="requestAddressibleParent">
     <property name="value" value="searchTaskList, searchTransactionLog, searchMessageLog, smsConfig, 
-    smsConfigActionBean, SmsTestActionBean, SmsMessageLocator, SmsConfigLocator, csvActionBean, SmsAccount, dateTestBean"/>
+    smsConfigActionBean, SmsTestActionBean, SmsMessageLocator, SmsConfigLocator, csvActionBean, SmsAccountLocator, dateTestBean"/>
   </bean>
 
   <!-- The beans which will be preserved across a flow via simple instance copying -->
@@ -63,7 +63,7 @@
   -->
  
  <bean id="smsAccountGuard" parent="writeGuardParent">
- 	<property name="guardedPath" value="SmsAccount.*" />
+ 	<property name="guardedPath" value="SmsAccountLocator.*" />
  	<property name="guard"><bean class="org.sakaiproject.sms.validators.SmsAccountValidator" /></property>
  </bean>
   
