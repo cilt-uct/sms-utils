@@ -32,6 +32,7 @@ public class SampleSmsTaskFactory implements Listable {
 		task.setSakaiToolName("Sakai tool");
 		task.setMaxTimeToLive(1000);
 		task.setDelReportTimeoutDuration(1000);
+		task.setAttemptCount(0);
 		return task;
 	}
 
@@ -43,6 +44,7 @@ public class SampleSmsTaskFactory implements Listable {
 		 * "Test date moved form 12 Jan to 15 Jan");
 		 */
 		SmsTask task1 = new SmsTask();
+
 		task1.setSakaiSiteId("3");
 		task1.setDeliveryUserId("SC");
 		task1.setDeliveryGroupId("CHEM100-05");
