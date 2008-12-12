@@ -124,12 +124,4 @@ public interface SmsBilling {
 	 */
 	public void reserveCredits(int accountID, int credits);
 
-	/**
-	 * Gets the account id.
-	 * 
-	 * @return the account id
-	 */
-	// TODO Check if this is right
-	public Integer getAccountId();
-
 }
