@@ -101,6 +101,7 @@ public class SmsSmppImpl implements SmsSmpp {
 	public SmsMessageLogic smsMessageLogic = null;
 	private int transactionTimer;
 	private int sendingDelay;
+	private String smscID;
 
 	public SmsMessageLogic getSmsMessageLogic() {
 		return smsMessageLogic;
@@ -392,7 +393,7 @@ public class SmsSmppImpl implements SmsSmpp {
 
 			sendingDelay = Integer.parseInt(properties
 					.getProperty("sendingDelay"));
-
+			smscID = properties.getProperty("SMSCid");
 		} catch (Exception e) {
 			LOG.error("Properies faild to load" + e);
 		}
@@ -548,6 +549,7 @@ public class SmsSmppImpl implements SmsSmpp {
 				message.setDebugInfo("Message submitted, message_id is "
 						+ messageId);
 				message.setSubmitResult(true);
+				message.setSmscId(smscID);
 				message.setStatusCode(SmsConst_DeliveryStatus.STATUS_SENT);
 				message
 						.setSmscDeliveryStatusCode(SmsConst_SmscDeliveryStatus.ENROUTE);
