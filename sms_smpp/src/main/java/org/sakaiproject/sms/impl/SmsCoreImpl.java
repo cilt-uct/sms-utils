@@ -144,17 +144,17 @@ public class SmsCoreImpl implements SmsCore {
 		SmsBilling billing = new SmsBillingImpl();
 		SmsTask smsTask = new SmsTask();
 		smsTask.setDateCreated(DateUtil.getCurrentTimestamp());
-		smsTask.setSmsAccountId(billing.getAccountId());
+		smsTask.setSmsAccountId(billing.getAccountID(1, 1, 1));// TODO populate
+		// args with
+		// correct alues
 		smsTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
 		smsTask.setSakaiSiteId("sakaiSiteId");// TODO Populate from Sakai
 		smsTask.setMessageTypeId(SmsHibernateConstants.MESSAGE_TYPE_OUTGOING);
 		smsTask.setSakaiToolId("sakaiToolId");// TODO Populate from Sakai
 		smsTask.setSenderUserName("senderUserName");// TODO Populate from Sakai
-		smsTask.setDeliveryGroupName("deliveryGroupName");// TODO Populate from
-		// Sakai
+		smsTask.setDeliveryGroupName("delGroupName");// TODO Populate from Sakai
 		calculateGroupSize(smsTask);
 		smsTaskLogic.persistSmsTask(smsTask);
-
 	}
 
 	/**
