@@ -129,7 +129,7 @@ public class SmppAPITest extends AbstractBaseTestCase {
 				.getId());
 		assertEquals(true, insertTask1update.getMessagesWithSmscStatus(
 				SmsConst_SmscDeliveryStatus.ENROUTE).size() == 0);
-		smsTaskLogicImpl.deleteSmsTask(insertTask1update);
+
 	}
 
 	/**

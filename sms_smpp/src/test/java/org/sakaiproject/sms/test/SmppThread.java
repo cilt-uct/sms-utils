@@ -144,6 +144,6 @@ class SmppThread extends TestRunnable {
 		assertTrue(updatedSmsTask.getMessagesWithSmscStatus(
 				SmsConst_SmscDeliveryStatus.ENROUTE).size() == 0);
 		assertTrue(updatedSmsTask.getSmsMessages().size() == message_count);
-		smsTaskLogicImpl.deleteSmsTask(updatedSmsTask);
+
 	}
 }

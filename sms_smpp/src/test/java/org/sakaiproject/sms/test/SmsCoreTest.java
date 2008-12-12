@@ -245,10 +245,6 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 			assertEquals(true, smsTask3Update.getMessagesWithStatus(
 					SmsConst_DeliveryStatus.STATUS_PENDING).size() == 0);
 
-			smsCoreImpl.getSmsTaskLogic().deleteSmsTask(smsTask1Update);
-			smsCoreImpl.getSmsTaskLogic().deleteSmsTask(smsTask2Update);
-			smsCoreImpl.getSmsTaskLogic().deleteSmsTask(smsTask3Update);
-			smsCoreImpl.getSmsTaskLogic().deleteSmsTask(smsTask4Update);
 		}
 	}
 }
