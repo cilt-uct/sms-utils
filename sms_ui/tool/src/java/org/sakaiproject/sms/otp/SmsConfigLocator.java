@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.sakaiproject.sms.hibernate.logic.SmsConfigLogic;
 import org.sakaiproject.sms.hibernate.model.SmsConfig;
+import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
 
 import uk.org.ponder.beanutil.BeanLocator;
 
@@ -62,6 +63,9 @@ public class SmsConfigLocator implements BeanLocator{
 					togo = new SmsConfig();
 					togo.setSakaiSiteId("3");
 					togo.setSakaiToolId("sakaiToolId");
+					
+					//set default values
+					togo.setPagingSize(SmsHibernateConstants.DEFAULT_PAGE_SIZE);
 				}
 			}
 			delivered.put(name, togo);

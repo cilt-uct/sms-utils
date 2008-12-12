@@ -23,6 +23,7 @@ import org.sakaiproject.sms.hibernate.bean.SearchResultContainer;
 import org.sakaiproject.sms.hibernate.logic.SmsTransactionLogic;
 import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsSearchException;
 import org.sakaiproject.sms.hibernate.model.SmsTransaction;
+import org.sakaiproject.sms.params.SortPagerViewParams;
 import org.sakaiproject.sms.util.NullHandling;
 import org.springframework.util.Assert;
 

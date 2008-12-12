@@ -16,7 +16,7 @@
  *
  **********************************************************************************/
 
-package org.sakaiproject.sms.renderers;
+package org.sakaiproject.sms.params;
 
 import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
 

@@ -18,9 +18,9 @@
 package org.sakaiproject.sms.producers;
 
 import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
+import org.sakaiproject.sms.params.SortPagerViewParams;
 import org.sakaiproject.sms.renderers.SearchCriteriaRenderer;
 import org.sakaiproject.sms.renderers.SearchResultsRenderer;
-import org.sakaiproject.sms.renderers.SortPagerViewParams;
 import org.sakaiproject.sms.renderers.TablePagerRenderer;
 import org.springframework.util.Assert;
 

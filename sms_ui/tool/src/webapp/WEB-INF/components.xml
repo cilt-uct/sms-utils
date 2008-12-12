@@ -6,9 +6,11 @@
 <beans>
 
 	<!-- add sakai application scope bean definitions here -->
+
+<!--  
     <bean id="org.sakaiproject.sms.api.SmsSmpp" class="org.sakaiproject.sms.impl.SmsSmppImpl" init-method="init" >
     	<property name="smsMessageLogic" ref="smsMessageLogic" />
     </bean>
-
+-->
 
 </beans>

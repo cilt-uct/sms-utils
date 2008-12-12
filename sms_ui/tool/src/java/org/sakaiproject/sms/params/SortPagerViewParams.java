@@ -16,7 +16,8 @@
  *
  **********************************************************************************/
 
-package org.sakaiproject.sms.renderers;
+package org.sakaiproject.sms.params;
+
 
 
 public class SortPagerViewParams extends PagerViewParams {
