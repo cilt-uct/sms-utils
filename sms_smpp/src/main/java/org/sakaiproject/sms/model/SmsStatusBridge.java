@@ -1,17 +1,17 @@
 /***********************************************************************************
  * SmsStatusBridge.java
  * Copyright (c) 2008 Sakai Project/Sakai Foundation
- * 
- * Licensed under the Educational Community License, Version 2.0 (the "License"); 
- * you may not use this file except in compliance with the License. 
+ *
+ * Licensed under the Educational Community License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.osedu.org/licenses/ECL-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software 
- * distributed under the License is distributed on an "AS IS" BASIS, 
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
- * See the License for the specific language governing permissions and 
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
  * limitations under the License.
  *
  **********************************************************************************/
@@ -22,13 +22,21 @@ import java.util.HashMap;
 import org.jsmpp.util.DeliveryReceiptState;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_SmscDeliveryStatus;
 
+/**
+ * Matches up the statuses from the JSMPP API to our local statuses.
+ * 
+ * @author etienne@psybergate.com
+ * 
+ */
 public class SmsStatusBridge {
 
-	public static boolean isSmsDeliveryStatusPopulated;
+	/**
+	 * The hashMap that stores the JSMPP statuses as the key and our local
+	 * statuses as the value.
+	 */
+	private static HashMap<DeliveryReceiptState, Integer> smsDeliveryStatus = null;
 
-	public static HashMap<DeliveryReceiptState, Integer> smsDeliveryStatus = null;
-
-	public static void setupHashMap() {
+	static {
 
 		smsDeliveryStatus = new HashMap<DeliveryReceiptState, Integer>();
 
@@ -46,22 +54,17 @@ public class SmsStatusBridge {
 				SmsConst_SmscDeliveryStatus.UNKNOWN);
 		smsDeliveryStatus.put(DeliveryReceiptState.REJECTD,
 				SmsConst_SmscDeliveryStatus.REJECTED);
-		isSmsDeliveryStatusPopulated = true;
 	}
 
+	/**
+	 * Returns the local status for the JSMPP status.
+	 * 
+	 * @param deliveryReceiptState
+	 * @return
+	 */
 	public static int getSmsDeliveryStatus(
+			final DeliveryReceiptState deliveryReceiptState) {
+		return smsDeliveryStatus.get(deliveryReceiptState);
 
-	DeliveryReceiptState deliveryReceiptState) {
-		int la = 0;
-		try {
-			if (!isSmsDeliveryStatusPopulated) {
-				setupHashMap();
-			}
-			la = smsDeliveryStatus.get(deliveryReceiptState);
-		} catch (Exception e) {
-			System.out.println("aalalalalalalallalal");
-		}
-
-		return la;
 	}
 }
