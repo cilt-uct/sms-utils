@@ -58,20 +58,20 @@ public class SearchResultContainer<T extends BaseModel> {
 	public Long getTotalResultSetSize() {
 		return totalResultSetSize;
 	}
-	
+
 	/**
 	 * Get the number of pages the user can view
 	 * 
 	 * @return the number of pages
 	 */
-	public int getNumberOfPages(){
+	public int getNumberOfPages() {
 		int paratialPage = 0;
-		if((totalResultSetSize.longValue() % SmsHibernateConstants.DEFAULT_PAGE_SIZE) > 0){
+		if ((totalResultSetSize.longValue() % SmsHibernateConstants.DEFAULT_PAGE_SIZE) > 0) {
 			paratialPage = 1;
 		}
-		return (int) (totalResultSetSize.longValue() / SmsHibernateConstants.DEFAULT_PAGE_SIZE) + paratialPage;
+		return (int) (totalResultSetSize.longValue() / SmsHibernateConstants.DEFAULT_PAGE_SIZE)
+				+ paratialPage;
 	}
-	
 
 	/**
 	 * Sets the total result set size.
@@ -110,5 +110,21 @@ public class SearchResultContainer<T extends BaseModel> {
 
 		pageResults = fullResultSet.subList(indexStart, indexEnd);
 
+	}
+
+	public String toString() {
+		StringBuffer retStr = new StringBuffer("");
+
+		retStr.append("\n\n----------\n");
+		retStr.append("Results\n");
+		retStr.append("----------\n");
+		retStr.append("total resultset size: ").append(totalResultSetSize)
+				.append("\n");
+		retStr.append("tpage result size: ").append(pageResults.size()).append(
+				"\n");
+
+		retStr.append("----------");
+
+		return retStr.toString();
 	}
 }

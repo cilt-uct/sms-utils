@@ -22,7 +22,6 @@ import java.util.Date;
 import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
 import org.sakaiproject.sms.hibernate.util.DateUtil;
 
-
 // TODO: Auto-generated Javadoc
 /**
  * Generic search filter bean object. Will be used for the search screens as a
@@ -63,7 +62,7 @@ public class SearchFilterBean {
 
 	/** The sort direction. */
 	private String sortDirection;
-	
+
 	private boolean newSearch;
 
 	/**
@@ -122,7 +121,7 @@ public class SearchFilterBean {
 	public String getNumber() {
 		return number;
 	}
-	
+
 	/**
 	 * Gets the number
 	 * 
@@ -343,6 +342,27 @@ public class SearchFilterBean {
 	 */
 	public void setNewSearch(boolean newSearch) {
 		this.newSearch = newSearch;
+	}
+
+	public String toString() {
+		StringBuffer retStr = new StringBuffer("");
+
+		retStr.append("\n\n----------\n");
+		retStr.append("Search criteria\n");
+		retStr.append("----------\n");
+		retStr.append("number: ").append(number).append("\n");
+		retStr.append("status: ").append(status).append("\n");
+		retStr.append("dateFrom: ").append(dateFrom).append("\n");
+		retStr.append("dateTo: ").append(dateTo).append("\n");
+		retStr.append("toolName: ").append(toolName).append("\n");
+		retStr.append("sender: ").append(sender).append("\n");
+		retStr.append("currentPage: ").append(currentPage).append("\n");
+		retStr.append("orderBy: ").append(orderBy).append("\n");
+		retStr.append("transactionType: ").append(transactionType).append("\n");
+		retStr.append("sortDirection: ").append(sortDirection).append("\n");
+		retStr.append("newSearch: ").append(newSearch).append("\n");
+		retStr.append("----------\n");
+		return retStr.toString();
 	}
 
 }
