@@ -1,17 +1,17 @@
 /***********************************************************************************
  * SmsTask.java
  * Copyright (c) 2008 Sakai Project/Sakai Foundation
- * 
- * Licensed under the Educational Community License, Version 2.0 (the "License"); 
- * you may not use this file except in compliance with the License. 
+ *
+ * Licensed under the Educational Community License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.osedu.org/licenses/ECL-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software 
- * distributed under the License is distributed on an "AS IS" BASIS, 
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
- * See the License for the specific language governing permissions and 
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
  * limitations under the License.
  *
  **********************************************************************************/
@@ -20,7 +20,6 @@ package org.sakaiproject.sms.hibernate.model;
 
 import java.sql.Timestamp;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
@@ -79,7 +78,7 @@ public class SmsTask extends BaseModel {
 	/** The message body. */
 	private String messageBody;
 
-	// 
+	//
 	/** Type of task, only SO (system originating) for now. */
 	private Integer messageTypeId;
 
@@ -561,13 +560,14 @@ public class SmsTask extends BaseModel {
 	 *            the new status
 	 */
 	public void setStatusForMessages(String oldStatus, String newStatus) {
-		Iterator<SmsMessage> it = getSmsMessages().iterator();
-		while (it.hasNext()) {
-			SmsMessage message = it.next();
-			if (message.getStatusCode().equals(oldStatus)) {
-				message.setStatusCode(newStatus);
+		if (smsMessages != null) {
+			for (SmsMessage message : smsMessages) {
+				if (message.getStatusCode().equals(oldStatus)) {
+					message.setStatusCode(newStatus);
+				}
 			}
 		}
+
 	}
 
 	/**
@@ -580,11 +580,11 @@ public class SmsTask extends BaseModel {
 	 */
 	public Set<SmsMessage> getMessagesWithSmscStatus(int smscStatus) {
 		Set<SmsMessage> filtered = new HashSet<SmsMessage>();
-		Iterator<SmsMessage> it = getSmsMessages().iterator();
-		while (it.hasNext()) {
-			SmsMessage message = it.next();
-			if (message.getSmscDeliveryStatusCode().equals(smscStatus)) {
-				filtered.add(message);
+		if (smsMessages != null) {
+			for (SmsMessage message : smsMessages) {
+				if (message.getSmscDeliveryStatusCode().equals(smscStatus)) {
+					filtered.add(message);
+				}
 			}
 		}
 		return filtered;
@@ -601,11 +601,11 @@ public class SmsTask extends BaseModel {
 	 */
 	public Set<SmsMessage> getMessagesWithStatus(String status) {
 		Set<SmsMessage> filtered = new HashSet<SmsMessage>();
-		Iterator<SmsMessage> it = getSmsMessages().iterator();
-		while (it.hasNext()) {
-			SmsMessage message = it.next();
-			if (message.getStatusCode().equals(status)) {
-				filtered.add(message);
+		if (smsMessages != null) {
+			for (SmsMessage message : smsMessages) {
+				if (message.getStatusCode().equals(status)) {
+					filtered.add(message);
+				}
 			}
 		}
 		return filtered;
