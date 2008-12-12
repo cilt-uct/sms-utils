@@ -27,6 +27,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.sakaiproject.sms.hibernate.bean.SearchFilterBean;
@@ -185,7 +186,7 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 			if (searchBean.getToolName() != null
 					&& !searchBean.getToolName().trim().equals("")) {
 				crit.add(Restrictions.ilike("smsTask.sakaiToolName", searchBean
-						.getToolName()));
+						.getToolName(), MatchMode.ANYWHERE));
 			}
 
 			// Date to send start
@@ -207,7 +208,7 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 			if (searchBean.getSender() != null
 					&& !searchBean.getSender().trim().equals("")) {
 				crit.add(Restrictions.ilike("smsTask.senderUserName",
-						searchBean.getSender()));
+						searchBean.getSender(), MatchMode.ANYWHERE));
 			}
 
 			// Mobile number
