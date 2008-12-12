@@ -117,11 +117,11 @@ public class SmppAPITest extends AbstractBaseTestCase {
 
 		}
 		insertTask.setSmsMessagesOnTask(smsMessages);
-		smsTaskLogicImpl.persistSmsTask(insertTask);
+		// smsTaskLogicImpl.persistSmsTask(insertTask);
 		assertEquals(true, smsSmppImpl.sendMessagesToGateway(smsMessages)
 				.equals(SmsConst_DeliveryStatus.STATUS_SENT));
 		try {
-			Thread.sleep(15000);
+			Thread.sleep(25000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -150,7 +150,7 @@ public class SmppAPITest extends AbstractBaseTestCase {
 		insertMessage1.setSmsTask(insertTask1);
 		smsMessages.add(insertMessage1);
 		insertTask1.setSmsMessagesOnTask(smsMessages);
-		smsTaskLogicImpl.persistSmsTask(insertTask1);
+		// smsTaskLogicImpl.persistSmsTask(insertTask1);
 		assertEquals(true, smsSmppImpl.sendMessageToGateway(insertMessage1)
 				.getSmscMessageId() != null);
 		try {
