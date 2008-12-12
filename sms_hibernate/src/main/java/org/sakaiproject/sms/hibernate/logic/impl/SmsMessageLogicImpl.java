@@ -173,6 +173,7 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 		Criteria crit = HibernateUtil.getSession().createCriteria(
 				SmsMessage.class).createAlias("smsTask", "smsTask");
 
+		log.debug(searchBean.toString());
 		List<SmsMessage> messages = new ArrayList<SmsMessage>();
 		try {
 			// Message status
@@ -237,6 +238,7 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 		messages = crit.list();
 		con.setTotalResultSetSize(new Long(messages.size()));
 		con.calculateAndSetPageResults(messages, searchBean.getCurrentPage());
+		log.debug(con.toString());
 
 		HibernateUtil.closeSession();
 		return con;
