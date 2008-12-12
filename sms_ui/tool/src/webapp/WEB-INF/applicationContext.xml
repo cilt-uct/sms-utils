@@ -62,6 +62,10 @@
   </bean>
   -->
  
+ <bean id="smsAccountGuard" parent="writeGuardParent">
+ 	<property name="guardedPath" value="SmsAccount.*" />
+ 	<property name="guard"><bean class="org.sakaiproject.sms.validators.SmsAccountValidator" /></property>
+ </bean>
   
   <!--
 	Override this definition from RSF-evolvers, to reflect the fact we are
