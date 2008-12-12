@@ -10,6 +10,7 @@
 	<div rsf:id="message-for:*">
 		<span>Message for user here</span>
   	</div>
+  	<div id='config_errorloc' style="color: red; font-weight: bold; display:inline"></div>  
 	<div align="left">
 	<form name="config" id="config" action="#" rsf:id="sms-config-form">
     	<h2 rsf:id="page-heading">SMS Config</h2>
@@ -56,6 +57,9 @@
     
     <script language="JavaScript" type="text/javascript">
  		var frmvalidator = new Validator("config");
+ 		frmvalidator.EnableOnPageErrorDisplaySingleBox();
+ 		frmvalidator.EnableMsgsTogether();
+ 		
 		frmvalidator.addValidation("sms-config-report-timeout","minlen=1", "Please enter a number for Gateway report timeout");
 		frmvalidator.addValidation("sms-config-report-timeout","num", "Please enter a number for Gateway report timeout");
 		frmvalidator.addValidation("sms-config-retry-count","minlen=1", "Please enter a number for Maximum retry count");
