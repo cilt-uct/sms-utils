@@ -33,6 +33,12 @@ import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
 import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
 import org.sakaiproject.sms.hibernate.util.DateUtil;
 
+/**
+ * Handle all logic regarding SMPP gateway communication.
+ * 
+ * @author etienne@psybergate.co.za
+ * 
+ */
 public class SmsCoreImpl implements SmsCore {
 
 	public static final int MAX_RETRY = 5;
@@ -70,6 +76,7 @@ public class SmsCoreImpl implements SmsCore {
 	public Set<SmsMessage> getDeliveryGroup(String sakaiSiteID,
 			String sakaiGroupID, SmsTask smsTask) {
 		return getDummyDeliveryGroup(smsTask);
+		// TODO must make a Sakai call here
 	}
 
 	/**
@@ -120,15 +127,9 @@ public class SmsCoreImpl implements SmsCore {
 		return null;
 	}
 
-	public void insertIntoDebugLog() {
-		// TODO Auto-generated method stub
-
-	}
-
 	/**
-	 * Add a new task to the sms task list, for eg. send message to all
-	 * administrators at 10:00, or get latest announcements and send to mobile
-	 * numbers of Sakai group x (phase II).
+	 * Add a new task to the sms task list, for eg. send message to group x at
+	 * time y. numbers of Sakai group x (phase II).
 	 * 
 	 * @param deliverGroupId
 	 *            the deliver group id
@@ -179,12 +180,12 @@ public class SmsCoreImpl implements SmsCore {
 	 * @param messageID
 	 */
 	public void processIncomingMessage(SmsMessage smsMessage) {
-		// TODO Auto-generated method stub
+		// TODO For phase II
 
 	}
 
 	/**
-	 * Gets the next task to process. Based on specific criteria like status and
+	 * Get the next task to process. Based on specific criteria like status and
 	 * date to sent.
 	 */
 	public void processNextTask() {

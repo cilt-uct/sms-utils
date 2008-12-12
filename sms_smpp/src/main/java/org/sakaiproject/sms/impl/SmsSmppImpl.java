@@ -64,13 +64,7 @@ import org.sakaiproject.sms.hibernate.model.constants.SmsConst_SmscDeliveryStatu
 import org.sakaiproject.sms.model.SmsStatusBridge;
 
 public class SmsSmppImpl implements SmsSmpp {
-	/**
-	 * Establish a connection to the gateway (bind). The connection will be kept
-	 * open for the lifetime of the session. Concurrent connections will be
-	 * possible from other smpp services. The status of the connection will be
-	 * checked before sending a message, and a auto-bind will be made if the
-	 * connection is lost.
-	 */
+
 	private static final org.apache.log4j.Logger LOG = org.apache.log4j.Logger
 			.getLogger(SmsSmppImpl.class);
 	private static TimeFormatter timeFormatter = new AbsoluteTimeFormatter();

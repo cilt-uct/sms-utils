@@ -5,11 +5,10 @@ import java.util.Set;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 
 /**
- * This service will contain the necessary logic to communicate with a standard
- * SMPP gateway.
+ * Handle all logic regarding SMPP gateway communication.
  * 
- * @author louis@psybergate.com
- * @created 12-Nov-2008
+ * @author etienne@psybergate.co.za
+ * 
  */
 public interface SmsSmpp {
 

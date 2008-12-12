@@ -60,11 +60,6 @@ public interface SmsCore {
 	public String getSakaiMobileNumber(String sakaiUserID);
 
 	/**
-	 * Make entry into log file.
-	 */
-	public void insertIntoDebugLog();
-
-	/**
 	 * Add a new task to the sms task list, for eg. send message to all
 	 * administrators at 10:00, or get latest announcements and send to mobile
 	 * numbers of Sakai group x (phase II).

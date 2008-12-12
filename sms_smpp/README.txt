@@ -46,5 +46,3 @@ The test can be run from Eclipse or via the command line with: mvn test -Dtest=*
 2.5 Run SmppAPITest.java. This will test the basic smpp gateway API.
 2.6 Run SmsSmppImplTest.java to test the sending of messages to gateway.
 2.7 Run SmppThreadingTest.java to test concurrent gateway connections with concurrent sending of messages.
-
-All the test can be run using SmppTestSuite.java

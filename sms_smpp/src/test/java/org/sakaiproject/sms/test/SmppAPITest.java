@@ -33,8 +33,9 @@ import org.sakaiproject.sms.impl.SmsSmppImpl;
 
 /**
  * Test some api function on the smpp api. For example successful connect and
- * disconnect to the remote gateway.Both multiple and single message sending is
- * tested.
+ * disconnect to the remote gateway. Both group and single message sending is
+ * tested. It also waits for all the smmp delivery reports to come in and
+ * verifies that all deliveries was successful.
  */
 public class SmppAPITest extends AbstractBaseTestCase {
 

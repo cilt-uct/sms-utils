@@ -25,7 +25,6 @@ import java.util.Set;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
 import org.sakaiproject.sms.hibernate.util.DateUtil;
 
-// TODO: Auto-generated Javadoc
 /**
  * A sms task that needs to be processed. For example: send message X to sakai
  * group Y at time Z. When a sms task is processed, a record is inserted into
@@ -75,10 +74,9 @@ public class SmsTask extends BaseModel {
 	/** The estimated Sakai group size. Calculated when the task is created. */
 	private Integer groupSizeEstimate;
 
-	/** The message body. */
+	/** The message body. Already validated for character set, length etc. */
 	private String messageBody;
 
-	//
 	/** Type of task, only SO (system originating) for now. */
 	private Integer messageTypeId;
 
@@ -114,16 +112,15 @@ public class SmsTask extends BaseModel {
 	private String statusCode;
 
 	/**
-	 * The max time to live.
-	 * <p>
-	 * NB: This is in minutes
+	 * The maximum amount of minutes to allow this task to be pending since it
+	 * date-to-deliver. Some tasks like announcements are time critical and is
+	 * not relevant when it is sent out too late.
 	 */
 	private Integer maxTimeToLive;
 
 	/**
-	 * The delivery report timeout duration.
-	 * <p>
-	 * NB: This is in minutes
+	 * The maximum amount of minutes to wait for a delivery report for each
+	 * message. If a message exeeds this time, it will be marked as failed.
 	 */
 	private Integer delReportTimeoutDuration;
 

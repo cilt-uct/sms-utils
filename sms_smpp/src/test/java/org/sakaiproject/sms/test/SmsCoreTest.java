@@ -31,6 +31,15 @@ import org.sakaiproject.sms.hibernate.util.HibernateUtil;
 import org.sakaiproject.sms.impl.SmsCoreImpl;
 import org.sakaiproject.sms.impl.SmsSmppImpl;
 
+/**
+ * This test also send messages to the smpp simulator but it check the specific
+ * statuses of sent messages. It also test the retrieval of the next sms task
+ * from the SMS_TASK table.
+ * 
+ * @author etienne@psybergate.co.za
+ * 
+ */
+
 public class SmsCoreTest extends AbstractBaseTestCase {
 
 	static SmsSmppImpl smsSmppImpl = null;
@@ -174,10 +183,10 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 
 	/**
 	 * In this test the ProcessNextTask method is tested. 4 smsTasks are created
-	 * with different sending times and statuses.The ProcessNextTask method must
-	 * pick up the oldest SmsTask with an (pending/incomplete/reply) status. The
-	 * test succeeds if the Smstasks are returned in the proper order and the
-	 * correct amount of delivery reports were received.
+	 * with different sending times and statuses. The ProcessNextTask method
+	 * must pick up the oldest SmsTask with an (pending/incomplete/reply)
+	 * status. The test succeeds if the Smstasks are returned in the proper
+	 * order and the correct amount of delivery reports were received.
 	 * 
 	 * NOTE: Make sure that the SMS_TASK table is empty before running this
 	 * test, else it will fail.
