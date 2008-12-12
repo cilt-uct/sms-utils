@@ -33,7 +33,7 @@
     via incoming request URL -->
   <bean parent="requestAddressibleParent">
     <property name="value" value="searchTaskList, searchTransactionLog, searchMessageLog, smsConfig, 
-    smsConfigActionBean, SmsTestActionBean, SmsMessageLocator, SmsConfigLocator, csvActionBean, SmsAccountLocator, dateTestBean"/>
+    smsConfigActionBean, SmsTestActionBean, SmsMessageLocator, SmsConfigLocator, csvActionBean, SmsAccountLocator"/>
   </bean>
 
   <!-- The beans which will be preserved across a flow via simple instance copying -->
