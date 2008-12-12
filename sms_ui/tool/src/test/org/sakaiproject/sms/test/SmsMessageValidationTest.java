@@ -17,10 +17,14 @@
  **********************************************************************************/
 package org.sakaiproject.sms.test;
 
+import java.sql.Timestamp;
+
 import junit.framework.TestCase;
 
 import org.sakaiproject.sms.constants.SmsUiConstants;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
+import org.sakaiproject.sms.hibernate.model.SmsTask;
+import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
 import org.sakaiproject.sms.validators.SmsMessageValidator;
 import org.springframework.validation.BindException;
 
@@ -32,6 +36,7 @@ public class SmsMessageValidationTest extends TestCase {
 
 	private SmsMessageValidator validator;
 	private BindException errors;
+	private SmsTask smsTask;
 	private SmsMessage msg;
 
 	private static String VALID_MOBILE_NR = "0123456789";
@@ -48,8 +53,20 @@ public class SmsMessageValidationTest extends TestCase {
 	@Override
 	public void setUp() {
 		validator = new SmsMessageValidator();
-		msg = new SmsMessage("", ""); // Should be default constructor, but is
-										// giving NPE's at the moment
+		msg = new SmsMessage();
+		smsTask = new SmsTask();
+		smsTask.setSakaiSiteId("sakaiSiteId");
+		smsTask.setSmsAccountId(1);
+		smsTask.setDateCreated(new Timestamp(System.currentTimeMillis()));
+		smsTask.setDateToSend(new Timestamp(System.currentTimeMillis()));
+		smsTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
+		smsTask.setAttemptCount(2);
+		smsTask.setMessageBody("messageBody");
+		smsTask.setSenderUserName("senderUserName");
+		smsTask.setMaxTimeToLive(1);
+		smsTask.setDelReportTimeoutDuration(1);
+		smsTask.getSmsMessages().add(msg);
+		msg.setSmsTask(smsTask);
 		errors = new BindException(msg, "SmsMessage");
 	}
 
