@@ -507,8 +507,7 @@ public class SmsSmppImpl implements SmsSmpp {
 			try {
 				Thread.sleep(sendingDelay);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				LOG.error(e);
 			}
 			message = sendMessageToGateway(message);
 			if (!message.getStatusCode().equals(
