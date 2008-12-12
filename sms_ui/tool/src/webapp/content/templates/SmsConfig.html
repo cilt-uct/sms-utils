@@ -3,6 +3,7 @@
 <head>
 <link href="../css/tool_base.css" type="text/css" rel="stylesheet" media="all" />
 <link href="../css/default/tool.css" type="text/css" rel="stylesheet" media="all" />
+<script type="text/javascript" language="JavaScript" src="../js/gen_validatorv31.js"></script>
 <title rsf:id="page-title">Search Window</title>
 </head>
 <body style="padding: 5px; margin: 4px;">
@@ -10,7 +11,7 @@
 		<span>Message for user here</span>
   	</div>
 	<div align="left">
-	<form action="#" rsf:id="sms-config-form">
+	<form name="config" id="config" action="#" rsf:id="sms-config-form">
     	<h2 rsf:id="page-heading">SMS Config</h2>
     <table class="" align="left">
       <tr>
@@ -24,8 +25,26 @@
       </tr>
       <tr>
         <td>Notification Email:</td>
-        <td><input style="width: 200px" type="text" rsf:id="sms-config-notification-email"></input></td>
+        <td><input  style="width: 200px" maxLength="100" type="text" rsf:id="sms-config-notification-email"></input></td>
       </tr>
+      	<td>Gateway report timeout:</td>
+      	<td><input style="width: 200px" maxLength="10" type="text" rsf:id="sms-config-report-timeout"></input></td>
+      <tr>
+      </tr>
+      	<td>Maximum retry count:</td>
+      	<td><input  style="width: 200px" maxLength="10" type="text" rsf:id="sms-config-retry-count"></input></td>
+      <tr>
+      </tr>
+      	<td>Maximum task lifetime:</td>
+      	<td><input  style="width: 200px" maxLength="10" type="text" rsf:id="sms-config-task-max-lifetime"></input></td>
+      <tr>
+      </tr>
+      	<td>Retry schedule interval:</td>
+      	<td><input  style="width: 200px" maxLength="10" type="text" rsf:id="sms-config-retry-interval" ></input></td>
+      <tr>
+      </tr>
+      	<td>Paging size:</td>
+      	<td><input style="width: 200px" maxLength="10" type="text" rsf:id="sms-config-paging-size"></input></td>
       <tr>
       <td colspan="1" align="left">
         <input style="color:#0099CC;" rsf:id="save" type="submit" value="Save"/>
@@ -34,6 +53,21 @@
       </tr>
     </table>
     </form>
+    
+    <script language="JavaScript" type="text/javascript">
+ 		var frmvalidator = new Validator("config");
+		frmvalidator.addValidation("sms-config-report-timeout","minlen=1", "Please enter a number for Gateway report timeout");
+		frmvalidator.addValidation("sms-config-report-timeout","num", "Please enter a number for Gateway report timeout");
+		frmvalidator.addValidation("sms-config-retry-count","minlen=1", "Please enter a number for Maximum retry count");
+		frmvalidator.addValidation("sms-config-retry-count","num", "Please enter a number for Maximum retry count");
+		frmvalidator.addValidation("sms-config-task-max-lifetime","minlen=1", "Please enter a number for Maximum task lifetime");
+		frmvalidator.addValidation("sms-config-task-max-lifetime","num", "Please enter a number for Maximum task lifetime");
+		frmvalidator.addValidation("sms-config-retry-interval","minlen=1", "Please enter a number for Retry schedule interval");
+		frmvalidator.addValidation("sms-config-retry-interval","num", "Please enter a number for Retry schedule interval");
+		frmvalidator.addValidation("sms-config-paging-size","minlen=1", "Please enter a number for Paging size");
+		frmvalidator.addValidation("sms-config-paging-size","num", "Please enter a number for Paging size");
+	</script>
+    
 </div>
 </body>
 </html>

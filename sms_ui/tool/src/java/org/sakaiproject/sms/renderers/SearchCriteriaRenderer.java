@@ -78,7 +78,12 @@ public class SearchCriteriaRenderer{
 		
 		UIInput dateFrom = UIInput.make(searchForm, "date-from:", searchBeanName + "." + "dateFrom");		
 		dateEvolver.evolveDateInput(dateFrom);
-		UIInput.make(searchForm, "tool-name", createSearchELString("toolName"));
+		
+		//No Tool name search criteria
+		if(labelDropDown.indexOf("Type") == -1){
+			UIOutput.make(searchForm, "tool-name-label", "Tool Name:");
+			UIInput.make(searchForm, "tool-name", createSearchELString("toolName"));
+		}
 		
 		//No drop down for Transaction log
 		if(labelDropDown.indexOf("Type") == -1)

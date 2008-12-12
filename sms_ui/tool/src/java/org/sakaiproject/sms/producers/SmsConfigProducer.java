@@ -70,6 +70,14 @@ public class SmsConfigProducer implements ViewComponentProducer, NavigationCaseR
 		combo.optionnames = comboNames;
 
 		UIInput.make(smsConfigform, "sms-config-notification-email", smsConfigOTP + ".notificationEmail");
+		
+		UIInput.make(smsConfigform, "sms-config-report-timeout", smsConfigOTP + ".gateWayReportTimeout");
+		UIInput.make(smsConfigform, "sms-config-retry-count", smsConfigOTP + ".smsRetryMaxCount");
+		UIInput.make(smsConfigform, "sms-config-task-max-lifetime", smsConfigOTP + ".smsTaskMaxLifeTime");
+		UIInput.make(smsConfigform, "sms-config-retry-interval", smsConfigOTP + ".smsRetryScheduleInterval");
+		UIInput.make(smsConfigform, "sms-config-paging-size", smsConfigOTP + ".pagingSize");
+		
+		
 
 		UICommand.make(smsConfigform, "save", "#{smsConfigActionBean.save}");
 		UICommand.make(smsConfigform, "cancel", "#"); 
