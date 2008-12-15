@@ -55,39 +55,39 @@ public class SmsHibernateConstants {
 	public static final String SMS_DEV_DEFAULT_SAKAI_ID = "1";
 
 	/** Enable or disable sms functionality for the site or tool. */
-	public static final boolean SMSENABLEDFORSITE = true;
+	public static final boolean SMS_ENABLED_FOR_SITE = true;
 
 	/**
 	 * The email address that will receive the notification of errors or
 	 * insufficient credits.
 	 */
-	public static final String NOTIFICATIONEMAIL = "notification@instution.com";
+	public static final String NOTIFICATION_EMAIL = "notification@instution.com";
 
 	/**
 	 * The sms gateway report timeout in seconds. If a delivery report takes
 	 * longer that this, the message will be marked as failed.
 	 */
-	public static final Integer GATEWAYREPORTTIMEOUT = (60 * 10);
+	public static final Integer GATEWAY_REPORT_TIMEOUT = (60 * 10);
 
 	/**
 	 * The maximum amount of time an smsTask can be retried.
 	 */
-	public static final Integer MAXIMUMRETRYCOUNT = 5;
+	public static final Integer MAXIMUM_RETRY_COUNT = 5;
 
 	/**
 	 * The message may only be delivered in the time frame defined by
 	 * [dateToSend] + [MAXIMUMTASKLIFETIME]
 	 */
-	public static final Integer MAXIMUMTASKLIFETIME = 60 * 60 * 24;
+	public static final Integer MAXIMUM_TASK_LIFETIME = 60 * 60 * 24;
 
 	/**
 	 * The time to wait before retrying an smsTask.
 	 */
-	public static final Integer RETRYSCHEDULEINTERVAL = 60 * 5;
+	public static final Integer RETRY_SCHEDULE_INTERVAL = 60 * 5;
 
 	/**
 	 * Default paging size
 	 */
-	public static final Integer PAGINGSIZE = 200;
+	public static final Integer PAGING_SIZE = 200;
 
 }
