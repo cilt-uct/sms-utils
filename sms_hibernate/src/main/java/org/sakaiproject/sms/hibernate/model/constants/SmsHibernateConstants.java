@@ -52,7 +52,7 @@ public class SmsHibernateConstants {
 	/**
 	 * The default sakai_id to be used in development mode.
 	 */
-	public static final String SMS_DEV_DEFAULT_SAKAI_ID = "1";
+	public static final String SMS_DEV_DEFAULT_SAKAI_ID = "SakaiSiteID";
 
 	/** Enable or disable sms functionality for the site or tool. */
 	public static final boolean SMS_ENABLED_FOR_SITE = true;

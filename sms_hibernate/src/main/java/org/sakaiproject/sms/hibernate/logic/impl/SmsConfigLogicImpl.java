@@ -115,18 +115,19 @@ public class SmsConfigLogicImpl extends SmsDao implements SmsConfigLogic {
 	public SmsConfig createDefaultSmsConfig(String sakaiSiteId) {
 		SmsConfig config = new SmsConfig();
 		config
-				.setGateWayReportTimeout(SmsHibernateConstants.GATEWAYREPORTTIMEOUT);
-		config.setNotificationEmail(SmsHibernateConstants.NOTIFICATIONEMAIL);
+				.setGateWayReportTimeout(SmsHibernateConstants.GATEWAY_REPORT_TIMEOUT);
+		config.setNotificationEmail(SmsHibernateConstants.NOTIFICATION_EMAIL);
 		config.setNotificationEmailBilling("notificationBilling@instution.com");
 		config.setNotificationEmailSent("notificationSent@instution.com");
-		config.setPagingSize(SmsHibernateConstants.PAGINGSIZE);
+		config.setPagingSize(SmsHibernateConstants.DEFAULT_PAGE_SIZE);
 		config.setSakaiSiteId(sakaiSiteId);
 		config.setSakaiToolId("DummyToolId");
 		config.setSendSmsEnabled(true);
-		config.setSmsRetryMaxCount(SmsHibernateConstants.MAXIMUMRETRYCOUNT);
+		config.setSmsRetryMaxCount(SmsHibernateConstants.MAXIMUM_RETRY_COUNT);
 		config
-				.setSmsRetryScheduleInterval(SmsHibernateConstants.RETRYSCHEDULEINTERVAL);
-		config.setSmsTaskMaxLifeTime(SmsHibernateConstants.MAXIMUMTASKLIFETIME);
+				.setSmsRetryScheduleInterval(SmsHibernateConstants.RETRY_SCHEDULE_INTERVAL);
+		config
+				.setSmsTaskMaxLifeTime(SmsHibernateConstants.MAXIMUM_TASK_LIFETIME);
 		return config;
 
 	}
