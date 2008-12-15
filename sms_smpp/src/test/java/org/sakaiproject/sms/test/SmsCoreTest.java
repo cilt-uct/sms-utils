@@ -21,6 +21,7 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 
 import org.apache.log4j.Level;
+import org.sakaiproject.sms.hibernate.logic.impl.SmsConfigLogicImpl;
 import org.sakaiproject.sms.hibernate.logic.impl.SmsMessageLogicImpl;
 import org.sakaiproject.sms.hibernate.logic.impl.SmsTaskLogicImpl;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
@@ -55,6 +56,7 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 		smsSmppImpl.init();
 		smsCoreImpl.setSmsSmpp(smsSmppImpl);
 		smsCoreImpl.setSmsTaskLogic(new SmsTaskLogicImpl());
+		smsCoreImpl.setSmsConfigLogic(new SmsConfigLogicImpl());
 		smsCoreImpl.enableDebugInformation(true);
 		LOG.setLevel(Level.ALL);
 	}
