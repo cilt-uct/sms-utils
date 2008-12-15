@@ -23,6 +23,7 @@ import java.util.Map;
 import org.sakaiproject.sms.beans.ActionResults;
 import org.sakaiproject.sms.hibernate.logic.SmsAccountLogic;
 import org.sakaiproject.sms.hibernate.model.SmsAccount;
+import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
 
 import uk.org.ponder.beanutil.BeanLocator;
 import uk.org.ponder.messageutil.TargettedMessage;
@@ -50,6 +51,8 @@ public class SmsAccountLocator implements BeanLocator {
 		if (togo == null) {
 			if (name.startsWith(NEW_PREFIX)) {
 				togo = new SmsAccount();
+				togo.setBalance(SmsHibernateConstants.INITIAL_BALANACE);
+				togo.setOverdraftLimit(SmsHibernateConstants.OVERDRAFT_LIMIT);
 			} else {
 				togo = smsAccountLogic.getSmsAccount(Long.parseLong(name));
 			}

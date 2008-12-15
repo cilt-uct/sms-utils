@@ -107,8 +107,8 @@ public class MessageLogResultsRenderer implements SearchResultsRenderer {
 					"sms.message-log-search-results.account.mobile.number");
 			sortHeaderRenderer.makeSortingLink(searchResultsTable,
 					"tableheader-date-processed:", sortViewParams,
-					"smsTask.dateProcessed",
-					"sms.message-log-search-results.account.date.processesd");
+					"dateDelivered",
+					"sms.message-log-search-results.account.date.delivered");
 			sortHeaderRenderer.makeSortingLink(searchResultsTable,
 					"tableheader-status:", sortViewParams,
 					"smsTask.statusCode",
@@ -130,8 +130,7 @@ public class MessageLogResultsRenderer implements SearchResultsRenderer {
 				UIOutput.make(row, "row-data-mobile-number", NullHandling
 						.safeToString(smsMessage.getMobileNumber()));
 				UIOutput.make(row, "row-data-date-processed", NullHandling
-						.safeToString(smsMessage.getSmsTask()
-								.getDateProcessed()));
+						.safeToString(smsMessage.getDateDelivered()));
 				UIOutput.make(row, "row-data-status", NullHandling
 						.safeToString(smsMessage.getStatusCode()));
 			}

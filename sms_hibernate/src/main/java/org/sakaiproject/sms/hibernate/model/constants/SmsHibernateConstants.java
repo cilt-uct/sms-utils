@@ -90,4 +90,14 @@ public class SmsHibernateConstants {
 	 */
 	public static final Integer PAGING_SIZE = 200;
 
+	/**
+	 * The defauly overdraft limit
+	 */
+	public static final Float OVERDRAFT_LIMIT = 10.0f;
+	
+	/**
+	 * The default initial balance for an account
+	 */
+	public static final Float INITIAL_BALANACE = 100.0f;
+	
 }
