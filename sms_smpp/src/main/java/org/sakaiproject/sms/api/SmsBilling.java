@@ -70,7 +70,7 @@ public interface SmsBilling {
 	 * @param userID
 	 * @param accountType
 	 */
-	public int getAccountID(Integer siteID, Integer userID, Integer accountType);
+	public int getAccountID(String siteID, String userID, Integer accountType);
 
 	/**
 	 * Return a list of all transactions between startDate and endDate for the
