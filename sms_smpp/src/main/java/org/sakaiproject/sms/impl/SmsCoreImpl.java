@@ -1,17 +1,17 @@
 /***********************************************************************************
  * SmsCoreImpl.java
  * Copyright (c) 2008 Sakai Project/Sakai Foundation
- * 
- * Licensed under the Educational Community License, Version 2.0 (the "License"); 
- * you may not use this file except in compliance with the License. 
+ *
+ * Licensed under the Educational Community License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.osedu.org/licenses/ECL-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software 
- * distributed under the License is distributed on an "AS IS" BASIS, 
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
- * See the License for the specific language governing permissions and 
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
  * limitations under the License.
  *
  **********************************************************************************/
@@ -40,10 +40,6 @@ import org.sakaiproject.sms.hibernate.util.DateUtil;
  * 
  */
 public class SmsCoreImpl implements SmsCore {
-
-	public static final int MAX_RETRY = 5;
-
-	public static final int RESCHEDULE_TIMEOUT = 15;
 
 	private static final org.apache.log4j.Logger LOG = org.apache.log4j.Logger
 			.getLogger(SmsCoreImpl.class);
@@ -207,7 +203,7 @@ public class SmsCoreImpl implements SmsCore {
 	public void processTask(SmsTask smsTask) {
 		smsTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_BUSY);
 		smsTask.setAttemptCount((smsTask.getAttemptCount()) + 1);
-		if (smsTask.getAttemptCount() < MAX_RETRY) {
+		if (smsTask.getAttemptCount() < SmsHibernateConstants.MAXIMUM_RETRY_COUNT) {
 			if (smsTask.getAttemptCount() <= 1) {
 				smsTask.setSmsMessagesOnTask(this.getDeliveryGroup(smsTask
 						.getSakaiSiteId(), smsTask.getDeliveryGroupId(),
@@ -225,7 +221,8 @@ public class SmsCoreImpl implements SmsCore {
 					|| smsTask.getStatusCode().equals(
 							SmsConst_DeliveryStatus.STATUS_RETRY)) {
 				Calendar now = Calendar.getInstance();
-				now.add(Calendar.MINUTE, +(RESCHEDULE_TIMEOUT));
+				now.add(Calendar.MINUTE,
+						+(SmsHibernateConstants.RETRY_SCHEDULE_INTERVAL));
 				smsTask.rescheduleDateToSend(new Timestamp(now
 						.getTimeInMillis()));
 			}
