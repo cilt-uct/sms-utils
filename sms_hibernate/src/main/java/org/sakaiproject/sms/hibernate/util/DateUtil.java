@@ -49,8 +49,20 @@ public class DateUtil {
 	 * @return the date a week before
 	 */
 	public static Date getDateOneWeekBeforeNow() {
+		return getDateFromNow(-7);
+	}
+
+	
+	
+	/**
+	 * Get the date at the specified number of days from now
+	 * 
+	 * @param daysFromNow
+	 * @return
+	 */
+	public static Date getDateFromNow(int daysFromNow) {
 		Calendar date1 = Calendar.getInstance();
-		date1.add(Calendar.DAY_OF_YEAR, -7);
+		date1.add(Calendar.DAY_OF_YEAR, daysFromNow);
 		Date weekBefore = date1.getTime();
 		return weekBefore;
 	}

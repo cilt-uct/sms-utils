@@ -71,7 +71,7 @@ public class SearchFilterBean {
 	public SearchFilterBean() {
 		super();
 		newSearch = true;
-		dateFrom = DateUtil.getDateOneWeekBeforeNow();
+		dateFrom = DateUtil.getDateFromNow(-5);
 		dateTo = new Date();
 		currentPage = new Integer(1);
 	}
@@ -344,6 +344,7 @@ public class SearchFilterBean {
 		this.newSearch = newSearch;
 	}
 
+	@Override
 	public String toString() {
 		StringBuffer retStr = new StringBuffer("");
 
