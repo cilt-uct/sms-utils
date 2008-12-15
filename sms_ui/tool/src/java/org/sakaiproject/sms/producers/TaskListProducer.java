@@ -17,8 +17,6 @@
  **********************************************************************************/
 package org.sakaiproject.sms.producers;
 
-import uk.org.ponder.rsf.components.UIBranchContainer;
-import uk.org.ponder.rsf.components.UICommand;
 
 public class TaskListProducer extends AbstractSearchListProducer {
 
@@ -38,11 +36,5 @@ public class TaskListProducer extends AbstractSearchListProducer {
 	public String getDefaultSortColumn() {
 		return "dateProcessed";
 	}
-
-	@Override
-	protected void addAddtionalButtons(UIBranchContainer branch) {
-		UICommand.make(branch, "add-task", (String)null);
-	}
-	
 	
 }

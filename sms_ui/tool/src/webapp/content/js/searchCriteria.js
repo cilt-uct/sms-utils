@@ -30,3 +30,11 @@ function checkNumbers(){
 		input.value = input.value.replace(/[^0-9/+]/g, '');
 	}
 }
+
+//delete when deployed into sakai since this function will be available
+function openWindow(url, title, options)
+{
+	var win = top.window.open(url, title, options);
+	win.focus();
+	return win;
+}
