@@ -211,8 +211,8 @@ public class SmsCoreImpl implements SmsCore {
 	 * See http://jira.sakaiproject.org/jira/browse/SMS-9
 	 */
 	public void processTask(SmsTask smsTask) {
-		SmsConfig config = smsConfigLogic.getSmsConfigBySakaiSiteId(smsTask
-				.getSakaiSiteId());
+		SmsConfig config = smsConfigLogic
+				.getOrCreateSmsConfigBySakaiSiteId(smsTask.getSakaiSiteId());
 		smsTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_BUSY);
 		smsTask.setAttemptCount((smsTask.getAttemptCount()) + 1);
 		if (smsTask.getAttemptCount() < config.getSmsRetryMaxCount()) {
