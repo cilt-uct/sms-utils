@@ -16,10 +16,10 @@
 <div rsf:id="search-component:">
 <fieldset><legend>Search / Filter</legend>
 <form action="#" method="get" rsf:id="search-criteria">
-<table border="0">
+<table class="shorttext" border="0">
 	<tr>
 		<td><div id="id" rsf:id="label-id">Mobile Number:</div></td>
-		<td><input id="mobileNumber" onkeyup="checkNumbers()" type="text" rsf:id="id"></input></td>
+		<td><input id="mobileNumber" style="width: 100px;" onkeyup="checkNumbers()" type="text" rsf:id="id"></input></td>
 		<td>Date From:</td>
 		<td>
 			<span rsf:id="date-from:"> <input type="text"
@@ -28,7 +28,7 @@
 			alt="calendar" /> </span>
 		</td>
 		<td><div rsf:id="tool-name-label">Tool Name:</div></td>
-		<td><input id="toolName" type="text" rsf:id="tool-name"/></td>
+		<td><input style="width: 100px;" id="toolName" type="text" rsf:id="tool-name"/></td>
 		<td><div rsf:id="label-dropdown">Task Status:</div></td>
 		<td>
 			<select id="task-status" rsf:id="task-status">
@@ -43,7 +43,7 @@
 			alt="calendar" /> </span>
 		</td>
 		<td>Sender:</td>
-		<td><input id="sender" type="text" rsf:id="sender"/></td>
+		<td><input style="width: 100px;" id="sender" type="text" rsf:id="sender"/></td>
 	</tr>
 </table>
 	<input rsf:id="search" type="submit" value="Search"/>
