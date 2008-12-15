@@ -145,7 +145,7 @@ public class HibernateUtil {
 	 *                if any error occurs reading the hibernate configuration
 	 *                files
 	 */
-	private static SessionFactory getSessionFactory() {
+	private static synchronized SessionFactory getSessionFactory() {
 		try {
 			if (sessionFactory == null) {
 				// configuration = new Configuration();

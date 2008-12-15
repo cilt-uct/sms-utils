@@ -32,6 +32,8 @@ import uk.org.ponder.rsf.components.UIForm;
 import uk.org.ponder.rsf.components.UIInput;
 import uk.org.ponder.rsf.components.UIMessage;
 import uk.org.ponder.rsf.components.UISelect;
+import uk.org.ponder.rsf.components.decorators.DecoratorList;
+import uk.org.ponder.rsf.components.decorators.UITooltipDecorator;
 import uk.org.ponder.rsf.flow.ARIResult;
 import uk.org.ponder.rsf.flow.jsfnav.NavigationCase;
 import uk.org.ponder.rsf.flow.jsfnav.NavigationCaseReporter;
@@ -58,7 +60,8 @@ public class SmsConfigProducer implements ViewComponentProducer, NavigationCaseR
 		UIMessage.make(tofill, "page-title", "sms.config.title");
 		UIForm smsConfigform = UIForm.make(tofill, "sms-config-form");
 		UIMessage.make(tofill, "page-heading", "sms.config.title");
-				
+		
+		UIMessage.make(smsConfigform, "sms-enabled", "sms.config.enabled");		
 		UISelect combo = UISelect.make(smsConfigform, "sms-config-enabled");
 		combo.selection = new UIInput();
 		combo.selection.valuebinding = new ELReference(smsConfigOTP + ".sendSmsEnabled");
@@ -68,16 +71,29 @@ public class SmsConfigProducer implements ViewComponentProducer, NavigationCaseR
 		UIBoundList comboNames = new UIBoundList();
 		comboNames.setValue(new String[] {"Yes","No"});
 		combo.optionnames = comboNames;
-
-		UIInput.make(smsConfigform, "sms-config-notification-email", smsConfigOTP + ".notificationEmail");
 		
-		UIInput.make(smsConfigform, "sms-config-report-timeout", smsConfigOTP + ".gateWayReportTimeout");
-		UIInput.make(smsConfigform, "sms-config-retry-count", smsConfigOTP + ".smsRetryMaxCount");
-		UIInput.make(smsConfigform, "sms-config-task-max-lifetime", smsConfigOTP + ".smsTaskMaxLifeTime");
-		UIInput.make(smsConfigform, "sms-config-retry-interval", smsConfigOTP + ".smsRetryScheduleInterval");
-		UIInput.make(smsConfigform, "sms-config-paging-size", smsConfigOTP + ".pagingSize");
+		UIMessage.make(smsConfigform,  "notification-email", "sms.config.notification.email");
+		UIInput make = UIInput.make(smsConfigform, "sms-config-notification-email", smsConfigOTP + ".notificationEmail");
 		
+		UIMessage.make(smsConfigform, "gateway-report-timeout", "sms.config.gateway.timeout"); 
+		UIInput reportTimeoutInput = UIInput.make(smsConfigform, "sms-config-report-timeout", smsConfigOTP + ".gateWayReportTimeout");
+		reportTimeoutInput.decorators = new DecoratorList(new UITooltipDecorator(UIMessage.make("sms.config.gateway.timeout-tooltip")));
 		
+		UIMessage.make(smsConfigform, "max-retry-count", "sms.config.max.retry"); 
+		UIInput retryCountInput = UIInput.make(smsConfigform, "sms-config-retry-count", smsConfigOTP + ".smsRetryMaxCount");
+		retryCountInput.decorators = new DecoratorList(new UITooltipDecorator(UIMessage.make("sms.config.max.retry-tooltip")));
+		
+		UIMessage.make(smsConfigform,  "max-task-lifetime", "sms.config.task.lifetime");
+		UIInput maxTaskLifetimeInput = UIInput.make(smsConfigform, "sms-config-task-max-lifetime", smsConfigOTP + ".smsTaskMaxLifeTime");
+		maxTaskLifetimeInput.decorators = new DecoratorList(new UITooltipDecorator(UIMessage.make("sms.config.task.lifetime-tooltip")));
+		
+		UIMessage.make(smsConfigform,  "retry-schedule-interval", "sms.config.retry.schedule");
+		UIInput retryIntervalInput = UIInput.make(smsConfigform, "sms-config-retry-interval", smsConfigOTP + ".smsRetryScheduleInterval");
+		retryIntervalInput.decorators = new DecoratorList(new UITooltipDecorator(UIMessage.make("sms.config.retry.schedule-tooltip")));
+		
+		UIMessage.make(smsConfigform,  "paging-size", "sms.config.paging.size");
+		UIInput pagingSizeInput = UIInput.make(smsConfigform, "sms-config-paging-size", smsConfigOTP + ".pagingSize");
+		pagingSizeInput.decorators = new DecoratorList(new UITooltipDecorator(UIMessage.make("sms.config.paging.size-tooltip")));
 
 		UICommand.make(smsConfigform, "save", "#{smsConfigActionBean.save}");
 		UICommand.make(smsConfigform, "cancel", "#"); 

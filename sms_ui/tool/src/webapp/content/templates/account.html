@@ -5,6 +5,7 @@
 	<title rsf:id="page-title">SMS Account</title>
 	<link href="../css/tool_base.css" type="text/css" rel="stylesheet" media="all" />
 	<link href="../css/default/tool.css" type="text/css" rel="stylesheet" media="all" />
+	<script type="text/javascript" language="JavaScript" src="../js/gen_validatorv31.js"></script>
 </head>
 
 <body style="margin-left : 5px;">
@@ -12,7 +13,8 @@
 	<div rsf:id="message-for:*">
 		<span>Message for user here</span>
 	</div>
-	<form rsf:id="account-form">
+	<div id='account_errorloc' style="color: red; font-weight: bold; display:inline"></div>
+	<form name="account" rsf:id="account-form">
 		<p class="shorttext required">
 			<label rsf:id="account-name-label" for="accountName" >
 				Account Name
@@ -32,21 +34,30 @@
 			<input rsf:id="sakai-user-id" type="text" maxlength="99"  />
 		</p>
 		<p class="shorttext required">
-			<label rsf:id="overdraft-limit-label" for="overdraft-limit" >
+			<label rsf:id="overdraft-limit-label" for="overdraft-limit" maxlength="10">
 				Overdraft Limit
 			</label>
 			<input rsf:id="overdraft-limit" type="text"  />
 		</p>
 		<p class="shorttext required">
-			<label rsf:id="balance-label" for="balance" >
+			<label rsf:id="balance-label" for="balance" maxlength="10">
 				Balance
 			</label>
 			<input rsf:id="balance" type="text"  />
 		</p>
 		<div class="act">
 			<input rsf:id="save-btn" class="active" value="Save" accesskey="s" type="submit" />
-			<input rsf:id="cancel-btn" value="Cancel" accesskey="x" type="submit" />
+			<input rsf:id="cancel-btn" value="Cancel" accesskey="x" type="button" onclick="history.go(-1)" />
 		</div>		
 	</form>
+	<script language="JavaScript" type="text/javascript">
+ 		var frmvalidator = new Validator("account");
+ 		frmvalidator.EnableOnPageErrorDisplaySingleBox();
+ 		frmvalidator.EnableMsgsTogether();
+		frmvalidator.addValidation("overdraft-limit","minlen=1", "Please enter a number for Overdraft Limit");
+		frmvalidator.addValidation("overdraft-limit","dec", "Please enter a valid number for Overdraft Limit");
+		frmvalidator.addValidation("balance","minlen=1", "Please enter a number for Balance");
+		frmvalidator.addValidation("balance","dec", "Please enter a valid number for Balance");
+	</script>
 </body>
 </html>

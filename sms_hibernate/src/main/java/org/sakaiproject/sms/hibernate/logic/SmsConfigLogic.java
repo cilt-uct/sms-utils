@@ -73,7 +73,7 @@ public interface SmsConfigLogic {
 	 * 
 	 * @return the sms config by sakai site id
 	 */
-	public SmsConfig getSmsConfigBySakaiSiteId(String sakaiSiteId);
+	public SmsConfig getOrCreateSmsConfigBySakaiSiteId(String sakaiSiteId);
 
 	/**
 	 * Gets the sms config by sakai tool id.

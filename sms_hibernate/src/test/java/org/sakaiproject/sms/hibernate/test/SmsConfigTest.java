@@ -105,11 +105,11 @@ public class SmsConfigTest extends AbstractBaseTestCase {
 
 		try {
 			SmsHibernateConstants.SMS_DEV_MODE = false;
-			SmsConfig conf = logic.getSmsConfigBySakaiSiteId(testId);
+			SmsConfig conf = logic.getOrCreateSmsConfigBySakaiSiteId(testId);
 			assertNotNull("Object not found", conf);
 			assertEquals("Incorrect object returned", conf, insertSmsConfig);
 
-			conf = logic.getSmsConfigBySakaiSiteId("SomeOtherId");
+			conf = logic.getOrCreateSmsConfigBySakaiSiteId("SomeOtherId");
 			assertNull("No object should be found", conf);
 			SmsHibernateConstants.SMS_DEV_MODE = true;
 		} finally {
@@ -149,7 +149,7 @@ public class SmsConfigTest extends AbstractBaseTestCase {
 	 */
 	public void testFindByIdDevMode() {
 		SmsConfig getSmsConfig = logic
-				.getSmsConfigBySakaiSiteId(SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_ID);
+				.getOrCreateSmsConfigBySakaiSiteId(SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_ID);
 		assertNotNull(getSmsConfig);
 
 	}
