@@ -104,8 +104,7 @@ public class SmsConfigLogicImpl extends SmsDao implements SmsConfigLogic {
 			config = configs.get(0);
 		}
 		HibernateUtil.closeSession();
-		// Only used for development
-		if (SmsHibernateConstants.SMS_DEV_MODE && config == null) {
+		if (config == null) {
 			config = new SmsConfig();
 			config
 					.setGateWayReportTimeout(SmsHibernateConstants.GATEWAYREPORTTIMEOUT);
