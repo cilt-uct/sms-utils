@@ -75,6 +75,22 @@ public class SmsAccount extends BaseModel {
 		this.startdate = new Date(System.currentTimeMillis());
 	}
 
+	/**
+	 * Instantiates a new sms account.
+	 */
+	public SmsAccount(Float balance, String messageTypeCode,
+			Float overdraftLimit, String sakaiSiteId, String sakaiUserId,
+			String accountName) {
+		super();
+		this.balance = balance;
+		this.messageTypeCode = messageTypeCode;
+		this.overdraftLimit = overdraftLimit;
+		this.sakaiSiteId = sakaiSiteId;
+		this.sakaiUserId = sakaiUserId;
+		this.accountName = accountName;
+		this.startdate = new Date(System.currentTimeMillis());
+	}
+
 	public Date getStartdate() {
 		return startdate;
 	}
@@ -89,21 +105,6 @@ public class SmsAccount extends BaseModel {
 
 	public void setEnddate(Date enddate) {
 		this.enddate = enddate;
-	}
-
-	/**
-	 * Instantiates a new sms account.
-	 */
-	public SmsAccount(Float balance, String messageTypeCode,
-			Float overdraftLimit, String sakaiSiteId, String sakaiUserId,
-			String accountName) {
-		super();
-		this.balance = balance;
-		this.messageTypeCode = messageTypeCode;
-		this.overdraftLimit = overdraftLimit;
-		this.sakaiSiteId = sakaiSiteId;
-		this.sakaiUserId = sakaiUserId;
-		this.accountName = accountName;
 	}
 
 	/**
