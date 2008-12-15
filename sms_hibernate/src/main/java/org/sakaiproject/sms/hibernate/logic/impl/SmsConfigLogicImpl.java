@@ -1,17 +1,17 @@
 /***********************************************************************************
  * SmsAccountLogicImpl.java
  * Copyright (c) 2008 Sakai Project/Sakai Foundation
- * 
- * Licensed under the Educational Community License, Version 2.0 (the "License"); 
- * you may not use this file except in compliance with the License. 
+ *
+ * Licensed under the Educational Community License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.osedu.org/licenses/ECL-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software 
- * distributed under the License is distributed on an "AS IS" BASIS, 
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
- * See the License for the specific language governing permissions and 
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
  * limitations under the License.
  *
  **********************************************************************************/
@@ -26,6 +26,7 @@ import org.hibernate.Session;
 import org.sakaiproject.sms.hibernate.dao.SmsDao;
 import org.sakaiproject.sms.hibernate.logic.SmsConfigLogic;
 import org.sakaiproject.sms.hibernate.model.SmsConfig;
+import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
 import org.sakaiproject.sms.hibernate.util.HibernateUtil;
 
 /**
@@ -91,18 +92,40 @@ public class SmsConfigLogicImpl extends SmsDao implements SmsConfigLogic {
 	 * 
 	 * @return the sms config by sakai site id
 	 */
-	public SmsConfig getSmsConfigBySakaiSiteId(String id) {
+	public SmsConfig getSmsConfigBySakaiSiteId(String sakaiSiteId) {
 		List<SmsConfig> configs = new ArrayList<SmsConfig>();
 		SmsConfig config = null;
 		Session s = HibernateUtil.getSession();
 		Query query = s
 				.createQuery("from SmsConfig conf where conf.sakaiSiteId = :id");
-		query.setParameter("id", id);
+		query.setParameter("id", sakaiSiteId);
 		configs = query.list();
 		if (configs.size() == 1) {
 			config = configs.get(0);
 		}
 		HibernateUtil.closeSession();
+		// Only used for development
+		if (SmsHibernateConstants.SMS_DEV_MODE && config == null) {
+			config = new SmsConfig();
+			config
+					.setGateWayReportTimeout(SmsHibernateConstants.GATEWAYREPORTTIMEOUT);
+			config
+					.setNotificationEmail(SmsHibernateConstants.NOTIFICATIONEMAIL);
+			config
+					.setNotificationEmailBilling("notificationBilling@instution.com");
+			config.setNotificationEmailSent("notificationSent@instution.com");
+			config.setPagingSize(SmsHibernateConstants.PAGINGSIZE);
+			config.setSakaiSiteId(sakaiSiteId);
+			config.setSakaiToolId("DummyToolId");
+			config.setSendSmsEnabled(true);
+			config.setSmsRetryMaxCount(SmsHibernateConstants.MAXIMUMRETRYCOUNT);
+			config
+					.setSmsRetryScheduleInterval(SmsHibernateConstants.RETRYSCHEDULEINTERVAL);
+			config
+					.setSmsTaskMaxLifeTime(SmsHibernateConstants.MAXIMUMTASKLIFETIME);
+			persistSmsConfig(config);
+
+		}
 		return config;
 	}
 

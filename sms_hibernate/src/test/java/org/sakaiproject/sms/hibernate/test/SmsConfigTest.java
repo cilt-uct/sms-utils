@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.sakaiproject.sms.hibernate.logic.impl.SmsConfigLogicImpl;
 import org.sakaiproject.sms.hibernate.model.SmsConfig;
+import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
 import org.sakaiproject.sms.hibernate.util.AbstractBaseTestCase;
 import org.sakaiproject.sms.hibernate.util.HibernateUtil;
 
@@ -103,13 +104,14 @@ public class SmsConfigTest extends AbstractBaseTestCase {
 		assertTrue("Object not created correctly", insertSmsConfig.exists());
 
 		try {
+			SmsHibernateConstants.SMS_DEV_MODE = false;
 			SmsConfig conf = logic.getSmsConfigBySakaiSiteId(testId);
 			assertNotNull("Object not found", conf);
 			assertEquals("Incorrect object returned", conf, insertSmsConfig);
 
 			conf = logic.getSmsConfigBySakaiSiteId("SomeOtherId");
 			assertNull("No object should be found", conf);
-
+			SmsHibernateConstants.SMS_DEV_MODE = true;
 		} finally {
 			logic.deleteSmsCongif(insertSmsConfig);
 		}
@@ -140,6 +142,16 @@ public class SmsConfigTest extends AbstractBaseTestCase {
 		} finally {
 			logic.deleteSmsCongif(insertSmsConfig);
 		}
+	}
+
+	/**
+	 * Test delete sms config.
+	 */
+	public void testFindByIdDevMode() {
+		SmsConfig getSmsConfig = logic
+				.getSmsConfigBySakaiSiteId(SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_ID);
+		assertNotNull(getSmsConfig);
+
 	}
 
 	/**
