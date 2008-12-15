@@ -105,27 +105,30 @@ public class SmsConfigLogicImpl extends SmsDao implements SmsConfigLogic {
 		}
 		HibernateUtil.closeSession();
 		if (config == null) {
-			config = new SmsConfig();
-			config
-					.setGateWayReportTimeout(SmsHibernateConstants.GATEWAYREPORTTIMEOUT);
-			config
-					.setNotificationEmail(SmsHibernateConstants.NOTIFICATIONEMAIL);
-			config
-					.setNotificationEmailBilling("notificationBilling@instution.com");
-			config.setNotificationEmailSent("notificationSent@instution.com");
-			config.setPagingSize(SmsHibernateConstants.PAGINGSIZE);
-			config.setSakaiSiteId(sakaiSiteId);
-			config.setSakaiToolId("DummyToolId");
-			config.setSendSmsEnabled(true);
-			config.setSmsRetryMaxCount(SmsHibernateConstants.MAXIMUMRETRYCOUNT);
-			config
-					.setSmsRetryScheduleInterval(SmsHibernateConstants.RETRYSCHEDULEINTERVAL);
-			config
-					.setSmsTaskMaxLifeTime(SmsHibernateConstants.MAXIMUMTASKLIFETIME);
+			config = createDefaultSmsConfig(sakaiSiteId);
 			persistSmsConfig(config);
 
 		}
 		return config;
+	}
+
+	public SmsConfig createDefaultSmsConfig(String sakaiSiteId) {
+		SmsConfig config = new SmsConfig();
+		config
+				.setGateWayReportTimeout(SmsHibernateConstants.GATEWAYREPORTTIMEOUT);
+		config.setNotificationEmail(SmsHibernateConstants.NOTIFICATIONEMAIL);
+		config.setNotificationEmailBilling("notificationBilling@instution.com");
+		config.setNotificationEmailSent("notificationSent@instution.com");
+		config.setPagingSize(SmsHibernateConstants.PAGINGSIZE);
+		config.setSakaiSiteId(sakaiSiteId);
+		config.setSakaiToolId("DummyToolId");
+		config.setSendSmsEnabled(true);
+		config.setSmsRetryMaxCount(SmsHibernateConstants.MAXIMUMRETRYCOUNT);
+		config
+				.setSmsRetryScheduleInterval(SmsHibernateConstants.RETRYSCHEDULEINTERVAL);
+		config.setSmsTaskMaxLifeTime(SmsHibernateConstants.MAXIMUMTASKLIFETIME);
+		return config;
+
 	}
 
 	/**
