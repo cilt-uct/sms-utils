@@ -17,7 +17,7 @@
  **********************************************************************************/
 package org.sakaiproject.sms.test;
 
-import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -78,11 +78,11 @@ public class SmppAPITest extends AbstractBaseTestCase {
 	 * @return
 	 */
 	public SmsTask insertNewTask(String sakaiID, String status,
-			Timestamp dateToSend, int attemptCount) {
+			Date dateToSend, int attemptCount) {
 		SmsTask insertTask = new SmsTask();
 		insertTask.setSakaiSiteId(sakaiID);
 		insertTask.setSmsAccountId(0);
-		insertTask.setDateCreated(new Timestamp(System.currentTimeMillis()));
+		insertTask.setDateCreated(new Date(System.currentTimeMillis()));
 		insertTask.setDateToSend(dateToSend);
 		insertTask.setStatusCode(status);
 		insertTask.setAttemptCount(0);
@@ -104,7 +104,7 @@ public class SmppAPITest extends AbstractBaseTestCase {
 		Set<SmsMessage> smsMessages = new HashSet<SmsMessage>();
 
 		SmsTask insertTask = insertNewTask("testSendMessagesToGateway",
-				SmsConst_DeliveryStatus.STATUS_PENDING, new Timestamp(System
+				SmsConst_DeliveryStatus.STATUS_PENDING, new Date(System
 						.currentTimeMillis()), 0);
 		assertTrue("Task for message not created", insertTask.exists());
 
@@ -141,7 +141,7 @@ public class SmppAPITest extends AbstractBaseTestCase {
 	public void testSendMessageToGateway() {
 		smsSmppImpl.connectToGateway();
 		SmsTask insertTask1 = insertNewTask("testSendMessageToGateway2",
-				SmsConst_DeliveryStatus.STATUS_PENDING, new Timestamp(System
+				SmsConst_DeliveryStatus.STATUS_PENDING, new Date(System
 						.currentTimeMillis()), 0);
 		Set<SmsMessage> smsMessages = new HashSet<SmsMessage>();
 		SmsMessage insertMessage1 = new SmsMessage();

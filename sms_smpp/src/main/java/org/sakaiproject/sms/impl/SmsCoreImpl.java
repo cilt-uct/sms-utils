@@ -17,8 +17,8 @@
  **********************************************************************************/
 package org.sakaiproject.sms.impl;
 
-import java.sql.Timestamp;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -148,11 +148,11 @@ public class SmsCoreImpl implements SmsCore {
 	 * @param sakaiToolId
 	 *            the sakai tool id
 	 */
-	public void insertNewTask(String deliverGroupId, Timestamp dateToSend,
+	public void insertNewTask(String deliverGroupId, Date dateToSend,
 			String messageBody, String sakaiToolId) {
 		SmsBilling billing = new SmsBillingImpl();
 		SmsTask smsTask = new SmsTask();
-		smsTask.setDateCreated(DateUtil.getCurrentTimestamp());
+		smsTask.setDateCreated(DateUtil.getCurrentDate());
 		smsTask.setSmsAccountId(billing.getAccountID("1", "1", 1));
 		smsTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
 		smsTask.setSakaiSiteId("sakaiSiteId");// TODO Populate from Sakai
@@ -235,8 +235,7 @@ public class SmsCoreImpl implements SmsCore {
 				Calendar now = Calendar.getInstance();
 				now.add(Calendar.MINUTE,
 						+(config.getSmsRetryScheduleInterval()));
-				smsTask.rescheduleDateToSend(new Timestamp(now
-						.getTimeInMillis()));
+				smsTask.rescheduleDateToSend(new Date(now.getTimeInMillis()));
 			}
 
 		} else {

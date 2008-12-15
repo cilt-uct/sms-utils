@@ -17,8 +17,8 @@
  **********************************************************************************/
 package org.sakaiproject.sms.test;
 
-import java.sql.Timestamp;
 import java.util.Calendar;
+import java.util.Date;
 
 import org.apache.log4j.Level;
 import org.sakaiproject.sms.hibernate.logic.impl.SmsConfigLogicImpl;
@@ -81,11 +81,11 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 	 * sakaiID is used to identify the temp task.
 	 */
 	public SmsTask insertNewTask(String sakaiID, String status,
-			Timestamp dateToSend, int attemptCount) {
+			Date dateToSend, int attemptCount) {
 		SmsTask insertTask = new SmsTask();
 		insertTask.setSakaiSiteId(sakaiID);
 		insertTask.setSmsAccountId(0);
-		insertTask.setDateCreated(new Timestamp(System.currentTimeMillis()));
+		insertTask.setDateCreated(new Date(System.currentTimeMillis()));
 		insertTask.setDateToSend(dateToSend);
 		insertTask.setStatusCode(status);
 		insertTask.setAttemptCount(0);
@@ -120,7 +120,7 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 	public void testProcessTaskFail() {
 		smsSmppImpl.connectToGateway();
 		SmsTask smsTask = insertNewTask("testProcessTaskFail",
-				SmsConst_DeliveryStatus.STATUS_PENDING, new Timestamp(System
+				SmsConst_DeliveryStatus.STATUS_PENDING, new Date(System
 						.currentTimeMillis()), 1);
 		smsSmppImpl.setLogLevel(Level.OFF);
 		LOG.info("Disconnecting from server for fail test ");
@@ -158,8 +158,8 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 		smsSmppImpl.setLogLevel(Level.OFF);
 		if (smsCoreImpl.getSmsSmpp().getConnectionStatus()) {
 			SmsTask smsTask = insertNewTask("testMessageStatusUpdate",
-					SmsConst_DeliveryStatus.STATUS_PENDING, new Timestamp(
-							System.currentTimeMillis()), 0);
+					SmsConst_DeliveryStatus.STATUS_PENDING, new Date(System
+							.currentTimeMillis()), 0);
 			smsTask.setSmsMessagesOnTask(smsCoreImpl.getDeliveryGroup(
 					"testMessageStatusUpdate", "group1", smsTask));
 			LOG
@@ -200,19 +200,19 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 
 			Calendar now = Calendar.getInstance();
 			SmsTask smsTask3 = insertNewTask("smsTask3",
-					SmsConst_DeliveryStatus.STATUS_PENDING, new Timestamp(now
+					SmsConst_DeliveryStatus.STATUS_PENDING, new Date(now
 							.getTimeInMillis()), 0);
 			now.add(Calendar.MINUTE, -15);
 			SmsTask smsTask2 = insertNewTask("smsTask2",
-					SmsConst_DeliveryStatus.STATUS_INCOMPLETE, new Timestamp(
-							now.getTimeInMillis()), 0);
+					SmsConst_DeliveryStatus.STATUS_INCOMPLETE, new Date(now
+							.getTimeInMillis()), 0);
 			now.add(Calendar.MINUTE, -55);
 			SmsTask smsTask1 = insertNewTask("smsTask1",
-					SmsConst_DeliveryStatus.STATUS_PENDING, new Timestamp(now
+					SmsConst_DeliveryStatus.STATUS_PENDING, new Date(now
 							.getTimeInMillis()), 0);
 			now.add(Calendar.MINUTE, 120);
 			SmsTask smsTask4 = insertNewTask("smsTask4",
-					SmsConst_DeliveryStatus.STATUS_RETRY, new Timestamp(now
+					SmsConst_DeliveryStatus.STATUS_RETRY, new Date(now
 							.getTimeInMillis()), 0);
 
 			assertEquals(true, smsTask1.getId().equals(

@@ -21,7 +21,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Properties;
 import java.util.Set;
@@ -185,7 +184,7 @@ public class SmsSmppImpl implements SmsSmpp {
 						smsMessage.setSmscDeliveryStatusCode(SmsStatusBridge
 								.getSmsDeliveryStatus((deliveryReceipt
 										.getFinalStatus())));
-						smsMessage.setDateDelivered(new Timestamp(System
+						smsMessage.setDateDelivered(new Date(System
 								.currentTimeMillis()));
 						if (SmsStatusBridge
 								.getSmsDeliveryStatus((deliveryReceipt

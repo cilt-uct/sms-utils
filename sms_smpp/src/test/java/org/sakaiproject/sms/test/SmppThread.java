@@ -17,7 +17,7 @@
  **********************************************************************************/
 package org.sakaiproject.sms.test;
 
-import java.sql.Timestamp;
+import java.util.Date;
 
 import net.sourceforge.groboutils.junit.v1.TestRunnable;
 
@@ -73,11 +73,11 @@ class SmppThread extends TestRunnable {
 	 * sakaiID is used to identify the temp task.
 	 */
 	public SmsTask insertNewTask(String sakaiID, String status,
-			Timestamp dateToSend, int attemptCount) {
+			Date dateToSend, int attemptCount) {
 		SmsTask insertTask = new SmsTask();
 		insertTask.setSakaiSiteId(sakaiID);
 		insertTask.setSmsAccountId(0);
-		insertTask.setDateCreated(new Timestamp(System.currentTimeMillis()));
+		insertTask.setDateCreated(new Date(System.currentTimeMillis()));
 		insertTask.setDateToSend(dateToSend);
 		insertTask.setStatusCode(status);
 		insertTask.setAttemptCount(0);
@@ -95,7 +95,7 @@ class SmppThread extends TestRunnable {
 	public void runTest() throws Throwable {
 		LOG.info(sessionName + ": sending " + message_count + " to gateway...");
 		SmsTask insertTask = insertNewTask(this.sessionName,
-				SmsConst_DeliveryStatus.STATUS_PENDING, new Timestamp(System
+				SmsConst_DeliveryStatus.STATUS_PENDING, new Date(System
 						.currentTimeMillis()), 0);
 		for (int i = 0; i < message_count; i++) {
 			SmsMessage message = new SmsMessage();
