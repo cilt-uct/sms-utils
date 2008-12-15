@@ -26,7 +26,9 @@ import org.apache.log4j.Level;
 import org.sakaiproject.sms.api.SmsBilling;
 import org.sakaiproject.sms.api.SmsCore;
 import org.sakaiproject.sms.api.SmsSmpp;
+import org.sakaiproject.sms.hibernate.logic.SmsConfigLogic;
 import org.sakaiproject.sms.hibernate.logic.SmsTaskLogic;
+import org.sakaiproject.sms.hibernate.model.SmsConfig;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
@@ -47,6 +49,16 @@ public class SmsCoreImpl implements SmsCore {
 	public SmsSmpp smsSmpp = null;
 
 	public SmsTaskLogic smsTaskLogic = null;
+
+	public SmsConfigLogic smsConfigLogic = null;
+
+	public SmsConfigLogic getSmsConfigLogic() {
+		return smsConfigLogic;
+	}
+
+	public void setSmsConfigLogic(SmsConfigLogic smsConfigLogic) {
+		this.smsConfigLogic = smsConfigLogic;
+	}
 
 	public void setSmsSmpp(SmsSmpp smsSmpp) {
 		this.smsSmpp = smsSmpp;
@@ -141,9 +153,7 @@ public class SmsCoreImpl implements SmsCore {
 		SmsBilling billing = new SmsBillingImpl();
 		SmsTask smsTask = new SmsTask();
 		smsTask.setDateCreated(DateUtil.getCurrentTimestamp());
-		smsTask.setSmsAccountId(billing.getAccountID(1, 1, 1));// TODO populate
-		// args with
-		// correct alues
+		smsTask.setSmsAccountId(billing.getAccountID("1", "1", 1));
 		smsTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
 		smsTask.setSakaiSiteId("sakaiSiteId");// TODO Populate from Sakai
 		smsTask.setMessageTypeId(SmsHibernateConstants.MESSAGE_TYPE_OUTGOING);
@@ -201,9 +211,11 @@ public class SmsCoreImpl implements SmsCore {
 	 * See http://jira.sakaiproject.org/jira/browse/SMS-9
 	 */
 	public void processTask(SmsTask smsTask) {
+		SmsConfig config = smsConfigLogic.getSmsConfigBySakaiSiteId(smsTask
+				.getSakaiSiteId());
 		smsTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_BUSY);
 		smsTask.setAttemptCount((smsTask.getAttemptCount()) + 1);
-		if (smsTask.getAttemptCount() < SmsHibernateConstants.MAXIMUM_RETRY_COUNT) {
+		if (smsTask.getAttemptCount() < config.getSmsRetryMaxCount()) {
 			if (smsTask.getAttemptCount() <= 1) {
 				smsTask.setSmsMessagesOnTask(this.getDeliveryGroup(smsTask
 						.getSakaiSiteId(), smsTask.getDeliveryGroupId(),
@@ -222,7 +234,7 @@ public class SmsCoreImpl implements SmsCore {
 							SmsConst_DeliveryStatus.STATUS_RETRY)) {
 				Calendar now = Calendar.getInstance();
 				now.add(Calendar.MINUTE,
-						+(SmsHibernateConstants.RETRY_SCHEDULE_INTERVAL));
+						+(config.getSmsRetryScheduleInterval()));
 				smsTask.rescheduleDateToSend(new Timestamp(now
 						.getTimeInMillis()));
 			}
