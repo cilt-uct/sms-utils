@@ -22,6 +22,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.sakaiproject.sms.hibernate.logic.SmsConfigLogic;
 import org.sakaiproject.sms.hibernate.model.SmsConfig;
+import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
 import org.sakaiproject.sms.otp.SmsConfigLocator;
 import org.springframework.util.Assert;
 
@@ -50,7 +51,7 @@ public class SmsConfigActionBean {
 		
 		//TODO hard code id for now
 		SmsConfig smsConfig = (SmsConfig) smsConfigLocator
-		.locateBean("3");
+		.locateBean(SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_ID);
 		
 		//TODO: find out if this should be the case
 		//		if(smsConfig.getSmsEnabled().equals(Boolean.FALSE))

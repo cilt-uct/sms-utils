@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.sakaiproject.sms.beans.ActionResults;
+import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
 import org.sakaiproject.sms.otp.SmsConfigLocator;
 
 import uk.org.ponder.rsf.components.ELReference;
@@ -45,7 +46,6 @@ import uk.org.ponder.rsf.viewstate.ViewParameters;
 public class SmsConfigProducer implements ViewComponentProducer, NavigationCaseReporter{
 
 	public static final String VIEW_ID = "SmsConfig";
-	public static final String HARD_CODE_ID = "3";
 	
 	public String getViewID() {
 		return VIEW_ID;
@@ -55,7 +55,7 @@ public class SmsConfigProducer implements ViewComponentProducer, NavigationCaseR
 			ComponentChecker checker) {
 		
 		String smsConfigOTP = SmsConfigLocator.LOCATOR_NAME + "."
-		+ HARD_CODE_ID;
+		+ SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_ID;
 				 
 		UIMessage.make(tofill, "page-title", "sms.config.title");
 		UIForm smsConfigform = UIForm.make(tofill, "sms-config-form");
