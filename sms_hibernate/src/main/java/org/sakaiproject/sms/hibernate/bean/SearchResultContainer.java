@@ -69,8 +69,13 @@ public class SearchResultContainer<T extends BaseModel> {
 		if ((totalResultSetSize.longValue() % SmsHibernateConstants.DEFAULT_PAGE_SIZE) > 0) {
 			paratialPage = 1;
 		}
-		return (int) (totalResultSetSize.longValue() / SmsHibernateConstants.DEFAULT_PAGE_SIZE)
+		int pageNumber = (int) (totalResultSetSize.longValue() / SmsHibernateConstants.DEFAULT_PAGE_SIZE)
 				+ paratialPage;
+		
+		if(pageNumber == 0)
+			return 1;
+		
+		return pageNumber;
 	}
 
 	/**
@@ -112,6 +117,7 @@ public class SearchResultContainer<T extends BaseModel> {
 
 	}
 
+	@Override
 	public String toString() {
 		StringBuffer retStr = new StringBuffer("");
 
