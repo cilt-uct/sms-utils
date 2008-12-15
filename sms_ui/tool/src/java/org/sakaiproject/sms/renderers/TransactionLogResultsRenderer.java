@@ -119,8 +119,9 @@ public class TransactionLogResultsRenderer implements SearchResultsRenderer {
 
 				UIOutput.make(row, "row-data-account-number", NullHandling
 						.safeToString(smsTransaction.getSmsAccount().getId()));
-				UIOutput.make(row, "row-data-transaction-type", smsTransaction
-						.getTransactionTypeCode());
+				UIOutput.make(row, "row-data-transaction-type", NullHandling
+						.safeToString(smsTransaction
+						.getTransactionTypeCode()));
 				UIOutput.make(row, "row-data-transaction-date", NullHandling
 						.safeToString(smsTransaction.getTransactionDate()));
 				UIOutput.make(row, "row-data-transaction-credits", NullHandling

@@ -5,20 +5,29 @@ import java.util.Date;
 
 public class NullHandling {
 
+	
+	public static String safeToString(String value){
+		
+		if(value == null)
+			return "N/A";
+		
+		return value;
+	}
+	
 	public static String safeToString(Number integer){
 		
 		if(integer == null)
 			return "N/A";
-		else
-			return integer.toString();
+		
+		return integer.toString();
 	}
 	
 	public static String safeToString(Timestamp timestamp){
 		
 		if(timestamp == null)
 			return "N/A";
-		else
-			return timestamp.toString();
+		
+		return timestamp.toString();
 	}
 	
 	public static boolean safeDateCheck(Date from, Date to){

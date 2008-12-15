@@ -119,19 +119,21 @@ public class MessageLogResultsRenderer implements SearchResultsRenderer {
 				UIBranchContainer row = UIBranchContainer.make(
 						searchResultsTable, "dataset:");
 
-				UIOutput.make(row, "row-data-group", smsMessage.getSmsTask().getDeliveryGroupId());
-				UIOutput.make(row, "row-data-tool-name", smsMessage
-						.getSmsTask().getSakaiToolName());
-				UIOutput.make(row, "row-data-sender", smsMessage.getSmsTask()
-						.getSenderUserName());
-				UIOutput.make(row, "row-data-receiver", smsMessage.getSakaiUserId());
-				UIOutput.make(row, "row-data-mobile-number", smsMessage
-						.getMobileNumber());
+				UIOutput.make(row, "row-data-group", NullHandling
+						.safeToString(smsMessage.getSmsTask().getDeliveryGroupId()));
+				UIOutput.make(row, "row-data-tool-name", NullHandling
+						.safeToString(smsMessage.getSmsTask().getSakaiToolName()));
+				UIOutput.make(row, "row-data-sender", NullHandling
+						.safeToString(smsMessage.getSmsTask().getSenderUserName()));
+				UIOutput.make(row, "row-data-receiver", NullHandling
+						.safeToString(smsMessage.getSakaiUserId()));
+				UIOutput.make(row, "row-data-mobile-number", NullHandling
+						.safeToString(smsMessage.getMobileNumber()));
 				UIOutput.make(row, "row-data-date-processed", NullHandling
 						.safeToString(smsMessage.getSmsTask()
 								.getDateProcessed()));
-				UIOutput.make(row, "row-data-status", smsMessage
-						.getStatusCode());
+				UIOutput.make(row, "row-data-status", NullHandling
+						.safeToString(smsMessage.getStatusCode()));
 			}
 		}
 	}

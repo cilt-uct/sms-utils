@@ -118,21 +118,21 @@ public class TaskListResultsRenderer implements SearchResultsRenderer {
 				UIBranchContainer row = UIBranchContainer.make(
 						searchResultsTable, "dataset:");
 
-				UIOutput.make(row, "row-data-group", smsTask
-						.getDeliveryGroupName());
+				UIOutput.make(row, "row-data-group", NullHandling
+						.safeToString(smsTask.getDeliveryGroupName()));
 				UIOutput.make(row, "row-data-size-estimate", NullHandling
 						.safeToString(smsTask.getGroupSizeEstimate()));
 				UIOutput.make(row, "row-data-size-actual", NullHandling
 						.safeToString(smsTask.getGroupSizeActual()));
-				UIOutput.make(row, "row-data-tool-name", smsTask
-						.getSakaiToolName());
-				UIOutput.make(row, "row-data-sender", smsTask
-						.getSenderUserName());
+				UIOutput.make(row, "row-data-tool-name", NullHandling.safeToString(smsTask
+						.getSakaiToolName()));
+				UIOutput.make(row, "row-data-sender", NullHandling
+						.safeToString(smsTask.getSenderUserName()));
 				UIOutput
 						.make(row, "row-data-message", smsTask.getMessageBody());
 				UIOutput.make(row, "row-data-process-date", NullHandling
 						.safeToString(smsTask.getDateProcessed()));
-				UIOutput.make(row, "row-data-status", smsTask.getStatusCode());
+				UIOutput.make(row, "row-data-status", NullHandling.safeToString(smsTask.getStatusCode()));
 			}
 		}
 	}
