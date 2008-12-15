@@ -40,5 +40,12 @@ public class NullHandling {
 		
 		return true;
 	}
+
+	public static String safeToString(Date dateProcessed) {
+		if(dateProcessed == null)
+			return "N/A";
+		
+		return dateProcessed.toString();
+	}
 	
 }

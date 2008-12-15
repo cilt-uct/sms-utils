@@ -86,6 +86,9 @@ public class TaskListResultsRenderer implements SearchResultsRenderer {
 			UIMessage.make(searchResultsTable, "warning", "GeneralActionError");
 		else {
 			sortHeaderRenderer.makeSortingLink(searchResultsTable,
+					"tableheader-task-id:", sortViewParams, "id",
+					"sms.task-list-search-results.id");
+			sortHeaderRenderer.makeSortingLink(searchResultsTable,
 					"tableheader-group:", sortViewParams, "deliveryGroupName",
 					"sms.task-list-search-results.group");
 			sortHeaderRenderer.makeSortingLink(searchResultsTable,
@@ -117,7 +120,8 @@ public class TaskListResultsRenderer implements SearchResultsRenderer {
 
 				UIBranchContainer row = UIBranchContainer.make(
 						searchResultsTable, "dataset:");
-
+				UIOutput.make(row, "row-data-id", NullHandling
+						.safeToString(smsTask.getId()));
 				UIOutput.make(row, "row-data-group", NullHandling
 						.safeToString(smsTask.getDeliveryGroupName()));
 				UIOutput.make(row, "row-data-size-estimate", NullHandling
