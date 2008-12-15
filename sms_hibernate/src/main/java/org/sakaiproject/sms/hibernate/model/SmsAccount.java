@@ -56,8 +56,16 @@ public class SmsAccount extends BaseModel {
 	/** The account name. */
 	private String accountName;
 
+	/**
+	 * The date from when this account is active. The default is the date is was
+	 * created in database.
+	 */
 	private Date startdate;
 
+	/**
+	 * Date account is closed. End-dated accounts are not listed and cannot be
+	 * used, even if they contain funds.
+	 */
 	private Date enddate;
 
 	/**
