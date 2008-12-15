@@ -104,14 +104,9 @@ public class SmsConfigTest extends AbstractBaseTestCase {
 		assertTrue("Object not created correctly", insertSmsConfig.exists());
 
 		try {
-			SmsHibernateConstants.SMS_DEV_MODE = false;
 			SmsConfig conf = logic.getOrCreateSmsConfigBySakaiSiteId(testId);
 			assertNotNull("Object not found", conf);
 			assertEquals("Incorrect object returned", conf, insertSmsConfig);
-
-			conf = logic.getOrCreateSmsConfigBySakaiSiteId("SomeOtherId");
-			assertNull("No object should be found", conf);
-			SmsHibernateConstants.SMS_DEV_MODE = true;
 		} finally {
 			logic.deleteSmsCongif(insertSmsConfig);
 		}

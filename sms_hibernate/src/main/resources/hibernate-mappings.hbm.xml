@@ -93,7 +93,7 @@
         <id name="id" type="long" column="CONFIG_ID">
             <generator class="native"/>
         </id>
-        <property name="sakaiSiteId" type="string" column="SAKAI_SITE_ID" not-null="false" length="99" unique="true"/>
+        <property name="sakaiSiteId" type="string" column="SAKAI_SITE_ID" not-null="true" length="99" unique="true"/>
         <property name="sakaiToolId" type="string" column="SAKAI_TOOL_ID" not-null="false"  length="99" unique="false"/>
         <property name="smsEnabled" type="string" column="SMS_ENABLED" not-null="false" length="5"/>
         <property name="notificationEmail" type="string" column="NOTIFICATION_EMAIL" not-null="false"  length="100"/>
