@@ -1,24 +1,24 @@
 /***********************************************************************************
  * SmsTransaction.java
  * Copyright (c) 2008 Sakai Project/Sakai Foundation
- * 
- * Licensed under the Educational Community License, Version 2.0 (the "License"); 
- * you may not use this file except in compliance with the License. 
+ *
+ * Licensed under the Educational Community License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.osedu.org/licenses/ECL-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software 
- * distributed under the License is distributed on an "AS IS" BASIS, 
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
- * See the License for the specific language governing permissions and 
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
  * limitations under the License.
  *
  **********************************************************************************/
 
 package org.sakaiproject.sms.hibernate.model;
 
-import java.sql.Timestamp;
+import java.util.Date;
 
 import org.sakaiproject.sms.hibernate.util.DateUtil;
 
@@ -47,7 +47,7 @@ public class SmsTransaction extends BaseModel {
 	private Integer transactionCredits;
 
 	/** The transaction date. */
-	private Timestamp transactionDate;
+	private Date transactionDate;
 
 	/** The transaction type code. */
 	private String transactionTypeCode;
@@ -67,7 +67,7 @@ public class SmsTransaction extends BaseModel {
 	 */
 	public SmsTransaction(Float balance, String sakaiUserId,
 			Float transactionAmount, Integer transactionCredits,
-			Timestamp transactionDate, String transactionTypeCode) {
+			Date transactionDate, String transactionTypeCode) {
 		super();
 		this.balance = balance;
 		this.sakaiUserId = sakaiUserId;
@@ -110,7 +110,7 @@ public class SmsTransaction extends BaseModel {
 	 * 
 	 * @return the transaction date
 	 */
-	public Timestamp getTransactionDate() {
+	public Date getTransactionDate() {
 		return transactionDate;
 	}
 
@@ -169,8 +169,8 @@ public class SmsTransaction extends BaseModel {
 	 * @param transactionDate
 	 *            the new transaction date
 	 */
-	public void setTransactionDate(Timestamp transactionDate) {
-		this.transactionDate = DateUtil.getUsableTimeStamp(transactionDate);
+	public void setTransactionDate(Date transactionDate) {
+		this.transactionDate = DateUtil.getUsableDate(transactionDate);
 	}
 
 	/**

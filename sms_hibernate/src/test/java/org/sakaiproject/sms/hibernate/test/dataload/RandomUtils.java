@@ -1,6 +1,6 @@
 package org.sakaiproject.sms.hibernate.test.dataload;
 
-import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Random;
 
 public class RandomUtils {
@@ -11,32 +11,31 @@ public class RandomUtils {
 		super();
 	}
 
-	public Float getRandomFloat(int maxSize){	
+	public Float getRandomFloat(int maxSize) {
 		return random.nextFloat() * random.nextInt(maxSize);
 	}
-	
-	public Timestamp getBoundRandomDate(int year){
-		
+
+	public Date getBoundRandomDate(int year) {
+
 		int month = random.nextInt(11) + 1;
 		int day = random.nextInt(27) + 1;
 		int hour = random.nextInt(23);
 		int min = random.nextInt(59);
 		int sec = random.nextInt(59);
-		
-		return Timestamp.valueOf(year + "-" + padNumber(month) + "-" + padNumber(day)
-				+ " " + padNumber(hour) + ":" + padNumber(min) + ":" + padNumber(sec));
+
+		return new Date(year, month, day, hour, min, sec);
 	}
-	
-	public Integer getRandomInteger(int maxSize){
+
+	public Integer getRandomInteger(int maxSize) {
 		return random.nextInt(maxSize);
 	}
-	
-	private String padNumber(int numToPad){
-		if(numToPad < 10)
+
+	private String padNumber(int numToPad) {
+		if (numToPad < 10)
 			return "0" + numToPad;
-			
-		return "" +numToPad;
-			
+
+		return "" + numToPad;
+
 	}
-	
+
 }

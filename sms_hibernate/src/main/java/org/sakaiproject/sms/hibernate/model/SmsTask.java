@@ -18,7 +18,7 @@
 
 package org.sakaiproject.sms.hibernate.model;
 
-import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -44,20 +44,20 @@ public class SmsTask extends BaseModel {
 	private Integer creditEstimate;
 
 	/** The date-time when the task was successfully create. */
-	private Timestamp dateCreated;
+	private Date dateCreated;
 
 	/**
 	 * The date-time when the task was last processed. It might be processed a
 	 * few times until successful or until the attempt count reaches a
 	 * predefined maximum..
 	 */
-	private Timestamp dateProcessed;
+	private Date dateProcessed;
 
 	/**
 	 * Post dated for future delivery. If this date is equal to the current time
 	 * or null, the message will be processed immediately, if possible.
 	 */
-	private Timestamp dateToSend;
+	private Date dateToSend;
 
 	/** The Sakai group who will receive the message, empty if not applicable. */
 	private String deliveryGroupId;
@@ -177,7 +177,7 @@ public class SmsTask extends BaseModel {
 	 * 
 	 * @return the date created
 	 */
-	public Timestamp getDateCreated() {
+	public Date getDateCreated() {
 		return dateCreated;
 	}
 
@@ -186,7 +186,7 @@ public class SmsTask extends BaseModel {
 	 * 
 	 * @return the date processed
 	 */
-	public Timestamp getDateProcessed() {
+	public Date getDateProcessed() {
 		return dateProcessed;
 	}
 
@@ -196,7 +196,7 @@ public class SmsTask extends BaseModel {
 	 * @param dateToSend
 	 *            the date to send
 	 */
-	public void rescheduleDateToSend(Timestamp dateToSend) {
+	public void rescheduleDateToSend(Date dateToSend) {
 		this.setDateToSend(dateToSend);
 	}
 
@@ -205,7 +205,7 @@ public class SmsTask extends BaseModel {
 	 * 
 	 * @return the date to send
 	 */
-	public Timestamp getDateToSend() {
+	public Date getDateToSend() {
 		return dateToSend;
 	}
 
@@ -360,8 +360,8 @@ public class SmsTask extends BaseModel {
 	 * @param dateCreated
 	 *            the new date created
 	 */
-	public void setDateCreated(Timestamp dateCreated) {
-		this.dateCreated = DateUtil.getUsableTimeStamp(dateCreated);
+	public void setDateCreated(Date dateCreated) {
+		this.dateCreated = DateUtil.getUsableDate(dateCreated);
 	}
 
 	/**
@@ -370,8 +370,8 @@ public class SmsTask extends BaseModel {
 	 * @param dateProcessed
 	 *            the new date processed
 	 */
-	public void setDateProcessed(Timestamp dateProcessed) {
-		this.dateProcessed = DateUtil.getUsableTimeStamp(dateProcessed);
+	public void setDateProcessed(Date dateProcessed) {
+		this.dateProcessed = DateUtil.getUsableDate(dateProcessed);
 	}
 
 	/**
@@ -380,8 +380,8 @@ public class SmsTask extends BaseModel {
 	 * @param dateToSend
 	 *            the new date to send
 	 */
-	public void setDateToSend(Timestamp dateToSend) {
-		this.dateToSend = DateUtil.getUsableTimeStamp(dateToSend);
+	public void setDateToSend(Date dateToSend) {
+		this.dateToSend = DateUtil.getUsableDate(dateToSend);
 	}
 
 	/**

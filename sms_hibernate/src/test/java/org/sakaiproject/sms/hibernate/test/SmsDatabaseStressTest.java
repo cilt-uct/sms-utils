@@ -1,6 +1,6 @@
 package org.sakaiproject.sms.hibernate.test;
 
-import java.sql.Timestamp;
+import java.util.Date;
 
 import org.hibernate.Session;
 import org.sakaiproject.sms.hibernate.logic.impl.SmsMessageLogicImpl;
@@ -57,8 +57,8 @@ public class SmsDatabaseStressTest extends AbstractBaseTestCase {
 		smsTask = new SmsTask();
 		smsTask.setSakaiSiteId("sakaiSiteId");
 		smsTask.setSmsAccountId(1);
-		smsTask.setDateCreated(new Timestamp(System.currentTimeMillis()));
-		smsTask.setDateToSend(new Timestamp(System.currentTimeMillis()));
+		smsTask.setDateCreated(new Date(System.currentTimeMillis()));
+		smsTask.setDateToSend(new Date(System.currentTimeMillis()));
 		smsTask.setStatusCode("SC");
 		smsTask.setAttemptCount(2);
 		smsTask.setMessageBody("messageBody");

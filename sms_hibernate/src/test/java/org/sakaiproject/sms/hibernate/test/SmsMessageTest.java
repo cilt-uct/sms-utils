@@ -1,6 +1,5 @@
 package org.sakaiproject.sms.hibernate.test;
 
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -45,8 +44,8 @@ public class SmsMessageTest extends AbstractBaseTestCase {
 		insertTask = new SmsTask();
 		insertTask.setSakaiSiteId("sakaiSiteId");
 		insertTask.setSmsAccountId(1);
-		insertTask.setDateCreated(new Timestamp(System.currentTimeMillis()));
-		insertTask.setDateToSend(new Timestamp(System.currentTimeMillis()));
+		insertTask.setDateCreated(new Date(System.currentTimeMillis()));
+		insertTask.setDateToSend(new Date(System.currentTimeMillis()));
 		insertTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
 		insertTask.setAttemptCount(2);
 		insertTask.setMessageBody("messageBody");
@@ -196,8 +195,8 @@ public class SmsMessageTest extends AbstractBaseTestCase {
 		SmsTask insertTask = new SmsTask();
 		insertTask.setSakaiSiteId("sakaiSiteId");
 		insertTask.setSmsAccountId(1);
-		insertTask.setDateCreated(new Timestamp(System.currentTimeMillis()));
-		insertTask.setDateToSend(new Timestamp(System.currentTimeMillis()));
+		insertTask.setDateCreated(new Date(System.currentTimeMillis()));
+		insertTask.setDateToSend(new Date(System.currentTimeMillis()));
 		insertTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
 		insertTask.setAttemptCount(2);
 		insertTask.setMessageBody("messageCrit");
@@ -257,8 +256,8 @@ public class SmsMessageTest extends AbstractBaseTestCase {
 		SmsTask insertTask = new SmsTask();
 		insertTask.setSakaiSiteId("sakaiSiteId");
 		insertTask.setSmsAccountId(1);
-		insertTask.setDateCreated(new Timestamp(System.currentTimeMillis()));
-		insertTask.setDateToSend(new Timestamp(System.currentTimeMillis()));
+		insertTask.setDateCreated(new Date(System.currentTimeMillis()));
+		insertTask.setDateToSend(new Date(System.currentTimeMillis()));
 		insertTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
 		insertTask.setAttemptCount(2);
 		insertTask.setMessageBody("messageCrit");

@@ -1,26 +1,26 @@
 /***********************************************************************************
  * SmsMessageLogicImpl.java
  * Copyright (c) 2008 Sakai Project/Sakai Foundation
- * 
- * Licensed under the Educational Community License, Version 2.0 (the "License"); 
- * you may not use this file except in compliance with the License. 
+ *
+ * Licensed under the Educational Community License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.osedu.org/licenses/ECL-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software 
- * distributed under the License is distributed on an "AS IS" BASIS, 
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
- * See the License for the specific language governing permissions and 
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
  * limitations under the License.
  *
  **********************************************************************************/
 
 package org.sakaiproject.sms.hibernate.logic.impl;
 
-import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Criteria;
@@ -192,16 +192,15 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 
 			// Date to send start
 			if (searchBean.getDateFrom() != null) {
-				Timestamp date = DateUtil
-						.getTimestampFromStartDateString(searchBean
-								.getDateFrom());
+				Date date = DateUtil.getDateFromStartDateString(searchBean
+						.getDateFrom());
 				crit.add(Restrictions.ge("smsTask.dateToSend", date));
 			}
 
 			// Date to send end
 			if (searchBean.getDateTo() != null) {
-				Timestamp date = DateUtil
-						.getTimestampFromEndDateString(searchBean.getDateTo());
+				Date date = DateUtil.getDateFromEndDateString(searchBean
+						.getDateTo());
 				crit.add(Restrictions.le("smsTask.dateToSend", date));
 			}
 
@@ -264,8 +263,8 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 		SmsTask smsTask = new SmsTask();
 		smsTask.setSakaiSiteId("sakaiSiteId");
 		smsTask.setSmsAccountId(1);
-		smsTask.setDateCreated(new Timestamp(System.currentTimeMillis()));
-		smsTask.setDateToSend(new Timestamp(System.currentTimeMillis()));
+		smsTask.setDateCreated(new Date(System.currentTimeMillis()));
+		smsTask.setDateToSend(new Date(System.currentTimeMillis()));
 		smsTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
 		smsTask.setAttemptCount(2);
 		smsTask.setMessageBody("messageBody");

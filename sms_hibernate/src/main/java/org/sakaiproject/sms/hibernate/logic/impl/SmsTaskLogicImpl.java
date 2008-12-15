@@ -1,26 +1,26 @@
 /***********************************************************************************
  * SmsTaskLogicImpl.java
  * Copyright (c) 2008 Sakai Project/Sakai Foundation
- * 
- * Licensed under the Educational Community License, Version 2.0 (the "License"); 
- * you may not use this file except in compliance with the License. 
+ *
+ * Licensed under the Educational Community License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.osedu.org/licenses/ECL-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software 
- * distributed under the License is distributed on an "AS IS" BASIS, 
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
- * See the License for the specific language governing permissions and 
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
  * limitations under the License.
  *
  **********************************************************************************/
 
 package org.sakaiproject.sms.hibernate.logic.impl;
 
-import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Criteria;
@@ -106,7 +106,7 @@ public class SmsTaskLogicImpl extends SmsDao implements SmsTaskLogic {
 		hql.append(" and task.statusCode IN (:statusCodes) ");
 		hql.append(" order by task.dateToSend ");
 		Query query = HibernateUtil.getSession().createQuery(hql.toString());
-		query.setParameter("today", getTimestampCurrent(), Hibernate.TIMESTAMP);
+		query.setParameter("today", getCurrentDate(), Hibernate.TIMESTAMP);
 		query.setParameterList("statusCodes", new Object[] {
 				SmsConst_DeliveryStatus.STATUS_PENDING,
 				SmsConst_DeliveryStatus.STATUS_INCOMPLETE,
@@ -188,16 +188,15 @@ public class SmsTaskLogicImpl extends SmsDao implements SmsTaskLogic {
 
 			// Date to send start
 			if (searchBean.getDateFrom() != null) {
-				Timestamp date = DateUtil
-						.getTimestampFromStartDateString(searchBean
-								.getDateFrom());
+				Date date = DateUtil.getDateFromStartDateString(searchBean
+						.getDateFrom());
 				crit.add(Restrictions.ge("dateToSend", date));
 			}
 
 			// Date to send end
 			if (searchBean.getDateTo() != null) {
-				Timestamp date = DateUtil
-						.getTimestampFromEndDateString(searchBean.getDateTo());
+				Date date = DateUtil.getDateFromEndDateString(searchBean
+						.getDateTo());
 				crit.add(Restrictions.le("dateToSend", date));
 			}
 
@@ -227,7 +226,8 @@ public class SmsTaskLogicImpl extends SmsDao implements SmsTaskLogic {
 		SearchResultContainer<SmsTask> container = new SearchResultContainer<SmsTask>();
 		tasks = crit.list();
 		container.setTotalResultSetSize(new Long(tasks.size()));
-		container.calculateAndSetPageResults(tasks, searchBean.getCurrentPage());
+		container
+				.calculateAndSetPageResults(tasks, searchBean.getCurrentPage());
 
 		HibernateUtil.closeSession();
 		return container;

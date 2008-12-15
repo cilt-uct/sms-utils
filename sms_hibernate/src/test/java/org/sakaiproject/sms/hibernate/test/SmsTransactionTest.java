@@ -1,6 +1,5 @@
 package org.sakaiproject.sms.hibernate.test;
 
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
@@ -50,7 +49,7 @@ public class SmsTransactionTest extends AbstractBaseTestCase {
 		insertSmsTransaction = new SmsTransaction();
 		insertSmsTransaction.setBalance(1.32f);
 		insertSmsTransaction.setSakaiUserId("sakaiUserId");
-		insertSmsTransaction.setTransactionDate(new Timestamp(System
+		insertSmsTransaction.setTransactionDate(new Date(System
 				.currentTimeMillis()));
 		insertSmsTransaction.setTransactionTypeCode("TC");
 		insertSmsTransaction.setTransactionCredits(666);
@@ -133,7 +132,7 @@ public class SmsTransactionTest extends AbstractBaseTestCase {
 		SmsTransaction insertSmsTransaction = new SmsTransaction();
 		insertSmsTransaction.setBalance(1.32f);
 		insertSmsTransaction.setSakaiUserId("sakaiUserId");
-		insertSmsTransaction.setTransactionDate(new Timestamp(System
+		insertSmsTransaction.setTransactionDate(new Date(System
 				.currentTimeMillis()));
 		insertSmsTransaction.setTransactionTypeCode("TTC");
 		insertSmsTransaction.setTransactionCredits(666);
@@ -150,7 +149,8 @@ public class SmsTransactionTest extends AbstractBaseTestCase {
 			SearchFilterBean bean = new SearchFilterBean();
 			bean.setTransactionType(insertSmsTransaction
 					.getTransactionTypeCode());
-			bean.setNumber(insertSmsTransaction.getSmsAccount().getId().toString());
+			bean.setNumber(insertSmsTransaction.getSmsAccount().getId()
+					.toString());
 			bean.setDateFrom(new Date());
 			bean.setDateTo(new Date());
 			bean.setSender(insertSmsTransaction.getSakaiUserId());
@@ -194,7 +194,7 @@ public class SmsTransactionTest extends AbstractBaseTestCase {
 			SmsTransaction smsTransaction = new SmsTransaction();
 			smsTransaction.setBalance(1.32f);
 			smsTransaction.setSakaiUserId("sakaiUserId");
-			smsTransaction.setTransactionDate(new Timestamp(System
+			smsTransaction.setTransactionDate(new Date(System
 					.currentTimeMillis()));
 			smsTransaction.setTransactionTypeCode("TC");
 			smsTransaction.setTransactionCredits(i);
@@ -203,7 +203,6 @@ public class SmsTransactionTest extends AbstractBaseTestCase {
 
 			logic.persistSmsTransaction(smsTransaction);
 		}
-
 		try {
 
 			SearchFilterBean bean = new SearchFilterBean();

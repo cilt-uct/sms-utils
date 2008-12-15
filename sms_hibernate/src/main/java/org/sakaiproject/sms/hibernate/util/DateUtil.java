@@ -1,23 +1,22 @@
 /***********************************************************************************
  * DateUtil.java
  * Copyright (c) 2008 Sakai Project/Sakai Foundation
- * 
- * Licensed under the Educational Community License, Version 2.0 (the "License"); 
- * you may not use this file except in compliance with the License. 
+ *
+ * Licensed under the Educational Community License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.osedu.org/licenses/ECL-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software 
- * distributed under the License is distributed on an "AS IS" BASIS, 
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
- * See the License for the specific language governing permissions and 
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
  * limitations under the License.
  *
  **********************************************************************************/
 package org.sakaiproject.sms.hibernate.util;
 
-import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -68,63 +67,63 @@ public class DateUtil {
 	}
 
 	/**
-	 * Creates a Timestamp object from the startDate parameter for use in start
-	 * dates searches
+	 * Creates a Date object from the startDate parameter for use in start dates
+	 * searches
 	 * 
 	 * @param start
 	 *            date
-	 * @return time stamp for start date
+	 * @return the date for start date
 	 * @throws ParseException
 	 */
-	public static Timestamp getTimestampFromStartDateString(String startDate)
+	public static Date getDateFromStartDateString(String startDate)
 			throws ParseException {
 		startDate = startDate.concat(" 00:00:00");
-		return getUsableTimeStamp(new Timestamp(sdf.parse(startDate).getTime()));
+		return getUsableDate(new Date(sdf.parse(startDate).getTime()));
 	}
 
 	/**
-	 * Creates a Timestamp object from the startDate parameter for use in start
-	 * dates searches
+	 * Creates a Date object from the startDate parameter for use in start dates
+	 * searches
 	 * 
 	 * @param start
 	 *            date
-	 * @return time stamp for start date
+	 * @return Date for start date
 	 * @throws ParseException
 	 */
-	public static Timestamp getTimestampFromStartDateString(Date startDate)
+	public static Date getDateFromStartDateString(Date startDate)
 			throws ParseException {
 		String sStartDate = getDateString(startDate) + (" 00:00:00");
-		return getUsableTimeStamp(new Timestamp(sdf.parse(sStartDate).getTime()));
+		return getUsableDate(new Date(sdf.parse(sStartDate).getTime()));
 	}
 
 	/**
-	 * Creates a Timestamp object from the endDate parameter for use in end
-	 * dates searches
+	 * Creates a Date object from the endDate parameter for use in end dates
+	 * searches
 	 * 
 	 * @param end
 	 *            date
-	 * @return time stamp for end date
+	 * @return Date for end date
 	 * @throws ParseException
 	 */
-	public static Timestamp getTimestampFromEndDateString(String endDate)
+	public static Date getDateFromEndDateString(String endDate)
 			throws ParseException {
 		endDate = endDate.concat(" 23:59:59");
-		return getUsableTimeStamp(new Timestamp(sdf.parse(endDate).getTime()));
+		return getUsableDate(new Date(sdf.parse(endDate).getTime()));
 	}
 
 	/**
-	 * Creates a Timestamp object from the endDate parameter for use in end
-	 * dates searches
+	 * Creates a Date object from the endDate parameter for use in end dates
+	 * searches
 	 * 
 	 * @param end
 	 *            date
-	 * @return time stamp for end date
+	 * @return Date for end date
 	 * @throws ParseException
 	 */
-	public static Timestamp getTimestampFromEndDateString(Date endDate)
+	public static Date getDateFromEndDateString(Date endDate)
 			throws ParseException {
 		String sEndDate = getDateString(endDate) + (" 23:59:59");
-		return getUsableTimeStamp(new Timestamp(sdf.parse(sEndDate).getTime()));
+		return getUsableDate(new Date(sdf.parse(sEndDate).getTime()));
 	}
 
 	/**
@@ -140,7 +139,7 @@ public class DateUtil {
 	}
 
 	/**
-	 * Gets a usable time stamp.
+	 * Gets a usable Date.
 	 * <p>
 	 * When hibernate save a model class to the DB, MySql zero's the
 	 * milliseconds. This caused inconsistensies in the equeals methods of the
@@ -150,25 +149,25 @@ public class DateUtil {
 	 * @param dateCreated
 	 *            the date created
 	 * 
-	 * @return the usable time stamp
+	 * @return the usable Date
 	 */
-	public static Timestamp getUsableTimeStamp(Timestamp timeStamp) {
-		if (timeStamp != null) {
+	public static Date getUsableDate(Date date) {
+		if (date != null) {
 			Calendar cal = Calendar.getInstance();
-			cal.setTimeInMillis(timeStamp.getTime());
+			cal.setTimeInMillis(date.getTime());
 			cal.set(Calendar.MILLISECOND, 0);
-			return new Timestamp(cal.getTimeInMillis());
+			return new Date(cal.getTimeInMillis());
 		}
 		return null;
 	}
 
 	/**
-	 * Gets usable timestamp with the current date and time.
+	 * Gets usable Date with the current date and time.
 	 * 
-	 * @return the current timestamp
+	 * @return the current Date
 	 */
-	public static Timestamp getCurrentTimestamp() {
-		return getUsableTimeStamp(new Timestamp(System.currentTimeMillis()));
+	public static Date getCurrentDate() {
+		return getUsableDate(new Date(System.currentTimeMillis()));
 	}
 
 }

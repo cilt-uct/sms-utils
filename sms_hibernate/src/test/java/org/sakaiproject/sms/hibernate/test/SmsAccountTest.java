@@ -1,6 +1,6 @@
 package org.sakaiproject.sms.hibernate.test;
 
-import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 import org.sakaiproject.sms.hibernate.logic.impl.SmsAccountLogicImpl;
@@ -44,7 +44,7 @@ public class SmsAccountTest extends AbstractBaseTestCase {
 		insertSmsTransaction1.setSakaiUserId("SakaiUserId1");
 		insertSmsTransaction1.setTransactionAmount(100.00f);
 		insertSmsTransaction1.setTransactionCredits(100);
-		insertSmsTransaction1.setTransactionDate(new Timestamp(System
+		insertSmsTransaction1.setTransactionDate(new Date(System
 				.currentTimeMillis()));
 		insertSmsTransaction1.setTransactionTypeCode("TTC");
 
@@ -53,7 +53,7 @@ public class SmsAccountTest extends AbstractBaseTestCase {
 		insertSmsTransaction2.setSakaiUserId("SakaiUserId2");
 		insertSmsTransaction2.setTransactionAmount(100.00f);
 		insertSmsTransaction2.setTransactionCredits(100);
-		insertSmsTransaction2.setTransactionDate(new Timestamp(System
+		insertSmsTransaction2.setTransactionDate(new Date(System
 				.currentTimeMillis()));
 		insertSmsTransaction2.setTransactionTypeCode("TTC");
 	}
