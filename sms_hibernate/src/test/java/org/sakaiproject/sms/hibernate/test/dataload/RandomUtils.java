@@ -23,7 +23,7 @@ public class RandomUtils {
 		int min = random.nextInt(59);
 		int sec = random.nextInt(59);
 
-		return new Date(year, month, day, hour, min, sec);
+		return new Date(year - 1900, month, day, hour, min, sec);
 	}
 
 	public Integer getRandomInteger(int maxSize) {
