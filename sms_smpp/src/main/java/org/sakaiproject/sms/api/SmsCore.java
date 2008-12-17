@@ -41,6 +41,7 @@ public interface SmsCore {
 	 * @param sakaiSiteID
 	 *            (e.g. !admin)
 	 * @param sakaiGroupID
+	 *            (the Sakai group UID)
 	 * @param smsTask
 	 */
 	public Set getDeliveryGroup(String sakaiSiteID, String sakaiGroupID,
