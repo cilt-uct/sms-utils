@@ -1,6 +1,7 @@
 package org.sakaiproject.sms.util;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class NullHandling {
@@ -41,11 +42,13 @@ public class NullHandling {
 		return true;
 	}
 
-	public static String safeToString(Date dateProcessed) {
+	public static String safeToStringFormated(Date dateProcessed) {
 		if(dateProcessed == null)
 			return "N/A";
 		
-		return dateProcessed.toString();
+		SimpleDateFormat format = new SimpleDateFormat("yyyy/M/dd hh:mm");
+		
+		return format.format(dateProcessed);
 	}
 
 	

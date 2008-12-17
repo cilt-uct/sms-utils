@@ -130,7 +130,7 @@ public class MessageLogResultsRenderer implements SearchResultsRenderer {
 				UIOutput.make(row, "row-data-mobile-number", NullHandling
 						.safeToString(smsMessage.getMobileNumber()));
 				UIOutput.make(row, "row-data-date-processed", NullHandling
-						.safeToString(smsMessage.getDateDelivered()));
+						.safeToStringFormated(smsMessage.getDateDelivered()));
 				UIOutput.make(row, "row-data-status", NullHandling
 						.safeToString(smsMessage.getStatusCode()));
 			}

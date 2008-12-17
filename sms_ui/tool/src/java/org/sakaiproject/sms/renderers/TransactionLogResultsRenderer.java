@@ -123,7 +123,7 @@ public class TransactionLogResultsRenderer implements SearchResultsRenderer {
 						.safeToString(smsTransaction
 						.getTransactionTypeCode()));
 				UIOutput.make(row, "row-data-transaction-date", NullHandling
-						.safeToString(smsTransaction.getTransactionDate()));
+						.safeToStringFormated(smsTransaction.getTransactionDate()));
 				UIOutput.make(row, "row-data-transaction-credits", NullHandling
 						.safeToString(smsTransaction.getTransactionCredits()));
 				UIOutput.make(row, "row-data-transaction-amount", NullHandling
