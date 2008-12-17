@@ -70,7 +70,7 @@ public class SearchFilterBean {
 	 */
 	public SearchFilterBean() {
 		super();
-		newSearch = true;
+		newSearch = false;
 		dateFrom = DateUtil.getDateFromNow(-5);
 		dateTo = new Date();
 		currentPage = new Integer(1);
