@@ -25,12 +25,15 @@ import org.sakaiproject.sms.constants.SmsUiConstants;
 import org.sakaiproject.sms.otp.SmsAccountLocator;
 import org.sakaiproject.sms.params.IdParams;
 
+import uk.org.ponder.rsf.components.ELReference;
+import uk.org.ponder.rsf.components.UIBoundList;
 import uk.org.ponder.rsf.components.UICommand;
 import uk.org.ponder.rsf.components.UIContainer;
 import uk.org.ponder.rsf.components.UIELBinding;
 import uk.org.ponder.rsf.components.UIForm;
 import uk.org.ponder.rsf.components.UIInput;
 import uk.org.ponder.rsf.components.UIMessage;
+import uk.org.ponder.rsf.components.UISelect;
 import uk.org.ponder.rsf.evolvers.FormatAwareDateInputEvolver;
 import uk.org.ponder.rsf.flow.jsfnav.NavigationCase;
 import uk.org.ponder.rsf.flow.jsfnav.NavigationCaseReporter;
@@ -80,7 +83,22 @@ private FormatAwareDateInputEvolver dateEvolver;
 
 		UIMessage.make(form, "sakai-site-id-label",
 				"sms.sms-account.sakai-site-id");
-		UIInput.make(form, "sakai-site-id", accountOTP + ".sakaiSiteId");
+		
+		UISelect combo = UISelect.make(form, "sakai-site-id");
+		combo.selection = new UIInput();
+		combo.selection.valuebinding = new ELReference(accountOTP + ".sakaiSiteId");
+		UIBoundList comboValues = new UIBoundList();
+		comboValues.setValue(new String[] {"1", 
+										   "2", 
+										   "3",
+										   "4",
+										   "5"
+										});
+		combo.optionlist = comboValues;
+		UIBoundList comboNames = new UIBoundList();
+		comboNames.setValue(new String[] {"1", "2", "3", "4", "5"});
+		combo.optionnames = comboNames;	
+		
 		UIMessage.make(form, "sakai-user-id-label",
 				"sms.sms-account.sakai-user-id");
 		UIInput.make(form, "sakai-user-id", accountOTP + ".sakaiUserId");

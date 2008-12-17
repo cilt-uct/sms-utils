@@ -25,7 +25,9 @@
 			<label rsf:id="sakai-site-id-label" for="sakaiSiteId" >
 				Sakai Site Id
 			</label>
-			<input rsf:id="sakai-site-id" type="text" maxlength="99" />
+			<select id="task-status" rsf:id="sakai-site-id">
+				<option>All</option>
+			</select> 			
 		</p>	
 		<p class="shorttext required">
 			<label rsf:id="sakai-user-id-label" for="sakaiUserId" >
@@ -40,7 +42,7 @@
 			<input rsf:id="overdraft-limit" type="text"  />
 		</p>
 		<p class="shorttext required">
-			<label rsf:id="balance-label" for="balance" maxlength="10">
+			<label rsf:id="balance-label" for="balance" maxlength="10">`
 				Balance
 			</label>
 			<input rsf:id="balance" type="text"  />
