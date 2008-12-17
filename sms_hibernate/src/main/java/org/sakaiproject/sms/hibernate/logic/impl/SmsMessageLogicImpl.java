@@ -244,7 +244,7 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 	}
 
 	/**
-	 * Gets the new sms message instance test.
+	 * Create a new sms message. Only used for testing.
 	 * 
 	 * This method will instantiate and persist a SmsTask and return a
 	 * SmsMessage with the associated SmsTask object set on it.
@@ -274,10 +274,9 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 		smsTask.setGroupSizeEstimate(1);
 		smsTask.setGroupSizeActual(1);
 		smsTask.setDeliveryUserId("sakaiUserID");
-		smsTask.setDeliveryGroupId("SakaiGrouID");
+		smsTask.setDeliveryGroupId("SakaiGroupID");
+		smsTask.setDeliveryGroupName("SakaiGroupName");
 		smsTask.setCreditEstimate(1);
-
-		getTaskLogic().persistSmsTask(smsTask);
 
 		SmsMessage smsMessage = new SmsMessage();
 		smsMessage.setSmsTask(smsTask);
@@ -287,6 +286,7 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 		smsMessage.setSakaiUserId("sakaiUserId");
 		smsMessage.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
 
+		getTaskLogic().persistSmsTask(smsTask);
 		return smsMessage;
 	}
 }
