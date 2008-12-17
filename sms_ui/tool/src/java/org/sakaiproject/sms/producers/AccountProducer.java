@@ -88,15 +88,19 @@ private FormatAwareDateInputEvolver dateEvolver;
 		combo.selection = new UIInput();
 		combo.selection.valuebinding = new ELReference(accountOTP + ".sakaiSiteId");
 		UIBoundList comboValues = new UIBoundList();
-		comboValues.setValue(new String[] {"1", 
-										   "2", 
-										   "3",
-										   "4",
-										   "5"
+		comboValues.setValue(new String[] {"Sakai site 1", 
+										   "Sakai site 2", 
+										   "Sakai site 3",
+										   "Sakai site 4",
+										   "Sakai site 5"
 										});
 		combo.optionlist = comboValues;
 		UIBoundList comboNames = new UIBoundList();
-		comboNames.setValue(new String[] {"1", "2", "3", "4", "5"});
+		comboNames.setValue(new String[] {"Sakai site 1", 
+				   "Sakai site 2", 
+				   "Sakai site 3",
+				   "Sakai site 4",
+				   "Sakai site 5"});
 		combo.optionnames = comboNames;	
 		
 		UIMessage.make(form, "sakai-user-id-label",
