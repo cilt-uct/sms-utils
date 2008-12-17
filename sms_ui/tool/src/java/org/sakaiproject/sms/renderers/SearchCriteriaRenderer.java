@@ -86,7 +86,7 @@ public class SearchCriteriaRenderer{
 		}
 		
 		//No drop down for Transaction log
-		//TODO: refactor by splitting into 3 different classes once the UIDesign is more well known
+		//TODO: refactor by splitting into 3 different classes
 		if(labelDropDown.indexOf("Task") != -1)
 			createTaskDropDown(searchForm);
 		if(labelDropDown.indexOf("Message") != -1)
@@ -132,10 +132,11 @@ public class SearchCriteriaRenderer{
 										   SmsConst_DeliveryStatus.STATUS_SENT, 
 										   SmsConst_DeliveryStatus.STATUS_PENDING,
 										   SmsConst_DeliveryStatus.STATUS_FAIL,
+										   SmsConst_DeliveryStatus.STATUS_DELIVERED
 										});
 		combo.optionlist = comboValues;
 		UIBoundList comboNames = new UIBoundList();
-		comboNames.setValue(new String[] {"All", "Sent", "Pending", "Failed"});
+		comboNames.setValue(new String[] {"All", "Sent", "Pending", "Failed", "Delivered"});
 		combo.optionnames = comboNames;
 	}
 	

@@ -50,6 +50,10 @@
   <bean class="org.sakaiproject.sms.producers.SmsTestProducer" />
   <bean class="org.sakaiproject.sms.producers.SmsConfigProducer"/>
   
+  <bean class="org.sakaiproject.sms.producers.TaskListPopupProducer" >
+  	<property name="smsTaskLogic" ref="smsTaskLogic"/>
+  </bean>
+  
   
   <bean class="org.sakaiproject.sms.producers.AccountProducer" >
   	<property name="dateEvolver" ref="fieldDateInputEvolver" />
@@ -101,5 +105,6 @@
   	<property name="smsAccountLogic" ref="SmsAccountLogic"/>
   	<property name="messages" ref="targettedMessageList" />
   </bean>
+  
   
 </beans>
