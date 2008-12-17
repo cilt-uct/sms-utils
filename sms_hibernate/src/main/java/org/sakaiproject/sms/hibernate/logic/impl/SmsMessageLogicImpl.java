@@ -194,14 +194,14 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 			if (searchBean.getDateFrom() != null) {
 				Date date = DateUtil.getDateFromStartDateString(searchBean
 						.getDateFrom());
-				crit.add(Restrictions.ge("smsTask.dateToSend", date));
+				crit.add(Restrictions.ge("dateDelivered", date));
 			}
 
 			// Date to send end
 			if (searchBean.getDateTo() != null) {
 				Date date = DateUtil.getDateFromEndDateString(searchBean
 						.getDateTo());
-				crit.add(Restrictions.le("smsTask.dateToSend", date));
+				crit.add(Restrictions.le("dateDelivered", date));
 			}
 
 			// Sender name
