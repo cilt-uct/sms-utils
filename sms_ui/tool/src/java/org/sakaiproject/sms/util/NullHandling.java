@@ -51,5 +51,16 @@ public class NullHandling {
 		return format.format(dateProcessed);
 	}
 
+	public static String safeTruncatedToString(String value, int numberOfCharacters) {
+
+		if(value == null)
+			return "N/A";
+
+		if(value.length() <= numberOfCharacters)
+			return value;
+		
+		return value.substring(0, numberOfCharacters) + "...";
+	}
+
 	
 }

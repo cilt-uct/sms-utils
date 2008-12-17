@@ -130,7 +130,7 @@ public class TaskListResultsRenderer implements SearchResultsRenderer {
 				UIOutput.make(row, "row-data-sender", NullHandling
 						.safeToString(smsTask.getSenderUserName()));
 				UIOutput
-						.make(row, "row-data-message", smsTask.getMessageBody());
+						.make(row, "row-data-message", NullHandling.safeTruncatedToString(smsTask.getMessageBody(), 20));
 				UIOutput.make(row, "row-data-process-date", NullHandling
 						.safeToStringFormated(smsTask.getDateProcessed()));
 				UIOutput.make(row, "row-data-status", NullHandling.safeToString(smsTask.getStatusCode()));
