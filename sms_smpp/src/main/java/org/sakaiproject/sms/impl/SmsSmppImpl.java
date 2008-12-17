@@ -170,16 +170,6 @@ public class SmsSmppImpl implements SmsSmpp {
 					SmsMessage smsMessage = smsMessageLogic
 							.getSmsMessageBySmscMessageId(deliveryReceipt
 									.getId());
-					if (smsMessage == null) {
-						try {
-							Thread.sleep(2000);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
-						smsMessage = smsMessageLogic
-								.getSmsMessageBySmscMessageId(deliveryReceipt
-										.getId());
-					}
 					if (smsMessage != null) {
 						smsMessage.setSmscDeliveryStatusCode(SmsStatusBridge
 								.getSmsDeliveryStatus((deliveryReceipt
@@ -195,6 +185,10 @@ public class SmsSmppImpl implements SmsSmpp {
 
 						smsMessageLogic.persistSmsMessage(smsMessage);
 
+					} else {
+						LOG
+								.error("Delivery report received for message not in database. MessageSMSCID="
+										+ deliveryReceipt.getId());
 					}
 
 				} catch (InvalidDeliveryReceiptException e) {
