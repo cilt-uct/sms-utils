@@ -86,8 +86,11 @@ public class SearchCriteriaRenderer{
 		}
 		
 		//No drop down for Transaction log
-		if(labelDropDown.indexOf("Type") == -1)
-			createDropDown(searchForm);
+		//TODO: refactor by splitting into 3 different classes once the UIDesign is more well known
+		if(labelDropDown.indexOf("Task") != -1)
+			createTaskDropDown(searchForm);
+		if(labelDropDown.indexOf("Message") != -1)
+			createMessageDropDown(searchForm);
 		
 		UIInput dateTo = UIInput.make(searchForm, "date-to:", searchBeanName + "." + "dateTo");
 		dateEvolver.evolveDateInput(dateTo);
@@ -96,7 +99,7 @@ public class SearchCriteriaRenderer{
 		UICommand.make(searchForm, "search", createSearchELString("fireAction"));
 	}
 
-	private void createDropDown(UIForm searchForm) {
+	private void createTaskDropDown(UIForm searchForm) {
 		UIOutput.make(searchForm, "label-dropdown", labelDropDown);
 		
 		UISelect combo = UISelect.make(searchForm, "task-status");
@@ -114,6 +117,25 @@ public class SearchCriteriaRenderer{
 		combo.optionlist = comboValues;
 		UIBoundList comboNames = new UIBoundList();
 		comboNames.setValue(new String[] {"All", "Retry", "Sent", "Busy", "Pending", "Incomplete", "Failed"});
+		combo.optionnames = comboNames;
+	}
+	
+	
+	private void createMessageDropDown(UIForm searchForm) {
+		UIOutput.make(searchForm, "label-dropdown", labelDropDown);
+		
+		UISelect combo = UISelect.make(searchForm, "task-status");
+		combo.selection = new UIInput();
+		combo.selection.valuebinding = new ELReference(createSearchELString("status"));
+		UIBoundList comboValues = new UIBoundList();
+		comboValues.setValue(new String[] {"",  
+										   SmsConst_DeliveryStatus.STATUS_SENT, 
+										   SmsConst_DeliveryStatus.STATUS_PENDING,
+										   SmsConst_DeliveryStatus.STATUS_FAIL,
+										});
+		combo.optionlist = comboValues;
+		UIBoundList comboNames = new UIBoundList();
+		comboNames.setValue(new String[] {"All", "Sent", "Pending", "Failed"});
 		combo.optionnames = comboNames;
 	}
 	
