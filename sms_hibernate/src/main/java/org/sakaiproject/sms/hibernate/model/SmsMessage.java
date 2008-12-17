@@ -68,10 +68,16 @@ public class SmsMessage extends BaseModel {
 	 */
 	private boolean submitResult;
 
-	/** The smsc delivery status code. */
+	/**
+	 * The status code as received in the sms delivery report from the gateway.
+	 * See SmsConst_SmscDeliveryStatus.java for a list of possible codes.
+	 */
 	private Integer smscDeliveryStatusCode;
 
-	/** The smsc id. */
+	/**
+	 * A unique id for the specific gateway. When you switch to a new gateway,
+	 * this number must be incremented in smpp.properties.
+	 */
 	private String smscId;
 
 	/**
@@ -92,7 +98,6 @@ public class SmsMessage extends BaseModel {
 	 * @depricated Do not use
 	 */
 	public SmsMessage(String mobileNumber, String messageBody) {
-		// smsTask = new SmsTask("", "", "", 0, messageBody);
 		this.mobileNumber = mobileNumber;
 		this.statusCode = SmsConst_DeliveryStatus.STATUS_PENDING;
 
