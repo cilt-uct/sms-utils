@@ -137,7 +137,7 @@ public class SmsCoreImpl implements SmsCore {
 
 	/**
 	 * Add a new task to the sms task list, for eg. send message to group x at
-	 * time y. numbers of Sakai group x.
+	 * time y.
 	 * 
 	 * @param deliverGroupId
 	 *            the deliver group id

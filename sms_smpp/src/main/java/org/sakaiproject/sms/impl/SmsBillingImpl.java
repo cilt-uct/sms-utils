@@ -18,6 +18,7 @@
 package org.sakaiproject.sms.impl;
 
 import java.util.Date;
+import java.util.Set;
 
 import org.sakaiproject.sms.api.SmsBilling;
 
@@ -74,8 +75,9 @@ public class SmsBillingImpl implements SmsBilling {
 	 * @param startDate
 	 * @param endDate
 	 */
-	public void getAccTransactions(int accountID, Date startDate, Date endDate) {
+	public Set getAccTransactions(int accountID, Date startDate, Date endDate) {
 		// TODO Auto-generated method stub
+		return null;
 
 	}
 
@@ -110,8 +112,9 @@ public class SmsBillingImpl implements SmsBilling {
 	 * 
 	 * @param sakaiSiteID
 	 */
-	public void getAllSiteAccounts(String sakaiSiteID) {
+	public Set getAllSiteAccounts(String sakaiSiteID) {
 		// TODO Auto-generated method stub
+		return null;
 
 	}
 
@@ -120,9 +123,8 @@ public class SmsBillingImpl implements SmsBilling {
 	 * 
 	 * @param sakaiSiteID
 	 */
-	public void insertAccount(String sakaiSiteID) {
-		// TODO Auto-generated method stub
-
+	public boolean insertAccount(String sakaiSiteID) {
+		return false;
 	}
 
 	/**
@@ -146,9 +148,8 @@ public class SmsBillingImpl implements SmsBilling {
 	 * @param accountID
 	 * @param credits
 	 */
-	public void reserveCredits(int accountID, int credits) {
-		// TODO Auto-generated method stub
-
+	public boolean reserveCredits(int accountID, int credits) {
+		return false;
 	}
 
 }

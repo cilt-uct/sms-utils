@@ -19,6 +19,7 @@
 package org.sakaiproject.sms.api;
 
 import java.util.Date;
+import java.util.Set;
 
 /**
  * The billing service will handle all financial functions for the sms tool in
@@ -82,7 +83,7 @@ public interface SmsBilling {
 	 * @param startDate
 	 * @param endDate
 	 */
-	public void getAccTransactions(int accountID, Date startDate, Date endDate);
+	public Set getAccTransactions(int accountID, Date startDate, Date endDate);
 
 	/**
 	 * Return all accounts linked to the given Sakai site.
@@ -90,7 +91,7 @@ public interface SmsBilling {
 	 * @param sakaiSiteID
 	 *            (e.g. !admin)
 	 */
-	public void getAllSiteAccounts(String sakaiSiteID);
+	public Set getAllSiteAccounts(String sakaiSiteID);
 
 	/**
 	 * Convert the given credits to currency base on the defined conversion
@@ -106,7 +107,7 @@ public interface SmsBilling {
 	 * @param sakaiSiteID
 	 *            (e.g. !admin)
 	 */
-	public void insertAccount(String sakaiSiteID);
+	public boolean insertAccount(String sakaiSiteID);
 
 	/**
 	 * Insert a new transaction for the given account id.
@@ -126,6 +127,6 @@ public interface SmsBilling {
 	 * @param accountID
 	 * @param credits
 	 */
-	public void reserveCredits(int accountID, int credits);
+	public boolean reserveCredits(int accountID, int credits);
 
 }
