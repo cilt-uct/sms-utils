@@ -20,8 +20,9 @@ package org.sakaiproject.sms.hibernate.model;
 
 // TODO: Auto-generated Javadoc
 /**
- * Some site specific configuration info for the sms tool. COnfiguration info
- * could also be set up for a specific tool in a specific site or for all sites.
+ * Some site specific configuration info for the sms tool. Configuration info
+ * could also be set up for a specific tool in a specific site or sytem whide by
+ * leaving some fields empty.
  * 
  * @author Julian Wyngaard
  * @version 1.0
@@ -41,7 +42,7 @@ public class SmsConfig extends BaseModel {
 	 */
 	private String notificationEmail;
 
-	/** The sakai site id. */
+	/** The sakai site id (e.g. !admin) */
 	private String sakaiSiteId;
 
 	/** The sakai tool id, if empty, the config is for the site. */
@@ -50,13 +51,17 @@ public class SmsConfig extends BaseModel {
 	/** Enable or disable sms functionality for the site or tool. */
 	private String smsEnabled;
 
-	/** The sms retry max count. */
+	/**
+	 * The number of times to retry to send the message to gateway. Retries will
+	 * occur when the gateway could not be contacted or when the gateway bind
+	 * failed.
+	 */
 	private Integer smsRetryMaxCount;
 
 	/** The sms retry schedule interval. */
 	private Integer smsRetryScheduleInterval;
 
-	/** The sms task max life time. */
+	/** The duration in seconds for a task to be valid since in date to send. */
 	private Integer smsTaskMaxLifeTime;
 
 	/** The notification email billing. */
@@ -65,7 +70,7 @@ public class SmsConfig extends BaseModel {
 	/** The notification email sent. */
 	private String notificationEmailSent;
 
-	/** The paging size. */
+	/** Number of lines to show in grid windows. */
 	private Integer pagingSize;
 
 	/**
