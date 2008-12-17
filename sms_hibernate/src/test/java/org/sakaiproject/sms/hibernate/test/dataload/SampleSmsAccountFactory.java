@@ -5,12 +5,12 @@ import java.util.List;
 
 import org.sakaiproject.sms.hibernate.model.SmsAccount;
 
-public class SampleSmsAccountFactorty implements Listable {
+public class SampleSmsAccountFactory implements Listable {
 
 	private List<SmsAccount> smsAccounts;
 	private RandomUtils randomUtils = new RandomUtils();
 
-	public SampleSmsAccountFactorty() {
+	public SampleSmsAccountFactory() {
 		createSampleSmsAccounts();
 	}
 

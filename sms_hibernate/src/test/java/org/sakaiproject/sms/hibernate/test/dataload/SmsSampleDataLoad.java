@@ -15,9 +15,16 @@ import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.hibernate.model.SmsTransaction;
 
+/**
+ * Use the application to insert test data into the database. Increase the value
+ * of NUMBER_OF_REPETITIONS if you want to test the performance of the UI,
+ * especially paging in the grids.
+ * 
+ * 
+ */
 public class SmsSampleDataLoad {
 
-	public static final int NUMBER_OF_REPETITIONS = 100;
+	public static final int NUMBER_OF_REPETITIONS = 1000;
 
 	private SmsTransactionLogic smsTransactionLogic;
 	private SmsAccountLogic smsAccountLogic;
@@ -27,7 +34,7 @@ public class SmsSampleDataLoad {
 	private SampleSmsTaskFactory taskFactory;
 	private SampleSmsMessageFactory messageFactory;
 	private SampleSmsTransactionFactory testSMSTransactionFactory;
-	private SampleSmsAccountFactorty sampleSmsAccountFactorty;
+	private SampleSmsAccountFactory sampleSmsAccountFactorty;
 
 	public static void main(String[] args) {
 		SmsSampleDataLoad sampleDataLoad = new SmsSampleDataLoad();
@@ -107,7 +114,7 @@ public class SmsSampleDataLoad {
 	}
 
 	private void persistsSmsAccounts(SmsAccountLogic smsAccountLogic) {
-		sampleSmsAccountFactorty = new SampleSmsAccountFactorty();
+		sampleSmsAccountFactorty = new SampleSmsAccountFactory();
 
 		for (int i = 0; i < 1; i++) {
 
