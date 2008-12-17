@@ -68,13 +68,10 @@ public class TaskListResultsRenderer implements SearchResultsRenderer {
 		
 		boolean fail = false;
 		try {
-			if (NullHandling.safeDateCheck(searchFilterBean.getDateFrom(), searchFilterBean.getDateTo())) {
 				smsTaskList = smsTaskLogic.getSmsTasksForCriteria(searchFilterBean);
 				sortViewParams.current_count = smsTaskList.getNumberOfPages();
-			} else {
-				sortViewParams.current_count = 1;
-			}
-		} catch (SmsSearchException e) {
+		} 
+		catch (SmsSearchException e) {
 			LOG.error(e);
 			fail = true;
 		}

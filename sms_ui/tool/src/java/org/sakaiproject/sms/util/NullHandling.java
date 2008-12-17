@@ -47,5 +47,6 @@ public class NullHandling {
 		
 		return dateProcessed.toString();
 	}
+
 	
 }
