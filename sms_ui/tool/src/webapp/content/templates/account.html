@@ -45,6 +45,19 @@
 			</label>
 			<input rsf:id="balance" type="text"  />
 		</p>
+		
+		<p class="shorttext required">
+			<label rsf:id="end-date-label" for="balance" maxlength="10">
+				End Date
+			</label>
+			<span rsf:id="date-to:"> <input type="text"
+			id="start_date_dummy" name="start_date_dummy" value="YYYY/MM/DD"
+			size="12" maxlength="10" /> <img src="../images/calendar.gif"
+			alt="calendar" /> </span>
+		</p>
+		
+		
+		
 		<div class="act">
 			<input rsf:id="save-btn" class="active" value="Save" accesskey="s" type="submit" />
 			<input rsf:id="cancel-btn" value="Cancel" accesskey="x" type="button" onclick="history.go(-1)" />

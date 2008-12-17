@@ -49,7 +49,11 @@
   <!--  Producers -->
   <bean class="org.sakaiproject.sms.producers.SmsTestProducer" />
   <bean class="org.sakaiproject.sms.producers.SmsConfigProducer"/>
-  <bean class="org.sakaiproject.sms.producers.AccountProducer" />
+  
+  
+  <bean class="org.sakaiproject.sms.producers.AccountProducer" >
+  	<property name="dateEvolver" ref="fieldDateInputEvolver" />
+  </bean>
   
   <bean class="org.sakaiproject.sms.producers.BillingAdminProducer" >
   	<property name="smsAccountLogic" ref="SmsAccountLogic" />

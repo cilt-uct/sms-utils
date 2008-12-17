@@ -31,6 +31,7 @@ import uk.org.ponder.rsf.components.UIELBinding;
 import uk.org.ponder.rsf.components.UIForm;
 import uk.org.ponder.rsf.components.UIInput;
 import uk.org.ponder.rsf.components.UIMessage;
+import uk.org.ponder.rsf.evolvers.FormatAwareDateInputEvolver;
 import uk.org.ponder.rsf.flow.jsfnav.NavigationCase;
 import uk.org.ponder.rsf.flow.jsfnav.NavigationCaseReporter;
 import uk.org.ponder.rsf.view.ComponentChecker;
@@ -43,10 +44,21 @@ public class AccountProducer implements ViewComponentProducer,
 		NavigationCaseReporter, ViewParamsReporter {
 
 	public static final String VIEW_ID = "account";
-
+	
+private FormatAwareDateInputEvolver dateEvolver;
+	
+	public void setDateEvolver(FormatAwareDateInputEvolver dateEvolver) {
+		this.dateEvolver = dateEvolver;
+	}
+	
+	public void init(){
+		dateEvolver.setStyle(FormatAwareDateInputEvolver.DATE_INPUT);
+	}
+	
 	public void fillComponents(UIContainer tofill, ViewParameters viewparams,
 			ComponentChecker checker) {
 
+		init();
 		UIMessage.make(tofill, "page-title", "sms.sms-account.title");
 		UIMessage.make(tofill, "sms-account-heading", "sms.sms-account.title");
 
@@ -63,7 +75,7 @@ public class AccountProducer implements ViewComponentProducer,
 
 		UIMessage.make(form, "account-name-label",
 				"sms.sms-account.account-name");
-		UIInput input = UIInput.make(form, "account-name", accountOTP
+		UIInput.make(form, "account-name", accountOTP
 				+ ".accountName");
 
 		UIMessage.make(form, "sakai-site-id-label",
@@ -77,6 +89,11 @@ public class AccountProducer implements ViewComponentProducer,
 		UIInput.make(form, "overdraft-limit", accountOTP + ".overdraftLimit");
 		UIMessage.make(form, "balance-label", "sms.sms-account.balance");
 		UIInput.make(form, "balance", accountOTP + ".balance");
+		
+		UIMessage.make(form, "end-date-label", "sms.sms-account.end.date");
+		
+		UIInput dateTo = UIInput.make(form, "date-to:", accountOTP + ".enddate");
+		dateEvolver.evolveDateInput(dateTo);
 
 		form.addParameter(new UIELBinding(accountOTP + ".messageTypeCode",
 				SmsUiConstants.MESSAGE_TYPE_CODE));
