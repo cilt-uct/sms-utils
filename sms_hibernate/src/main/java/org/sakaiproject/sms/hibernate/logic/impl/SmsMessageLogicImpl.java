@@ -271,6 +271,11 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 		smsTask.setSenderUserName("senderUserName");
 		smsTask.setMaxTimeToLive(1);
 		smsTask.setDelReportTimeoutDuration(1);
+		smsTask.setGroupSizeEstimate(1);
+		smsTask.setGroupSizeActual(1);
+		smsTask.setDeliveryUserId("sakaiUserID");
+		smsTask.setDeliveryGroupId("SakaiGrouID");
+		smsTask.setCreditEstimate(1);
 
 		getTaskLogic().persistSmsTask(smsTask);
 

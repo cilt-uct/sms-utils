@@ -66,11 +66,13 @@ public interface SmsBilling {
 	 * Use Sakai siteID, Sakai userID and account type to get a valid account
 	 * id. AccountType is only outgoing masses for now.
 	 * 
-	 * @param siteID
-	 * @param userID
+	 * @param sakaiSiteID
+	 *            (e.g. !admin)
+	 * @param sakaiUserID
 	 * @param accountType
 	 */
-	public int getAccountID(String siteID, String userID, Integer accountType);
+	public int getAccountID(String sakaiSiteID, String sakaiUserID,
+			Integer accountType);
 
 	/**
 	 * Return a list of all transactions between startDate and endDate for the
@@ -86,6 +88,7 @@ public interface SmsBilling {
 	 * Return all accounts linked to the given Sakai site.
 	 * 
 	 * @param sakaiSiteID
+	 *            (e.g. !admin)
 	 */
 	public void getAllSiteAccounts(String sakaiSiteID);
 
@@ -101,6 +104,7 @@ public interface SmsBilling {
 	 * Insert a new account and return the new account id.
 	 * 
 	 * @param sakaiSiteID
+	 *            (e.g. !admin)
 	 */
 	public void insertAccount(String sakaiSiteID);
 

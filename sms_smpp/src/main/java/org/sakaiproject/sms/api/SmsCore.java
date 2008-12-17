@@ -39,6 +39,7 @@ public interface SmsCore {
 	 * numbers or opted out profiles.
 	 * 
 	 * @param sakaiSiteID
+	 *            (e.g. !admin)
 	 * @param sakaiGroupID
 	 * @param smsTask
 	 */

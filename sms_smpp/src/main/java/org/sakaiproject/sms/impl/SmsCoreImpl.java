@@ -137,7 +137,7 @@ public class SmsCoreImpl implements SmsCore {
 
 	/**
 	 * Add a new task to the sms task list, for eg. send message to group x at
-	 * time y. numbers of Sakai group x (phase II).
+	 * time y. numbers of Sakai group x.
 	 * 
 	 * @param deliverGroupId
 	 *            the deliver group id
@@ -165,7 +165,8 @@ public class SmsCoreImpl implements SmsCore {
 	}
 
 	/**
-	 * Calculate group size.
+	 * Calculate the number of user in the Sakai group that must receive the sms
+	 * message.
 	 * 
 	 * @param smsTask
 	 *            the sms task

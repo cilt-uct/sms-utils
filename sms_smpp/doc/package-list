@@ -1,4 +1,5 @@
 org.sakaiproject.sms.api
 org.sakaiproject.sms.impl
 org.sakaiproject.sms.model
+org.sakaiproject.sms.test
 org.sakaiproject.test

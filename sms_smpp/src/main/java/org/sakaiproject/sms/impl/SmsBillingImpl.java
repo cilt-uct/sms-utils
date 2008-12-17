@@ -99,7 +99,8 @@ public class SmsBillingImpl implements SmsBilling {
 		return 0;
 	}
 
-	public int getAccountID(String siteID, String userID, Integer accountType) {
+	public int getAccountID(String sakaiSiteID, String sakaiUserID,
+			Integer accountType) {
 		// TODO Auto-generated method stub
 		return 0;
 	}

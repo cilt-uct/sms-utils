@@ -40,9 +40,6 @@ public interface SmsScheduler {
 	 */
 	public int getStatus();
 
-	// log all activities
-	public void insertIntoDebugLog();
-
 	/**
 	 * Fire on timer to process the task queue. Apply row locking (software) on
 	 * message queue. Use the SmsCore service to do the actual work.
@@ -50,7 +47,7 @@ public interface SmsScheduler {
 	public void processQueue();
 
 	/**
-	 * Force a immediate process of the message queue.
+	 * Force a immediate process of the sms task list (queue).
 	 */
 	public void processQueueNow();
 
