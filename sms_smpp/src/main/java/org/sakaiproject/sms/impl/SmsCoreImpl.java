@@ -52,6 +52,16 @@ public class SmsCoreImpl implements SmsCore {
 
 	public SmsConfigLogic smsConfigLogic = null;
 
+	public SmsBilling smsBilling = null;
+
+	public SmsBilling getSmsBilling() {
+		return smsBilling;
+	}
+
+	public void setSmsBilling(SmsBilling smsBilling) {
+		this.smsBilling = smsBilling;
+	}
+
 	public SmsConfigLogic getSmsConfigLogic() {
 		return smsConfigLogic;
 	}
@@ -81,9 +91,9 @@ public class SmsCoreImpl implements SmsCore {
 	 */
 	// TODO Why pass three args when they can all come from the SmsTask?? Only 1
 	// arg needed.. smsTask
-	public Set<SmsMessage> getDeliveryGroup(String sakaiSiteID,
-			String sakaiGroupID, SmsTask smsTask) {
-		return getDummyDeliveryGroup(smsTask);
+	public Set<SmsMessage> generateSmsMessages(SmsTask smsTask,
+			Set<String> sakaiUserIDs) {
+		return generateDummySmsMessages(smsTask, sakaiUserIDs);
 		// TODO must make a Sakai call here
 	}
 
@@ -94,21 +104,39 @@ public class SmsCoreImpl implements SmsCore {
 	 * @param smsTask
 	 * @return
 	 */
-	private Set<SmsMessage> getDummyDeliveryGroup(SmsTask smsTask) {
+	private Set<SmsMessage> generateDummySmsMessages(SmsTask smsTask,
+			Set<String> sakaiUserIDs) {
 		Set<SmsMessage> messages = new HashSet<SmsMessage>();
-		String[] users = new String[100];
+
+		String[] users;
+		int numberOfMessages = (int) Math.round(Math.random() * 100);
+		if (sakaiUserIDs != null) {
+			users = sakaiUserIDs.toArray(new String[0]);
+			numberOfMessages = users.length;
+		} else {
+			users = new String[100];
+		}
+
 		String[] celnumbers = new String[100];
 		for (int i = 0; i < users.length; i++) {
-			users[i] = "SakaiUser" + i;
+			if (sakaiUserIDs == null) {
+				users[i] = "SakaiUser" + i;
+			}
 			celnumbers[i] = "+2773"
 					+ (int) Math.round(Math.random() * 10000000);
 		}
-		for (int i = 0; i < (int) Math.round(Math.random() * 100); i++) {
+		for (int i = 0; i < numberOfMessages; i++) {
 
 			SmsMessage message = new SmsMessage();
 			message.setMobileNumber(celnumbers[(int) Math
 					.round(Math.random() * 99)]);
-			message.setSakaiUserId(users[(int) Math.round(Math.random() * 99)]);
+			if (sakaiUserIDs != null) {
+				message.setSakaiUserId(users[i]);
+
+			} else {
+				message.setSakaiUserId(users[(int) Math
+						.round(Math.random() * 99)]);
+			}
 			message.setSmsTask(smsTask);
 			messages.add(message);
 		}
@@ -136,46 +164,79 @@ public class SmsCoreImpl implements SmsCore {
 	}
 
 	/**
-	 * Add a new task to the sms task list, for eg. send message to group x at
-	 * time y.
+	 * Add a new task to the sms task list, for eg. send message to all
+	 * administrators at 10:00, or get latest announcements and send to mobile
+	 * numbers of Sakai group x (phase II).
 	 * 
 	 * @param deliverGroupId
-	 *            the deliver group id
 	 * @param dateToSend
-	 *            the date to send
 	 * @param messageBody
-	 *            the message body
 	 * @param sakaiToolId
-	 *            the sakai tool id
+	 * @return
 	 */
-	public void insertNewTask(String deliverGroupId, Date dateToSend,
+	public SmsTask insertNewTask(String deliverGroupId, Date dateToSend,
 			String messageBody, String sakaiToolId) {
-		SmsBilling billing = new SmsBillingImpl();
+		return insertNewTask(deliverGroupId, null, null, dateToSend,
+				messageBody, sakaiToolId);
+	}
+
+	/**
+	 * Add a new task to the sms task list, for eg. send message to all
+	 * administrators at 10:00, or get latest announcements and send to mobile
+	 * numbers of Sakai group x (phase II).
+	 * 
+	 * @param sakaiUserIds
+	 * @param dateToSend
+	 * @param messageBody
+	 * @param sakaiToolId
+	 * @return
+	 */
+	public SmsTask insertNewTask(Set<String> sakaiUserIds, Date dateToSend,
+			String messageBody, String sakaiToolId) {
+
+		return insertNewTask(null, null, sakaiUserIds, dateToSend, messageBody,
+				sakaiToolId);
+
+	}
+
+	/**
+	 * Add a new task to the sms task list, for eg. send message to all
+	 * administrators at 10:00, or get latest announcements and send to mobile
+	 * numbers of Sakai group x (phase II).
+	 * 
+	 * @param deliverGroupId
+	 * @param mobileNumbers
+	 * @param sakaiUserIds
+	 * @param dateToSend
+	 * @param messageBody
+	 * @param sakaiToolId
+	 * @return
+	 */
+	public SmsTask insertNewTask(String deliverGroupId,
+			Set<String> mobileNumbers, Set<String> sakaiUserIds,
+			Date dateToSend, String messageBody, String sakaiToolId) {
+		// TODO mobileNumbers must be implemented
 		SmsTask smsTask = new SmsTask();
 		smsTask.setDateCreated(DateUtil.getCurrentDate());
-		smsTask.setSmsAccountId(billing.getAccountID("1", "1", 1));
+		smsTask.setSmsAccountId(smsBilling.getAccountID("1", "1", 1));
 		smsTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
-		smsTask.setSakaiSiteId("sakaiSiteId");// TODO Populate from Sakai
+		smsTask.setSakaiSiteId(SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_ID);
+		// TODO Populate from Sakai
 		smsTask.setMessageTypeId(SmsHibernateConstants.MESSAGE_TYPE_OUTGOING);
 		smsTask.setSakaiToolId("sakaiToolId");// TODO Populate from Sakai
 		smsTask.setSenderUserName("senderUserName");// TODO Populate from Sakai
 		smsTask.setDeliveryGroupName("delGroupName");// TODO Populate from Sakai
-		calculateGroupSize(smsTask);
-		smsTaskLogic.persistSmsTask(smsTask);
-	}
-
-	/**
-	 * Calculate the number of user in the Sakai group that must receive the sms
-	 * message.
-	 * 
-	 * @param smsTask
-	 *            the sms task
-	 */
-	private void calculateGroupSize(SmsTask smsTask) {
-		Set<SmsMessage> deliverGroupMessages = getDeliveryGroup(smsTask
-				.getSakaiSiteId(), smsTask.getDeliveryGroupId(), smsTask);
-		smsTask.setGroupSizeEstimate(deliverGroupMessages.size());
+		smsTask.setDateToSend(dateToSend);
+		smsTask.setAttemptCount(0);
+		smsTask.setMessageBody(messageBody);
+		Set<SmsMessage> deliverGroupMessages = generateSmsMessages(smsTask,
+				sakaiUserIds);
+		smsTask.setGroupSizeEstimate(smsTask.getSmsMessages().size());
 		smsTask.setCreditEstimate(deliverGroupMessages.size());
+		smsTask.setMaxTimeToLive(1000);
+		smsTask.setDelReportTimeoutDuration(1000);
+		smsTaskLogic.persistSmsTask(smsTask);
+		return smsTask;
 	}
 
 	/**
@@ -218,9 +279,11 @@ public class SmsCoreImpl implements SmsCore {
 		smsTask.setAttemptCount((smsTask.getAttemptCount()) + 1);
 		if (smsTask.getAttemptCount() < config.getSmsRetryMaxCount()) {
 			if (smsTask.getAttemptCount() <= 1) {
-				smsTask.setSmsMessagesOnTask(this.getDeliveryGroup(smsTask
-						.getSakaiSiteId(), smsTask.getDeliveryGroupId(),
-						smsTask));
+
+				// TODO: we need to generate messages based on a list of userIDs
+				// or mobileNumbers
+				smsTask.setSmsMessagesOnTask(this.generateSmsMessages(smsTask,
+						null));
 				LOG.info("Total messages on task:="
 						+ smsTask.getSmsMessages().size());
 				smsTaskLogic.persistSmsTask(smsTask);

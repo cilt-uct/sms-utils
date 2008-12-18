@@ -44,8 +44,7 @@ public interface SmsCore {
 	 *            (the Sakai group UID)
 	 * @param smsTask
 	 */
-	public Set getDeliveryGroup(String sakaiSiteID, String sakaiGroupID,
-			SmsTask smsTask);
+	public Set generateSmsMessages(SmsTask smsTask, Set<String> sakaiUserIDs);
 
 	/**
 	 * Find the next sms task to process from the task queue. Determine tasks
@@ -67,15 +66,26 @@ public interface SmsCore {
 	 * numbers of Sakai group x (phase II).
 	 * 
 	 * @param deliverGroupId
-	 *            the deliver group id
 	 * @param dateToSend
-	 *            the date to send
 	 * @param messageBody
-	 *            the message body
 	 * @param sakaiToolId
-	 *            the sakai tool id
+	 * @return
 	 */
-	public void insertNewTask(String deliverGroupId, Date dateToSend,
+	public SmsTask insertNewTask(String deliverGroupId, Date dateToSend,
+			String messageBody, String sakaiToolId);
+
+	/**
+	 * Add a new task to the sms task list, for eg. send message to all
+	 * administrators at 10:00, or get latest announcements and send to mobile
+	 * numbers of Sakai group x (phase II).
+	 * 
+	 * @param sakaiUserIds
+	 * @param dateToSend
+	 * @param messageBody
+	 * @param sakaiToolId
+	 * @return
+	 */
+	public SmsTask insertNewTask(Set<String> sakaiUserIds, Date dateToSend,
 			String messageBody, String sakaiToolId);
 
 	/**
