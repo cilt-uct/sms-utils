@@ -54,6 +54,7 @@ public class SmppAPITest extends AbstractBaseTestCase {
 		HibernateUtil.createSchema();
 		smsSmppImpl = new SmsSmppImpl();
 		smsSmppImpl.setSmsMessageLogic(new SmsMessageLogicImpl());
+		smsSmppImpl.setSmsTaskLogic(new SmsTaskLogicImpl());
 		smsSmppImpl.init();
 
 	}
@@ -62,6 +63,7 @@ public class SmppAPITest extends AbstractBaseTestCase {
 	 * The tearDown method safely calls disconnectGateWay at the end of every
 	 * test.
 	 */
+	@Override
 	protected void tearDown() throws Exception {
 		smsSmppImpl.disconnectGateWay();
 

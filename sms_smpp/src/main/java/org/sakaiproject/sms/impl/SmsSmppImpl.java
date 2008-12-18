@@ -57,6 +57,7 @@ import org.jsmpp.util.InvalidDeliveryReceiptException;
 import org.jsmpp.util.TimeFormatter;
 import org.sakaiproject.sms.api.SmsSmpp;
 import org.sakaiproject.sms.hibernate.logic.SmsMessageLogic;
+import org.sakaiproject.sms.hibernate.logic.SmsTaskLogic;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_SmscDeliveryStatus;
@@ -92,10 +93,19 @@ public class SmsSmppImpl implements SmsSmpp {
 	private String userName;
 	private String addressRange;
 	public SmsMessageLogic smsMessageLogic = null;
+	public SmsTaskLogic smsTaskLogic = null;
 	private int transactionTimer;
 	private int sendingDelay;
 	private String smscID;
 
+	public SmsTaskLogic getSmsTaskLogic() {
+		return smsTaskLogic;
+	}
+
+	public void setSmsTaskLogic(SmsTaskLogic smsTaskLogic) {
+		this.smsTaskLogic = smsTaskLogic;
+	}
+	
 	public SmsMessageLogic getSmsMessageLogic() {
 		return smsMessageLogic;
 	}
@@ -540,6 +550,7 @@ public class SmsSmppImpl implements SmsSmpp {
 				message.setStatusCode(SmsConst_DeliveryStatus.STATUS_SENT);
 				message
 						.setSmscDeliveryStatusCode(SmsConst_SmscDeliveryStatus.ENROUTE);
+				smsTaskLogic.persistSmsTask(message.getSmsTask());
 				smsMessageLogic.persistSmsMessage(message);
 				LOG.info("Message submitted, message_id is " + messageId);
 			} catch (PDUException e) {
@@ -585,4 +596,6 @@ public class SmsSmppImpl implements SmsSmpp {
 		LOG.setLevel(level);
 
 	}
+
+	
 }

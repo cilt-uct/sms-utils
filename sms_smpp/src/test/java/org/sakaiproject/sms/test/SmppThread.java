@@ -61,6 +61,7 @@ class SmppThread extends TestRunnable {
 		this.sessionName = sessionName;
 		this.smsSmppImpl = new SmsSmppImpl();
 		this.smsSmppImpl.setSmsMessageLogic(new SmsMessageLogicImpl());
+		this.smsSmppImpl.setSmsTaskLogic(new SmsTaskLogicImpl());
 		this.smsSmppImpl.init();
 		this.smsSmppImpl.setLogLevel(Level.WARN);
 		this.LOG.setLevel(Level.ALL);
@@ -92,6 +93,7 @@ class SmppThread extends TestRunnable {
 	/**
 	 * Send x messages to gateway inside a separate thread
 	 */
+	@Override
 	public void runTest() throws Throwable {
 		LOG.info(sessionName + ": sending " + message_count + " to gateway...");
 		SmsTask insertTask = insertNewTask(this.sessionName,

@@ -244,12 +244,12 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 	}
 
 	/**
-	 * Create a new sms message. Only used for testing.
+	 * A new sms message factory method. Only used for testing.
 	 * 
-	 * This method will instantiate and persist a SmsTask and return a
+	 * This method will instantiate a SmsTask and return a
 	 * SmsMessage with the associated SmsTask object set on it.
 	 * <p>
-	 * The message will not be persisted so this will need to be done manually.
+	 * The message will not be persisted.
 	 * 
 	 * @param mobileNumber
 	 *            the mobile number
@@ -286,7 +286,6 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 		smsMessage.setSakaiUserId("sakaiUserId");
 		smsMessage.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
 
-		getTaskLogic().persistSmsTask(smsTask);
 		return smsMessage;
 	}
 }

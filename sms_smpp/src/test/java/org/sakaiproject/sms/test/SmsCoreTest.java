@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.log4j.Level;
+import org.sakaiproject.sms.hibernate.logic.SmsTaskLogic;
 import org.sakaiproject.sms.hibernate.logic.impl.SmsConfigLogicImpl;
 import org.sakaiproject.sms.hibernate.logic.impl.SmsMessageLogicImpl;
 import org.sakaiproject.sms.hibernate.logic.impl.SmsTaskLogicImpl;
@@ -59,6 +60,7 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 		smsSmppImpl = new SmsSmppImpl();
 		smsCoreImpl.setSmsBilling(new SmsBillingImpl());
 		smsSmppImpl.setSmsMessageLogic(new SmsMessageLogicImpl());
+		smsSmppImpl.setSmsTaskLogic(new SmsTaskLogicImpl());
 		smsSmppImpl.init();
 		smsCoreImpl.setSmsSmpp(smsSmppImpl);
 		smsCoreImpl.setSmsTaskLogic(new SmsTaskLogicImpl());
@@ -78,6 +80,7 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 	 * The tearDown method safely calls disconnectGateWay at the end of every
 	 * test.
 	 */
+	@Override
 	protected void tearDown() throws Exception {
 		smsSmppImpl.disconnectGateWay();
 	}
