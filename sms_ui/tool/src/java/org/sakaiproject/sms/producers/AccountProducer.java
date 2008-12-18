@@ -81,27 +81,15 @@ private FormatAwareDateInputEvolver dateEvolver;
 		UIInput.make(form, "account-name", accountOTP
 				+ ".accountName");
 
+		UIMessage.make(form, "account-enabled-label",
+		"sms.sms-account.account.enabled");
+		
+		createAccountEnabledBooleanSelection(accountOTP, form);	
+		
 		UIMessage.make(form, "sakai-site-id-label",
 				"sms.sms-account.sakai-site-id");
 		
-		UISelect combo = UISelect.make(form, "sakai-site-id");
-		combo.selection = new UIInput();
-		combo.selection.valuebinding = new ELReference(accountOTP + ".sakaiSiteId");
-		UIBoundList comboValues = new UIBoundList();
-		comboValues.setValue(new String[] {"Sakai site 1", 
-										   "Sakai site 2", 
-										   "Sakai site 3",
-										   "Sakai site 4",
-										   "Sakai site 5"
-										});
-		combo.optionlist = comboValues;
-		UIBoundList comboNames = new UIBoundList();
-		comboNames.setValue(new String[] {"Sakai site 1", 
-				   "Sakai site 2", 
-				   "Sakai site 3",
-				   "Sakai site 4",
-				   "Sakai site 5"});
-		combo.optionnames = comboNames;	
+		createSelectableSakaiSiteIds(accountOTP, form);	
 		
 		UIMessage.make(form, "sakai-user-id-label",
 				"sms.sms-account.sakai-user-id");
@@ -127,6 +115,45 @@ private FormatAwareDateInputEvolver dateEvolver;
 				.setReturn(ActionResults.CANCEL);
 
 	}
+
+	private void createAccountEnabledBooleanSelection(String accountOTP,
+			UIForm form) {
+		
+		UISelect comboBoolean = UISelect.make(form, "account-enabled");
+		comboBoolean.selection = new UIInput();
+		comboBoolean.selection.valuebinding = new ELReference(accountOTP + ".accountEnabled");
+		UIBoundList comboBoolValues = new UIBoundList();
+		comboBoolValues.setValue(new String[] {"true", 
+				"false", 
+		});
+		comboBoolean.optionlist = comboBoolValues;
+		UIBoundList comboBoolNames = new UIBoundList();
+		comboBoolNames.setValue(new String[] {"true", 
+		"false"});
+		comboBoolean.optionnames = comboBoolNames;
+	}
+	
+	private void createSelectableSakaiSiteIds(String accountOTP, UIForm form) {
+		UISelect combo = UISelect.make(form, "sakai-site-id");
+		combo.selection = new UIInput();
+		combo.selection.valuebinding = new ELReference(accountOTP + ".sakaiSiteId");
+		UIBoundList comboValues = new UIBoundList();
+		comboValues.setValue(new String[] {"Sakai site 1", 
+										   "Sakai site 2", 
+										   "Sakai site 3",
+										   "Sakai site 4",
+										   "Sakai site 5"
+										});
+		combo.optionlist = comboValues;
+		UIBoundList comboNames = new UIBoundList();
+		comboNames.setValue(new String[] {"Sakai site 1", 
+				   "Sakai site 2", 
+				   "Sakai site 3",
+				   "Sakai site 4",
+				   "Sakai site 5"});
+		combo.optionnames = comboNames;
+	}
+
 
 	public String getViewID() {
 		return VIEW_ID;

@@ -109,8 +109,8 @@
 			not-null="true" />
 		<property name="enddate" type="timestamp" column="END_DATE"
 			not-null="false" />
-		<property name="accountEnabled" type="string" column="ACCOUNT_ENABLED"
-			not-null="false" length="1" />
+		<property name="accountEnabled" type="boolean" column="ACCOUNT_ENABLED"
+			not-null="true" />
 
 		<set name="smsTransactions" lazy="false" inverse="true"
 			cascade="all-delete-orphan">

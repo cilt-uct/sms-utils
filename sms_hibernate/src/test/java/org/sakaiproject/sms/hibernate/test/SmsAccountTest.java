@@ -38,7 +38,8 @@ public class SmsAccountTest extends AbstractBaseTestCase {
 		insertSmsAccount.setOverdraftLimit(10000.00f);
 		insertSmsAccount.setBalance(5000.00f);
 		insertSmsAccount.setAccountName("accountName");
-
+		insertSmsAccount.setAccountEnabled(true);
+		
 		insertSmsTransaction1 = new SmsTransaction();
 		insertSmsTransaction1.setBalance(100.00f);
 		insertSmsTransaction1.setSakaiUserId("SakaiUserId1");

@@ -33,8 +33,8 @@ import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
  * @version 1.0
  * @created 08-Dec-2008
  */
-public class SearchResultContainer<T extends BaseModel> {
-
+public class SearchResultContainer<T extends BaseModel> {	
+	
 	/** The total result set size. */
 	private Long totalResultSetSize;
 
