@@ -1,6 +1,8 @@
 package org.sakaiproject.sms.hibernate.model.constants;
 
-//TODO move to sms_core project later on
+/**
+ * These are the message status codes as defined by the SMPP protocol.
+ */
 
 public class SmsConst_SmscDeliveryStatus {
 
@@ -15,8 +17,6 @@ public class SmsConst_SmscDeliveryStatus {
 	public final static int EXPIRED = 3;
 
 	public final static int REJECTED = 8;
-
-	public final static int SCHEDULED = 0;
 
 	public final static int SKIPPED = 9;
 
