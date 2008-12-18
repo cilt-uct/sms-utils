@@ -265,7 +265,8 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 		smsTask.setSmsAccountId(1);
 		smsTask.setDateCreated(new Date(System.currentTimeMillis()));
 		smsTask.setDateToSend(new Date(System.currentTimeMillis()));
-		smsTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
+		smsTask.setDateProcessed(new Date(System.currentTimeMillis()));
+		smsTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_SENT);
 		smsTask.setAttemptCount(2);
 		smsTask.setMessageBody("messageBody");
 		smsTask.setSenderUserName("senderUserName");
@@ -277,7 +278,6 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 		smsTask.setDeliveryGroupId("SakaiGroupID");
 		smsTask.setDeliveryGroupName("SakaiGroupName");
 		smsTask.setCreditEstimate(1);
-
 		SmsMessage smsMessage = new SmsMessage();
 		smsMessage.setSmsTask(smsTask);
 		smsMessage.setMobileNumber(mobileNumber);
