@@ -23,47 +23,55 @@ import java.util.Set;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 
 /**
- * This service allows for the quick creation of smsTasks.
+ * This API allows for easy implementation of SMS services in an existing or new
+ * Sakai tool.
  * 
- * @author Etienne.Swanepoel
+ * @author etienne@psybergate.co.za
  * 
  */
 public interface SmsService {
 
 	/**
-	 * Add a new task to the sms task list, for eg. send message to all
-	 * administrators at 10:00, or get latest announcements and send to mobile
-	 * numbers of Sakai group x (phase II).
+	 * Add a new task to the sms task list, for eg. send message y to Sakai
+	 * group X ant time Z. If the task is future dated, then it be picked up by
+	 * the sms task (job) scheduler for processing.
 	 * 
-	 * @param deliverGroupId
+	 * @param sakaiGroupId
 	 * @param dateToSend
 	 * @param messageBody
 	 * @param sakaiToolId
 	 * @return
 	 */
-	public SmsTask insertNewTask(String deliverGroupId, Date dateToSend,
+	public SmsTask insertNewTask(String sakaiGroupId, Date dateToSend,
 			String messageBody, String sakaiToolId);
 
 	/**
-	 * Add a new task to the sms task list, for eg. send message to all
-	 * administrators at 10:00, or get latest announcements and send to mobile
-	 * numbers of Sakai group x (phase II).
+	 * Add a new task to the sms task list. In this case you must supply a list
+	 * of Sakai user ID's.
 	 * 
 	 * @param sakaiUserIds
 	 * @param dateToSend
 	 * @param messageBody
+	 *            , the actual sms body.
 	 * @param sakaiToolId
+	 *            , If the message originated from a sakai tool, then give id
+	 *            here, otherwise use null.
 	 * @return
 	 */
 	public SmsTask insertNewTask(Set<String> sakaiUserIds, Date dateToSend,
 			String messageBody, String sakaiToolId);
 
 	/**
-	 * Return true of the account has the required credits available. Take into
-	 * account overdraft limits, if applicable.
+	 * Return true of the account has the required credits available to send the
+	 * messages. The account number is calculated using either the Sakai site or
+	 * the Sakai user. If this returns false, then the UI must not allow the
+	 * user to proceed. If not handled by the UI, then the sms service will fail
+	 * the the sending of the message anyway.
 	 * 
-	 * @param accountID
-	 * @param creditsRequired
+	 * @param sakaiSiteID
+	 *            , (e.g. "!admin")
+	 * @param sakaiUserID
 	 */
-	public boolean checkSufficientCredits(int accountID, int creditsRequired);
+	public boolean checkSufficientCredits(String sakaiSiteID,
+			String sakaiUserID, int creditsRequired);
 }
