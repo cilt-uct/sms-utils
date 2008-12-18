@@ -69,6 +69,30 @@ public class SmsAccount extends BaseModel {
 	private Date enddate;
 
 	/**
+	 * Specifies if the sms account is enabled or disabled .If disabled no
+	 * message sending is possible.
+	 */
+	private boolean accountEnabled;
+
+	/**
+	 * Gets the account status.
+	 * 
+	 * @return
+	 */
+	public boolean isAccountEnabled() {
+		return accountEnabled;
+	}
+
+	/**
+	 * Sets the account status.
+	 * 
+	 * @param accountEnabled
+	 */
+	public void setAccountEnabled(boolean accountEnabled) {
+		this.accountEnabled = accountEnabled;
+	}
+
+	/**
 	 * Instantiates a new sms account.
 	 */
 	public SmsAccount() {
