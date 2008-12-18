@@ -16,22 +16,18 @@
 <form action="#" method="get" rsf:id="search-criteria">
 <table class="shorttext" border="0">
 	<tr>
-		<td><div id="id" rsf:id="label-id">Mobile Number:</div></td>
-		<td><input id="mobileNumber" style="width: 100px;" onkeyup="checkNumbers()" type="text" rsf:id="id"></input></td>
+		<td><div rsf:id="label-dropdown">Task Status:</div></td>
+		<td>
+			<select id="task-status" rsf:id="task-status">
+				<option>All</option>
+			</select> 
+		</td>
 		<td>Date From:</td>
 		<td>
 			<span rsf:id="date-from:"> <input type="text"
 			id="start_date_dummy" name="start_date_dummy" value="YYYY/MM/DD"
 			size="12" maxlength="10" /> <img src="../images/calendar.gif"
 			alt="calendar" /> </span>
-		</td>
-		<td><div rsf:id="tool-name-label">Tool Name:</div></td>
-		<td><input style="width: 100px;" id="toolName" type="text" rsf:id="tool-name"/></td>
-		<td><div rsf:id="label-dropdown">Task Status:</div></td>
-		<td>
-			<select id="task-status" rsf:id="task-status">
-				<option>All</option>
-			</select> 
 		</td>
 		<td>Date To:</td>
 		<td>
@@ -40,8 +36,12 @@
 			size="12" maxlength="10" /> <img src="../images/calendar.gif"
 			alt="calendar" /> </span>
 		</td>
+		<td><div id="id" rsf:id="label-id">Mobile Number:</div></td>
+		<td><input id="mobileNumber" style="width: 80px;" onkeyup="checkNumbers()" type="text" rsf:id="id"></input></td>
+		<td><div rsf:id="tool-name-label">Tool Name:</div></td>
+		<td><input style="width: 80px;" id="toolName" type="text" rsf:id="tool-name"/></td>
 		<td>Sender:</td>
-		<td><input style="width: 100px;" id="sender" type="text" rsf:id="sender"/></td>
+		<td><input style="width: 80px;" id="sender" type="text" rsf:id="sender"/></td>
 	</tr>
 </table>
 	<input rsf:id="search" type="submit" value="Search"/>

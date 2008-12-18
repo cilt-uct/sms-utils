@@ -69,6 +69,19 @@ public class SearchCriteriaRenderer{
 		
 		UIForm searchForm =  UIForm.make(searchCriteria, "search-criteria");
 		
+		//No drop down for Transaction log
+		//TODO: refactor by splitting into 3 different classes
+		if(labelDropDown.indexOf("Task") != -1)
+			createTaskDropDown(searchForm);
+		if(labelDropDown.indexOf("Message") != -1)
+			createMessageDropDown(searchForm);
+
+		UIInput dateFrom = UIInput.make(searchForm, "date-from:", searchBeanName + "." + "dateFrom");		
+		dateEvolver.evolveDateInput(dateFrom);
+
+		UIInput dateTo = UIInput.make(searchForm, "date-to:", searchBeanName + "." + "dateTo");
+		dateEvolver.evolveDateInput(dateTo);
+
 		//No Id field for Task
 		if(labelDropDown.indexOf("Task") == -1)
 			UIOutput.make(searchForm, "label-id", labelID);		
@@ -76,8 +89,6 @@ public class SearchCriteriaRenderer{
 		if(labelDropDown.indexOf("Task") == -1)
 			UIInput.make(searchForm, "id", createSearchELString("number"));
 		
-		UIInput dateFrom = UIInput.make(searchForm, "date-from:", searchBeanName + "." + "dateFrom");		
-		dateEvolver.evolveDateInput(dateFrom);
 		
 		//No Tool name search criteria
 		if(labelDropDown.indexOf("Type") == -1){
@@ -85,15 +96,7 @@ public class SearchCriteriaRenderer{
 			UIInput.make(searchForm, "tool-name", createSearchELString("toolName"));
 		}
 		
-		//No drop down for Transaction log
-		//TODO: refactor by splitting into 3 different classes
-		if(labelDropDown.indexOf("Task") != -1)
-			createTaskDropDown(searchForm);
-		if(labelDropDown.indexOf("Message") != -1)
-			createMessageDropDown(searchForm);
 		
-		UIInput dateTo = UIInput.make(searchForm, "date-to:", searchBeanName + "." + "dateTo");
-		dateEvolver.evolveDateInput(dateTo);
 		
 		UIInput.make(searchForm, "sender", createSearchELString("sender"));
 		UICommand.make(searchForm, "search", createSearchELString("fireAction"));
