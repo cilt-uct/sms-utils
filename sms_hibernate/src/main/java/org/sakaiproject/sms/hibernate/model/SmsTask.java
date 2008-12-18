@@ -579,7 +579,9 @@ public class SmsTask extends BaseModel {
 		Set<SmsMessage> filtered = new HashSet<SmsMessage>();
 		if (smsMessages != null) {
 			for (SmsMessage message : smsMessages) {
-				if (message.getSmscDeliveryStatusCode().equals(smscStatus)) {
+				if (message.getSmscDeliveryStatusCode() != null
+						&& message.getSmscDeliveryStatusCode().equals(
+								smscStatus)) {
 					filtered.add(message);
 				}
 			}
