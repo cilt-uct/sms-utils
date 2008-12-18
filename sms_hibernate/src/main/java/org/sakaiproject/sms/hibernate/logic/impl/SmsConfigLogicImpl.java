@@ -85,11 +85,10 @@ public class SmsConfigLogicImpl extends SmsDao implements SmsConfigLogic {
 	}
 
 	/**
-	 * Gets the sms config by sakai site id, no entry can be found 
-	 * a row is created with default values.
+	 * Gets the sms config by sakai site id. If no entry can be found for the
+	 * specified site, then a site config is created with default values.
 	 * 
-	 * @param id
-	 *            the id
+	 * @param sakaiSiteId
 	 * 
 	 * @return the sms config by sakai site id
 	 */
@@ -123,7 +122,7 @@ public class SmsConfigLogicImpl extends SmsDao implements SmsConfigLogic {
 		config.setPagingSize(SmsHibernateConstants.DEFAULT_PAGE_SIZE);
 		config.setSakaiSiteId(sakaiSiteId);
 		config.setSakaiToolId("DummyToolId");
-		config.setSendSmsEnabled(true);
+		config.setSendSmsEnabled(false);
 		config.setSmsRetryMaxCount(SmsHibernateConstants.MAXIMUM_RETRY_COUNT);
 		config
 				.setSmsRetryScheduleInterval(SmsHibernateConstants.RETRY_SCHEDULE_INTERVAL);

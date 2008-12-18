@@ -532,8 +532,9 @@ public class SmsSmppImpl implements SmsSmpp {
 								Alphabet.ALPHA_DEFAULT), smDefaultMsgId,
 						message.getMessageBody().getBytes());
 				message.setSmscMessageId(messageId);
-				message.setDebugInfo("Message submitted, message_id is "
-						+ messageId);
+				message
+						.setDebugInfo("Message sent to gateway, smsc message id is "
+								+ messageId);
 				message.setSubmitResult(true);
 				message.setSmscId(smscID);
 				message.setStatusCode(SmsConst_DeliveryStatus.STATUS_SENT);

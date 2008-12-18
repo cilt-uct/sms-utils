@@ -49,7 +49,7 @@ public class SmsTransaction extends BaseModel {
 	/** The transaction date. */
 	private Date transactionDate;
 
-	/** The transaction type code. */
+	/** The transaction type code. See SmsConst_Billing */
 	private String transactionTypeCode;
 
 	/** The Sms account. */
