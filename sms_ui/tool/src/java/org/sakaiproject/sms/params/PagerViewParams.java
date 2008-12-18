@@ -18,14 +18,17 @@
 
 package org.sakaiproject.sms.params;
 
-import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
+import org.sakaiproject.sms.hibernate.logic.SmsConfigLogic;
 
 import uk.org.ponder.rsf.viewstate.SimpleViewParameters;
 
 public class PagerViewParams extends SimpleViewParameters {
 
+	public SmsConfigLogic smsConfigLogic;
+	
+	
 	public int current_start = 1;
-	public int current_count = SmsHibernateConstants.DEFAULT_PAGE_SIZE;
+	public int current_count = 1;
 
 	public PagerViewParams() {
 	}
@@ -44,5 +47,9 @@ public class PagerViewParams extends SimpleViewParameters {
 	public String getParseSpec() {
 		// include a comma delimited list of the public properties in this class
 		return super.getParseSpec() + ",current_start,current_count";
+	}
+
+	public void setSmsConfigLogic(SmsConfigLogic smsConfigLogic) {
+		this.smsConfigLogic = smsConfigLogic;
 	}
 }
