@@ -45,6 +45,7 @@ public class SmsTransactionTest extends AbstractBaseTestCase {
 		insertSmsAccount.setOverdraftLimit(10000.00f);
 		insertSmsAccount.setBalance(5000.00f);
 		insertSmsAccount.setAccountName("accountname");
+		insertSmsAccount.setAccountEnabled(true);
 
 		insertSmsTransaction = new SmsTransaction();
 		insertSmsTransaction.setBalance(1.32f);
@@ -128,6 +129,7 @@ public class SmsTransactionTest extends AbstractBaseTestCase {
 		insertSmsAccount.setOverdraftLimit(10000.00f);
 		insertSmsAccount.setBalance(5000.00f);
 		insertSmsAccount.setAccountName("accountName");
+		insertSmsAccount.setAccountEnabled(true);
 
 		SmsTransaction insertSmsTransaction = new SmsTransaction();
 		insertSmsTransaction.setBalance(1.32f);
@@ -187,6 +189,7 @@ public class SmsTransactionTest extends AbstractBaseTestCase {
 		smsAccount.setOverdraftLimit(10000.00f);
 		smsAccount.setBalance(5000.00f);
 		smsAccount.setAccountName("accountname");
+		smsAccount.setAccountEnabled(true);
 		accountLogic.persistSmsAccount(smsAccount);
 
 		for (int i = 0; i < recordsToInsert; i++) {

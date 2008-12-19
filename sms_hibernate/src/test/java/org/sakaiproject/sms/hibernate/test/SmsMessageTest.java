@@ -209,6 +209,7 @@ public class SmsMessageTest extends AbstractBaseTestCase {
 		insertMessage.setMobileNumber("0721998919");
 		insertMessage.setSmscMessageId("criterai");
 		insertMessage.setSakaiUserId("criterai");
+		insertMessage.setDateDelivered(new Date(System.currentTimeMillis()));
 		insertMessage.setStatusCode(SmsConst_DeliveryStatus.STATUS_ERROR);
 
 		insertMessage.setSmsTask(insertTask);
@@ -275,6 +276,8 @@ public class SmsMessageTest extends AbstractBaseTestCase {
 			insertMessage.setSmsTask(insertTask);
 			insertTask.getSmsMessages().add(insertMessage);
 			insertMessage.setSmscMessageId("" + i);// To make unique
+			insertMessage
+					.setDateDelivered(new Date(System.currentTimeMillis()));
 		}
 
 		try {
@@ -282,7 +285,7 @@ public class SmsMessageTest extends AbstractBaseTestCase {
 
 			SearchFilterBean bean = new SearchFilterBean();
 			bean.setStatus(SmsConst_DeliveryStatus.STATUS_ERROR);
-			bean.setDateFrom(new Date());
+			bean.setDateFrom(new Date(System.currentTimeMillis() - 10000));
 			bean.setDateTo(new Date());
 			bean.setToolName(insertTask.getSakaiToolName());
 			bean.setSender(insertTask.getSenderUserName());
