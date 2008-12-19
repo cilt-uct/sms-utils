@@ -22,8 +22,8 @@ import org.sakaiproject.sms.hibernate.util.HibernateUtil;
  */
 public class SmsMessageTest extends AbstractBaseTestCase {
 
-	/** The logic. */
-	private static SmsMessageLogicImpl logic = null;
+	/** The sms Message Logic . */
+	private static SmsMessageLogicImpl smsMessageLogic = null;
 
 	/** The insert task. */
 	private static SmsTask insertTask;
@@ -35,11 +35,11 @@ public class SmsMessageTest extends AbstractBaseTestCase {
 	private static SmsMessage insertMessage2;
 
 	/** The task logic. */
-	private static SmsTaskLogicImpl taskLogic;
+	private static SmsTaskLogicImpl smsTaskLogic;
 	static {
 		HibernateUtil.createSchema();
 
-		logic = new SmsMessageLogicImpl();
+		smsMessageLogic = new SmsMessageLogicImpl();
 
 		insertTask = new SmsTask();
 		insertTask.setSakaiSiteId("sakaiSiteId");
@@ -52,7 +52,7 @@ public class SmsMessageTest extends AbstractBaseTestCase {
 		insertTask.setSenderUserName("senderUserName");
 		insertTask.setMaxTimeToLive(1);
 		insertTask.setDelReportTimeoutDuration(1);
-		taskLogic = new SmsTaskLogicImpl();
+		smsTaskLogic = new SmsTaskLogicImpl();
 		// Insert the task so we can play with messages
 
 		insertMessage1 = new SmsMessage();
@@ -88,12 +88,12 @@ public class SmsMessageTest extends AbstractBaseTestCase {
 	 * Test insert sms message.
 	 */
 	public void testInsertSmsMessage() {
-		taskLogic.persistSmsTask(insertTask);
+		smsTaskLogic.persistSmsTask(insertTask);
 		assertTrue("Task for message not created", insertTask.exists());
 		insertMessage1.setSmsTask(insertTask);
 		insertMessage2.setSmsTask(insertTask);
-		logic.persistSmsMessage(insertMessage1);
-		logic.persistSmsMessage(insertMessage2);
+		smsMessageLogic.persistSmsMessage(insertMessage1);
+		smsMessageLogic.persistSmsMessage(insertMessage2);
 		assertTrue("Object not persisted", insertMessage1.exists());
 		assertTrue("Object not persisted", insertMessage2.exists());
 		Set<SmsMessage> smsMessages = new HashSet<SmsMessage>();
@@ -102,7 +102,7 @@ public class SmsMessageTest extends AbstractBaseTestCase {
 		insertTask.setSmsMessagesOnTask(smsMessages);
 		assertTrue("", insertTask.getSmsMessages().contains(insertMessage1));
 		assertTrue("", insertTask.getSmsMessages().contains(insertMessage2));
-		taskLogic.persistSmsTask(insertTask);
+		smsTaskLogic.persistSmsTask(insertTask);
 
 	}
 
@@ -110,7 +110,8 @@ public class SmsMessageTest extends AbstractBaseTestCase {
 	 * Test get sms message by id.
 	 */
 	public void testGetSmsMessageById() {
-		SmsMessage getSmsMessage = logic.getSmsMessage(insertMessage1.getId());
+		SmsMessage getSmsMessage = smsMessageLogic.getSmsMessage(insertMessage1
+				.getId());
 		assertTrue("Object not persisted", insertMessage1.exists());
 		assertNotNull(getSmsMessage);
 		assertEquals(insertMessage1, getSmsMessage);
@@ -121,10 +122,11 @@ public class SmsMessageTest extends AbstractBaseTestCase {
 	 * Test update sms message.
 	 */
 	public void testUpdateSmsMessage() {
-		SmsMessage smsMessage = logic.getSmsMessage(insertMessage1.getId());
+		SmsMessage smsMessage = smsMessageLogic.getSmsMessage(insertMessage1
+				.getId());
 		smsMessage.setSakaiUserId("newSakaiUserId");
-		logic.persistSmsMessage(smsMessage);
-		smsMessage = logic.getSmsMessage(insertMessage1.getId());
+		smsMessageLogic.persistSmsMessage(smsMessage);
+		smsMessage = smsMessageLogic.getSmsMessage(insertMessage1.getId());
 		assertEquals("newSakaiUserId", smsMessage.getSakaiUserId());
 	}
 
@@ -132,7 +134,7 @@ public class SmsMessageTest extends AbstractBaseTestCase {
 	 * Test get sms messages.
 	 */
 	public void testGetSmsMessages() {
-		List<SmsMessage> messages = logic.getAllSmsMessages();
+		List<SmsMessage> messages = smsMessageLogic.getAllSmsMessages();
 		assertNotNull("Returned collection is null", messages);
 		assertTrue("No records returned", messages.size() > 0);
 	}
@@ -141,7 +143,7 @@ public class SmsMessageTest extends AbstractBaseTestCase {
 	 * Test get sms message by smsc message id.
 	 */
 	public void testGetSmsMessageBySmscMessageId() {
-		SmsMessage smsMessage = logic
+		SmsMessage smsMessage = smsMessageLogic
 				.getSmsMessageBySmscMessageId(insertMessage2.getSmscMessageId());
 		assertTrue(smsMessage.equals(insertMessage2));
 		assertEquals(smsMessage.getSmscMessageId(), insertMessage2
@@ -156,7 +158,7 @@ public class SmsMessageTest extends AbstractBaseTestCase {
 
 		// Assert that messages exist for this task that have a status other
 		// than PENDING
-		SmsTask task = taskLogic.getSmsTask(insertTask.getId());
+		SmsTask task = smsTaskLogic.getSmsTask(insertTask.getId());
 		task.getSmsMessages().size();
 		boolean otherStatusFound = false;
 		for (SmsMessage message : task.getSmsMessages()) {
@@ -170,8 +172,8 @@ public class SmsMessageTest extends AbstractBaseTestCase {
 				"This test requires that messages exist for this task that have a status other than PENDING",
 				otherStatusFound);
 
-		List<SmsMessage> messages = logic.getSmsMessagesWithStatus(insertTask
-				.getId(), SmsConst_DeliveryStatus.STATUS_PENDING);
+		List<SmsMessage> messages = smsMessageLogic.getSmsMessagesWithStatus(
+				insertTask.getId(), SmsConst_DeliveryStatus.STATUS_PENDING);
 
 		// We expect some records to be returned
 		assertTrue("Expected objects in collection", messages.size() > 0);
@@ -216,7 +218,7 @@ public class SmsMessageTest extends AbstractBaseTestCase {
 		insertTask.getSmsMessages().add(insertMessage);
 
 		try {
-			taskLogic.persistSmsTask(insertTask);
+			smsTaskLogic.persistSmsTask(insertTask);
 
 			SearchFilterBean bean = new SearchFilterBean();
 			bean.setStatus(insertMessage.getStatusCode());
@@ -227,7 +229,7 @@ public class SmsMessageTest extends AbstractBaseTestCase {
 			bean.setNumber(insertMessage.getMobileNumber());
 			bean.setCurrentPage(1);
 
-			SearchResultContainer<SmsMessage> con = logic
+			SearchResultContainer<SmsMessage> con = smsMessageLogic
 					.getSmsMessagesForCriteria(bean);
 			List<SmsMessage> messages = con.getPageResults();
 			assertTrue("Collection returned has no objects",
@@ -242,8 +244,8 @@ public class SmsMessageTest extends AbstractBaseTestCase {
 		} catch (SmsSearchException se) {
 			fail(se.getMessage());
 		} finally {
-			SmsTask task = taskLogic.getSmsTask(insertTask.getId());
-			taskLogic.deleteSmsTask(task);
+			SmsTask task = smsTaskLogic.getSmsTask(insertTask.getId());
+			smsTaskLogic.deleteSmsTask(task);
 		}
 	}
 
@@ -281,7 +283,7 @@ public class SmsMessageTest extends AbstractBaseTestCase {
 		}
 
 		try {
-			taskLogic.persistSmsTask(insertTask);
+			smsTaskLogic.persistSmsTask(insertTask);
 
 			SearchFilterBean bean = new SearchFilterBean();
 			bean.setStatus(SmsConst_DeliveryStatus.STATUS_ERROR);
@@ -293,7 +295,7 @@ public class SmsMessageTest extends AbstractBaseTestCase {
 
 			bean.setCurrentPage(2);
 
-			SearchResultContainer<SmsMessage> con = logic
+			SearchResultContainer<SmsMessage> con = smsMessageLogic
 					.getSmsMessagesForCriteria(bean);
 			List<SmsMessage> messages = con.getPageResults();
 			assertTrue("Incorrect collection size returned",
@@ -311,7 +313,7 @@ public class SmsMessageTest extends AbstractBaseTestCase {
 				bean.setCurrentPage(pages + 1);
 			}
 
-			con = logic.getSmsMessagesForCriteria(bean);
+			con = smsMessageLogic.getSmsMessagesForCriteria(bean);
 			messages = con.getPageResults();
 			int lastPageRecordCount = recordsToInsert
 					- (pages * SmsHibernateConstants.DEFAULT_PAGE_SIZE);
@@ -321,8 +323,8 @@ public class SmsMessageTest extends AbstractBaseTestCase {
 		} catch (SmsSearchException se) {
 			fail(se.getMessage());
 		} finally {
-			SmsTask task = taskLogic.getSmsTask(insertTask.getId());
-			taskLogic.deleteSmsTask(task);
+			SmsTask task = smsTaskLogic.getSmsTask(insertTask.getId());
+			smsTaskLogic.deleteSmsTask(task);
 		}
 	}
 
@@ -331,8 +333,8 @@ public class SmsMessageTest extends AbstractBaseTestCase {
 	 */
 	public void testDeleteSmsMessage() {
 		// Delete the associated task too
-		taskLogic.deleteSmsTask(insertTask);
-		SmsTask getSmsTask = taskLogic.getSmsTask(insertTask.getId());
+		smsTaskLogic.deleteSmsTask(insertTask);
+		SmsTask getSmsTask = smsTaskLogic.getSmsTask(insertTask.getId());
 		assertNull("Object not removed", getSmsTask);
 	}
 
@@ -340,8 +342,9 @@ public class SmsMessageTest extends AbstractBaseTestCase {
 	 * Test get new test sms message instance.
 	 */
 	public void testGetNewTestSmsMessageInstance() {
-		SmsMessage message = logic.getNewTestSmsMessageInstance("0721999988",
-				"Message body");
+		SmsMessage message = smsMessageLogic.getNewTestSmsMessageInstance(
+				"0721999988", "Message body");
+		smsTaskLogic.persistSmsTask(message.getSmsTask());
 		assertNotNull("Message returned was null", message);
 		assertNotNull("", message.getSmsTask());
 		assertTrue("Associated SmsTask not created successfully", message
