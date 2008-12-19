@@ -128,8 +128,8 @@ private FormatAwareDateInputEvolver dateEvolver;
 		});
 		comboBoolean.optionlist = comboBoolValues;
 		UIBoundList comboBoolNames = new UIBoundList();
-		comboBoolNames.setValue(new String[] {"true", 
-		"false"});
+		comboBoolNames.setValue(new String[] {"Yes", 
+		"No"});
 		comboBoolean.optionnames = comboBoolNames;
 	}
 	
