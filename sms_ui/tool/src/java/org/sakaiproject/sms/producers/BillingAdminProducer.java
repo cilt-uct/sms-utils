@@ -87,7 +87,9 @@ public class BillingAdminProducer implements ViewComponentProducer {
 			UIOutput.make(entry, "account-no", account.getId().toString());
 			// TODO: Use Sakai services to get site and username
 			UIOutput.make(entry, "sakai-site", account.getSakaiSiteId());
-			UIOutput.make(entry, "sakai-user", account.getSakaiUserId());
+			UIOutput.make(entry, "sakai-user",
+					account.getSakaiUserId() == null ? "" : account
+							.getSakaiUserId());
 			UIOutput.make(entry, "overdraft-limit", nf.format(
 					account.getOverdraftLimit()).toString());
 			UIOutput.make(entry, "balance", nf.format(account.getBalance())

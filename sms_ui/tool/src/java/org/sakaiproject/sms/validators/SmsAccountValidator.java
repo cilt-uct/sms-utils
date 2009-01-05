@@ -45,8 +45,6 @@ public class SmsAccountValidator implements Validator {
 				"sms.errors.accountName.empty");
 		ValidationUtils.rejectIfEmptyOrWhitespace(err, "sakaiSiteId",
 				"sms.errors.sakaiSiteId.empty");
-		ValidationUtils.rejectIfEmptyOrWhitespace(err, "sakaiUserId",
-				"sms.errors.sakaiUserId.empty");
 		ValidationUtils.rejectIfEmptyOrWhitespace(err, "overdraftLimit",
 				"sms.errors.overdraftLimit.empty");
 		ValidationUtils.rejectIfEmptyOrWhitespace(err, "balance",
