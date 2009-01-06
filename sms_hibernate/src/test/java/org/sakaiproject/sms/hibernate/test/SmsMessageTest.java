@@ -350,4 +350,59 @@ public class SmsMessageTest extends AbstractBaseTestCase {
 		assertTrue("Associated SmsTask not created successfully", message
 				.getSmsTask().exists());
 	}
+
+	/**
+	 * Test get billable messages count.
+	 */
+	public void testGetBillableMessagesCount() {
+
+		SmsTask task = new SmsTask();
+		task.setSakaiSiteId("ss1");
+		task.setSmsAccountId(1);
+		task.setDeliveryGroupId("dg1");
+		task.setDeliveryUserId("du1");
+		task.setDateCreated(new Date(System.currentTimeMillis()));
+		task.setDateToSend(new Date(System.currentTimeMillis()));
+		task.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
+		task.setAttemptCount(2);
+		task.setMessageBody("messageBody");
+		task.setSenderUserName("senderUserName");
+		task.setMaxTimeToLive(1);
+		task.setDelReportTimeoutDuration(1);
+		smsTaskLogic.persistSmsTask(task);
+
+		Integer billableMessages = smsMessageLogic.getBillableMessagesCount(
+				task.getSakaiSiteId(), task.getDeliveryUserId(), task
+						.getDeliveryGroupId(), task.getSmsAccountId());
+
+		// No messages exist for this task
+		assertNotNull("Return value is null", billableMessages);
+		assertTrue("Should not return any messages", billableMessages == 0);
+
+		SmsMessage message = new SmsMessage();
+		message.setMobileNumber("0721998919");
+		message.setSmscMessageId("smscMessageId1");
+		message.setSakaiUserId("sakaiUserId");
+		message.setStatusCode(SmsConst_DeliveryStatus.STATUS_BUSY);
+		message.setSmsTask(task);
+		task.getSmsMessages().add(message);
+		smsTaskLogic.persistSmsTask(task);
+
+		billableMessages = smsMessageLogic.getBillableMessagesCount(task
+				.getSakaiSiteId(), task.getDeliveryUserId(), task
+				.getDeliveryGroupId(), task.getSmsAccountId());
+
+		// There should still be no messages with status delivered
+		assertTrue("Should not return any messages", billableMessages == 0);
+
+		message.setStatusCode(SmsConst_DeliveryStatus.STATUS_DELIVERED);
+		smsTaskLogic.persistSmsTask(task);
+
+		billableMessages = smsMessageLogic.getBillableMessagesCount(task
+				.getSakaiSiteId(), task.getDeliveryUserId(), task
+				.getDeliveryGroupId(), task.getSmsAccountId());
+
+		// Can expect messages now.
+		assertTrue("Messages should exist", billableMessages == 1);
+	}
 }

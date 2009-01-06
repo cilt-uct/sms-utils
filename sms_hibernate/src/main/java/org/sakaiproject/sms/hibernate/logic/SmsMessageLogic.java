@@ -117,4 +117,25 @@ public interface SmsMessageLogic {
 	public SmsMessage getNewTestSmsMessageInstance(String mobileNumber,
 			String messageBody);
 
+	/**
+	 * Count billable messages.
+	 * <p>
+	 * Only the messages that were reported as delivered are billable. Messages
+	 * that are marked as invalid, failed or timed out will not be billed to the
+	 * account.
+	 * 
+	 * @param sakaiSiteId
+	 *            the sakai site id
+	 * @param deliveryUserId
+	 *            the delivery user id
+	 * @param deliveryGroupdId
+	 *            the delivery groupd id
+	 * @param smsAccountId
+	 *            the sms account id
+	 * 
+	 * @return the number of billable messages
+	 */
+	public Integer getBillableMessagesCount(String sakaiSiteId,
+			String deliveryUserId, String deliveryGroupdId, Integer smsAccountId);
+
 }

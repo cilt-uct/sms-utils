@@ -18,6 +18,7 @@
 
 package org.sakaiproject.sms.hibernate.logic.impl;
 
+import java.math.BigInteger;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,6 +27,7 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.Query;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
@@ -112,7 +114,6 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 			return messages.get(0);
 		}
 		return null;
-
 	}
 
 	/**
@@ -289,5 +290,70 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 		smsMessage.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
 
 		return smsMessage;
+	}
+
+	/**
+	 * Count billable messages.
+	 * <p>
+	 * Only the messages that were reported as delivered are billable. Messages
+	 * that are marked as invalid, failed or timed out will not be billed to the
+	 * account.
+	 * 
+	 * @param sakaiSiteId
+	 *            the sakai site id
+	 * @param deliveryUserId
+	 *            the delivery user id
+	 * @param deliveryGroupdId
+	 *            the delivery groupd id
+	 * @param smsAccountId
+	 *            the sms account id
+	 * 
+	 * @return the number of billable messages
+	 */
+	public Integer getBillableMessagesCount(String sakaiSiteId,
+			String deliveryUserId, String deliveryGroupdId, Integer smsAccountId) {
+		List count = null;
+		Session s = HibernateUtil.getSession();
+		StringBuilder sql = new StringBuilder();
+		sql
+				.append(" select count(SMS_MESSAGE.MESSAGE_ID) as count from SMS_TASK, SMS_MESSAGE");
+		sql.append(" where SMS_TASK.TASK_ID = SMS_MESSAGE.TASK_ID ");
+		sql.append(" and SMS_MESSAGE.STATUS_CODE = :statusCode ");
+
+		if (sakaiSiteId != null && !sakaiSiteId.trim().equals("")) {
+			sql.append(" and SMS_TASK.SAKAI_SITE_ID = :sakaiSiteId");
+		}
+
+		if (deliveryUserId != null && !deliveryUserId.trim().equals("")) {
+			sql.append(" and SMS_TASK.DELIVERY_USER_ID = :deliveryUserId");
+		}
+
+		if (deliveryGroupdId != null && !deliveryGroupdId.trim().equals("")) {
+			sql.append(" and SMS_TASK.DELIVERY_GROUP_ID = :deliveryGroupdId");
+		}
+
+		if (smsAccountId != null) {
+			sql.append(" and SMS_TASK.SMS_ACCOUNT_ID = :smsAccountId");
+		}
+
+		SQLQuery query = s.createSQLQuery(sql.toString());
+		query.setString("statusCode", SmsConst_DeliveryStatus.STATUS_DELIVERED);
+		if (sakaiSiteId != null && !sakaiSiteId.trim().equals("")) {
+			query.setString("sakaiSiteId", sakaiSiteId);
+		}
+		if (deliveryUserId != null && !deliveryUserId.trim().equals("")) {
+			query.setString("deliveryUserId", deliveryUserId);
+		}
+		if (deliveryGroupdId != null && !deliveryGroupdId.trim().equals("")) {
+			query.setString("deliveryGroupdId", deliveryGroupdId);
+		}
+		if (smsAccountId != null) {
+			query.setInteger("smsAccountId", smsAccountId);
+		}
+
+		query.addScalar("count");
+
+		count = query.list();
+		return ((BigInteger) count.get(0)).intValue();
 	}
 }
