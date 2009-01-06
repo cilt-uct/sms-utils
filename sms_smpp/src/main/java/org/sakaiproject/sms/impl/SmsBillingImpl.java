@@ -21,6 +21,7 @@ import java.util.Date;
 import java.util.Set;
 
 import org.sakaiproject.sms.api.SmsBilling;
+import org.sakaiproject.sms.hibernate.logic.impl.SmsMessageLogicImpl;
 
 /**
  * The billing service will handle all financial functions for the sms tool in
@@ -31,6 +32,8 @@ import org.sakaiproject.sms.api.SmsBilling;
  * @created 12-Dec-2008
  */
 public class SmsBillingImpl implements SmsBilling {
+
+	private SmsMessageLogicImpl messageLogic = new SmsMessageLogicImpl();
 
 	/**
 	 * Add extra credits to the specific account by making an entry into
@@ -150,6 +153,31 @@ public class SmsBillingImpl implements SmsBilling {
 	 */
 	public boolean reserveCredits(int accountID, int credits) {
 		return false;
+	}
+
+	/**
+	 * Count billable messages.
+	 * <p>
+	 * Only the messages that were reported as delivered are billable. Messages
+	 * that are marked as invalid, failed or timed out will not be billed to the
+	 * account.
+	 * 
+	 * @param sakaiSiteId
+	 *            the sakai site id
+	 * @param deliveryUserId
+	 *            the delivery user id
+	 * @param deliveryGroupdId
+	 *            the delivery groupd id
+	 * @param smsAccountId
+	 *            the sms account id
+	 * 
+	 * @return the number of billable messages
+	 */
+	public Integer countBillableMessages(String sakaiSiteId,
+			String deliveryUserId, String deliveryGroupdId, Integer smsAccountId) {
+		// TODO Louis to check this is correct
+
+		return messageLogic.getBillableMessagesCount("", "", "", 0);
 	}
 
 }

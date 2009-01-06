@@ -21,6 +21,7 @@ package org.sakaiproject.sms.api;
 import java.util.Date;
 import java.util.Set;
 
+// TODO: Auto-generated Javadoc
 /**
  * The billing service will handle all financial functions for the sms tool in
  * Sakai.
@@ -36,7 +37,9 @@ public interface SmsBilling {
 	 * SMS_TRANSACTION Also update the available credits on the account.
 	 * 
 	 * @param accountID
+	 *            the account id
 	 * @param creditCount
+	 *            the credit count
 	 */
 	void allocateCredits(int accountID, int creditCount);
 
@@ -45,7 +48,11 @@ public interface SmsBilling {
 	 * account overdraft limits, if applicable.
 	 * 
 	 * @param accountID
+	 *            the account id
 	 * @param creditsRequired
+	 *            the credits required
+	 * 
+	 * @return true, if check sufficient credits
 	 */
 	public boolean checkSufficientCredits(int accountID, int creditsRequired);
 
@@ -53,6 +60,9 @@ public interface SmsBilling {
 	 * Return the currency amount available in the account.
 	 * 
 	 * @param accountID
+	 *            the account id
+	 * 
+	 * @return the account balance
 	 */
 	public double getAccountBalance(int accountID);
 
@@ -60,6 +70,9 @@ public interface SmsBilling {
 	 * Return credits available in the account.
 	 * 
 	 * @param accountID
+	 *            the account id
+	 * 
+	 * @return the account credits
 	 */
 	public int getAccountCredits(int accountID);
 
@@ -70,7 +83,11 @@ public interface SmsBilling {
 	 * @param sakaiSiteID
 	 *            (e.g. !admin)
 	 * @param sakaiUserID
+	 *            the sakai user id
 	 * @param accountType
+	 *            the account type
+	 * 
+	 * @return the account id
 	 */
 	public int getAccountID(String sakaiSiteID, String sakaiUserID,
 			Integer accountType);
@@ -80,8 +97,13 @@ public interface SmsBilling {
 	 * specific account.
 	 * 
 	 * @param accountID
+	 *            the account id
 	 * @param startDate
+	 *            the start date
 	 * @param endDate
+	 *            the end date
+	 * 
+	 * @return the acc transactions
 	 */
 	public Set getAccTransactions(int accountID, Date startDate, Date endDate);
 
@@ -90,6 +112,8 @@ public interface SmsBilling {
 	 * 
 	 * @param sakaiSiteID
 	 *            (e.g. !admin)
+	 * 
+	 * @return the all site accounts
 	 */
 	public Set getAllSiteAccounts(String sakaiSiteID);
 
@@ -98,6 +122,9 @@ public interface SmsBilling {
 	 * value at the given time.
 	 * 
 	 * @param creditCount
+	 *            the credit count
+	 * 
+	 * @return the double
 	 */
 	public double convertCreditsToAmount(int creditCount);
 
@@ -106,6 +133,8 @@ public interface SmsBilling {
 	 * 
 	 * @param sakaiSiteID
 	 *            (e.g. !admin)
+	 * 
+	 * @return true, if insert account
 	 */
 	public boolean insertAccount(String sakaiSiteID);
 
@@ -113,8 +142,13 @@ public interface SmsBilling {
 	 * Insert a new transaction for the given account id.
 	 * 
 	 * @param accountID
+	 *            the account id
 	 * @param transCodeID
+	 *            the trans code id
 	 * @param creditAmount
+	 *            the credit amount
+	 * 
+	 * @return true, if insert transaction
 	 */
 	public Boolean insertTransaction(int accountID, int transCodeID,
 			int creditAmount);
@@ -125,8 +159,33 @@ public interface SmsBilling {
 	 * reservation must be rolled back with another transaction.
 	 * 
 	 * @param accountID
+	 *            the account id
 	 * @param credits
+	 *            the credits
+	 * 
+	 * @return true, if reserve credits
 	 */
 	public boolean reserveCredits(int accountID, int credits);
+
+	/**
+	 * Count billable messages.
+	 * <p>
+	 * Only the messages that were reported as delivered are billable. Messages
+	 * that are marked as invalid, failed or timed out will not be billed to the
+	 * account.
+	 * 
+	 * @param sakaiSiteId
+	 *            the sakai site id
+	 * @param deliveryUserId
+	 *            the delivery user id
+	 * @param deliveryGroupdId
+	 *            the delivery groupd id
+	 * @param smsAccountId
+	 *            the sms account id
+	 * 
+	 * @return the number of billable messages
+	 */
+	public Integer countBillableMessages(String sakaiSiteId,
+			String deliveryUserId, String deliveryGroupdId, Integer smsAccountId);
 
 }
