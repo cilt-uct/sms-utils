@@ -23,6 +23,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
+import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
 import org.sakaiproject.sms.hibernate.util.DateUtil;
 
 /**
@@ -129,7 +130,9 @@ public class SmsTask extends BaseModel {
 	 */
 	public SmsTask() {
 		setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
-		setMessageTypeId(0);// outgoing, 1=incoming
+		this
+				.setMessageTypeId(SmsHibernateConstants.SMS_TASK_TYPE_PROCESS_SCHEDULED);// outgoing,
+		// 1=incoming
 	}
 
 	/**
@@ -160,6 +163,8 @@ public class SmsTask extends BaseModel {
 		this.statusCode = "";
 		this.creditEstimate = 0;
 		this.statusCode = SmsConst_DeliveryStatus.STATUS_PENDING;
+		this
+				.setMessageTypeId(SmsHibernateConstants.SMS_TASK_TYPE_PROCESS_SCHEDULED);
 
 	}
 

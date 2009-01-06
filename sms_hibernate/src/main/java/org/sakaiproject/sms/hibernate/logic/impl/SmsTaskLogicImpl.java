@@ -104,6 +104,7 @@ public class SmsTaskLogicImpl extends SmsDao implements SmsTaskLogic {
 		StringBuilder hql = new StringBuilder();
 		hql.append(" from SmsTask task where task.dateToSend <= :today ");
 		hql.append(" and task.statusCode IN (:statusCodes) ");
+		hql.append(" and task.messageTypeId = (:messageTypeId) ");
 		hql.append(" order by task.dateToSend ");
 		Query query = HibernateUtil.getSession().createQuery(hql.toString());
 		query.setParameter("today", getCurrentDate(), Hibernate.TIMESTAMP);
@@ -111,6 +112,9 @@ public class SmsTaskLogicImpl extends SmsDao implements SmsTaskLogic {
 				SmsConst_DeliveryStatus.STATUS_PENDING,
 				SmsConst_DeliveryStatus.STATUS_INCOMPLETE,
 				SmsConst_DeliveryStatus.STATUS_RETRY }, Hibernate.STRING);
+		query.setParameter("messageTypeId",
+				SmsHibernateConstants.SMS_TASK_TYPE_PROCESS_SCHEDULED,
+				Hibernate.INTEGER);
 		log.debug("getNextSmsTask() HQL: " + query.getQueryString());
 		List<SmsTask> tasks = query.list();
 		HibernateUtil.closeSession();

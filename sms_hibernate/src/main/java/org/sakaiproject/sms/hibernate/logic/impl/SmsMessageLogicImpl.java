@@ -246,8 +246,8 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 	/**
 	 * A new sms message factory method. Only used for testing.
 	 * 
-	 * This method will instantiate a SmsTask and return a
-	 * SmsMessage with the associated SmsTask object set on it.
+	 * This method will instantiate a SmsTask and return a SmsMessage with the
+	 * associated SmsTask object set on it.
 	 * <p>
 	 * The message will not be persisted.
 	 * 
@@ -268,6 +268,8 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 		smsTask.setDateProcessed(new Date(System.currentTimeMillis()));
 		smsTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_SENT);
 		smsTask.setAttemptCount(2);
+		smsTask
+				.setMessageTypeId(SmsHibernateConstants.SMS_TASK_TYPE_PROCESS_NOW);
 		smsTask.setMessageBody("messageBody");
 		smsTask.setSenderUserName("senderUserName");
 		smsTask.setMaxTimeToLive(1);

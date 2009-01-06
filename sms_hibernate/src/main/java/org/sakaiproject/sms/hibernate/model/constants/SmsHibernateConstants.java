@@ -45,6 +45,16 @@ public class SmsHibernateConstants {
 	public static final Integer MESSAGE_TYPE_INCOMING = 1;
 
 	/**
+	 * Used to indicate if the Task must be processed immediately.
+	 */
+	public static final Integer SMS_TASK_TYPE_PROCESS_NOW = 1;
+
+	/**
+	 * Used to indicate if the Task must be processed by the scheduler.
+	 */
+	public static final Integer SMS_TASK_TYPE_PROCESS_SCHEDULED = 0;
+
+	/**
 	 * Used to indicate if the system is running in development mode.
 	 */
 	public static boolean SMS_DEV_MODE = true;
@@ -94,10 +104,10 @@ public class SmsHibernateConstants {
 	 * The defauly overdraft limit
 	 */
 	public static final Float OVERDRAFT_LIMIT = 10.0f;
-	
+
 	/**
 	 * The default initial balance for an account
 	 */
 	public static final Float INITIAL_BALANACE = 100.0f;
-	
+
 }
