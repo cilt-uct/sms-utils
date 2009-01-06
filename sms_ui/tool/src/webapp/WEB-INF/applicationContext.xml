@@ -67,6 +67,22 @@
  	<property name="guard"><bean class="org.sakaiproject.sms.validators.SmsAccountValidator" /></property>
  </bean>
   
+
+ <!-- Data Converters for Float values -->  
+ <bean class="uk.org.ponder.mapping.DataConverter">
+	<property name="targetPath" value="SmsAccountLocator.*.balance" />
+	<property name="converter">
+		<bean class="org.sakaiproject.sms.util.FloatEditorFactory" />
+	</property>
+ </bean>
+ 
+  <bean class="uk.org.ponder.mapping.DataConverter">
+	<property name="targetPath" value="SmsAccountLocator.*.overdraftLimit" />
+	<property name="converter">
+		<bean class="org.sakaiproject.sms.util.FloatEditorFactory" />
+	</property>
+ </bean>
+
   <!--
 	Override this definition from RSF-evolvers, to reflect the fact we are
 	serving the RSF components templates from our own webapp (as provided

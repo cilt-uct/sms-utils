@@ -45,10 +45,14 @@ public class SmsAccountValidator implements Validator {
 				"sms.errors.accountName.empty");
 		ValidationUtils.rejectIfEmptyOrWhitespace(err, "sakaiSiteId",
 				"sms.errors.sakaiSiteId.empty");
-		ValidationUtils.rejectIfEmptyOrWhitespace(err, "overdraftLimit",
-				"sms.errors.overdraftLimit.empty");
-		ValidationUtils.rejectIfEmptyOrWhitespace(err, "balance",
-				"sms.errors.balance.empty");
+
+		// Because SmsCustomNumberEditor sets all invalid number values as null
+		// we must give generic message for null values
+		ValidationUtils.rejectIfEmpty(err, "overdraftLimit",
+				"sms.errors.overdraftLimit.invalid");
+		ValidationUtils.rejectIfEmpty(err, "balance",
+				"sms.errors.balance.invalid");
+
 		SmsAccount smsAccount = (SmsAccount) obj;
 
 		if (isTooLong(smsAccount.getAccountName(), 99)) {

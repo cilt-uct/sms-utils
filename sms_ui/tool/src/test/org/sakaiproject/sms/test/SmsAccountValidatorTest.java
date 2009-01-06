@@ -121,9 +121,8 @@ public class SmsAccountValidatorTest extends TestCase {
 		account.setBalance(null);
 		validator.validate(account, errors);
 		assertTrue(errors.hasFieldErrors(BALANCE_FIELD));
-		assertEquals("sms.errors.balance.empty", errors.getFieldError()
+		assertEquals("sms.errors.balance.invalid", errors.getFieldError()
 				.getCode());
-
 	}
 
 	/**
@@ -133,8 +132,8 @@ public class SmsAccountValidatorTest extends TestCase {
 		account.setOverdraftLimit(null);
 		validator.validate(account, errors);
 		assertTrue(errors.hasFieldErrors(OVERDRAFT_LIMIT_FIELD));
-		assertEquals("sms.errors.overdraftLimit.empty", errors.getFieldError()
-				.getCode());
+		assertEquals("sms.errors.overdraftLimit.invalid", errors
+				.getFieldError().getCode());
 
 	}
 
