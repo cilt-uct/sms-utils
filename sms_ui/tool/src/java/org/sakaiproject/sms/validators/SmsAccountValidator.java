@@ -52,15 +52,15 @@ public class SmsAccountValidator implements Validator {
 		SmsAccount smsAccount = (SmsAccount) obj;
 
 		if (isTooLong(smsAccount.getAccountName(), 99)) {
-			err.reject("sms.errors.accountName.tooLong");
+			err.rejectValue("accountName", "sms.errors.accountName.tooLong");
 		}
 
 		if (isTooLong(smsAccount.getSakaiSiteId(), 99)) {
-			err.reject("sms.errors.sakaiSiteId.tooLong");
+			err.rejectValue("sakaiSiteId", "sms.errors.sakaiSiteId.tooLong");
 		}
 
 		if (isTooLong(smsAccount.getSakaiUserId(), 99)) {
-			err.reject("sms.errors.sakaiUserId.tooLong");
+			err.rejectValue("sakaiUserId", "sms.errors.sakaiUserId.tooLong");
 		}
 	}
 }
