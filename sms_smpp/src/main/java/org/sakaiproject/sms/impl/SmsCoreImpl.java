@@ -86,6 +86,10 @@ public class SmsCoreImpl implements SmsCore {
 		return smsTaskLogic;
 	}
 
+	public void init() {
+
+	}
+
 	/**
 	 * Get the group list from Sakai
 	 */
@@ -291,7 +295,9 @@ public class SmsCoreImpl implements SmsCore {
 			String submissionStatus = smsSmpp
 					.sendMessagesToGateway(smsTask
 							.getMessagesWithStatus(SmsConst_DeliveryStatus.STATUS_PENDING));
+			smsTask = smsTaskLogic.getSmsTask(smsTask.getId());
 			smsTask.setStatusCode(submissionStatus);
+
 			if (smsTask.getStatusCode().equals(
 					SmsConst_DeliveryStatus.STATUS_INCOMPLETE)
 					|| smsTask.getStatusCode().equals(

@@ -33,7 +33,7 @@ import org.sakaiproject.sms.impl.SmsSmppImpl;
 /**
  * The Class SmppSession. Used in the threading test.
  */
-class SmppThread extends TestRunnable {
+public class SmppThread extends TestRunnable {
 
 	private static SmsTaskLogicImpl smsTaskLogicImpl = new SmsTaskLogicImpl();
 

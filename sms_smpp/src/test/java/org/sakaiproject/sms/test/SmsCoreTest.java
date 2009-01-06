@@ -23,7 +23,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.log4j.Level;
-import org.sakaiproject.sms.hibernate.logic.SmsTaskLogic;
 import org.sakaiproject.sms.hibernate.logic.impl.SmsConfigLogicImpl;
 import org.sakaiproject.sms.hibernate.logic.impl.SmsMessageLogicImpl;
 import org.sakaiproject.sms.hibernate.logic.impl.SmsTaskLogicImpl;
@@ -141,7 +140,7 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 
 			// we give the delivery reports time to get back.
 			try {
-				Thread.sleep(25000);
+				Thread.sleep(30000);
 
 			} catch (InterruptedException e) {
 				e.printStackTrace();

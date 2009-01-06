@@ -61,6 +61,7 @@ import org.sakaiproject.sms.hibernate.logic.SmsTaskLogic;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_SmscDeliveryStatus;
+import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
 import org.sakaiproject.sms.model.SmsStatusBridge;
 
 public class SmsSmppImpl implements SmsSmpp {
@@ -105,7 +106,7 @@ public class SmsSmppImpl implements SmsSmpp {
 	public void setSmsTaskLogic(SmsTaskLogic smsTaskLogic) {
 		this.smsTaskLogic = smsTaskLogic;
 	}
-	
+
 	public SmsMessageLogic getSmsMessageLogic() {
 		return smsMessageLogic;
 	}
@@ -251,7 +252,9 @@ public class SmsSmppImpl implements SmsSmpp {
 						if ((arg0.equals(SessionState.CLOSED) || arg0
 								.equals(SessionState.UNBOUND))
 								&& (!disconnectGateWayCalled)) {
-							LOG.warn("SMSC session lost Starting BindThread");
+							LOG
+									.warn("SMSC session lost Starting BindThread.Status-"
+											+ arg0);
 							session.unbindAndClose();
 							gatewayBound = false;
 							bindTest = new BindThread();
@@ -550,7 +553,9 @@ public class SmsSmppImpl implements SmsSmpp {
 				message.setStatusCode(SmsConst_DeliveryStatus.STATUS_SENT);
 				message
 						.setSmscDeliveryStatusCode(SmsConst_SmscDeliveryStatus.ENROUTE);
-				smsTaskLogic.persistSmsTask(message.getSmsTask());
+				if ((message.getSmsTask()).getMessageTypeId() == SmsHibernateConstants.SMS_TASK_TYPE_PROCESS_NOW) {
+					smsTaskLogic.persistSmsTask(message.getSmsTask());
+				}
 				smsMessageLogic.persistSmsMessage(message);
 				LOG.info("Message submitted, message_id is " + messageId);
 			} catch (PDUException e) {
@@ -597,5 +602,4 @@ public class SmsSmppImpl implements SmsSmpp {
 
 	}
 
-	
 }

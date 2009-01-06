@@ -1,22 +1,30 @@
 package org.sakaiproject.sms.impl;
 
 import java.util.Date;
-import java.util.Timer;
 
 import org.sakaiproject.sms.api.SmsCore;
 import org.sakaiproject.sms.api.SmsScheduler;
+import org.springframework.util.Assert;
 
 public class SmsSchedulerImpl implements SmsScheduler {
-	static Timer schedulerTimer;
 
-	static int schedulerInterval = 10; // seconds
+	static int schedulerInterval = 60000; // seconds
+
 	private static final org.apache.log4j.Logger LOG = org.apache.log4j.Logger
 			.getLogger(SmsSmppImpl.class);
 
 	public SmsCore smsCore = null;
 
+	public SmsSchedulerThread smsSchedulerThread = null;
+
 	public SmsSchedulerImpl() {
 
+	}
+
+	public void init() {
+		Assert.notNull(smsCore);
+		smsSchedulerThread = new SmsSchedulerThread();
+		System.out.println("Init of SmsScheduler complete");
 	}
 
 	public SmsCore getSmsCore() {
@@ -27,11 +35,11 @@ public class SmsSchedulerImpl implements SmsScheduler {
 		this.smsCore = smsCore;
 	}
 
-	private class BindThread implements Runnable {
+	private class SmsSchedulerThread implements Runnable {
 
-		boolean allDone = false;
+		boolean stopScheduler = false;
 
-		BindThread() {
+		SmsSchedulerThread() {
 			Thread t = new Thread(this);
 			t.start();
 		}
@@ -42,16 +50,16 @@ public class SmsSchedulerImpl implements SmsScheduler {
 
 		public void Work() {
 			while (true) {
-				if (allDone) {
+				if (stopScheduler) {
 					return;
 				}
+				LOG.info("Searching for tasks to process");
+				smsCore.processNextTask();
 				try {
 					Thread.sleep(schedulerInterval);
 				} catch (InterruptedException e) {
-
 					e.printStackTrace();
 				}
-				LOG.info("Trying to rebind");
 
 			}
 
@@ -59,33 +67,29 @@ public class SmsSchedulerImpl implements SmsScheduler {
 	}
 
 	public Date getLastProcessTime() {
-		// TODO Auto-generated method stub
+
 		return null;
 	}
 
 	public int getStatus() {
-		// TODO Auto-generated method stub
+
 		return 0;
 	}
 
 	public void insertIntoDebugLog() {
-		// TODO Auto-generated method stub
 
 	}
 
 	public void processQueue() {
-		// TODO Auto-generated method stub
 
 	}
 
 	public void processQueueNow() {
-		// TODO Auto-generated method stub
 
 	}
 
 	public void setInterval(int seconds) {
-		// TODO Auto-generated method stub
-
+		schedulerInterval = seconds * 60;
 	}
 
 }
