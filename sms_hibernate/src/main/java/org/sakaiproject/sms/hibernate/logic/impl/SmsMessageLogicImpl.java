@@ -289,6 +289,8 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 		smsMessage.setSakaiUserId("sakaiUserId");
 		smsMessage.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
 
+		smsTask.getSmsMessages().add(smsMessage);
+
 		return smsMessage;
 	}
 
