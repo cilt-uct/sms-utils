@@ -252,8 +252,37 @@ public class SmsCoreImpl implements SmsCore {
 	 * @param messageID
 	 */
 	public void processIncomingMessage(SmsMessage smsMessage) {
-		// TODO For phase II
+		
+		// Persist the message first
+		smsTaskLogic.persistSmsTask(smsMessage.getSmsTask());
 
+		// TODO Check wth Louis in this
+		// TODO Check what the status codes should be set to for task and
+		// messages
+		if (smsMessage.getSmsTask().getDateToSend().getTime() <= System
+				.currentTimeMillis()) {
+			// Send to gateway
+			smsMessage = smsSmpp.sendMessageToGateway(smsMessage);
+
+			// Check if there were any problems sending the message
+			if (!smsMessage.getStatusCode().equals(
+					SmsConst_DeliveryStatus.STATUS_SENT)) {
+				// Problem experienced, set as incomplete and leave for the
+				// scheduler to process
+				smsMessage.getSmsTask().setStatusCode(
+						SmsConst_DeliveryStatus.STATUS_INCOMPLETE);
+				smsMessage.getSmsTask().setMessageTypeId(
+						SmsHibernateConstants.SMS_TASK_TYPE_PROCESS_SCHEDULED);
+				smsTaskLogic.persistSmsTask(smsMessage.getSmsTask());
+			}
+		} else {
+			// TODO Check wth Louis in this
+			smsMessage.getSmsTask().setStatusCode(
+					SmsConst_DeliveryStatus.STATUS_PENDING);
+			smsMessage.getSmsTask().setMessageTypeId(
+					SmsHibernateConstants.SMS_TASK_TYPE_PROCESS_SCHEDULED);
+			smsTaskLogic.persistSmsTask(smsMessage.getSmsTask());
+		}
 	}
 
 	/**

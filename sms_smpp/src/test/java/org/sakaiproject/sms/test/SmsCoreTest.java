@@ -278,4 +278,10 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 			smsCoreImpl.getSmsTaskLogic().deleteSmsTask(smsTask);
 		}
 	}
+
+	public void testProcessIncomingMessage() {
+		SmsMessage smsMessage = smsSmppImpl.getSmsMessageLogic()
+				.getNewTestSmsMessageInstance("Mobile number", "Message body");
+		smsCoreImpl.processIncomingMessage(smsMessage);
+	}
 }
