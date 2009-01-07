@@ -83,6 +83,26 @@ public class SmsTestProducer implements ViewComponentProducer, DefaultView,
 				UIMessage.make("sms.general.cancel")).setReturn(
 				ActionResults.CANCEL);
 
+		UIMessage.make(form, "estimated-group-size-label",
+				"sms.test.estimated-group-size");
+		UIInput groupSize = UIInput.make(form, "estimated-group-size",
+				smsMessageOTP + ".smsTask.groupSizeEstimate");
+		groupSize.decorate(new UIDisabledDecorator());
+		groupSize.fossilize = false;
+
+		UIMessage.make(form, "account-balance-label",
+				"sms.test.account-balance");
+		UIInput accountBalance = UIInput.make(form, "account-balance",
+				smsMessageOTP + ".smsTask.smsAccountId");
+		accountBalance.decorate(new UIDisabledDecorator());
+		accountBalance.fossilize = false;
+
+		UIMessage.make(form, "estimated-cost-label", "sms.test.estimated-cost");
+		UIInput estimatedCost = UIInput.make(form, "estimated-cost",
+				smsMessageOTP + ".smsTask.creditEstimate");
+		estimatedCost.decorate(new UIDisabledDecorator());
+		estimatedCost.fossilize = false;
+
 		UIMessage.make(form, "smpp-debug-label", "sms.test.smpp-debug");
 		UIInput debug = UIInput.make(form, "smpp-debug", smsMessageOTP
 				+ ".debugInfo");
