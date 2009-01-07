@@ -23,6 +23,12 @@ public class SmsMessageLogicStub implements SmsMessageLogic {
 		return null;
 	}
 
+	public Integer getBillableMessagesCount(String arg0, String arg1,
+			String arg2, Integer arg3) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	public SmsMessage getNewTestSmsMessageInstance(String mobileNumber,
 			String messageBody) {
 		SmsTask smsTask = new SmsTask();
