@@ -47,7 +47,11 @@
   </bean>
 
   <!--  Producers -->
-  <bean class="org.sakaiproject.sms.producers.SmsTestProducer" />
+  <bean class="org.sakaiproject.sms.producers.SmsTestProducer" >
+  	<property name="ELEvaluator" ref="ELEvaluator" />
+	<property name="smsAccountLogic" ref="SmsAccountLogic" />
+  </bean>
+  
   <bean class="org.sakaiproject.sms.producers.SmsConfigProducer"/>
   
   <bean class="org.sakaiproject.sms.producers.TaskListPopupProducer" >
