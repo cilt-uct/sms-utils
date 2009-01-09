@@ -18,10 +18,13 @@
 package org.sakaiproject.sms.test;
 
 import java.sql.Timestamp;
+import java.util.Date;
 
 import junit.framework.TestCase;
 
 import org.sakaiproject.sms.constants.SmsUiConstants;
+import org.sakaiproject.sms.hibernate.logic.impl.SmsAccountLogicImpl;
+import org.sakaiproject.sms.hibernate.model.SmsAccount;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
@@ -45,6 +48,9 @@ public class SmsMessageValidationTest extends TestCase {
 	private static String MOBILE_NR_FIELD = "mobileNumber";
 	private static String MSG_BODY_FIELD = "messageBody";
 
+	private SmsAccountLogicImpl accountLogic;
+	private SmsAccount account;
+
 	/**
 	 * setUp to run before every test. Create SmsMessage + validator + errors
 	 * 
@@ -52,11 +58,22 @@ public class SmsMessageValidationTest extends TestCase {
 	 */
 	@Override
 	public void setUp() {
+
+		accountLogic = new SmsAccountLogicImpl();
+		account = new SmsAccount();
+		account.setSakaiSiteId("sakaiSiteId");
+		account.setMessageTypeCode("");
+		account.setBalance(10f);
+		account.setAccountName("account name");
+		account.setStartdate(new Date());
+		account.setAccountEnabled(true);
+		accountLogic.persistSmsAccount(account);
+
 		validator = new SmsMessageValidator();
 		msg = new SmsMessage();
 		smsTask = new SmsTask();
 		smsTask.setSakaiSiteId("sakaiSiteId");
-		smsTask.setSmsAccountId(1);
+		smsTask.setSmsAccountId(account.getId().intValue());
 		smsTask.setDateCreated(new Timestamp(System.currentTimeMillis()));
 		smsTask.setDateToSend(new Timestamp(System.currentTimeMillis()));
 		smsTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
@@ -66,8 +83,10 @@ public class SmsMessageValidationTest extends TestCase {
 		smsTask.setMaxTimeToLive(1);
 		smsTask.setDelReportTimeoutDuration(1);
 		smsTask.getSmsMessages().add(msg);
+		smsTask.setCreditEstimate(5);
 		msg.setSmsTask(smsTask);
 		errors = new BindException(msg, "SmsMessage");
+
 	}
 
 	/**
@@ -209,5 +228,16 @@ public class SmsMessageValidationTest extends TestCase {
 		msg.setMobileNumber(VALID_MOBILE_NR);
 		validator.validate(msg, errors);
 		assertFalse(errors.hasErrors());
+	}
+
+	/**
+	 * Test insufficient funds.
+	 */
+	public void testInsufficientCredit() {
+		msg.getSmsTask().setCreditEstimate(15);
+		msg.setMessageBody(VALID_MSG_BODY);
+		msg.setMobileNumber(VALID_MOBILE_NR);
+		validator.validate(msg, errors);
+		assertTrue(errors.hasErrors());
 	}
 }

@@ -19,6 +19,7 @@ package org.sakaiproject.sms.validators;
 
 import org.sakaiproject.sms.constants.SmsUiConstants;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
+import org.sakaiproject.sms.impl.SmsBillingImpl;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
@@ -63,7 +64,8 @@ public class SmsMessageValidator implements Validator {
 		}
 
 		if (msg.getMobileNumber() != null && !"".equals(msg.getMobileNumber())) {
-			String trimmedNumber = msg.getMobileNumber().trim();
+			String trimmedNumber = msg.getMobileNumber().trim().replaceAll(" ",
+					"");
 			// Check length of mobile number
 			if (trimmedNumber.length() > SmsUiConstants.MAX_MOBILE_NR_LENGTH) {
 				err.rejectValue("mobileNumber",
@@ -75,6 +77,16 @@ public class SmsMessageValidator implements Validator {
 				err.rejectValue("mobileNumber",
 						"sms.errors.mobileNumber.invalid");
 			}
+
+			// check for sufficient balance
+			SmsBillingImpl billing = new SmsBillingImpl();
+			boolean sufficientCredits = billing.checkSufficientCredits(msg
+					.getSmsTask().getSmsAccountId(), msg.getSmsTask()
+					.getCreditEstimate());
+			if (!sufficientCredits) {
+				err.reject("sms.errors.credit.insufficient");
+			}
+
 		}
 
 	}
