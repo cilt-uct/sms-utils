@@ -137,6 +137,8 @@
 			not-null="true" />
 		<property name="balance" type="float" column="BALANCE"
 			not-null="true" />
+		<property name="smsTaskId" type="long"
+			column="SMS_TASK_ID" not-null="true" />
 		<many-to-one name="smsAccount"
 			class="org.sakaiproject.sms.hibernate.model.SmsAccount" column="SMS_ACCOUNT_ID"
 			not-null="true" />

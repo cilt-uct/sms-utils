@@ -55,6 +55,9 @@ public class SmsTransaction extends BaseModel {
 	/** The Sms account. */
 	private SmsAccount smsAccount;
 
+	/** The sms task id. */
+	private Long smsTaskId;
+
 	/**
 	 * Instantiates a new sms transaction.
 	 */
@@ -211,6 +214,25 @@ public class SmsTransaction extends BaseModel {
 		return transactionAmount;
 	}
 
+	/**
+	 * Gets the sms task id.
+	 * 
+	 * @return the sms task
+	 */
+	public Long getSmsTaskId() {
+		return smsTaskId;
+	}
+
+	/**
+	 * Sets the sms task id.
+	 * 
+	 * @param smsTask
+	 *            the new sms task
+	 */
+	public void setSmsTaskId(Long smsTaskId) {
+		this.smsTaskId = smsTaskId;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -233,6 +255,8 @@ public class SmsTransaction extends BaseModel {
 				* result
 				+ ((transactionTypeCode == null) ? 0 : transactionTypeCode
 						.hashCode());
+		result = prime * result
+				+ ((smsTaskId == null) ? 0 : smsTaskId.hashCode());
 		return result;
 	}
 
@@ -273,6 +297,12 @@ public class SmsTransaction extends BaseModel {
 				return false;
 		} else if (!transactionTypeCode.equals(other.transactionTypeCode))
 			return false;
+		if (smsTaskId == null) {
+			if (other.smsTaskId != null)
+				return false;
+		} else if (!smsTaskId.equals(other.smsTaskId))
+			return false;
 		return true;
 	}
+
 }

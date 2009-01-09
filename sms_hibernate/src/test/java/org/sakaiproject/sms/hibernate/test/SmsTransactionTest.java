@@ -57,6 +57,7 @@ public class SmsTransactionTest extends AbstractBaseTestCase {
 		insertSmsTransaction.setTransactionAmount(1000.00f);
 
 		insertSmsTransaction.setSmsAccount(insertSmsAccount);
+		insertSmsTransaction.setSmsTaskId(1L);
 	}
 
 	/**
@@ -139,6 +140,7 @@ public class SmsTransactionTest extends AbstractBaseTestCase {
 		insertSmsTransaction.setTransactionTypeCode("TTC");
 		insertSmsTransaction.setTransactionCredits(666);
 		insertSmsTransaction.setTransactionAmount(1000.00f);
+		insertSmsTransaction.setSmsTaskId(1L);
 
 		insertSmsTransaction.setSmsAccount(insertSmsAccount);
 		insertSmsAccount.getSmsTransactions().add(insertSmsTransaction);
@@ -203,6 +205,7 @@ public class SmsTransactionTest extends AbstractBaseTestCase {
 			smsTransaction.setTransactionCredits(i);
 			smsTransaction.setTransactionAmount(1000.00f);
 			smsTransaction.setSmsAccount(smsAccount);
+			smsTransaction.setSmsTaskId(1L);
 
 			logic.persistSmsTransaction(smsTransaction);
 		}
