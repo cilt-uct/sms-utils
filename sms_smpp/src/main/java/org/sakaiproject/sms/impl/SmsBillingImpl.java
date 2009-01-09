@@ -21,8 +21,11 @@ import java.util.Date;
 import java.util.Set;
 
 import org.sakaiproject.sms.api.SmsBilling;
+import org.sakaiproject.sms.hibernate.logic.impl.SmsAccountLogicImpl;
 import org.sakaiproject.sms.hibernate.logic.impl.SmsMessageLogicImpl;
+import org.sakaiproject.sms.hibernate.model.SmsAccount;
 
+// TODO: Auto-generated Javadoc
 /**
  * The billing service will handle all financial functions for the sms tool in
  * Sakai.
@@ -33,14 +36,20 @@ import org.sakaiproject.sms.hibernate.logic.impl.SmsMessageLogicImpl;
  */
 public class SmsBillingImpl implements SmsBilling {
 
+	/** The message logic. */
 	private SmsMessageLogicImpl messageLogic = new SmsMessageLogicImpl();
+
+	/** The account logic. */
+	private SmsAccountLogicImpl accountLogic = new SmsAccountLogicImpl();
 
 	/**
 	 * Add extra credits to the specific account by making an entry into
 	 * SMS_TRANSACTION Also update the available credits on the account.
 	 * 
 	 * @param accountID
+	 *            the account id
 	 * @param creditCount
+	 *            the credit count
 	 */
 	public void allocateCredits(int accountID, int creditCount) {
 		// TODO Auto-generated method stub
@@ -52,11 +61,36 @@ public class SmsBillingImpl implements SmsBilling {
 	 * account overdraft limits, if applicable.
 	 * 
 	 * @param accountID
+	 *            the account id
 	 * @param creditsRequired
+	 *            the credits required
+	 * 
+	 * @return true, if sufficient credits
 	 */
 	public boolean checkSufficientCredits(int accountID, int creditsRequired) {
-		// TODO Auto-generated method stub
-		return false;
+		SmsAccount account = accountLogic.getSmsAccount(new Long(new Integer(
+				accountID)));
+
+		// Account is null or disabled
+		if (account == null || !account.getAccountEnabled()) {
+			return false;
+		}
+
+		boolean sufficientCredit = false;
+		if (account.getOverdraftLimit() != null) {
+			if ((account.getBalance() + account.getOverdraftLimit()) >= creditsRequired) {
+				sufficientCredit = true;
+			}
+		} else if (account.getBalance() >= creditsRequired) {
+			sufficientCredit = true;
+		}
+
+		if (sufficientCredit) {
+			// Reserve credits and check return if reservation was succesful.
+			return reserveCredits(accountID, creditsRequired);
+		}
+
+		return sufficientCredit;
 	}
 
 	/**
@@ -64,6 +98,9 @@ public class SmsBillingImpl implements SmsBilling {
 	 * value at the given time.
 	 * 
 	 * @param creditCount
+	 *            the credit count
+	 * 
+	 * @return the double
 	 */
 	public double convertCreditsToAmount(int creditCount) {
 		// TODO Auto-generated method stub
@@ -75,8 +112,13 @@ public class SmsBillingImpl implements SmsBilling {
 	 * specific account.
 	 * 
 	 * @param accountID
+	 *            the account id
 	 * @param startDate
+	 *            the start date
 	 * @param endDate
+	 *            the end date
+	 * 
+	 * @return the acc transactions
 	 */
 	public Set getAccTransactions(int accountID, Date startDate, Date endDate) {
 		// TODO Auto-generated method stub
@@ -88,6 +130,9 @@ public class SmsBillingImpl implements SmsBilling {
 	 * Return the currency amount available in the account.
 	 * 
 	 * @param accountID
+	 *            the account id
+	 * 
+	 * @return the account balance
 	 */
 	public double getAccountBalance(int accountID) {
 		// TODO Auto-generated method stub
@@ -98,12 +143,21 @@ public class SmsBillingImpl implements SmsBilling {
 	 * Return credits available in the account.
 	 * 
 	 * @param accountID
+	 *            the account id
+	 * 
+	 * @return the account credits
 	 */
 	public int getAccountCredits(int accountID) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.sakaiproject.sms.api.SmsBilling#getAccountID(java.lang.String,
+	 * java.lang.String, java.lang.Integer)
+	 */
 	public int getAccountID(String sakaiSiteID, String sakaiUserID,
 			Integer accountType) {
 		// TODO Auto-generated method stub
@@ -114,6 +168,9 @@ public class SmsBillingImpl implements SmsBilling {
 	 * Return all accounts linked to the given Sakai site.
 	 * 
 	 * @param sakaiSiteID
+	 *            the sakai site id
+	 * 
+	 * @return the all site accounts
 	 */
 	public Set getAllSiteAccounts(String sakaiSiteID) {
 		// TODO Auto-generated method stub
@@ -125,6 +182,9 @@ public class SmsBillingImpl implements SmsBilling {
 	 * Insert a new account and return the new account id.
 	 * 
 	 * @param sakaiSiteID
+	 *            the sakai site id
+	 * 
+	 * @return true, if insert account
 	 */
 	public boolean insertAccount(String sakaiSiteID) {
 		return false;
@@ -134,8 +194,13 @@ public class SmsBillingImpl implements SmsBilling {
 	 * Insert a new transaction for the given account id.
 	 * 
 	 * @param accountID
+	 *            the account id
 	 * @param transCodeID
+	 *            the trans code id
 	 * @param creditAmount
+	 *            the credit amount
+	 * 
+	 * @return true, if insert transaction
 	 */
 	public Boolean insertTransaction(int accountID, int transCodeID,
 			int creditAmount) {
@@ -149,10 +214,14 @@ public class SmsBillingImpl implements SmsBilling {
 	 * reservation must be rolled back with another transaction.
 	 * 
 	 * @param accountID
+	 *            the account id
 	 * @param credits
+	 *            the credits
+	 * 
+	 * @return true, if reserve credits
 	 */
 	public boolean reserveCredits(int accountID, int credits) {
-		return false;
+		return true;
 	}
 
 	/**
@@ -177,7 +246,8 @@ public class SmsBillingImpl implements SmsBilling {
 			String deliveryUserId, String deliveryGroupdId, Integer smsAccountId) {
 		// TODO Louis to check this is correct
 
-		return messageLogic.getBillableMessagesCount("", "", "", 0);
+		return messageLogic.getBillableMessagesCount(sakaiSiteId,
+				deliveryUserId, deliveryGroupdId, smsAccountId);
 	}
 
 }

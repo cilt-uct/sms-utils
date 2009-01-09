@@ -26,6 +26,7 @@ import org.apache.log4j.Level;
 import org.sakaiproject.sms.api.SmsBilling;
 import org.sakaiproject.sms.api.SmsCore;
 import org.sakaiproject.sms.api.SmsSmpp;
+import org.sakaiproject.sms.hibernate.logic.SmsAccountLogic;
 import org.sakaiproject.sms.hibernate.logic.SmsConfigLogic;
 import org.sakaiproject.sms.hibernate.logic.SmsTaskLogic;
 import org.sakaiproject.sms.hibernate.model.SmsConfig;
@@ -49,6 +50,8 @@ public class SmsCoreImpl implements SmsCore {
 	public SmsSmpp smsSmpp = null;
 
 	public SmsTaskLogic smsTaskLogic = null;
+
+	public SmsAccountLogic smsAccountLogic = null;
 
 	public SmsConfigLogic smsConfigLogic = null;
 
@@ -251,12 +254,13 @@ public class SmsCoreImpl implements SmsCore {
 	 * 
 	 * @param messageID
 	 */
+	// TODO Why does this not process all the messages for a group
 	public void processIncomingMessage(SmsMessage smsMessage) {
-		
-		// Persist the message first
+
+		// insert into queue
 		smsTaskLogic.persistSmsTask(smsMessage.getSmsTask());
 
-		// TODO Check wth Louis in this
+		// TODO Check with Louis about this functionality
 		// TODO Check what the status codes should be set to for task and
 		// messages
 		if (smsMessage.getSmsTask().getDateToSend().getTime() <= System
@@ -276,7 +280,7 @@ public class SmsCoreImpl implements SmsCore {
 				smsTaskLogic.persistSmsTask(smsMessage.getSmsTask());
 			}
 		} else {
-			// TODO Check wth Louis in this
+			// Add to the que for the scheduler to process
 			smsMessage.getSmsTask().setStatusCode(
 					SmsConst_DeliveryStatus.STATUS_PENDING);
 			smsMessage.getSmsTask().setMessageTypeId(
