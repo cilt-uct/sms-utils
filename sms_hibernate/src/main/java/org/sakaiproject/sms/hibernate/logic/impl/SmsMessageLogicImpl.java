@@ -321,41 +321,22 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 				.append(" select count(SMS_MESSAGE.MESSAGE_ID) as count from SMS_TASK, SMS_MESSAGE");
 		sql.append(" where SMS_TASK.TASK_ID = SMS_MESSAGE.TASK_ID ");
 		sql.append(" and SMS_MESSAGE.STATUS_CODE = :statusCode ");
-
-		if (sakaiSiteId != null && !sakaiSiteId.trim().equals("")) {
-			sql.append(" and SMS_TASK.SAKAI_SITE_ID = :sakaiSiteId");
-		}
-
-		if (deliveryUserId != null && !deliveryUserId.trim().equals("")) {
-			sql.append(" and SMS_TASK.DELIVERY_USER_ID = :deliveryUserId");
-		}
-
-		if (deliveryGroupdId != null && !deliveryGroupdId.trim().equals("")) {
-			sql.append(" and SMS_TASK.DELIVERY_GROUP_ID = :deliveryGroupdId");
-		}
-
-		if (smsAccountId != null) {
-			sql.append(" and SMS_TASK.SMS_ACCOUNT_ID = :smsAccountId");
-		}
+		sql.append(" and SMS_TASK.SAKAI_SITE_ID = :sakaiSiteId");
+		sql.append(" and SMS_TASK.DELIVERY_USER_ID = :deliveryUserId");
+		sql.append(" and SMS_TASK.DELIVERY_GROUP_ID = :deliveryGroupdId");
+		sql.append(" and SMS_TASK.SMS_ACCOUNT_ID = :smsAccountId");
 
 		SQLQuery query = s.createSQLQuery(sql.toString());
 		query.setString("statusCode", SmsConst_DeliveryStatus.STATUS_DELIVERED);
-		if (sakaiSiteId != null && !sakaiSiteId.trim().equals("")) {
-			query.setString("sakaiSiteId", sakaiSiteId);
-		}
-		if (deliveryUserId != null && !deliveryUserId.trim().equals("")) {
-			query.setString("deliveryUserId", deliveryUserId);
-		}
-		if (deliveryGroupdId != null && !deliveryGroupdId.trim().equals("")) {
-			query.setString("deliveryGroupdId", deliveryGroupdId);
-		}
-		if (smsAccountId != null) {
-			query.setInteger("smsAccountId", smsAccountId);
-		}
+		query.setString("sakaiSiteId", sakaiSiteId);
+		query.setString("deliveryUserId", deliveryUserId);
+		query.setString("deliveryGroupdId", deliveryGroupdId);
+		query.setInteger("smsAccountId", smsAccountId);
 
 		query.addScalar("count");
 
 		count = query.list();
 		return ((BigInteger) count.get(0)).intValue();
 	}
+
 }
