@@ -39,7 +39,7 @@ public class SmsAccountTest extends AbstractBaseTestCase {
 		insertSmsAccount.setBalance(5000.00f);
 		insertSmsAccount.setAccountName("accountName");
 		insertSmsAccount.setAccountEnabled(true);
-		
+
 		insertSmsTransaction1 = new SmsTransaction();
 		insertSmsTransaction1.setBalance(100.00f);
 		insertSmsTransaction1.setSakaiUserId("SakaiUserId1");
@@ -48,6 +48,7 @@ public class SmsAccountTest extends AbstractBaseTestCase {
 		insertSmsTransaction1.setTransactionDate(new Date(System
 				.currentTimeMillis()));
 		insertSmsTransaction1.setTransactionTypeCode("TTC");
+		insertSmsTransaction1.setSmsTaskId(1L);
 
 		insertSmsTransaction2 = new SmsTransaction();
 		insertSmsTransaction2.setBalance(100.00f);
@@ -57,6 +58,7 @@ public class SmsAccountTest extends AbstractBaseTestCase {
 		insertSmsTransaction2.setTransactionDate(new Date(System
 				.currentTimeMillis()));
 		insertSmsTransaction2.setTransactionTypeCode("TTC");
+		insertSmsTransaction2.setSmsTaskId(1L);
 	}
 
 	/**
@@ -124,7 +126,6 @@ public class SmsAccountTest extends AbstractBaseTestCase {
 		assertEquals("Incorrect object returned", insertSmsAccount, account);
 		assertTrue("Returnend collection is incorreclt size", account
 				.getSmsTransactions().size() == 2);
-
 	}
 
 	/**
