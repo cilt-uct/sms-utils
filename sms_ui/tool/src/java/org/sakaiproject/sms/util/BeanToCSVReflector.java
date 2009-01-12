@@ -1,15 +1,13 @@
 package org.sakaiproject.sms.util;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import sun.reflect.misc.FieldUtil;
-
 /**
- * A Utility class to convert a List of objects to a CSV list
+ * A Utility class to convert a List of java beans to a CSV list does not fetch nested objects
  *
  */
 public class BeanToCSVReflector {
@@ -28,28 +26,16 @@ public class BeanToCSVReflector {
 		}
 		
 		Object objectToReflectOn = list.get(0);
-		Field[] fieldArray = FieldUtil.getDeclaredFields(objectToReflectOn.getClass());
+		Method[] methodArray =  getAllPublicAccesorMethods(objectToReflectOn);
+		methodArray = createOrderedMethodArray(methodArray, fieldNames);
 		
-		fieldArray = createOrderedFieldArray(fieldArray, fieldNames);
-		
-		
-		Method[] method =  objectToReflectOn.getClass().getMethods();
-		for (int i = 0; i < method.length; i++) {
-			System.err.println(method[i].getName());
-		}
-		
-		
-		
-		for (int i = 0; i < fieldArray.length; i++) {
-			fieldArray[i].setAccessible(true);
-		}
 		
 		for (Object object : list) {
-			for (int i = 0; i < fieldArray.length; i++) {
+			for (int i = 0; i < methodArray.length; i++) {
 				try {
-					String value = fieldArray[i].get(object).toString();
+					String value = methodArray[i].invoke(object).toString();
 					
-					if(i == fieldArray.length - 1){
+					if(i == methodArray.length - 1){
 						buffer.append(value + "\n");
 					}
 					else{
@@ -57,7 +43,7 @@ public class BeanToCSVReflector {
 					}
 					
 				} catch (Exception e) {
-					throw new RuntimeException("Faile to obtain value from field"  + fieldArray[i].toString());
+					throw new RuntimeException("Faile to obtain value from method"  + methodArray[i].toString());
 				} 
 			}
 		}
@@ -65,30 +51,67 @@ public class BeanToCSVReflector {
 		return buffer;
 	}
 
-	private Field[] createOrderedFieldArray(Field[] fieldArray, String[] fieldNames) {
+	private Method[] getAllPublicAccesorMethods(Object objectToReflectOn) {
+		
+		Method[] allMethods = objectToReflectOn.getClass().getMethods();
+		ArrayList<Method> accesorMethods = new ArrayList<Method>();
+
+		for (int i = 0; i < allMethods.length; i++) {
+			
+			String methodName = allMethods[i].getName();
+			
+			if(methodName.startsWith("get"))
+				accesorMethods.add(allMethods[i]);
+		}
+		
+		Method[] methodList = new Method[accesorMethods.size()];
+		
+		for(int i = 0 ; i < methodList.length ; i++){
+			methodList[i] = accesorMethods.get(i);
+		}
+		
+		return methodList;
+	}
+
+	private Method[] createOrderedMethodArray(Method[] methodArray, String[] fieldNames) {
+		
 		
 		if(fieldNames == null){
-			return fieldArray;
+			return methodArray;
 		}
 		
-		Map<String, Field> fieldMap = new TreeMap<String, Field>();
-		for (int i = 0; i < fieldArray.length; i++) {
-			fieldMap.put(fieldArray[i].getName(), fieldArray[i]);
+		Map<String, Method> methodMap = new TreeMap<String, Method>();
+		for (int i = 0; i < methodArray.length; i++) {
+			
+			String methodName = methodArray[i].getName();
+			String fieldName = convertMethodNameToFieldName(methodName);			
+			methodMap.put(fieldName, methodArray[i]);
 		}
 		
-		Field[] fieldsToReflectOn = new Field[fieldNames.length];
+		Method[] methodsToInvoke = new Method[fieldNames.length];
 		for (int i = 0; i < fieldNames.length; i++) {
 			
-			Field tempField = fieldMap.get(fieldNames[i]);
+			Method tempMethod = methodMap.get(fieldNames[i]);
 			
-			if(tempField == null){
+			if(tempMethod == null){
 				throw new RuntimeException("The Field value " + fieldNames[i]  + " does not exsist in the supplied Object List");
 			}
 			
-			fieldsToReflectOn[i] = tempField;
+			methodsToInvoke[i] = tempMethod;
 		}
 		
-		return fieldsToReflectOn;
+		return methodsToInvoke;
+	}
+
+	private String convertMethodNameToFieldName(String methodName) {
+		//remove "get"
+		methodName = methodName.substring(3);
+		
+		if(methodName.length() >= 2)
+			methodName = methodName.substring(0, 1).toLowerCase() + methodName.substring(1);
+		else
+			methodName = methodName.toUpperCase();
+		return methodName;
 	}
 
 }

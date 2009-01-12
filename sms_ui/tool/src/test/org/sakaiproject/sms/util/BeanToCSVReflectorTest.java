@@ -29,12 +29,11 @@ public class BeanToCSVReflectorTest extends TestCase{
 		
 		String csvRow = buffer.toString();
 
-		System.out.println(csvRow);
 		
 		assertTrue(csvRow.contains(","));
 		assertTrue(csvRow.contains("Row 1"));
 		assertTrue(csvRow.contains("2000"));
-		assertTrue(csvRow.contains("255"));	
+		assertTrue(csvRow.contains("255"));
 	}
 
 	public void testSimpleResultSetWithOrder() throws Exception {
@@ -57,8 +56,6 @@ public class BeanToCSVReflectorTest extends TestCase{
 		List<ExtendedResultSet> list = createExtendedTestRow();
 		StringBuffer buffer = beanToCSVReflector.toCSV(list);
 		String extendCsvRow = buffer.toString();
-		
-		System.err.println(buffer);
 		
 		assertTrue(extendCsvRow.contains("Row 1"));
 		assertTrue(extendCsvRow.contains("More info"));
