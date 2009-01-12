@@ -49,4 +49,14 @@ public class SmsConst_DeliveryStatus {
 	 */
 	public final static String STATUS_BUSY = "B";
 
+	/**
+	 * The task is expired when its max time to live is to old to be processed.
+	 */
+	public final static String STATUS_EXPIRE = "X";
+
+	/**
+	 * The message did not receive a delivery report within the timeout period.
+	 */
+	public final static String STATUS_TIMEOUT = "T";
+
 }
