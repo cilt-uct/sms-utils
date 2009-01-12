@@ -27,6 +27,7 @@ import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_SmscDeliveryStatus;
+import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
 import org.sakaiproject.sms.hibernate.util.AbstractBaseTestCase;
 import org.sakaiproject.sms.hibernate.util.HibernateUtil;
 import org.sakaiproject.sms.impl.SmsSmppImpl;
@@ -50,7 +51,7 @@ public class SmppAPITest extends AbstractBaseTestCase {
 	}
 
 	static {
-		System.out.println("static setUp");
+		System.out.println("Static setUp");
 		HibernateUtil.createSchema();
 		smsSmppImpl = new SmsSmppImpl();
 		smsSmppImpl.setSmsMessageLogic(new SmsMessageLogicImpl());
@@ -90,8 +91,13 @@ public class SmppAPITest extends AbstractBaseTestCase {
 		insertTask.setAttemptCount(0);
 		insertTask.setMessageBody("testing1234567");
 		insertTask.setSenderUserName("administrator");
-		insertTask.setMaxTimeToLive(1000);
-		insertTask.setDelReportTimeoutDuration(1000);
+		insertTask.setMaxTimeToLive(300);
+		insertTask.setDelReportTimeoutDuration(300);
+		insertTask
+				.setMessageTypeId(SmsHibernateConstants.SMS_TASK_TYPE_PROCESS_NOW);
+		insertTask.setDateProcessed(new Date());
+		insertTask
+				.setMessageTypeId(SmsHibernateConstants.SMS_TASK_TYPE_PROCESS_NOW);
 		smsTaskLogicImpl = new SmsTaskLogicImpl();
 		smsTaskLogicImpl.persistSmsTask(insertTask);
 		return insertTask;
@@ -108,6 +114,7 @@ public class SmppAPITest extends AbstractBaseTestCase {
 		SmsTask insertTask = insertNewTask("testSendMessagesToGateway",
 				SmsConst_DeliveryStatus.STATUS_PENDING, new Date(System
 						.currentTimeMillis()), 0);
+
 		assertTrue("Task for message not created", insertTask.exists());
 
 		for (int i = 0; i < 10; i++) {
@@ -157,7 +164,7 @@ public class SmppAPITest extends AbstractBaseTestCase {
 		assertEquals(true, smsSmppImpl.sendMessageToGateway(insertMessage1)
 				.getSmscMessageId() != null);
 		try {
-			Thread.sleep(10000);
+			Thread.sleep(15000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

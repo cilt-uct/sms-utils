@@ -28,6 +28,7 @@ import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_SmscDeliveryStatus;
+import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
 import org.sakaiproject.sms.impl.SmsSmppImpl;
 
 /**
@@ -90,8 +91,12 @@ public class SmppThread extends TestRunnable {
 		insertTask.setAttemptCount(0);
 		insertTask.setMessageBody("testing1234567");
 		insertTask.setSenderUserName("administrator");
-		insertTask.setMaxTimeToLive(1000);
-		insertTask.setDelReportTimeoutDuration(1000);
+		insertTask.setMaxTimeToLive(300);
+		insertTask.setDelReportTimeoutDuration(300);
+		insertTask.setDateProcessed(new Date());
+		insertTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_SENT);
+		insertTask
+				.setMessageTypeId(SmsHibernateConstants.SMS_TASK_TYPE_PROCESS_NOW);
 		smsTaskLogicImpl.persistSmsTask(insertTask);
 		return insertTask;
 	}

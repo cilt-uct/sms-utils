@@ -21,6 +21,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Properties;
 import java.util.Set;
@@ -99,6 +100,10 @@ public class SmsSmppImpl implements SmsSmpp {
 	private int sendingDelay;
 	private String smscID;
 
+	//provides access to the session for the units.
+	public SMPPSession getSession() {
+		return session;
+	}
 	public SmsTaskLogic getSmsTaskLogic() {
 		return smsTaskLogic;
 	}
@@ -181,6 +186,21 @@ public class SmsSmppImpl implements SmsSmpp {
 					SmsMessage smsMessage = smsMessageLogic
 							.getSmsMessageBySmscMessageId(deliveryReceipt
 									.getId());
+					if (smsMessage == null) {
+						for (int i = 0; i < 5; i++) {
+							System.out.println("SMSC_DEL_RECEIPT retry " + i
+									+ " out of 5");
+							smsMessage = smsMessageLogic
+									.getSmsMessageBySmscMessageId(deliveryReceipt
+											.getId());
+							try {
+								Thread.sleep(5000);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+						}
+
+					}
 					if (smsMessage != null) {
 						smsMessage.setSmscDeliveryStatusCode(SmsStatusBridge
 								.getSmsDeliveryStatus((deliveryReceipt
@@ -192,16 +212,17 @@ public class SmsSmppImpl implements SmsSmpp {
 										.getFinalStatus())) != SmsConst_SmscDeliveryStatus.DELIVERED) {
 							smsMessage
 									.setStatusCode(SmsConst_DeliveryStatus.STATUS_FAIL);
+						} else {
+							smsMessage
+									.setStatusCode(SmsConst_DeliveryStatus.STATUS_DELIVERED);
 						}
 
 						smsMessageLogic.persistSmsMessage(smsMessage);
-
 					} else {
 						LOG
 								.error("Delivery report received for message not in database. MessageSMSCID="
 										+ deliveryReceipt.getId());
 					}
-
 				} catch (InvalidDeliveryReceiptException e) {
 					LOG.error("Failed getting delivery receipt" + e);
 
@@ -530,7 +551,7 @@ public class SmsSmppImpl implements SmsSmpp {
 
 		if (gatewayBound) {
 			try {
-
+			
 				String messageId = session.submitShortMessage(serviceType,
 						TypeOfNumber.valueOf(sourceAddressTON),
 						NumberingPlanIndicator.valueOf(sourceAddressNPI),
@@ -545,9 +566,7 @@ public class SmsSmppImpl implements SmsSmpp {
 								Alphabet.ALPHA_DEFAULT), smDefaultMsgId,
 						message.getMessageBody().getBytes());
 				message.setSmscMessageId(messageId);
-				message
-						.setDebugInfo("Message sent to gateway, smsc message id is "
-								+ messageId);
+
 				message.setSubmitResult(true);
 				message.setSmscId(smscID);
 				message.setStatusCode(SmsConst_DeliveryStatus.STATUS_SENT);
@@ -557,6 +576,7 @@ public class SmsSmppImpl implements SmsSmpp {
 					smsTaskLogic.persistSmsTask(message.getSmsTask());
 				}
 				smsMessageLogic.persistSmsMessage(message);
+
 				LOG.info("Message submitted, message_id is " + messageId);
 			} catch (PDUException e) {
 				// Invalid PDU parameter

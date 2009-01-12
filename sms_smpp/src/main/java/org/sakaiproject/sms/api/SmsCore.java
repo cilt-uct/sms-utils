@@ -100,6 +100,13 @@ public interface SmsCore {
 	public void processIncomingMessage(SmsMessage smsMessage);
 
 	/**
+	 * Updates the messages status to timedout which did not receive a delivery
+	 * report within the valid period.As determined by
+	 * DEL_REPORT_TIMEOUT_DURATION on the task.
+	 */
+	public void processTimedOutMessages();
+
+	/**
 	 * Gets the next task to process. Based on specific criteria like status en
 	 * date to sent.
 	 */

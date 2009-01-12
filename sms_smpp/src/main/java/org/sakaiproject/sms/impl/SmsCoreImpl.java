@@ -20,6 +20,7 @@ package org.sakaiproject.sms.impl;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.log4j.Level;
@@ -28,6 +29,7 @@ import org.sakaiproject.sms.api.SmsCore;
 import org.sakaiproject.sms.api.SmsSmpp;
 import org.sakaiproject.sms.hibernate.logic.SmsAccountLogic;
 import org.sakaiproject.sms.hibernate.logic.SmsConfigLogic;
+import org.sakaiproject.sms.hibernate.logic.SmsMessageLogic;
 import org.sakaiproject.sms.hibernate.logic.SmsTaskLogic;
 import org.sakaiproject.sms.hibernate.model.SmsConfig;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
@@ -51,7 +53,17 @@ public class SmsCoreImpl implements SmsCore {
 
 	public SmsTaskLogic smsTaskLogic = null;
 
-	public SmsAccountLogic smsAccountLogic = null;
+public SmsAccountLogic smsAccountLogic = null;
+
+	public SmsMessageLogic smsMessageLogic = null;
+
+	public SmsMessageLogic getSmsMessageLogic() {
+		return smsMessageLogic;
+	}
+
+	public void setSmsMessageLogic(SmsMessageLogic smsMessageLogic) {
+		this.smsMessageLogic = smsMessageLogic;
+	}
 
 	public SmsConfigLogic smsConfigLogic = null;
 
@@ -219,7 +231,7 @@ public class SmsCoreImpl implements SmsCore {
 	 * @param sakaiToolId
 	 * @return
 	 */
-	public SmsTask insertNewTask(String deliverGroupId,
+	public synchronized SmsTask insertNewTask(String deliverGroupId,
 			Set<String> mobileNumbers, Set<String> sakaiUserIds,
 			Date dateToSend, String messageBody, String sakaiToolId) {
 		// TODO mobileNumbers must be implemented
@@ -230,10 +242,11 @@ public class SmsCoreImpl implements SmsCore {
 		smsTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
 		smsTask.setSakaiSiteId(SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_ID);
 		// TODO Populate from Sakai
-		smsTask.setMessageTypeId(SmsHibernateConstants.MESSAGE_TYPE_OUTGOING);
-		smsTask.setSakaiToolId("sakaiToolId");// TODO Populate from Sakai
+		smsTask
+				.setMessageTypeId(SmsHibernateConstants.SMS_TASK_TYPE_PROCESS_SCHEDULED);
+		smsTask.setSakaiToolId(sakaiToolId);// TODO Populate from Sakai
 		smsTask.setSenderUserName("senderUserName");// TODO Populate from Sakai
-		smsTask.setDeliveryGroupName("delGroupName");// TODO Populate from Sakai
+		smsTask.setDeliveryGroupName(deliverGroupId);// TODO Populate from Sakai
 		smsTask.setDateToSend(dateToSend);
 		smsTask.setAttemptCount(0);
 		smsTask.setMessageBody(messageBody);
@@ -241,8 +254,8 @@ public class SmsCoreImpl implements SmsCore {
 				sakaiUserIds);
 		smsTask.setGroupSizeEstimate(smsTask.getSmsMessages().size());
 		smsTask.setCreditEstimate(deliverGroupMessages.size());
-		smsTask.setMaxTimeToLive(1000);
-		smsTask.setDelReportTimeoutDuration(1000);
+		smsTask.setMaxTimeToLive(300000);
+		smsTask.setDelReportTimeoutDuration(300000);
 		smsTaskLogic.persistSmsTask(smsTask);
 		return smsTask;
 	}
@@ -294,7 +307,7 @@ public class SmsCoreImpl implements SmsCore {
 	 * Get the next task to process. Based on specific criteria like status and
 	 * date to sent.
 	 */
-	public void processNextTask() {
+	public synchronized void processNextTask() {
 		SmsTask smsTask = smsTaskLogic.getNextSmsTask();
 		if (smsTask != null) {
 			this.processTask(smsTask);
@@ -313,8 +326,22 @@ public class SmsCoreImpl implements SmsCore {
 	public void processTask(SmsTask smsTask) {
 		SmsConfig config = smsConfigLogic
 				.getOrCreateSmsConfigBySakaiSiteId(smsTask.getSakaiSiteId());
-		smsTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_BUSY);
+		smsTask.setDateProcessed(new Date());
 		smsTask.setAttemptCount((smsTask.getAttemptCount()) + 1);
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(smsTask.getDateToSend());
+		cal.add(Calendar.SECOND, smsTask.getMaxTimeToLive());
+
+		if (cal.getTime().before(new Date())) {
+			smsTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_EXPIRE);
+			smsTask.setStatusForMessages(
+					SmsConst_DeliveryStatus.STATUS_PENDING,
+					SmsConst_DeliveryStatus.STATUS_EXPIRE);
+			smsTaskLogic.persistSmsTask(smsTask);
+			return;
+		}
+
+		smsTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_BUSY);
 		if (smsTask.getAttemptCount() < config.getSmsRetryMaxCount()) {
 			if (smsTask.getAttemptCount() <= 1) {
 
@@ -364,6 +391,32 @@ public class SmsCoreImpl implements SmsCore {
 		}
 	}
 
+	/**
+	 * Updates the messages status to timedout which did not receive a delivery
+	 * report within the valid period.As determined by
+	 * DEL_REPORT_TIMEOUT_DURATION on the task.
+	 */
+	public void processTimedOutMessages() {
+		List<SmsMessage> smsMessages = smsMessageLogic
+				.getSmsMessagesWithStatus(null,
+						SmsConst_DeliveryStatus.STATUS_SENT);
+
+		if (smsMessages != null) {
+			for (SmsMessage message : smsMessages) {
+				SmsTask task = message.getSmsTask();
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(task.getDateProcessed());
+				cal.add(Calendar.SECOND, task.getDelReportTimeoutDuration());
+				if (cal.getTime().before(new Date())) {
+					message
+							.setStatusCode(SmsConst_DeliveryStatus.STATUS_TIMEOUT);
+					smsMessageLogic.persistSmsMessage(message);
+				}
+
+			}
+		}
+
+	}
 	public SmsTask getPreliminaryTask(String deliverGroupId, Date dateToSend,
 			String messageBody, String sakaiToolId) {
 		// TODO Auto-generated method stub
