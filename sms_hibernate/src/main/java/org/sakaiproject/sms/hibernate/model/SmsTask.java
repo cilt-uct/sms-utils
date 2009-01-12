@@ -683,6 +683,25 @@ public class SmsTask extends BaseModel {
 		this.delReportTimeoutDuration = delReportTimeoutDuration;
 	}
 
+	/**
+	 * Count billable messages.
+	 * <p>
+	 * Only the messages that were reported as delivered are billable. Messages
+	 * that are marked as invalid, failed or timed out will not be billed to the
+	 * account.
+	 */
+	public Integer getBillableMessagesCount() {
+		int count = 0;
+		for (SmsMessage message : smsMessages) {
+			if (message.getStatusCode() != null
+					&& message.getStatusCode().equals(
+							SmsConst_DeliveryStatus.STATUS_DELIVERED)) {
+				count++;
+			}
+		}
+		return count;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
