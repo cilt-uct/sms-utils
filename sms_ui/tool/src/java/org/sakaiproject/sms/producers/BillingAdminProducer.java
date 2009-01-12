@@ -90,8 +90,9 @@ public class BillingAdminProducer implements ViewComponentProducer {
 			UIOutput.make(entry, "sakai-user",
 					account.getSakaiUserId() == null ? "" : account
 							.getSakaiUserId());
-			UIOutput.make(entry, "overdraft-limit", nf.format(
-					account.getOverdraftLimit()).toString());
+			Float overdraftLimit = account.getOverdraftLimit();
+			UIOutput.make(entry, "overdraft-limit", overdraftLimit == null ? ""
+					: nf.format(overdraftLimit));
 			UIOutput.make(entry, "balance", nf.format(account.getBalance())
 					.toString());
 		}
