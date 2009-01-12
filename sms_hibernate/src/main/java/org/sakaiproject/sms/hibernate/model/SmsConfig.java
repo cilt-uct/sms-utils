@@ -1,17 +1,17 @@
 /***********************************************************************************
  * SmsConfig.java
  * Copyright (c) 2008 Sakai Project/Sakai Foundation
- * 
- * Licensed under the Educational Community License, Version 2.0 (the "License"); 
- * you may not use this file except in compliance with the License. 
+ *
+ * Licensed under the Educational Community License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.osedu.org/licenses/ECL-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software 
- * distributed under the License is distributed on an "AS IS" BASIS, 
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
- * See the License for the specific language governing permissions and 
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
  * limitations under the License.
  *
  **********************************************************************************/
@@ -72,6 +72,9 @@ public class SmsConfig extends BaseModel {
 
 	/** Number of lines to show in grid windows. */
 	private Integer pagingSize;
+
+	/** Sets the interval for the scheduler. */
+	private Integer schedulerInterval = 60000;
 
 	/**
 	 * Instantiates a new sms configuration.
@@ -424,6 +427,14 @@ public class SmsConfig extends BaseModel {
 		} else if (!smsTaskMaxLifeTime.equals(other.smsTaskMaxLifeTime))
 			return false;
 		return true;
+	}
+
+	public void setSchedulerInterval(Integer schedulerInterval) {
+		this.schedulerInterval = schedulerInterval;
+	}
+
+	public Integer getSchedulerInterval() {
+		return schedulerInterval;
 	}
 
 	/*
