@@ -137,8 +137,8 @@
 			not-null="true" />
 		<property name="balance" type="float" column="BALANCE"
 			not-null="true" />
-		<property name="smsTaskId" type="long"
-			column="SMS_TASK_ID" not-null="true" />
+		<property name="smsTaskId" type="long" column="SMS_TASK_ID"
+			not-null="true" />
 		<many-to-one name="smsAccount"
 			class="org.sakaiproject.sms.hibernate.model.SmsAccount" column="SMS_ACCOUNT_ID"
 			not-null="true" />
@@ -150,7 +150,7 @@
 			<generator class="native" />
 		</id>
 		<property name="sakaiSiteId" type="string" column="SAKAI_SITE_ID"
-			not-null="true" length="99" unique="true" />
+			not-null="false" length="99" unique="true" />
 		<property name="sakaiToolId" type="string" column="SAKAI_TOOL_ID"
 			not-null="false" length="99" unique="false" />
 		<property name="smsEnabled" type="string" column="SMS_ENABLED"
@@ -159,7 +159,8 @@
 			not-null="false" length="100" />
 		<property name="gateWayReportTimeout" type="integer"
 			column="GATEWAY_REPORT_TIMEOUT" not-null="false" />
-
+		<property name="schedulerInterval" type="integer" column="SCHEDULER_INTERVAL"
+			not-null="false" />
 		<property name="smsRetryMaxCount" type="integer" column="SMS_RETRY_MAX_COUNT"
 			not-null="false" />
 		<property name="smsRetryScheduleInterval" type="integer"
