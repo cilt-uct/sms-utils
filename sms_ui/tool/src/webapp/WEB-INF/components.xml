@@ -6,15 +6,12 @@
 <beans>
 
 	<!-- add sakai application scope bean definitions here -->
-
-	<bean id="org.sakaiproject.sms.hibernate.logic.SmsMessageLogic"
-		class="org.sakaiproject.sms.hibernate.logic.impl.SmsMessageLogicImpl" />
-
-	<bean id="org.sakaiproject.sms.hibernate.logic.SmsTaskLogic"
-		class="org.sakaiproject.sms.hibernate.logic.impl.SmsTaskLogicImpl" />
-
-	<bean id="org.sakaiproject.sms.hibernate.logic.SmsConfigLogic"
-		class="org.sakaiproject.sms.hibernate.logic.impl.SmsConfigLogicImpl" />
+	
+	<bean id="smsConfigLogic" class="org.sakaiproject.sms.hibernate.logic.impl.SmsConfigLogicImpl"/>
+	<bean id="SmsAccountLogic" class="org.sakaiproject.sms.hibernate.logic.impl.SmsAccountLogicImpl" />
+	<bean id="smsTaskLogic" class="org.sakaiproject.sms.hibernate.logic.impl.SmsTaskLogicImpl"/>
+	<bean id="smsTransactionLogic" class="org.sakaiproject.sms.hibernate.logic.impl.SmsTransactionLogicImpl"/>
+	<bean id="smsMessageLogic" class="org.sakaiproject.sms.hibernate.logic.impl.SmsMessageLogicImpl" />
 
 	<bean id="org.sakaiproject.sms.api.SmsBilling" class="org.sakaiproject.sms.impl.SmsBillingImpl" />
 
@@ -23,15 +20,15 @@
 		init-method="init">
 		<property name="smsMessageLogic" ref="smsMessageLogic" />
 		<property name="smsTaskLogic"
-			ref="org.sakaiproject.sms.hibernate.logic.SmsTaskLogic" />
+			ref="smsTaskLogic" />
 	</bean>
 
 	<bean id="org.sakaiproject.sms.api.SmsCore" class="org.sakaiproject.sms.impl.SmsCoreImpl"
 		init-method="init">
 		<property name="smsTaskLogic"
-			ref="org.sakaiproject.sms.hibernate.logic.SmsTaskLogic" />
+			ref="smsTaskLogic" />
 		<property name="smsConfigLogic"
-			ref="org.sakaiproject.sms.hibernate.logic.SmsConfigLogic" />
+			ref="smsConfigLogic" />
 		<property name="smsBilling" ref="org.sakaiproject.sms.api.SmsBilling" />
 		<property name="smsSmpp" ref="org.sakaiproject.sms.api.SmsSmpp" />
 	</bean>

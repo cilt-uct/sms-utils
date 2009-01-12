@@ -22,6 +22,7 @@ package org.sakaiproject.sms.constants;
  */
 public class SmsUiConstants {
 
+	public static final int NO_RESULTS_PAGING_SIZE = 1;
 	// for spring OTP
 	public static final String NEW_1 = "new 1";
 

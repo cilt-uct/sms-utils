@@ -18,6 +18,7 @@
 
 package org.sakaiproject.sms.renderers;
 
+import org.sakaiproject.sms.constants.SmsUiConstants;
 import org.sakaiproject.sms.hibernate.bean.SearchFilterBean;
 import org.sakaiproject.sms.hibernate.bean.SearchResultContainer;
 import org.sakaiproject.sms.hibernate.logic.SmsTransactionLogic;
@@ -38,7 +39,7 @@ public class TransactionLogResultsRenderer implements SearchResultsRenderer {
 	private final static org.apache.log4j.Logger LOG = org.apache.log4j.Logger
 			.getLogger(TransactionLogResultsRenderer.class);
 
-	private SearchResultContainer<SmsTransaction> smsTransactions = new SearchResultContainer<SmsTransaction>();
+	private SearchResultContainer<SmsTransaction> smsTransactions = new SearchResultContainer<SmsTransaction>(SmsUiConstants.NO_RESULTS_PAGING_SIZE);
 
 	private SearchFilterBean searchFilterBean;
 	private SortHeaderRenderer sortHeaderRenderer;
