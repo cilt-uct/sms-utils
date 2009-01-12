@@ -35,6 +35,7 @@ import org.sakaiproject.sms.hibernate.bean.SearchResultContainer;
 import org.sakaiproject.sms.hibernate.dao.SmsDao;
 import org.sakaiproject.sms.hibernate.logic.SmsTaskLogic;
 import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsSearchException;
+import org.sakaiproject.sms.hibernate.model.SmsConfig;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
 import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
@@ -226,15 +227,23 @@ public class SmsTaskLogicImpl extends SmsDao implements SmsTaskLogic {
 			throw new SmsSearchException(e);
 		}
 
-		log.debug(crit.toString());
-		SearchResultContainer<SmsTask> container = new SearchResultContainer<SmsTask>();
-		tasks = crit.list();
-		container.setTotalResultSetSize(new Long(tasks.size()));
-		container
-				.calculateAndSetPageResults(tasks, searchBean.getCurrentPage());
 
+		log.debug(crit.toString());
+		tasks = crit.list();
 		HibernateUtil.closeSession();
+
+		SearchResultContainer<SmsTask> container = new SearchResultContainer<SmsTask>(getPageSize());
+		container.setTotalResultSetSize(new Long(tasks.size()));
+		container.calculateAndSetPageResults(tasks, searchBean.getCurrentPage());
+
 		return container;
 	}
 
+	private int getPageSize() {
+		SmsConfig smsConfig = getConfigLogic().getSmsConfigBySakaiToolId(SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_TOOL_ID);
+		if(smsConfig == null)
+			return SmsHibernateConstants.DEFAULT_PAGE_SIZE;
+		else 
+			return smsConfig.getPagingSize();
+	}
 }

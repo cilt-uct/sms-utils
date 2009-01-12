@@ -28,26 +28,31 @@ public class SampleSmsAccountFactory implements Listable {
 		SmsAccount smsAccount1 = new SmsAccount(randomUtils
 				.getRandomFloat(2000), "S", randomUtils.getRandomFloat(2000),
 				"SAK", "BOB001", "Account 1");
+		smsAccount1.setAccountEnabled(true);
 		smsAccounts.add(smsAccount1);
 
 		SmsAccount smsAccount2 = new SmsAccount(randomUtils
 				.getRandomFloat(2000), "P", randomUtils.getRandomFloat(2000),
 				"MMM", "JOE001", "Account 1");
+		smsAccount2.setAccountEnabled(true);
 		smsAccounts.add(smsAccount2);
 
 		SmsAccount smsAccount3 = new SmsAccount(randomUtils
 				.getRandomFloat(2000), "R", randomUtils.getRandomFloat(2000),
 				"JJT", "MAR001", "Account 1");
+		smsAccount3.setAccountEnabled(true);
 		smsAccounts.add(smsAccount3);
 
 		SmsAccount smsAccount4 = new SmsAccount(randomUtils
 				.getRandomFloat(2000), "F", randomUtils.getRandomFloat(2000),
 				"RMLL", "LEE001", "Account 1");
+		smsAccount4.setAccountEnabled(true);
 		smsAccounts.add(smsAccount4);
 
 		SmsAccount smsAccount5 = new SmsAccount(randomUtils
 				.getRandomFloat(2000), "S", randomUtils.getRandomFloat(2000),
 				"APG", "POP001", "Account 1");
+		smsAccount5.setAccountEnabled(true);
 		smsAccounts.add(smsAccount5);
 	}
 

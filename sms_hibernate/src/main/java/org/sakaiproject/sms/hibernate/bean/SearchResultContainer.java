@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.sakaiproject.sms.hibernate.model.BaseModel;
-import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
 
 /**
  * This class is used my the criteria search methods.
@@ -35,11 +34,22 @@ import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
  */
 public class SearchResultContainer<T extends BaseModel> {	
 	
+	/**
+	 * The page size set as an option in sms config
+	 */
+	private int pageSize = 10;
+	
 	/** The total result set size. */
 	private Long totalResultSetSize;
 
 	/** The page results. */
 	private List<T> pageResults;
+
+	
+	public SearchResultContainer(int pageSize) {
+		super();
+		this.pageSize = pageSize;
+	}
 
 	/**
 	 * Gets the page results.
@@ -66,10 +76,10 @@ public class SearchResultContainer<T extends BaseModel> {
 	 */
 	public int getNumberOfPages() {
 		int paratialPage = 0;
-		if ((totalResultSetSize.longValue() % SmsHibernateConstants.DEFAULT_PAGE_SIZE) > 0) {
+		if ((totalResultSetSize.longValue() % pageSize) > 0) {
 			paratialPage = 1;
 		}
-		int pageNumber = (int) (totalResultSetSize.longValue() / SmsHibernateConstants.DEFAULT_PAGE_SIZE)
+		int pageNumber = (int) (totalResultSetSize.longValue() / pageSize)
 				+ paratialPage;
 		
 		if(pageNumber == 0)
@@ -105,9 +115,9 @@ public class SearchResultContainer<T extends BaseModel> {
 			return;
 		}
 
-		int indexStart = (currentPage * SmsHibernateConstants.DEFAULT_PAGE_SIZE)
-				- SmsHibernateConstants.DEFAULT_PAGE_SIZE;
-		int indexEnd = indexStart + SmsHibernateConstants.DEFAULT_PAGE_SIZE;
+		int indexStart = (currentPage * pageSize)
+				- pageSize;
+		int indexEnd = indexStart + pageSize;
 
 		if (indexEnd > fullResultSet.size()) {
 			indexEnd = fullResultSet.size();

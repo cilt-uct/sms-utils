@@ -24,7 +24,7 @@ import org.sakaiproject.sms.hibernate.model.SmsTransaction;
  */
 public class SmsSampleDataLoad {
 
-	public static final int NUMBER_OF_REPETITIONS = 1000;
+	public static final int NUMBER_OF_REPETITIONS = 20;
 
 	private SmsTransactionLogic smsTransactionLogic;
 	private SmsAccountLogic smsAccountLogic;
