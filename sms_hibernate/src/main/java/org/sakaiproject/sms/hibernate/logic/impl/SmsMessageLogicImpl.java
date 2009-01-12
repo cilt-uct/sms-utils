@@ -235,13 +235,13 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 			throw new SmsSearchException(e);
 		}
 
-		SearchResultContainer<SmsMessage> con = new SearchResultContainer<SmsMessage>(getPageSize());
 		messages = crit.list();
+		HibernateUtil.closeSession();
+		SearchResultContainer<SmsMessage> con = new SearchResultContainer<SmsMessage>(getPageSize());
 		con.setTotalResultSetSize(new Long(messages.size()));
 		con.calculateAndSetPageResults(messages, searchBean.getCurrentPage());
 		log.debug(con.toString());
 
-		HibernateUtil.closeSession();
 		return con;
 	}
 	
