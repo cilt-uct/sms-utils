@@ -80,7 +80,6 @@ public class BillingAdminProducer implements ViewComponentProducer {
 			UIBranchContainer entry = UIBranchContainer.make(tofill,
 					"account-entry:");
 
-			// TODO: Change link to go to edit account
 			UIInternalLink.make(entry, "account-name-link", account
 					.getAccountName(), new IdParams(AccountProducer.VIEW_ID,
 					account.getId().toString()));

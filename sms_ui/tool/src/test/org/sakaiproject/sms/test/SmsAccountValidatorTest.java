@@ -21,6 +21,7 @@ import java.util.Date;
 
 import junit.framework.TestCase;
 
+import org.sakaiproject.sms.constants.SmsUiConstants;
 import org.sakaiproject.sms.hibernate.model.SmsAccount;
 import org.sakaiproject.sms.validators.SmsAccountValidator;
 import org.springframework.validation.BindException;
@@ -69,6 +70,7 @@ public class SmsAccountValidatorTest extends TestCase {
 		account.setEnddate(new Date());
 		account.setBalance(100f);
 		account.setOverdraftLimit(10f);
+		account.setMessageTypeCode(SmsUiConstants.MESSAGE_TYPE_CODE);
 		errors = new BindException(account, "SmsAccount");
 	}
 
@@ -123,6 +125,18 @@ public class SmsAccountValidatorTest extends TestCase {
 		assertTrue(errors.hasFieldErrors(BALANCE_FIELD));
 		assertEquals("sms.errors.balance.invalid", errors.getFieldError()
 				.getCode());
+	}
+
+	/**
+	 * If MessageTypeCode is null, none of the validation should run We are
+	 * actually dependant on this behaviour for the datepicker + cancel button
+	 * to work on the Account page
+	 */
+	public void testMessageTypeCode_null() {
+		account.setMessageTypeCode(null);
+		validator.validate(account, errors);
+		assertFalse(errors.hasErrors());
+		assertFalse(errors.hasFieldErrors());
 	}
 
 	/**

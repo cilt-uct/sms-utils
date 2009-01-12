@@ -25,6 +25,7 @@ import org.sakaiproject.sms.constants.SmsUiConstants;
 import org.sakaiproject.sms.otp.SmsAccountLocator;
 import org.sakaiproject.sms.params.IdParams;
 
+import uk.org.ponder.beanutil.BeanGetter;
 import uk.org.ponder.rsf.components.ELReference;
 import uk.org.ponder.rsf.components.UIBoundList;
 import uk.org.ponder.rsf.components.UICommand;
@@ -47,17 +48,40 @@ public class AccountProducer implements ViewComponentProducer,
 		NavigationCaseReporter, ViewParamsReporter {
 
 	public static final String VIEW_ID = "account";
-	
-private FormatAwareDateInputEvolver dateEvolver;
-	
-	public void setDateEvolver(FormatAwareDateInputEvolver dateEvolver) {
-		this.dateEvolver = dateEvolver;
+
+	private FormatAwareDateInputEvolver dateEvolver;
+	private BeanGetter ELEvaluator;
+
+	private void createAccountEnabledBooleanSelection(String accountOTP,
+			UIForm form) {
+
+		UISelect comboBoolean = UISelect.make(form, "account-enabled");
+		comboBoolean.selection = new UIInput();
+		comboBoolean.selection.valuebinding = new ELReference(accountOTP
+				+ ".accountEnabled");
+		UIBoundList comboBoolValues = new UIBoundList();
+		comboBoolValues.setValue(new String[] { "true", "false", });
+		comboBoolean.optionlist = comboBoolValues;
+		UIBoundList comboBoolNames = new UIBoundList();
+		comboBoolNames.setValue(new String[] { "Yes", "No" });
+		comboBoolean.optionnames = comboBoolNames;
 	}
-	
-	public void init(){
-		dateEvolver.setStyle(FormatAwareDateInputEvolver.DATE_INPUT);
+
+	private void createSelectableSakaiSiteIds(String accountOTP, UIForm form) {
+		UISelect combo = UISelect.make(form, "sakai-site-id");
+		combo.selection = new UIInput();
+		combo.selection.valuebinding = new ELReference(accountOTP
+				+ ".sakaiSiteId");
+		UIBoundList comboValues = new UIBoundList();
+		comboValues.setValue(new String[] { "Sakai site 1", "Sakai site 2",
+				"Sakai site 3", "Sakai site 4", "Sakai site 5" });
+		combo.optionlist = comboValues;
+		UIBoundList comboNames = new UIBoundList();
+		comboNames.setValue(new String[] { "Sakai site 1", "Sakai site 2",
+				"Sakai site 3", "Sakai site 4", "Sakai site 5" });
+		combo.optionnames = comboNames;
 	}
-	
+
 	public void fillComponents(UIContainer tofill, ViewParameters viewparams,
 			ComponentChecker checker) {
 
@@ -78,19 +102,18 @@ private FormatAwareDateInputEvolver dateEvolver;
 
 		UIMessage.make(form, "account-name-label",
 				"sms.sms-account.account-name");
-		UIInput.make(form, "account-name", accountOTP
-				+ ".accountName");
+		UIInput.make(form, "account-name", accountOTP + ".accountName");
 
 		UIMessage.make(form, "account-enabled-label",
-		"sms.sms-account.account.enabled");
-		
-		createAccountEnabledBooleanSelection(accountOTP, form);	
-		
+				"sms.sms-account.account.enabled");
+
+		createAccountEnabledBooleanSelection(accountOTP, form);
+
 		UIMessage.make(form, "sakai-site-id-label",
 				"sms.sms-account.sakai-site-id");
-		
-		createSelectableSakaiSiteIds(accountOTP, form);	
-		
+
+		createSelectableSakaiSiteIds(accountOTP, form);
+
 		UIMessage.make(form, "sakai-user-id-label",
 				"sms.sms-account.sakai-user-id");
 		UIInput.make(form, "sakai-user-id", accountOTP + ".sakaiUserId");
@@ -99,61 +122,26 @@ private FormatAwareDateInputEvolver dateEvolver;
 		UIInput.make(form, "overdraft-limit", accountOTP + ".overdraftLimit");
 		UIMessage.make(form, "balance-label", "sms.sms-account.balance");
 		UIInput.make(form, "balance", accountOTP + ".balance");
-		
-		UIMessage.make(form, "end-date-label", "sms.sms-account.end.date");
-		
-		UIInput dateTo = UIInput.make(form, "date-to:", accountOTP + ".enddate");
-		dateEvolver.evolveDateInput(dateTo);
 
-		form.addParameter(new UIELBinding(accountOTP + ".messageTypeCode",
+		UIMessage.make(form, "end-date-label", "sms.sms-account.end-date");
+
+		UIInput endDate = UIInput.make(form, "endDate:", accountOTP
+				+ ".enddate");
+		dateEvolver.evolveDateInput(endDate);
+
+		UICommand cmd = UICommand.make(form, "save-btn",
+				SmsAccountLocator.LOCATOR_NAME + ".saveAll");
+
+		// This parameter will let us identify if the bean is submitted for
+		// saving or if datepicker/cancel button was used
+		cmd.parameters.add(new UIELBinding(accountOTP + ".messageTypeCode",
 				SmsUiConstants.MESSAGE_TYPE_CODE));
 
-		UICommand.make(form, "save-btn", SmsAccountLocator.LOCATOR_NAME
-				+ ".saveAll");
 		UICommand
 				.make(form, "cancel-btn", UIMessage.make("sms.general.cancel"))
 				.setReturn(ActionResults.CANCEL);
 
 	}
-
-	private void createAccountEnabledBooleanSelection(String accountOTP,
-			UIForm form) {
-		
-		UISelect comboBoolean = UISelect.make(form, "account-enabled");
-		comboBoolean.selection = new UIInput();
-		comboBoolean.selection.valuebinding = new ELReference(accountOTP + ".accountEnabled");
-		UIBoundList comboBoolValues = new UIBoundList();
-		comboBoolValues.setValue(new String[] {"true", 
-				"false", 
-		});
-		comboBoolean.optionlist = comboBoolValues;
-		UIBoundList comboBoolNames = new UIBoundList();
-		comboBoolNames.setValue(new String[] {"Yes", 
-		"No"});
-		comboBoolean.optionnames = comboBoolNames;
-	}
-	
-	private void createSelectableSakaiSiteIds(String accountOTP, UIForm form) {
-		UISelect combo = UISelect.make(form, "sakai-site-id");
-		combo.selection = new UIInput();
-		combo.selection.valuebinding = new ELReference(accountOTP + ".sakaiSiteId");
-		UIBoundList comboValues = new UIBoundList();
-		comboValues.setValue(new String[] {"Sakai site 1", 
-										   "Sakai site 2", 
-										   "Sakai site 3",
-										   "Sakai site 4",
-										   "Sakai site 5"
-										});
-		combo.optionlist = comboValues;
-		UIBoundList comboNames = new UIBoundList();
-		comboNames.setValue(new String[] {"Sakai site 1", 
-				   "Sakai site 2", 
-				   "Sakai site 3",
-				   "Sakai site 4",
-				   "Sakai site 5"});
-		combo.optionnames = comboNames;
-	}
-
 
 	public String getViewID() {
 		return VIEW_ID;
@@ -161,6 +149,10 @@ private FormatAwareDateInputEvolver dateEvolver;
 
 	public ViewParameters getViewParameters() {
 		return new IdParams();
+	}
+
+	public void init() {
+		dateEvolver.setStyle(FormatAwareDateInputEvolver.DATE_INPUT);
 	}
 
 	public List reportNavigationCases() {
@@ -172,4 +164,7 @@ private FormatAwareDateInputEvolver dateEvolver;
 		return list;
 	}
 
+	public void setDateEvolver(FormatAwareDateInputEvolver dateEvolver) {
+		this.dateEvolver = dateEvolver;
+	}
 }

@@ -88,6 +88,5 @@ public class SmsMessageValidator implements Validator {
 			}
 
 		}
-
 	}
 }

@@ -41,6 +41,15 @@ public class SmsAccountValidator implements Validator {
 	}
 
 	public void validate(Object obj, Errors err) {
+		SmsAccount smsAccount = (SmsAccount) obj;
+
+		// I feel so dirty writing this but we have to have some way to know if
+		// the bean has been submitted for saving or if the datepicker/cancel
+		// button was used see AccountProducer
+		if (smsAccount.getMessageTypeCode() == null) {
+			return;
+		}
+
 		ValidationUtils.rejectIfEmptyOrWhitespace(err, "accountName",
 				"sms.errors.accountName.empty");
 		ValidationUtils.rejectIfEmptyOrWhitespace(err, "sakaiSiteId",
@@ -52,8 +61,6 @@ public class SmsAccountValidator implements Validator {
 				"sms.errors.overdraftLimit.invalid");
 		ValidationUtils.rejectIfEmpty(err, "balance",
 				"sms.errors.balance.invalid");
-
-		SmsAccount smsAccount = (SmsAccount) obj;
 
 		if (isTooLong(smsAccount.getAccountName(), 99)) {
 			err.rejectValue("accountName", "sms.errors.accountName.tooLong");
