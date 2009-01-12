@@ -167,25 +167,4 @@ public interface SmsBilling {
 	 */
 	public boolean reserveCredits(int accountID, int credits);
 
-	/**
-	 * Count billable messages.
-	 * <p>
-	 * Only the messages that were reported as delivered are billable. Messages
-	 * that are marked as invalid, failed or timed out will not be billed to the
-	 * account.
-	 * 
-	 * @param sakaiSiteId
-	 *            the sakai site id
-	 * @param deliveryUserId
-	 *            the delivery user id
-	 * @param deliveryGroupdId
-	 *            the delivery groupd id
-	 * @param smsAccountId
-	 *            the sms account id
-	 * 
-	 * @return the number of billable messages
-	 */
-	public Integer countBillableMessages(String sakaiSiteId,
-			String deliveryUserId, String deliveryGroupdId, Integer smsAccountId);
-
 }

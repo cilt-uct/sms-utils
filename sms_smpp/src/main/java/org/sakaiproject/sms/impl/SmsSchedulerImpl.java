@@ -22,7 +22,7 @@ import java.util.Date;
 
 import org.sakaiproject.sms.api.SmsCore;
 import org.sakaiproject.sms.api.SmsScheduler;
-import org.sakaiproject.sms.hibernate.logic.SmsConfigLogic;
+import org.sakaiproject.sms.hibernate.logic.impl.HibernateLogicFactory;
 import org.sakaiproject.sms.hibernate.model.SmsConfig;
 import org.springframework.util.Assert;
 
@@ -37,24 +37,14 @@ public class SmsSchedulerImpl implements SmsScheduler {
 
 	public SmsSchedulerThread smsSchedulerThread = null;
 
-	public SmsConfigLogic smsConfigLogic = null;
-
-	public SmsConfigLogic getSmsConfigLogic() {
-		return smsConfigLogic;
-	}
-
-	public void setSmsConfigLogic(SmsConfigLogic smsConfigLogic) {
-		this.smsConfigLogic = smsConfigLogic;
-	}
-
 	public SmsSchedulerImpl() {
 
 	}
 
 	public void init() {
 		Assert.notNull(smsCore);
-		Assert.notNull(smsConfigLogic);
-		smsConfig = smsConfigLogic.getOrCreateSmsConfigBySakaiSiteId(null);
+		smsConfig = HibernateLogicFactory.getConfigLogic()
+				.getOrCreateSmsConfigBySakaiSiteId(null);
 		smsSchedulerThread = new SmsSchedulerThread();
 		System.out.println("Init of SmsScheduler complete");
 	}

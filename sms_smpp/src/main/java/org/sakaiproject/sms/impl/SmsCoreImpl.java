@@ -27,10 +27,7 @@ import org.apache.log4j.Level;
 import org.sakaiproject.sms.api.SmsBilling;
 import org.sakaiproject.sms.api.SmsCore;
 import org.sakaiproject.sms.api.SmsSmpp;
-import org.sakaiproject.sms.hibernate.logic.SmsAccountLogic;
-import org.sakaiproject.sms.hibernate.logic.SmsConfigLogic;
-import org.sakaiproject.sms.hibernate.logic.SmsMessageLogic;
-import org.sakaiproject.sms.hibernate.logic.SmsTaskLogic;
+import org.sakaiproject.sms.hibernate.logic.impl.HibernateLogicFactory;
 import org.sakaiproject.sms.hibernate.model.SmsConfig;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
@@ -51,22 +48,6 @@ public class SmsCoreImpl implements SmsCore {
 
 	public SmsSmpp smsSmpp = null;
 
-	public SmsTaskLogic smsTaskLogic = null;
-
-public SmsAccountLogic smsAccountLogic = null;
-
-	public SmsMessageLogic smsMessageLogic = null;
-
-	public SmsMessageLogic getSmsMessageLogic() {
-		return smsMessageLogic;
-	}
-
-	public void setSmsMessageLogic(SmsMessageLogic smsMessageLogic) {
-		this.smsMessageLogic = smsMessageLogic;
-	}
-
-	public SmsConfigLogic smsConfigLogic = null;
-
 	public SmsBilling smsBilling = null;
 
 	public SmsBilling getSmsBilling() {
@@ -77,28 +58,12 @@ public SmsAccountLogic smsAccountLogic = null;
 		this.smsBilling = smsBilling;
 	}
 
-	public SmsConfigLogic getSmsConfigLogic() {
-		return smsConfigLogic;
-	}
-
-	public void setSmsConfigLogic(SmsConfigLogic smsConfigLogic) {
-		this.smsConfigLogic = smsConfigLogic;
-	}
-
 	public void setSmsSmpp(SmsSmpp smsSmpp) {
 		this.smsSmpp = smsSmpp;
 	}
 
-	public void setSmsTaskLogic(SmsTaskLogic smsTaskLogic) {
-		this.smsTaskLogic = smsTaskLogic;
-	}
-
 	public SmsSmpp getSmsSmpp() {
 		return smsSmpp;
-	}
-
-	public SmsTaskLogic getSmsTaskLogic() {
-		return smsTaskLogic;
 	}
 
 	public void init() {
@@ -167,7 +132,7 @@ public SmsAccountLogic smsAccountLogic = null;
 	 * with highest priority. Priority is based on message age and type.
 	 */
 	public SmsTask getNextSmsTask() {
-		return smsTaskLogic.getNextSmsTask();
+		return HibernateLogicFactory.getTaskLogic().getNextSmsTask();
 
 	}
 
@@ -256,7 +221,7 @@ public SmsAccountLogic smsAccountLogic = null;
 		smsTask.setCreditEstimate(deliverGroupMessages.size());
 		smsTask.setMaxTimeToLive(300000);
 		smsTask.setDelReportTimeoutDuration(300000);
-		smsTaskLogic.persistSmsTask(smsTask);
+		HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask);
 		return smsTask;
 	}
 
@@ -272,7 +237,8 @@ public SmsAccountLogic smsAccountLogic = null;
 	public void processIncomingMessage(SmsMessage smsMessage) {
 
 		// insert into queue
-		smsTaskLogic.persistSmsTask(smsMessage.getSmsTask());
+		HibernateLogicFactory.getTaskLogic().persistSmsTask(
+				smsMessage.getSmsTask());
 
 		// TODO Check with Louis about this functionality
 		// TODO Check what the status codes should be set to for task and
@@ -291,7 +257,8 @@ public SmsAccountLogic smsAccountLogic = null;
 						SmsConst_DeliveryStatus.STATUS_INCOMPLETE);
 				smsMessage.getSmsTask().setMessageTypeId(
 						SmsHibernateConstants.SMS_TASK_TYPE_PROCESS_SCHEDULED);
-				smsTaskLogic.persistSmsTask(smsMessage.getSmsTask());
+				HibernateLogicFactory.getTaskLogic().persistSmsTask(
+						smsMessage.getSmsTask());
 			}
 		} else {
 			// Add to the que for the scheduler to process
@@ -299,7 +266,8 @@ public SmsAccountLogic smsAccountLogic = null;
 					SmsConst_DeliveryStatus.STATUS_PENDING);
 			smsMessage.getSmsTask().setMessageTypeId(
 					SmsHibernateConstants.SMS_TASK_TYPE_PROCESS_SCHEDULED);
-			smsTaskLogic.persistSmsTask(smsMessage.getSmsTask());
+			HibernateLogicFactory.getTaskLogic().persistSmsTask(
+					smsMessage.getSmsTask());
 		}
 	}
 
@@ -308,10 +276,25 @@ public SmsAccountLogic smsAccountLogic = null;
 	 * date to sent.
 	 */
 	public synchronized void processNextTask() {
-		SmsTask smsTask = smsTaskLogic.getNextSmsTask();
+		SmsTask smsTask = HibernateLogicFactory.getTaskLogic().getNextSmsTask();
 		if (smsTask != null) {
 			this.processTask(smsTask);
 		}
+	}
+
+	public void processRealTimeMessage(SmsTask smsTask) {
+
+		if (smsTask.getDateToSend().getTime() <= System.currentTimeMillis()) {
+
+		} else {
+			// ???
+		}
+
+		/*
+		 * check date to send insert new task insert task call the insert new
+		 * task validation call processTask(smsTask);
+		 */
+
 	}
 
 	/**
@@ -324,7 +307,7 @@ public SmsAccountLogic smsAccountLogic = null;
 	 * See http://jira.sakaiproject.org/jira/browse/SMS-9
 	 */
 	public void processTask(SmsTask smsTask) {
-		SmsConfig config = smsConfigLogic
+		SmsConfig config = HibernateLogicFactory.getConfigLogic()
 				.getOrCreateSmsConfigBySakaiSiteId(smsTask.getSakaiSiteId());
 		smsTask.setDateProcessed(new Date());
 		smsTask.setAttemptCount((smsTask.getAttemptCount()) + 1);
@@ -337,7 +320,7 @@ public SmsAccountLogic smsAccountLogic = null;
 			smsTask.setStatusForMessages(
 					SmsConst_DeliveryStatus.STATUS_PENDING,
 					SmsConst_DeliveryStatus.STATUS_EXPIRE);
-			smsTaskLogic.persistSmsTask(smsTask);
+			HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask);
 			return;
 		}
 
@@ -351,12 +334,13 @@ public SmsAccountLogic smsAccountLogic = null;
 						null));
 				LOG.info("Total messages on task:="
 						+ smsTask.getSmsMessages().size());
-				smsTaskLogic.persistSmsTask(smsTask);
+				HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask);
 			}
 			String submissionStatus = smsSmpp
 					.sendMessagesToGateway(smsTask
 							.getMessagesWithStatus(SmsConst_DeliveryStatus.STATUS_PENDING));
-			smsTask = smsTaskLogic.getSmsTask(smsTask.getId());
+			smsTask = HibernateLogicFactory.getTaskLogic().getSmsTask(
+					smsTask.getId());
 			smsTask.setStatusCode(submissionStatus);
 
 			if (smsTask.getStatusCode().equals(
@@ -375,7 +359,7 @@ public SmsAccountLogic smsAccountLogic = null;
 					SmsConst_DeliveryStatus.STATUS_PENDING,
 					SmsConst_DeliveryStatus.STATUS_FAIL);
 		}
-		smsTaskLogic.persistSmsTask(smsTask);
+		HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask);
 	}
 
 	/**
@@ -397,7 +381,7 @@ public SmsAccountLogic smsAccountLogic = null;
 	 * DEL_REPORT_TIMEOUT_DURATION on the task.
 	 */
 	public void processTimedOutMessages() {
-		List<SmsMessage> smsMessages = smsMessageLogic
+		List<SmsMessage> smsMessages = HibernateLogicFactory.getMessageLogic()
 				.getSmsMessagesWithStatus(null,
 						SmsConst_DeliveryStatus.STATUS_SENT);
 
@@ -410,13 +394,15 @@ public SmsAccountLogic smsAccountLogic = null;
 				if (cal.getTime().before(new Date())) {
 					message
 							.setStatusCode(SmsConst_DeliveryStatus.STATUS_TIMEOUT);
-					smsMessageLogic.persistSmsMessage(message);
+					HibernateLogicFactory.getMessageLogic().persistSmsMessage(
+							message);
 				}
 
 			}
 		}
 
 	}
+
 	public SmsTask getPreliminaryTask(String deliverGroupId, Date dateToSend,
 			String messageBody, String sakaiToolId) {
 		// TODO Auto-generated method stub

@@ -21,7 +21,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Properties;
 import java.util.Set;
@@ -57,8 +56,7 @@ import org.jsmpp.util.AbsoluteTimeFormatter;
 import org.jsmpp.util.InvalidDeliveryReceiptException;
 import org.jsmpp.util.TimeFormatter;
 import org.sakaiproject.sms.api.SmsSmpp;
-import org.sakaiproject.sms.hibernate.logic.SmsMessageLogic;
-import org.sakaiproject.sms.hibernate.logic.SmsTaskLogic;
+import org.sakaiproject.sms.hibernate.logic.impl.HibernateLogicFactory;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_SmscDeliveryStatus;
@@ -94,30 +92,13 @@ public class SmsSmppImpl implements SmsSmpp {
 	private String systemType;
 	private String userName;
 	private String addressRange;
-	public SmsMessageLogic smsMessageLogic = null;
-	public SmsTaskLogic smsTaskLogic = null;
 	private int transactionTimer;
 	private int sendingDelay;
 	private String smscID;
 
-	//provides access to the session for the units.
+	// provides access to the session for the units.
 	public SMPPSession getSession() {
 		return session;
-	}
-	public SmsTaskLogic getSmsTaskLogic() {
-		return smsTaskLogic;
-	}
-
-	public void setSmsTaskLogic(SmsTaskLogic smsTaskLogic) {
-		this.smsTaskLogic = smsTaskLogic;
-	}
-
-	public SmsMessageLogic getSmsMessageLogic() {
-		return smsMessageLogic;
-	}
-
-	public void setSmsMessageLogic(SmsMessageLogic smsMessageLogic) {
-		this.smsMessageLogic = smsMessageLogic;
 	}
 
 	private class BindThread implements Runnable {
@@ -183,16 +164,17 @@ public class SmsSmppImpl implements SmsSmpp {
 							+ deliverSm.getSourceAddr() + " to "
 							+ deliverSm.getDestAddress() + " : "
 							+ deliveryReceipt);
-					SmsMessage smsMessage = smsMessageLogic
-							.getSmsMessageBySmscMessageId(deliveryReceipt
-									.getId());
+					SmsMessage smsMessage = HibernateLogicFactory
+							.getMessageLogic().getSmsMessageBySmscMessageId(
+									deliveryReceipt.getId());
 					if (smsMessage == null) {
 						for (int i = 0; i < 5; i++) {
 							System.out.println("SMSC_DEL_RECEIPT retry " + i
 									+ " out of 5");
-							smsMessage = smsMessageLogic
-									.getSmsMessageBySmscMessageId(deliveryReceipt
-											.getId());
+							smsMessage = HibernateLogicFactory
+									.getMessageLogic()
+									.getSmsMessageBySmscMessageId(
+											deliveryReceipt.getId());
 							try {
 								Thread.sleep(5000);
 							} catch (InterruptedException e) {
@@ -217,7 +199,8 @@ public class SmsSmppImpl implements SmsSmpp {
 									.setStatusCode(SmsConst_DeliveryStatus.STATUS_DELIVERED);
 						}
 
-						smsMessageLogic.persistSmsMessage(smsMessage);
+						HibernateLogicFactory.getMessageLogic()
+								.persistSmsMessage(smsMessage);
 					} else {
 						LOG
 								.error("Delivery report received for message not in database. MessageSMSCID="
@@ -551,7 +534,7 @@ public class SmsSmppImpl implements SmsSmpp {
 
 		if (gatewayBound) {
 			try {
-			
+
 				String messageId = session.submitShortMessage(serviceType,
 						TypeOfNumber.valueOf(sourceAddressTON),
 						NumberingPlanIndicator.valueOf(sourceAddressNPI),
@@ -573,9 +556,11 @@ public class SmsSmppImpl implements SmsSmpp {
 				message
 						.setSmscDeliveryStatusCode(SmsConst_SmscDeliveryStatus.ENROUTE);
 				if ((message.getSmsTask()).getMessageTypeId() == SmsHibernateConstants.SMS_TASK_TYPE_PROCESS_NOW) {
-					smsTaskLogic.persistSmsTask(message.getSmsTask());
+					HibernateLogicFactory.getTaskLogic().persistSmsTask(
+							message.getSmsTask());
 				}
-				smsMessageLogic.persistSmsMessage(message);
+				HibernateLogicFactory.getMessageLogic().persistSmsMessage(
+						message);
 
 				LOG.info("Message submitted, message_id is " + messageId);
 			} catch (PDUException e) {
