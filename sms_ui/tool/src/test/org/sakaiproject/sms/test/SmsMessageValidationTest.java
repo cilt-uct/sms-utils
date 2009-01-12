@@ -20,14 +20,14 @@ package org.sakaiproject.sms.test;
 import java.sql.Timestamp;
 import java.util.Date;
 
-import junit.framework.TestCase;
-
 import org.sakaiproject.sms.constants.SmsUiConstants;
 import org.sakaiproject.sms.hibernate.logic.impl.HibernateLogicFactory;
 import org.sakaiproject.sms.hibernate.model.SmsAccount;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
+import org.sakaiproject.sms.hibernate.util.AbstractBaseTestCase;
+import org.sakaiproject.sms.hibernate.util.HibernateUtil;
 import org.sakaiproject.sms.validators.SmsMessageValidator;
 import org.springframework.validation.BindException;
 
@@ -35,7 +35,7 @@ import org.springframework.validation.BindException;
  * The Class SmsMessageValidationTest. Runs tests for {@link SmsMessage}
  * validation that is run by {@link SmsMessageValidator}
  */
-public class SmsMessageValidationTest extends TestCase {
+public class SmsMessageValidationTest extends AbstractBaseTestCase {
 
 	private SmsMessageValidator validator;
 	private BindException errors;
@@ -47,6 +47,10 @@ public class SmsMessageValidationTest extends TestCase {
 
 	private static String MOBILE_NR_FIELD = "mobileNumber";
 	private static String MSG_BODY_FIELD = "messageBody";
+
+	static {
+		HibernateUtil.createSchema();
+	}
 
 	private SmsAccount account;
 
@@ -85,6 +89,17 @@ public class SmsMessageValidationTest extends TestCase {
 		msg.setSmsTask(smsTask);
 		errors = new BindException(msg, "SmsMessage");
 
+	}
+
+	/**
+	 * Test insufficient funds.
+	 */
+	public void testInsufficientCredit() {
+		msg.getSmsTask().setCreditEstimate(15);
+		msg.setMessageBody(VALID_MSG_BODY);
+		msg.setMobileNumber(VALID_MOBILE_NR);
+		validator.validate(msg, errors);
+		assertTrue(errors.hasErrors());
 	}
 
 	/**
@@ -226,16 +241,5 @@ public class SmsMessageValidationTest extends TestCase {
 		msg.setMobileNumber(VALID_MOBILE_NR);
 		validator.validate(msg, errors);
 		assertFalse(errors.hasErrors());
-	}
-
-	/**
-	 * Test insufficient funds.
-	 */
-	public void testInsufficientCredit() {
-		msg.getSmsTask().setCreditEstimate(15);
-		msg.setMessageBody(VALID_MSG_BODY);
-		msg.setMobileNumber(VALID_MOBILE_NR);
-		validator.validate(msg, errors);
-		assertTrue(errors.hasErrors());
 	}
 }
