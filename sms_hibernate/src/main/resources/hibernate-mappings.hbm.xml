@@ -81,7 +81,7 @@
 			column="SMSC_DELIVERY_STATUS_CODE" not-null="false" />
 		<property name="dateDelivered" type="timestamp" column="DATE_DELIVERED"
 			not-null="false" />
-		<many-to-one name="smsTask"
+		<many-to-one name="smsTask" lazy="false"
 			class="org.sakaiproject.sms.hibernate.model.SmsTask" column="TASK_ID"
 			not-null="true" />
 	</class>
