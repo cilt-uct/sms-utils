@@ -15,20 +15,12 @@
 
 	<bean id="org.sakaiproject.sms.api.SmsBilling" class="org.sakaiproject.sms.impl.SmsBillingImpl" />
 
-
 	<bean id="org.sakaiproject.sms.api.SmsSmpp" class="org.sakaiproject.sms.impl.SmsSmppImpl"
 		init-method="init">
-		<property name="smsMessageLogic" ref="smsMessageLogic" />
-		<property name="smsTaskLogic"
-			ref="smsTaskLogic" />
 	</bean>
 
 	<bean id="org.sakaiproject.sms.api.SmsCore" class="org.sakaiproject.sms.impl.SmsCoreImpl"
 		init-method="init">
-		<property name="smsTaskLogic"
-			ref="smsTaskLogic" />
-		<property name="smsConfigLogic"
-			ref="smsConfigLogic" />
 		<property name="smsBilling" ref="org.sakaiproject.sms.api.SmsBilling" />
 		<property name="smsSmpp" ref="org.sakaiproject.sms.api.SmsSmpp" />
 	</bean>
@@ -37,7 +29,5 @@
 		init-method="init">
 		<property name="smsCore" ref="org.sakaiproject.sms.api.SmsCore" />
 	</bean>
-
-
 
 </beans>
