@@ -23,7 +23,7 @@ import java.util.Date;
 import junit.framework.TestCase;
 
 import org.sakaiproject.sms.constants.SmsUiConstants;
-import org.sakaiproject.sms.hibernate.logic.impl.SmsAccountLogicImpl;
+import org.sakaiproject.sms.hibernate.logic.impl.HibernateLogicFactory;
 import org.sakaiproject.sms.hibernate.model.SmsAccount;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
@@ -48,7 +48,6 @@ public class SmsMessageValidationTest extends TestCase {
 	private static String MOBILE_NR_FIELD = "mobileNumber";
 	private static String MSG_BODY_FIELD = "messageBody";
 
-	private SmsAccountLogicImpl accountLogic;
 	private SmsAccount account;
 
 	/**
@@ -59,7 +58,6 @@ public class SmsMessageValidationTest extends TestCase {
 	@Override
 	public void setUp() {
 
-		accountLogic = new SmsAccountLogicImpl();
 		account = new SmsAccount();
 		account.setSakaiSiteId("sakaiSiteId");
 		account.setMessageTypeCode("");
@@ -67,7 +65,7 @@ public class SmsMessageValidationTest extends TestCase {
 		account.setAccountName("account name");
 		account.setStartdate(new Date());
 		account.setAccountEnabled(true);
-		accountLogic.persistSmsAccount(account);
+		HibernateLogicFactory.getAccountLogic().persistSmsAccount(account);
 
 		validator = new SmsMessageValidator();
 		msg = new SmsMessage();
