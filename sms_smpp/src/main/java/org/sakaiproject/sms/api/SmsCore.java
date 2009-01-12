@@ -63,7 +63,8 @@ public interface SmsCore {
 	/**
 	 * Add a new task to the sms task list, for eg. send message to all
 	 * administrators at 10:00, or get latest announcements and send to mobile
-	 * numbers of Sakai group x (phase II).
+	 * numbers of Sakai group x (phase II). Validation will be done to make sure
+	 * that the preliminary values are supplied.
 	 * 
 	 * @param deliverGroupId
 	 * @param dateToSend
@@ -111,4 +112,12 @@ public interface SmsCore {
 	 */
 	public void processTask(SmsTask smsTask);
 
+	/**
+	 * We calculate the group size and cost of the task without persisting any
+	 * data to the database. The returned task can then be passed on to
+	 * insertNewTask.
+	 * 
+	 */
+	public SmsTask getPreliminaryTask(String deliverGroupId, Date dateToSend,
+			String messageBody, String sakaiToolId);
 }

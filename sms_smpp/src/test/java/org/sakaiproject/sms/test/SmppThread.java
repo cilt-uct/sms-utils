@@ -58,15 +58,21 @@ public class SmppThread extends TestRunnable {
 	 *            the batch_count
 	 */
 	public SmppThread(String sessionName, int messageCount, int messageDelay) {
+		System.out
+				.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%61");
 		this.sessionName = sessionName;
 		this.smsSmppImpl = new SmsSmppImpl();
 		this.smsSmppImpl.setSmsMessageLogic(new SmsMessageLogicImpl());
 		this.smsSmppImpl.setSmsTaskLogic(new SmsTaskLogicImpl());
 		this.smsSmppImpl.init();
+		System.out
+				.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%67");
 		this.smsSmppImpl.setLogLevel(Level.WARN);
 		this.LOG.setLevel(Level.ALL);
 		this.message_count = messageCount;
 		this.delay_between_messages = messageDelay;
+		System.out
+				.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%72");
 	}
 
 	/**

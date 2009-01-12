@@ -223,6 +223,7 @@ public class SmsCoreImpl implements SmsCore {
 			Set<String> mobileNumbers, Set<String> sakaiUserIds,
 			Date dateToSend, String messageBody, String sakaiToolId) {
 		// TODO mobileNumbers must be implemented
+		// TODO, call task validation here and throw exception if failed.
 		SmsTask smsTask = new SmsTask();
 		smsTask.setDateCreated(DateUtil.getCurrentDate());
 		smsTask.setSmsAccountId(smsBilling.getAccountID("1", "1", 1));
@@ -361,5 +362,11 @@ public class SmsCoreImpl implements SmsCore {
 		} else {
 			LOG.setLevel(Level.OFF);
 		}
+	}
+
+	public SmsTask getPreliminaryTask(String deliverGroupId, Date dateToSend,
+			String messageBody, String sakaiToolId) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
