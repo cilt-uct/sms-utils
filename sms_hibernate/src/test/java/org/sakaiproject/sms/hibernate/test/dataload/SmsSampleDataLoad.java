@@ -6,10 +6,7 @@ import org.sakaiproject.sms.hibernate.logic.SmsAccountLogic;
 import org.sakaiproject.sms.hibernate.logic.SmsMessageLogic;
 import org.sakaiproject.sms.hibernate.logic.SmsTaskLogic;
 import org.sakaiproject.sms.hibernate.logic.SmsTransactionLogic;
-import org.sakaiproject.sms.hibernate.logic.impl.SmsAccountLogicImpl;
-import org.sakaiproject.sms.hibernate.logic.impl.SmsMessageLogicImpl;
-import org.sakaiproject.sms.hibernate.logic.impl.SmsTaskLogicImpl;
-import org.sakaiproject.sms.hibernate.logic.impl.SmsTransactionLogicImpl;
+import org.sakaiproject.sms.hibernate.logic.impl.HibernateLogicFactory;
 import org.sakaiproject.sms.hibernate.model.SmsAccount;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
@@ -27,9 +24,6 @@ public class SmsSampleDataLoad {
 	public static final int NUMBER_OF_REPETITIONS = 20;
 
 	private SmsTransactionLogic smsTransactionLogic;
-	private SmsAccountLogic smsAccountLogic;
-	private SmsTaskLogic smsTaskLogic;
-	private SmsMessageLogic smsMessageLogic;
 
 	private SampleSmsTaskFactory taskFactory;
 	private SampleSmsMessageFactory messageFactory;
@@ -46,24 +40,20 @@ public class SmsSampleDataLoad {
 
 	public SmsSampleDataLoad() {
 		super();
-		smsTransactionLogic = new SmsTransactionLogicImpl();
-		smsAccountLogic = new SmsAccountLogicImpl();
-		smsTaskLogic = new SmsTaskLogicImpl();
-		smsMessageLogic = new SmsMessageLogicImpl();
 	}
 
 	private void persistSmsTransactions() {
 		testSMSTransactionFactory = new SampleSmsTransactionFactory();
 
-		deleteSmsAccounts(smsAccountLogic);
+		deleteSmsAccounts(HibernateLogicFactory.getAccountLogic());
 		deleteSmsTransactions(smsTransactionLogic);
 
 		System.out.println("Inserting SmsAccounts:");
 
-		persistsSmsAccounts(smsAccountLogic);
+		persistsSmsAccounts(HibernateLogicFactory.getAccountLogic());
 
-		List<SmsAccount> persistedSmsAccounts = smsAccountLogic
-				.getAllSmsAccounts();
+		List<SmsAccount> persistedSmsAccounts = HibernateLogicFactory
+				.getAccountLogic().getAllSmsAccounts();
 
 		System.out.println("Inserting SmsTransactions:");
 
@@ -98,13 +88,14 @@ public class SmsSampleDataLoad {
 			List<SmsTask> smsTasks = taskFactory.getAllTestSmsTasks();
 
 			for (SmsTask smsTask : smsTasks) {
-				smsTaskLogic.persistSmsTask(smsTask);
+				HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask);
 			}
 
 			int index = 0;
 			for (SmsMessage smsMessage : smsMessages) {
 				smsMessage.setSmsTask(smsTasks.get(index));
-				smsMessageLogic.persistSmsMessage(smsMessage);
+				HibernateLogicFactory.getMessageLogic().persistSmsMessage(
+						smsMessage);
 				index++;
 			}
 

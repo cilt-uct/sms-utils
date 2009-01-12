@@ -38,6 +38,16 @@ import org.sakaiproject.sms.hibernate.util.HibernateUtil;
 public class SmsAccountLogicImpl extends SmsDao implements SmsAccountLogic {
 
 	/**
+	 * Leave this as protected to try and prevent the random instantiation of
+	 * this class.
+	 * <p>
+	 * Use LogicFactory.java to get instances of logic classes.
+	 */
+	protected SmsAccountLogicImpl() {
+
+	}
+
+	/**
 	 * Deletes and the given entity from the DB
 	 */
 	public void deleteSmsAccount(SmsAccount smsAccount) {

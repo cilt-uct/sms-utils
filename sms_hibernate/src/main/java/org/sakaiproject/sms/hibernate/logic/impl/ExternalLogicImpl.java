@@ -32,6 +32,16 @@ import org.sakaiproject.sms.hibernate.logic.ExternalLogic;
  */
 public class ExternalLogicImpl implements ExternalLogic {
 
+	/**
+	 * Leave this as protected to try and prevent the random instantiation of
+	 * this class.
+	 * <p>
+	 * Use LogicFactory.java to get instances of logic classes.
+	 */
+	protected ExternalLogicImpl() {
+
+	}
+
 	// private FunctionManager functionManager;
 	// private SecurityService securityService;
 

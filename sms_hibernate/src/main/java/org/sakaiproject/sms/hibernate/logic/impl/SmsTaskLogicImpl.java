@@ -53,6 +53,16 @@ import org.sakaiproject.sms.hibernate.util.HibernateUtil;
 public class SmsTaskLogicImpl extends SmsDao implements SmsTaskLogic {
 
 	/**
+	 * Leave this as protected to try and prevent the random instantiation of
+	 * this class.
+	 * <p>
+	 * Use LogicFactory.java to get instances of logic classes.
+	 */
+	protected SmsTaskLogicImpl() {
+
+	}
+
+	/**
 	 * Deletes and the given entity from the DB
 	 */
 	public void deleteSmsTask(SmsTask smsTask) {
@@ -227,23 +237,26 @@ public class SmsTaskLogicImpl extends SmsDao implements SmsTaskLogic {
 			throw new SmsSearchException(e);
 		}
 
-
 		log.debug(crit.toString());
 		tasks = crit.list();
 		HibernateUtil.closeSession();
 
-		SearchResultContainer<SmsTask> container = new SearchResultContainer<SmsTask>(getPageSize());
+		SearchResultContainer<SmsTask> container = new SearchResultContainer<SmsTask>(
+				getPageSize());
 		container.setTotalResultSetSize(new Long(tasks.size()));
-		container.calculateAndSetPageResults(tasks, searchBean.getCurrentPage());
+		container
+				.calculateAndSetPageResults(tasks, searchBean.getCurrentPage());
 
 		return container;
 	}
 
 	private int getPageSize() {
-		SmsConfig smsConfig = getConfigLogic().getSmsConfigBySakaiToolId(SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_TOOL_ID);
-		if(smsConfig == null)
+		SmsConfig smsConfig = HibernateLogicFactory.getConfigLogic()
+				.getSmsConfigBySakaiToolId(
+						SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_TOOL_ID);
+		if (smsConfig == null)
 			return SmsHibernateConstants.DEFAULT_PAGE_SIZE;
-		else 
+		else
 			return smsConfig.getPagingSize();
 	}
 }

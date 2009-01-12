@@ -3,7 +3,7 @@ package org.sakaiproject.sms.hibernate.test;
 import java.util.Date;
 import java.util.List;
 
-import org.sakaiproject.sms.hibernate.logic.impl.SmsAccountLogicImpl;
+import org.sakaiproject.sms.hibernate.logic.impl.HibernateLogicFactory;
 import org.sakaiproject.sms.hibernate.model.SmsAccount;
 import org.sakaiproject.sms.hibernate.model.SmsTransaction;
 import org.sakaiproject.sms.hibernate.util.AbstractBaseTestCase;
@@ -13,9 +13,6 @@ import org.sakaiproject.sms.hibernate.util.HibernateUtil;
  * The Class SmsAccountTest. Do some basic crud functions on the account table.
  */
 public class SmsAccountTest extends AbstractBaseTestCase {
-
-	/** The logic. */
-	private static SmsAccountLogicImpl logic = null;
 
 	/** The insert sms account. */
 	private static SmsAccount insertSmsAccount;
@@ -30,7 +27,6 @@ public class SmsAccountTest extends AbstractBaseTestCase {
 
 		HibernateUtil.createSchema();
 
-		logic = new SmsAccountLogicImpl();
 		insertSmsAccount = new SmsAccount();
 		insertSmsAccount.setSakaiUserId("SakaiUSerId");
 		insertSmsAccount.setSakaiSiteId("SakaiSiteId");
@@ -81,7 +77,8 @@ public class SmsAccountTest extends AbstractBaseTestCase {
 	 * Test insert sms account.
 	 */
 	public void testInsertSmsAccount() {
-		logic.persistSmsAccount(insertSmsAccount);
+		HibernateLogicFactory.getAccountLogic().persistSmsAccount(
+				insertSmsAccount);
 		// Check the record was created on the DB... an id will be assigned.
 		assertTrue("Object not persisted", insertSmsAccount.exists());
 	}
@@ -90,7 +87,7 @@ public class SmsAccountTest extends AbstractBaseTestCase {
 	 * Test get sms account by id.
 	 */
 	public void testGetSmsAccountById() {
-		SmsAccount getSmsAccount = logic
+		SmsAccount getSmsAccount = HibernateLogicFactory.getAccountLogic()
 				.getSmsAccount(insertSmsAccount.getId());
 		assertTrue("Object not persisted", insertSmsAccount.exists());
 		assertNotNull(getSmsAccount);
@@ -101,10 +98,12 @@ public class SmsAccountTest extends AbstractBaseTestCase {
 	 * Test update sms account.
 	 */
 	public void testUpdateSmsAccount() {
-		SmsAccount smsAccount = logic.getSmsAccount(insertSmsAccount.getId());
+		SmsAccount smsAccount = HibernateLogicFactory.getAccountLogic()
+				.getSmsAccount(insertSmsAccount.getId());
 		smsAccount.setSakaiSiteId("newSakaiSiteId");
-		logic.persistSmsAccount(smsAccount);
-		smsAccount = logic.getSmsAccount(insertSmsAccount.getId());
+		HibernateLogicFactory.getAccountLogic().persistSmsAccount(smsAccount);
+		smsAccount = HibernateLogicFactory.getAccountLogic().getSmsAccount(
+				insertSmsAccount.getId());
 		assertEquals("newSakaiSiteId", smsAccount.getSakaiSiteId());
 	}
 
@@ -117,11 +116,13 @@ public class SmsAccountTest extends AbstractBaseTestCase {
 		insertSmsAccount.getSmsTransactions().add(insertSmsTransaction1);
 		insertSmsAccount.getSmsTransactions().add(insertSmsTransaction2);
 
-		logic.persistSmsAccount(insertSmsAccount);
+		HibernateLogicFactory.getAccountLogic().persistSmsAccount(
+				insertSmsAccount);
 
 		assertTrue("Object not persisted", insertSmsTransaction1.exists());
 		assertTrue("Object not persisted", insertSmsTransaction2.exists());
-		SmsAccount account = logic.getSmsAccount(insertSmsAccount.getId());
+		SmsAccount account = HibernateLogicFactory.getAccountLogic()
+				.getSmsAccount(insertSmsAccount.getId());
 		assertNotNull("No object returned", account);
 		assertEquals("Incorrect object returned", insertSmsAccount, account);
 		assertTrue("Returnend collection is incorreclt size", account
@@ -132,7 +133,8 @@ public class SmsAccountTest extends AbstractBaseTestCase {
 	 * Test get sms accounts.
 	 */
 	public void testGetSmsAccounts() {
-		List<SmsAccount> accounts = logic.getAllSmsAccounts();
+		List<SmsAccount> accounts = HibernateLogicFactory.getAccountLogic()
+				.getAllSmsAccounts();
 		assertNotNull("Returnend collection is null", accounts);
 		assertTrue("No records returned", accounts.size() > 0);
 	}
@@ -141,8 +143,10 @@ public class SmsAccountTest extends AbstractBaseTestCase {
 	 * Test delete sms account.
 	 */
 	public void testDeleteSmsAccount() {
-		logic.deleteSmsAccount(logic.getSmsAccount(insertSmsAccount.getId()));
-		SmsAccount getSmsAccount = logic
+		HibernateLogicFactory.getAccountLogic().deleteSmsAccount(
+				HibernateLogicFactory.getAccountLogic().getSmsAccount(
+						insertSmsAccount.getId()));
+		SmsAccount getSmsAccount = HibernateLogicFactory.getAccountLogic()
 				.getSmsAccount(insertSmsAccount.getId());
 		assertNull(getSmsAccount);
 		assertNull("Object not removed", getSmsAccount);

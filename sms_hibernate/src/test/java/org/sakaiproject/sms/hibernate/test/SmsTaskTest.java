@@ -7,8 +7,7 @@ import java.util.Set;
 
 import org.sakaiproject.sms.hibernate.bean.SearchFilterBean;
 import org.sakaiproject.sms.hibernate.bean.SearchResultContainer;
-import org.sakaiproject.sms.hibernate.logic.impl.SmsMessageLogicImpl;
-import org.sakaiproject.sms.hibernate.logic.impl.SmsTaskLogicImpl;
+import org.sakaiproject.sms.hibernate.logic.impl.HibernateLogicFactory;
 import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsSearchException;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
@@ -27,9 +26,6 @@ import org.sakaiproject.sms.hibernate.util.HibernateUtil;
  */
 public class SmsTaskTest extends AbstractBaseTestCase {
 
-	/** The logic. */
-	private static SmsTaskLogicImpl logic = null;
-
 	/** The insert task. */
 	private static SmsTask insertTask;
 
@@ -39,15 +35,9 @@ public class SmsTaskTest extends AbstractBaseTestCase {
 	/** The insert message2. */
 	private static SmsMessage insertMessage2;
 
-	/** The message logic. */
-	private static SmsMessageLogicImpl messageLogic = null;
-
 	static {
 
 		HibernateUtil.createSchema();
-
-		messageLogic = new SmsMessageLogicImpl();
-		logic = new SmsTaskLogicImpl();
 
 		insertTask = new SmsTask();
 		insertTask.setSakaiSiteId("sakaiSiteId");
@@ -95,7 +85,7 @@ public class SmsTaskTest extends AbstractBaseTestCase {
 	 * Test insert sms task.
 	 */
 	public void testInsertSmsTask() {
-		logic.persistSmsTask(insertTask);
+		HibernateLogicFactory.getTaskLogic().persistSmsTask(insertTask);
 		assertTrue("Object not persisted", insertTask.exists());
 	}
 
@@ -103,7 +93,8 @@ public class SmsTaskTest extends AbstractBaseTestCase {
 	 * Test get sms task by id.
 	 */
 	public void testGetSmsTaskById() {
-		SmsTask getSmsTask = logic.getSmsTask(insertTask.getId());
+		SmsTask getSmsTask = HibernateLogicFactory.getTaskLogic().getSmsTask(
+				insertTask.getId());
 		assertNotNull(getSmsTask);
 		assertEquals(insertTask, getSmsTask);
 	}
@@ -112,11 +103,13 @@ public class SmsTaskTest extends AbstractBaseTestCase {
 	 * Test update sms task.
 	 */
 	public void testUpdateSmsTask() {
-		SmsTask smsTask = logic.getSmsTask(insertTask.getId());
+		SmsTask smsTask = HibernateLogicFactory.getTaskLogic().getSmsTask(
+				insertTask.getId());
 		assertFalse(smsTask.getSakaiSiteId().equals("newSakaiSiteId"));
 		smsTask.setSakaiSiteId("newSakaiSiteId");
-		logic.persistSmsTask(smsTask);
-		smsTask = logic.getSmsTask(insertTask.getId());
+		HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask);
+		smsTask = HibernateLogicFactory.getTaskLogic().getSmsTask(
+				insertTask.getId());
 		assertEquals("newSakaiSiteId", smsTask.getSakaiSiteId());
 	}
 
@@ -145,7 +138,7 @@ public class SmsTaskTest extends AbstractBaseTestCase {
 		messages.add(insertMessage2);
 
 		insertTask.setSmsMessagesOnTask(messages);
-		logic.persistSmsTask(insertTask);
+		HibernateLogicFactory.getTaskLogic().persistSmsTask(insertTask);
 	}
 
 	/**
@@ -157,8 +150,9 @@ public class SmsTaskTest extends AbstractBaseTestCase {
 		insertTask.getSmsMessages().add(insertMessage1);
 		insertTask.getSmsMessages().add(insertMessage2);
 
-		logic.persistSmsTask(insertTask);
-		SmsTask getSmsTask = logic.getSmsTask(insertTask.getId());
+		HibernateLogicFactory.getTaskLogic().persistSmsTask(insertTask);
+		SmsTask getSmsTask = HibernateLogicFactory.getTaskLogic().getSmsTask(
+				insertTask.getId());
 		assertNotNull(insertTask);
 		assertTrue("Collection size not correct", getSmsTask.getSmsMessages()
 				.size() == 4);
@@ -171,8 +165,9 @@ public class SmsTaskTest extends AbstractBaseTestCase {
 	public void testRemoveSmsMessagesFromTask() {
 		insertTask.setSakaiSiteId("oldSakaiSiteId");
 		insertTask.getSmsMessages().remove(insertMessage1);
-		logic.persistSmsTask(insertTask);
-		SmsTask getSmsTask = logic.getSmsTask(insertTask.getId());
+		HibernateLogicFactory.getTaskLogic().persistSmsTask(insertTask);
+		SmsTask getSmsTask = HibernateLogicFactory.getTaskLogic().getSmsTask(
+				insertTask.getId());
 		assertTrue("Object not removed from collection", getSmsTask
 				.getSmsMessages().size() == 3);
 		// Check the right object was removed
@@ -186,7 +181,8 @@ public class SmsTaskTest extends AbstractBaseTestCase {
 	 * Test get sms tasks.
 	 */
 	public void testGetSmsTasks() {
-		List<SmsTask> tasks = logic.getAllSmsTask();
+		List<SmsTask> tasks = HibernateLogicFactory.getTaskLogic()
+				.getAllSmsTask();
 		assertNotNull("Returned list is null", tasks);
 		assertTrue("No records returned", tasks.size() > 0);
 	}
@@ -235,7 +231,7 @@ public class SmsTaskTest extends AbstractBaseTestCase {
 		insertTask.setDelReportTimeoutDuration(1);
 
 		try {
-			logic.persistSmsTask(insertTask);
+			HibernateLogicFactory.getTaskLogic().persistSmsTask(insertTask);
 
 			SearchFilterBean bean = new SearchFilterBean();
 			bean.setStatus(insertTask.getStatusCode());
@@ -244,8 +240,8 @@ public class SmsTaskTest extends AbstractBaseTestCase {
 			bean.setToolName(insertTask.getSakaiToolName());
 			bean.setSender(insertTask.getSenderUserName());
 
-			List<SmsTask> tasks = logic.getSmsTasksForCriteria(bean)
-					.getPageResults();
+			List<SmsTask> tasks = HibernateLogicFactory.getTaskLogic()
+					.getSmsTasksForCriteria(bean).getPageResults();
 			assertTrue("Collection returned has no objects", tasks.size() > 0);
 
 			for (SmsTask task : tasks) {
@@ -255,7 +251,7 @@ public class SmsTaskTest extends AbstractBaseTestCase {
 		} catch (SmsSearchException se) {
 			fail(se.getMessage());
 		} finally {
-			logic.deleteSmsTask(insertTask);
+			HibernateLogicFactory.getTaskLogic().deleteSmsTask(insertTask);
 		}
 	}
 
@@ -279,7 +275,7 @@ public class SmsTaskTest extends AbstractBaseTestCase {
 			insertTask.setSakaiToolName("sakaiToolName");
 			insertTask.setMaxTimeToLive(1);
 			insertTask.setDelReportTimeoutDuration(i);
-			logic.persistSmsTask(insertTask);
+			HibernateLogicFactory.getTaskLogic().persistSmsTask(insertTask);
 		}
 
 		try {
@@ -293,8 +289,8 @@ public class SmsTaskTest extends AbstractBaseTestCase {
 
 			bean.setCurrentPage(2);
 
-			SearchResultContainer<SmsTask> con = logic
-					.getSmsTasksForCriteria(bean);
+			SearchResultContainer<SmsTask> con = HibernateLogicFactory
+					.getTaskLogic().getSmsTasksForCriteria(bean);
 			List<SmsTask> tasks = con.getPageResults();
 			assertTrue("Incorrect collection size returned",
 					tasks.size() == SmsHibernateConstants.DEFAULT_PAGE_SIZE);
@@ -311,7 +307,8 @@ public class SmsTaskTest extends AbstractBaseTestCase {
 				bean.setCurrentPage(pages + 1);
 			}
 
-			con = logic.getSmsTasksForCriteria(bean);
+			con = HibernateLogicFactory.getTaskLogic().getSmsTasksForCriteria(
+					bean);
 			tasks = con.getPageResults();
 			int lastPageRecordCount = recordsToInsert
 					- (pages * SmsHibernateConstants.DEFAULT_PAGE_SIZE);
@@ -327,8 +324,9 @@ public class SmsTaskTest extends AbstractBaseTestCase {
 	 * Test delete sms task.
 	 */
 	public void testDeleteSmsTask() {
-		logic.deleteSmsTask(insertTask);
-		SmsTask getSmsTask = logic.getSmsTask(insertTask.getId());
+		HibernateLogicFactory.getTaskLogic().deleteSmsTask(insertTask);
+		SmsTask getSmsTask = HibernateLogicFactory.getTaskLogic().getSmsTask(
+				insertTask.getId());
 		assertNull("Object not removed", getSmsTask);
 	}
 }
