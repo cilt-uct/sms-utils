@@ -573,6 +573,28 @@ public class SmsTask extends BaseModel {
 	}
 
 	/**
+	 * Sets the timeout status for messages that did not received delivery
+	 * reports .
+	 * 
+	 * @param oldStatus
+	 *            the old status
+	 * @param newStatus
+	 *            the new status
+	 */
+	public void setStatusForTimedOutMessages() {
+		if (smsMessages != null) {
+			for (SmsMessage message : smsMessages) {
+				if (message.getStatusCode().equals(
+						SmsConst_DeliveryStatus.STATUS_SENT)) {
+					message
+							.setStatusCode(SmsConst_DeliveryStatus.STATUS_TIMEOUT);
+				}
+			}
+		}
+
+	}
+
+	/**
 	 * Gets the messages with smsc status.
 	 * 
 	 * @param smscStatus

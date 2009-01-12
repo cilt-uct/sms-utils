@@ -80,7 +80,7 @@ public class SmsConfigLogicImpl extends SmsDao implements SmsConfigLogic {
 	 * @param sms
 	 *            confuguration to be persisted
 	 */
-	public void persistSmsConfig(SmsConfig smsConfig) {
+	public synchronized void persistSmsConfig(SmsConfig smsConfig) {
 		persist(smsConfig);
 	}
 
