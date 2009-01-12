@@ -255,8 +255,8 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 
 	private int getPageSize() {
 		SmsConfig smsConfig = HibernateLogicFactory.getConfigLogic()
-				.getSmsConfigBySakaiToolId(
-						SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_TOOL_ID);
+				.getOrCreateSmsConfigBySakaiSiteId(
+						SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_ID);
 		if (smsConfig == null)
 			return SmsHibernateConstants.DEFAULT_PAGE_SIZE;
 		else
