@@ -23,9 +23,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.log4j.Level;
-import org.sakaiproject.sms.hibernate.logic.impl.SmsConfigLogicImpl;
-import org.sakaiproject.sms.hibernate.logic.impl.SmsMessageLogicImpl;
-import org.sakaiproject.sms.hibernate.logic.impl.SmsTaskLogicImpl;
+import org.sakaiproject.sms.hibernate.logic.impl.HibernateLogicFactory;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
@@ -59,14 +57,9 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 		smsCoreImpl = new SmsCoreImpl();
 		smsSmppImpl = new SmsSmppImpl();
 		smsCoreImpl.setSmsBilling(new SmsBillingImpl());
-		smsCoreImpl.setSmsMessageLogic(new SmsMessageLogicImpl());
-		smsSmppImpl.setSmsMessageLogic(new SmsMessageLogicImpl());
-		smsSmppImpl.setSmsTaskLogic(new SmsTaskLogicImpl());
 		smsSmppImpl.init();
 		smsSmppImpl.setLogLevel(Level.ALL);
 		smsCoreImpl.setSmsSmpp(smsSmppImpl);
-		smsCoreImpl.setSmsTaskLogic(new SmsTaskLogicImpl());
-		smsCoreImpl.setSmsConfigLogic(new SmsConfigLogicImpl());
 		smsCoreImpl.enableDebugInformation(true);
 		LOG.setLevel(Level.ALL);
 	}
@@ -133,10 +126,10 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 
 			smsTask4.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
 
-			smsCoreImpl.getSmsTaskLogic().persistSmsTask(smsTask3);
-			smsCoreImpl.getSmsTaskLogic().persistSmsTask(smsTask2);
-			smsCoreImpl.getSmsTaskLogic().persistSmsTask(smsTask1);
-			smsCoreImpl.getSmsTaskLogic().persistSmsTask(smsTask4);
+			HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask3);
+			HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask2);
+			HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask1);
+			HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask4);
 
 			assertEquals(true, smsTask1.getId().equals(
 					smsCoreImpl.getNextSmsTask().getId()));
@@ -157,13 +150,13 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 				e.printStackTrace();
 			}
 
-			SmsTask smsTask1Update = smsCoreImpl.smsTaskLogic
+			SmsTask smsTask1Update = HibernateLogicFactory.getTaskLogic()
 					.getSmsTask(smsTask1.getId());
-			SmsTask smsTask2Update = smsCoreImpl.smsTaskLogic
+			SmsTask smsTask2Update = HibernateLogicFactory.getTaskLogic()
 					.getSmsTask(smsTask2.getId());
-			SmsTask smsTask3Update = smsCoreImpl.smsTaskLogic
+			SmsTask smsTask3Update = HibernateLogicFactory.getTaskLogic()
 					.getSmsTask(smsTask3.getId());
-			SmsTask smsTask4Update = smsCoreImpl.smsTaskLogic
+			SmsTask smsTask4Update = HibernateLogicFactory.getTaskLogic()
 					.getSmsTask(smsTask4.getId());
 
 			assertEquals(true, smsTask1Update.getMessagesWithSmscStatus(
@@ -205,8 +198,8 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 					"TestTaskStatuses-ExpiresTask", null);
 			smsTask1.setMaxTimeToLive(60);
 
-			smsCoreImpl.getSmsTaskLogic().persistSmsTask(smsTask2);
-			smsCoreImpl.getSmsTaskLogic().persistSmsTask(smsTask1);
+			HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask2);
+			HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask1);
 
 			assertEquals(true, smsTask1.getId().equals(
 					smsCoreImpl.getNextSmsTask().getId()));
@@ -223,9 +216,9 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 				e.printStackTrace();
 			}
 
-			SmsTask smsTask1Update = smsCoreImpl.smsTaskLogic
+			SmsTask smsTask1Update = HibernateLogicFactory.getTaskLogic()
 					.getSmsTask(smsTask1.getId());
-			SmsTask smsTask2Update = smsCoreImpl.smsTaskLogic
+			SmsTask smsTask2Update = HibernateLogicFactory.getTaskLogic()
 					.getSmsTask(smsTask2.getId());
 
 			assertEquals(true, smsTask1Update.getMessagesWithSmscStatus(
@@ -297,8 +290,8 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 				e.printStackTrace();
 			}
 		}
-		SmsTask smsTaskUpdate = smsCoreImpl.getSmsTaskLogic().getSmsTask(
-				smsTask.getId());
+		SmsTask smsTaskUpdate = HibernateLogicFactory.getTaskLogic()
+				.getSmsTask(smsTask.getId());
 		assertEquals(true, smsTaskUpdate.getStatusCode().equals(
 				SmsConst_DeliveryStatus.STATUS_FAIL));
 		assertEquals(true, smsTaskUpdate.getAttemptCount() == 5);
@@ -306,14 +299,14 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 				SmsConst_DeliveryStatus.STATUS_FAIL).size() == (smsTask
 				.getSmsMessages().size()));
 
-		smsCoreImpl.getSmsTaskLogic().deleteSmsTask(smsTask);
+		HibernateLogicFactory.getTaskLogic().deleteSmsTask(smsTask);
 		LOG.info("Reconnecting to server after fail test ");
 		smsSmppImpl.connectToGateway();
 	}
 
 	public void testProcessIncomingMessage() {
 		smsSmppImpl.connectToGateway();
-		SmsMessage smsMessage = smsSmppImpl.getSmsMessageLogic()
+		SmsMessage smsMessage = HibernateLogicFactory.getMessageLogic()
 				.getNewTestSmsMessageInstance("Mobile number", "Message body");
 		smsCoreImpl.processIncomingMessage(smsMessage);
 	}
@@ -350,7 +343,8 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 			LOG.info("Sending Messages To Gateway");
 			statusUpdateTask
 					.setMessageTypeId(SmsHibernateConstants.SMS_TASK_TYPE_PROCESS_NOW);
-			smsCoreImpl.smsTaskLogic.persistSmsTask(statusUpdateTask);
+			HibernateLogicFactory.getTaskLogic().persistSmsTask(
+					statusUpdateTask);
 			smsSmppImpl
 					.sendMessagesToGateway(statusUpdateTask.getSmsMessages());
 			LOG.info("SMS-messages Pending: "
@@ -368,7 +362,7 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 			timeOutTask.setDelReportTimeoutDuration(1);
 			timeOutTask.setSmsMessagesOnTask(smsCoreImpl.generateSmsMessages(
 					timeOutTask, null));
-			smsCoreImpl.smsTaskLogic.persistSmsTask(timeOutTask);
+			HibernateLogicFactory.getTaskLogic().persistSmsTask(timeOutTask);
 			smsSmppImpl.getSession().setMessageReceiverListener(null);
 			smsCoreImpl.processNextTask();
 
@@ -378,7 +372,7 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 				e.printStackTrace();
 			}
 			smsCoreImpl.processTimedOutMessages();
-			SmsTask smsTask3Update = smsCoreImpl.smsTaskLogic
+			SmsTask smsTask3Update = HibernateLogicFactory.getTaskLogic()
 					.getSmsTask(timeOutTask.getId());
 
 			Set<SmsMessage> smsMessages = smsTask3Update.getSmsMessages();

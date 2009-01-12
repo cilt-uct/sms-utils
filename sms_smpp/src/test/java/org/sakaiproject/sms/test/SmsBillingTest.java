@@ -20,9 +20,7 @@ package org.sakaiproject.sms.test;
 import java.sql.Timestamp;
 import java.util.Date;
 
-import org.sakaiproject.sms.hibernate.logic.impl.SmsAccountLogicImpl;
-import org.sakaiproject.sms.hibernate.logic.impl.SmsMessageLogicImpl;
-import org.sakaiproject.sms.hibernate.logic.impl.SmsTaskLogicImpl;
+import org.sakaiproject.sms.hibernate.logic.impl.HibernateLogicFactory;
 import org.sakaiproject.sms.hibernate.model.SmsAccount;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
@@ -43,12 +41,6 @@ public class SmsBillingTest extends AbstractBaseTestCase {
 
 	/** The sms billing impl. */
 	private static SmsBillingImpl smsBillingImpl = null;
-
-	/** The sms task logic impl. */
-	private static SmsTaskLogicImpl smsTaskLogicImpl = null;
-
-	/** The account logic. */
-	private static SmsAccountLogicImpl accountLogic;
 
 	/** The account. */
 	public static SmsAccount account;
@@ -71,12 +63,8 @@ public class SmsBillingTest extends AbstractBaseTestCase {
 
 	static {
 		HibernateUtil.createSchema();
-		accountLogic = new SmsAccountLogicImpl();
 		smsBillingImpl = new SmsBillingImpl();
-		smsTaskLogicImpl = new SmsTaskLogicImpl();
 		smsSmppImpl = new SmsSmppImpl();
-		smsSmppImpl.setSmsMessageLogic(new SmsMessageLogicImpl());
-		smsSmppImpl.setSmsTaskLogic(new SmsTaskLogicImpl());
 		smsSmppImpl.init();
 
 		account = new SmsAccount();
@@ -86,7 +74,7 @@ public class SmsBillingTest extends AbstractBaseTestCase {
 		account.setAccountName("account name");
 		account.setStartdate(new Date());
 		account.setAccountEnabled(true);
-		accountLogic.persistSmsAccount(account);
+		HibernateLogicFactory.getAccountLogic().persistSmsAccount(account);
 
 	}
 
@@ -184,7 +172,7 @@ public class SmsBillingTest extends AbstractBaseTestCase {
 
 		// Add overdraft to account
 		account.setOverdraftLimit(10f);
-		accountLogic.persistSmsAccount(account);
+		HibernateLogicFactory.getAccountLogic().persistSmsAccount(account);
 
 		sufficientCredits = smsBillingImpl.checkSufficientCredits(account
 				.getId().intValue(), creditsRequired);
@@ -195,6 +183,7 @@ public class SmsBillingTest extends AbstractBaseTestCase {
 	 * Test count billable messages.
 	 */
 	public void testCountBillableMessages() {
+		fail();
 		SmsTask task = new SmsTask();
 		task.setSakaiSiteId("sakaiSiteId");
 		task.setSmsAccountId(account.getId().intValue());
@@ -223,13 +212,15 @@ public class SmsBillingTest extends AbstractBaseTestCase {
 		message2.setSmsTask(task);
 		task.getSmsMessages().add(message1);
 		task.getSmsMessages().add(message2);
-		smsTaskLogicImpl.persistSmsTask(task);
+		HibernateLogicFactory.getTaskLogic().persistSmsTask(task);
 
-		int billableMessageCount = smsBillingImpl.countBillableMessages(task
-				.getSakaiSiteId(), task.getDeliveryUserId(), task
-				.getDeliveryGroupId(), 1);
-		assertTrue("Expected two billable messages", billableMessageCount == 2);
-
+		/*
+		 * int billableMessageCount = smsBillingImpl.countBillableMessages(task
+		 * .getSakaiSiteId(), task.getDeliveryUserId(), task
+		 * .getDeliveryGroupId(), 1);
+		 */
+		// assertTrue("Expected two billable messages", billableMessageCount ==
+		// 2);
 	}
 
 }

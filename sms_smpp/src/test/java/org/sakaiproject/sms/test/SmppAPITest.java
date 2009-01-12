@@ -21,8 +21,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.sakaiproject.sms.hibernate.logic.impl.SmsMessageLogicImpl;
-import org.sakaiproject.sms.hibernate.logic.impl.SmsTaskLogicImpl;
+import org.sakaiproject.sms.hibernate.logic.impl.HibernateLogicFactory;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
@@ -41,7 +40,6 @@ import org.sakaiproject.sms.impl.SmsSmppImpl;
 public class SmppAPITest extends AbstractBaseTestCase {
 
 	private static SmsSmppImpl smsSmppImpl = null;
-	private static SmsTaskLogicImpl smsTaskLogicImpl = null;
 
 	public SmppAPITest() {
 	}
@@ -54,8 +52,6 @@ public class SmppAPITest extends AbstractBaseTestCase {
 		System.out.println("Static setUp");
 		HibernateUtil.createSchema();
 		smsSmppImpl = new SmsSmppImpl();
-		smsSmppImpl.setSmsMessageLogic(new SmsMessageLogicImpl());
-		smsSmppImpl.setSmsTaskLogic(new SmsTaskLogicImpl());
 		smsSmppImpl.init();
 
 	}
@@ -98,8 +94,7 @@ public class SmppAPITest extends AbstractBaseTestCase {
 		insertTask.setDateProcessed(new Date());
 		insertTask
 				.setMessageTypeId(SmsHibernateConstants.SMS_TASK_TYPE_PROCESS_NOW);
-		smsTaskLogicImpl = new SmsTaskLogicImpl();
-		smsTaskLogicImpl.persistSmsTask(insertTask);
+		HibernateLogicFactory.getTaskLogic().persistSmsTask(insertTask);
 		return insertTask;
 	}
 
@@ -135,8 +130,8 @@ public class SmppAPITest extends AbstractBaseTestCase {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		SmsTask insertTask1update = smsTaskLogicImpl.getSmsTask(insertTask
-				.getId());
+		SmsTask insertTask1update = HibernateLogicFactory.getTaskLogic()
+				.getSmsTask(insertTask.getId());
 		assertEquals(true, insertTask1update.getMessagesWithSmscStatus(
 				SmsConst_SmscDeliveryStatus.ENROUTE).size() == 0);
 
@@ -168,11 +163,11 @@ public class SmppAPITest extends AbstractBaseTestCase {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		SmsTask insertTask1update = smsTaskLogicImpl.getSmsTask(insertTask1
-				.getId());
+		SmsTask insertTask1update = HibernateLogicFactory.getTaskLogic()
+				.getSmsTask(insertTask1.getId());
 		assertEquals(true, insertTask1update.getMessagesWithSmscStatus(
 				SmsConst_SmscDeliveryStatus.ENROUTE).size() == 0);
-		smsTaskLogicImpl.deleteSmsTask(insertTask1update);
+		HibernateLogicFactory.getTaskLogic().deleteSmsTask(insertTask1update);
 
 	}
 

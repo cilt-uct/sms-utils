@@ -22,8 +22,7 @@ import java.util.Date;
 import net.sourceforge.groboutils.junit.v1.TestRunnable;
 
 import org.apache.log4j.Level;
-import org.sakaiproject.sms.hibernate.logic.impl.SmsMessageLogicImpl;
-import org.sakaiproject.sms.hibernate.logic.impl.SmsTaskLogicImpl;
+import org.sakaiproject.sms.hibernate.logic.impl.HibernateLogicFactory;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
@@ -35,8 +34,6 @@ import org.sakaiproject.sms.impl.SmsSmppImpl;
  * The Class SmppSession. Used in the threading test.
  */
 public class SmppThread extends TestRunnable {
-
-	private static SmsTaskLogicImpl smsTaskLogicImpl = new SmsTaskLogicImpl();
 
 	private static final org.apache.log4j.Logger LOG = org.apache.log4j.Logger
 			.getLogger(SmppThread.class);
@@ -63,8 +60,6 @@ public class SmppThread extends TestRunnable {
 				.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%61");
 		this.sessionName = sessionName;
 		this.smsSmppImpl = new SmsSmppImpl();
-		this.smsSmppImpl.setSmsMessageLogic(new SmsMessageLogicImpl());
-		this.smsSmppImpl.setSmsTaskLogic(new SmsTaskLogicImpl());
 		this.smsSmppImpl.init();
 		System.out
 				.println("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%67");
@@ -97,7 +92,7 @@ public class SmppThread extends TestRunnable {
 		insertTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_SENT);
 		insertTask
 				.setMessageTypeId(SmsHibernateConstants.SMS_TASK_TYPE_PROCESS_NOW);
-		smsTaskLogicImpl.persistSmsTask(insertTask);
+		HibernateLogicFactory.getTaskLogic().persistSmsTask(insertTask);
 		return insertTask;
 	}
 
@@ -134,7 +129,8 @@ public class SmppThread extends TestRunnable {
 		while (waitForDeliveries) {
 
 			Thread.sleep(1000);
-			updatedSmsTask = smsTaskLogicImpl.getSmsTask(insertTask.getId());
+			updatedSmsTask = HibernateLogicFactory.getTaskLogic().getSmsTask(
+					insertTask.getId());
 			reportsRemainingAfterSleep = updatedSmsTask
 					.getMessagesWithSmscStatus(
 							SmsConst_SmscDeliveryStatus.ENROUTE).size();
