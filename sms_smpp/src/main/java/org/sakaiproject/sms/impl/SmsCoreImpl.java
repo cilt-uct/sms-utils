@@ -361,7 +361,7 @@ public class SmsCoreImpl implements SmsCore {
 	 * report within the valid period.As determined by
 	 * DEL_REPORT_TIMEOUT_DURATION on the task.
 	 */
-	public void processTimedOutMessages() {
+	public void processTimedOutDeliveryReports() {
 		List<SmsMessage> smsMessages = HibernateLogicFactory.getMessageLogic()
 				.getSmsMessagesWithStatus(null,
 						SmsConst_DeliveryStatus.STATUS_SENT);

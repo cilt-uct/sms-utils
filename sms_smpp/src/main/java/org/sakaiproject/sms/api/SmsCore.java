@@ -100,7 +100,7 @@ public interface SmsCore {
 	 * report within the valid period.As determined by
 	 * DEL_REPORT_TIMEOUT_DURATION on the task.
 	 */
-	public void processTimedOutMessages();
+	public void processTimedOutDeliveryReports();
 
 	/**
 	 * Gets the next task to process. Based on specific criteria like status en
