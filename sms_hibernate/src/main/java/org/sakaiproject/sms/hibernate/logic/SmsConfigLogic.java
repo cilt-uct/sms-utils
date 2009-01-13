@@ -93,4 +93,11 @@ public interface SmsConfigLogic {
 	 */
 	public SmsConfig createDefaultSmsConfig(String sakaiSiteId);
 
+	/**
+	 * Gets the system sms config.
+	 * 
+	 * @return
+	 */
+	public SmsConfig getOrCreateSystemSmsConfig();
+
 }

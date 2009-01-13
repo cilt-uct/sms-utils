@@ -122,6 +122,10 @@ public class SmsConfigLogicImpl extends SmsDao implements SmsConfigLogic {
 		return config;
 	}
 
+	public SmsConfig getOrCreateSystemSmsConfig() {
+		return getOrCreateSmsConfigBySakaiSiteId("");
+	}
+
 	public SmsConfig createDefaultSmsConfig(String sakaiSiteId) {
 		SmsConfig config = new SmsConfig();
 		config
