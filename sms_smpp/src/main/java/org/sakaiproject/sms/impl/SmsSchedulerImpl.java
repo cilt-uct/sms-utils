@@ -44,7 +44,7 @@ public class SmsSchedulerImpl implements SmsScheduler {
 	public void init() {
 		Assert.notNull(smsCore);
 		smsConfig = HibernateLogicFactory.getConfigLogic()
-				.getOrCreateSmsConfigBySakaiSiteId(null);
+				.getOrCreateSystemSmsConfig();
 		smsSchedulerThread = new SmsSchedulerThread();
 		System.out.println("Init of SmsScheduler complete");
 	}
@@ -77,7 +77,7 @@ public class SmsSchedulerImpl implements SmsScheduler {
 				}
 				LOG.info("Searching for tasks to process");
 				smsCore.processNextTask();
-				smsCore.processTimedOutMessages();
+				smsCore.processTimedOutDeliveryReports();
 				try {
 					Thread.sleep(smsConfig.getSchedulerInterval() * 1000);
 				} catch (InterruptedException e) {

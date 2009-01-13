@@ -370,7 +370,7 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			smsCoreImpl.processTimedOutMessages();
+			smsCoreImpl.processTimedOutDeliveryReports();
 			SmsTask smsTask3Update = HibernateLogicFactory.getTaskLogic()
 					.getSmsTask(timeOutTask.getId());
 
