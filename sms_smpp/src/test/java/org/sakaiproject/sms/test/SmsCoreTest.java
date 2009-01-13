@@ -358,7 +358,7 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 			SmsTask timeOutTask = smsCoreImpl.getPreliminaryTask(
 					"testTimeoutAndMessageStatusUpdate-TIMEOUT", new Date(),
 					"testTimeoutAndMessageStatusUpdate-TIMEOUT", null);
-			timeOutTask.setDelReportTimeoutDuration(1);
+			timeOutTask.setDelReportTimeoutDuration(60);
 			timeOutTask.setSmsMessagesOnTask(smsCoreImpl.generateSmsMessages(
 					timeOutTask, null));
 			smsCoreImpl.insertTask(timeOutTask);
