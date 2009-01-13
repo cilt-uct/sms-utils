@@ -1,5 +1,5 @@
 /***********************************************************************************
- * SmsTestProducer.java
+ * HelperProducer.java
  * Copyright (c) 2008 Sakai Project/Sakai Foundation
  * 
  * Licensed under the Educational Community License, Version 2.0 (the "License"); 
@@ -23,11 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.sakaiproject.sms.beans.ActionResults;
-import org.sakaiproject.sms.hibernate.logic.SmsAccountLogic;
-import org.sakaiproject.sms.hibernate.model.SmsAccount;
-import org.sakaiproject.sms.otp.SmsMessageLocator;
+import org.sakaiproject.sms.otp.SmsTaskLocator;
 
-import uk.org.ponder.beanutil.BeanGetter;
 import uk.org.ponder.rsf.components.UICommand;
 import uk.org.ponder.rsf.components.UIContainer;
 import uk.org.ponder.rsf.components.UIForm;
@@ -35,45 +32,30 @@ import uk.org.ponder.rsf.components.UIInitBlock;
 import uk.org.ponder.rsf.components.UIInput;
 import uk.org.ponder.rsf.components.UIMessage;
 import uk.org.ponder.rsf.components.decorators.UIDisabledDecorator;
-import uk.org.ponder.rsf.flow.ARIResult;
 import uk.org.ponder.rsf.flow.jsfnav.NavigationCase;
 import uk.org.ponder.rsf.flow.jsfnav.NavigationCaseReporter;
 import uk.org.ponder.rsf.view.ComponentChecker;
-import uk.org.ponder.rsf.view.ComponentProducer;
-import uk.org.ponder.rsf.view.DefaultView;
 import uk.org.ponder.rsf.view.ViewComponentProducer;
 import uk.org.ponder.rsf.viewstate.SimpleViewParameters;
 import uk.org.ponder.rsf.viewstate.ViewParameters;
 
-public class SmsTestProducer implements ViewComponentProducer, DefaultView,
+public class HelperProducer implements ViewComponentProducer,
 		NavigationCaseReporter {
 
-	private BeanGetter ELEvaluator;
-	private SmsAccountLogic smsAccountLogic;
+	public static final String VIEW_ID = "helper";
 
-	public static final String VIEW_ID = "sms_test";
-
-	/**
-	 * @see ComponentProducer#fillComponents(UIContainer, ViewParameters,
-	 *      ComponentChecker)
-	 */
 	public void fillComponents(UIContainer tofill, ViewParameters viewparams,
 			ComponentChecker checker) {
 
-		String smsMessageOTP = SmsMessageLocator.LOCATOR_NAME + "."
-				+ SmsMessageLocator.NEW_1;
+		String smsTaskOTP = SmsTaskLocator.LOCATOR_NAME + "."
+				+ SmsTaskLocator.NEW_1;
 
-		UIMessage.make(tofill, "page-title", "sms.test.title");
-		UIMessage.make(tofill, "sms-test-heading", "sms.test.heading");
-		UIForm form = UIForm.make(tofill, "test-form");
-
-		UIMessage.make(form, "mobile-nr-label", "sms.test.mobile-number");
-		UIInput mobileNr = UIInput.make(form, "mobile-nr", smsMessageOTP
-				+ ".mobileNumber");
-		mobileNr.mustapply = true; // Force to apply
+		UIMessage.make(tofill, "page-title", "sms.helper.title");
+		UIMessage.make(tofill, "sms-helper-heading", "sms.helper.heading");
+		UIForm form = UIForm.make(tofill, "helper-form");
 
 		UIMessage.make(form, "message-body-label", "sms.helper.message-body");
-		UIInput messageBody = UIInput.make(form, "message-body", smsMessageOTP
+		UIInput messageBody = UIInput.make(form, "message-body", smsTaskOTP
 				+ ".messageBody");
 		messageBody.mustapply = true; // Force to apply
 
@@ -84,8 +66,9 @@ public class SmsTestProducer implements ViewComponentProducer, DefaultView,
 		// Disables the characters remaining input
 		charsRemaining.decorate(new UIDisabledDecorator());
 
-		UICommand.make(form, "ok-button", UIMessage.make("sms.general.send"),
-				"SmsTestActionBean.send");
+		// TODO: Continue / Send button
+		UICommand.make(form, "action-button", UIMessage
+				.make("sms.general.send"));
 		UICommand.make(form, "cancel-button",
 				UIMessage.make("sms.general.cancel")).setReturn(
 				ActionResults.CANCEL);
@@ -93,33 +76,28 @@ public class SmsTestProducer implements ViewComponentProducer, DefaultView,
 		UIMessage.make(form, "estimated-group-size-label",
 				"sms.helper.estimated-group-size");
 		UIInput groupSize = UIInput.make(form, "estimated-group-size",
-				smsMessageOTP + ".smsTask.groupSizeEstimate");
+				smsTaskOTP + ".groupSizeEstimate");
 		groupSize.decorate(new UIDisabledDecorator());
 		groupSize.fossilize = false;
 
 		UIMessage.make(form, "account-balance-label",
 				"sms.helper.account-balance");
 		UIInput accountBalance = UIInput.make(form, "account-balance", null,
-				retrieveBalance(smsMessageOTP + ".smsTask.smsAccountId")
-						.toString());
+				"todo");
 		accountBalance.decorate(new UIDisabledDecorator());
 		accountBalance.fossilize = false;
 
 		UIMessage.make(form, "estimated-cost-label",
 				"sms.helper.estimated-cost");
-		UIInput estimatedCost = UIInput.make(form, "estimated-cost",
-				smsMessageOTP + ".smsTask.creditEstimate");
+		UIInput estimatedCost = UIInput.make(form, "estimated-cost", smsTaskOTP
+				+ ".creditEstimate");
 		estimatedCost.decorate(new UIDisabledDecorator());
 		estimatedCost.fossilize = false;
-
-		UIMessage.make(form, "smpp-debug-label", "sms.helper.smpp-debug");
-		UIInput debug = UIInput.make(form, "smpp-debug", smsMessageOTP
-				+ ".debugInfo");
-		debug.decorate(new UIDisabledDecorator());
 
 		UIInitBlock.make(tofill, "init-msg-body-change", "initMsgBodyChange",
 				new Object[] { messageBody, charsRemaining,
 						Integer.toString(MAX_SMS_LENGTH) });
+
 	}
 
 	public String getViewID() {
@@ -131,35 +109,9 @@ public class SmsTestProducer implements ViewComponentProducer, DefaultView,
 	 */
 	public List reportNavigationCases() {
 		List<NavigationCase> list = new ArrayList<NavigationCase>();
-		list.add(new NavigationCase(ActionResults.SUCCESS,
-				new SimpleViewParameters(SmsTestProducer.VIEW_ID),
-				ARIResult.FLOW_ONESTEP));
 		list.add(new NavigationCase(ActionResults.CANCEL,
 				new SimpleViewParameters(SmsTestProducer.VIEW_ID)));
 		return list;
 	}
 
-	/**
-	 * Retrieves the EL path (which will be the accountId of a SmsTask.
-	 * Retrieves the SmsAccount that corresponds to the id and returns the
-	 * balance. Will probably change after data model changes.
-	 */
-	private Float retrieveBalance(String path) {
-		Integer accountId = (Integer) ELEvaluator.getBean(path);
-		SmsAccount smsAccount = smsAccountLogic.getSmsAccount(accountId
-				.longValue());
-		if (smsAccount != null) {
-			return smsAccount.getBalance();
-		} else {
-			return 0f;
-		}
-	}
-
-	public void setELEvaluator(BeanGetter ELEvaluator) {
-		this.ELEvaluator = ELEvaluator;
-	}
-
-	public void setSmsAccountLogic(SmsAccountLogic smsAccountLogic) {
-		this.smsAccountLogic = smsAccountLogic;
-	}
 }

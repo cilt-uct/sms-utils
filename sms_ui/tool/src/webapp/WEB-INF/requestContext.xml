@@ -52,6 +52,8 @@
 	<property name="smsAccountLogic" ref="SmsAccountLogic" />
   </bean>
   
+  <bean class="org.sakaiproject.sms.producers.HelperProducer" />
+  
   <bean class="org.sakaiproject.sms.producers.SmsConfigProducer"/>
   
   <bean class="org.sakaiproject.sms.producers.TaskListPopupProducer" >
@@ -109,6 +111,8 @@
   	<property name="smsAccountLogic" ref="SmsAccountLogic"/>
   	<property name="messages" ref="targettedMessageList" />
   </bean>
-  
+  <bean id="SmsTaskLocator" class="org.sakaiproject.sms.otp.SmsTaskLocator">
+    	<property name="smsCore" ref="org.sakaiproject.sms.api.SmsCore"/>
+  </bean>
   
 </beans>
