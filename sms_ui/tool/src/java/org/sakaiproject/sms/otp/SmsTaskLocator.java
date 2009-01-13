@@ -48,7 +48,7 @@ public class SmsTaskLocator implements BeanLocator {
 		SmsTask togo = delivered.get(name);
 		if (togo == null) {
 			if (name.startsWith(NEW_PREFIX)) {
-				togo = smsCore.getPreliminaryTask(null, null, null, null);
+				togo = smsCore.getPreliminaryTask("", null, "", "");
 			} else {
 				// TODO: Code to retrieve existing SmsTask
 			}

@@ -23,11 +23,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.sakaiproject.sms.beans.ActionResults;
-import org.sakaiproject.sms.hibernate.logic.SmsAccountLogic;
 import org.sakaiproject.sms.hibernate.model.SmsAccount;
 import org.sakaiproject.sms.otp.SmsMessageLocator;
+import org.sakaiproject.sms.util.SmsAccountHelper;
 
-import uk.org.ponder.beanutil.BeanGetter;
 import uk.org.ponder.rsf.components.UICommand;
 import uk.org.ponder.rsf.components.UIContainer;
 import uk.org.ponder.rsf.components.UIForm;
@@ -48,8 +47,7 @@ import uk.org.ponder.rsf.viewstate.ViewParameters;
 public class SmsTestProducer implements ViewComponentProducer, DefaultView,
 		NavigationCaseReporter {
 
-	private BeanGetter ELEvaluator;
-	private SmsAccountLogic smsAccountLogic;
+	private SmsAccountHelper accountHelper;
 
 	public static final String VIEW_ID = "sms_test";
 
@@ -99,9 +97,10 @@ public class SmsTestProducer implements ViewComponentProducer, DefaultView,
 
 		UIMessage.make(form, "account-balance-label",
 				"sms.helper.account-balance");
+		SmsAccount account = accountHelper.retrieveAccount(smsMessageOTP
+				+ ".smsTask.smsAccountId");
 		UIInput accountBalance = UIInput.make(form, "account-balance", null,
-				retrieveBalance(smsMessageOTP + ".smsTask.smsAccountId")
-						.toString());
+				(account == null ? 0f : account.getBalance()) + "");
 		accountBalance.decorate(new UIDisabledDecorator());
 		accountBalance.fossilize = false;
 
@@ -139,27 +138,8 @@ public class SmsTestProducer implements ViewComponentProducer, DefaultView,
 		return list;
 	}
 
-	/**
-	 * Retrieves the EL path (which will be the accountId of a SmsTask.
-	 * Retrieves the SmsAccount that corresponds to the id and returns the
-	 * balance. Will probably change after data model changes.
-	 */
-	private Float retrieveBalance(String path) {
-		Integer accountId = (Integer) ELEvaluator.getBean(path);
-		SmsAccount smsAccount = smsAccountLogic.getSmsAccount(accountId
-				.longValue());
-		if (smsAccount != null) {
-			return smsAccount.getBalance();
-		} else {
-			return 0f;
-		}
+	public void setAccountHelper(SmsAccountHelper accountHelper) {
+		this.accountHelper = accountHelper;
 	}
 
-	public void setELEvaluator(BeanGetter ELEvaluator) {
-		this.ELEvaluator = ELEvaluator;
-	}
-
-	public void setSmsAccountLogic(SmsAccountLogic smsAccountLogic) {
-		this.smsAccountLogic = smsAccountLogic;
-	}
 }

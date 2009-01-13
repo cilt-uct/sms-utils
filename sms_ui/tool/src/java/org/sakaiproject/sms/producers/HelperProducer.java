@@ -23,7 +23,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.sakaiproject.sms.beans.ActionResults;
+import org.sakaiproject.sms.hibernate.model.SmsAccount;
 import org.sakaiproject.sms.otp.SmsTaskLocator;
+import org.sakaiproject.sms.util.SmsAccountHelper;
 
 import uk.org.ponder.rsf.components.UICommand;
 import uk.org.ponder.rsf.components.UIContainer;
@@ -43,6 +45,8 @@ public class HelperProducer implements ViewComponentProducer,
 		NavigationCaseReporter {
 
 	public static final String VIEW_ID = "helper";
+
+	private SmsAccountHelper accountHelper;
 
 	public void fillComponents(UIContainer tofill, ViewParameters viewparams,
 			ComponentChecker checker) {
@@ -82,8 +86,10 @@ public class HelperProducer implements ViewComponentProducer,
 
 		UIMessage.make(form, "account-balance-label",
 				"sms.helper.account-balance");
+		SmsAccount account = accountHelper.retrieveAccount(smsTaskOTP
+				+ ".smsAccountId");
 		UIInput accountBalance = UIInput.make(form, "account-balance", null,
-				"todo");
+				(account == null ? 0f : account.getBalance()) + "");
 		accountBalance.decorate(new UIDisabledDecorator());
 		accountBalance.fossilize = false;
 
@@ -112,6 +118,10 @@ public class HelperProducer implements ViewComponentProducer,
 		list.add(new NavigationCase(ActionResults.CANCEL,
 				new SimpleViewParameters(SmsTestProducer.VIEW_ID)));
 		return list;
+	}
+
+	public void setAccountHelper(SmsAccountHelper accountHelper) {
+		this.accountHelper = accountHelper;
 	}
 
 }

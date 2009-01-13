@@ -48,11 +48,12 @@
 
   <!--  Producers -->
   <bean class="org.sakaiproject.sms.producers.SmsTestProducer" >
-  	<property name="ELEvaluator" ref="ELEvaluator" />
-	<property name="smsAccountLogic" ref="SmsAccountLogic" />
+	<property name="accountHelper" ref="accountHelper" />
   </bean>
   
-  <bean class="org.sakaiproject.sms.producers.HelperProducer" />
+  <bean class="org.sakaiproject.sms.producers.HelperProducer">
+ 	<property name="accountHelper" ref="accountHelper" />
+  </bean>
   
   <bean class="org.sakaiproject.sms.producers.SmsConfigProducer"/>
   
@@ -97,6 +98,12 @@
   <bean id="smsConfigActionBean" class="org.sakaiproject.sms.beans.SmsConfigActionBean">
   	 <property name="smsConfigLocator" ref="SmsConfigLocator"/>
   	 <property name="smsConfigLogic" ref="smsConfigLogic"/>
+  </bean>
+  
+  <!-- Helpers -->
+  <bean id="accountHelper" class="org.sakaiproject.sms.util.SmsAccountHelper">
+    <property name="ELEvaluator" ref="ELEvaluator" />
+	<property name="smsAccountLogic" ref="SmsAccountLogic" />
   </bean>
   
   <!-- Locators -->
