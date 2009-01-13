@@ -25,7 +25,6 @@ import org.sakaiproject.sms.constants.SmsUiConstants;
 import org.sakaiproject.sms.otp.SmsAccountLocator;
 import org.sakaiproject.sms.params.IdParams;
 
-import uk.org.ponder.beanutil.BeanGetter;
 import uk.org.ponder.rsf.components.ELReference;
 import uk.org.ponder.rsf.components.UIBoundList;
 import uk.org.ponder.rsf.components.UICommand;
@@ -50,7 +49,6 @@ public class AccountProducer implements ViewComponentProducer,
 	public static final String VIEW_ID = "account";
 
 	private FormatAwareDateInputEvolver dateEvolver;
-	private BeanGetter ELEvaluator;
 
 	private void createAccountEnabledBooleanSelection(String accountOTP,
 			UIForm form) {
