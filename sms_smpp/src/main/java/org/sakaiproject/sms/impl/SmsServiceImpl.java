@@ -17,6 +17,21 @@
  **********************************************************************************/
 package org.sakaiproject.sms.impl;
 
+/** To sms-enabled a existing Sakai tool, the following guidelines must be followed:
+ * 
+ * call sms.getPreliminaryTask to get a new sms task 
+ * Display the sms window
+ * User press the “continue” button
+ * Post UI values to smsTask (body)
+ * call sms.validateTask(smsTask) and show any errors in UI
+ * call sms.calculateGroupSize to calculate estimated group size on smsTask
+ * Display estimated values in UI
+ * Change button to “Save”
+ * User press the “Save” button
+ * call sms.checkSufficientCredits
+ * Report insufficient credits in UI
+ * call sms.insertTask(smsTask) for scheduler to handle
+ */
 import java.util.Date;
 import java.util.Set;
 
@@ -45,9 +60,10 @@ public class SmsServiceImpl implements SmsService {
 	}
 
 	/**
-	 * Add a new task to the sms task list, for eg. send message y to Sakai
-	 * group X ant time Z. If the task is future dated, then it be picked up by
-	 * the sms task (job) scheduler for processing.
+	 * Get a new task with default attributes. The task is only a object. It is
+	 * not yet persisted to the database. For eg. send message y to Sakai group
+	 * X at time Z. If the task is future dated, then it be picked up by the sms
+	 * task (job) scheduler for processing.
 	 * 
 	 * @param sakaiGroupId
 	 * @param dateToSend
