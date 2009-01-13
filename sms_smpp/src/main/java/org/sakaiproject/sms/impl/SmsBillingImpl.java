@@ -101,25 +101,6 @@ public class SmsBillingImpl implements SmsBilling {
 	}
 
 	/**
-	 * Return a list of all transactions between startDate and endDate for the
-	 * specific account.
-	 * 
-	 * @param accountID
-	 *            the account id
-	 * @param startDate
-	 *            the start date
-	 * @param endDate
-	 *            the end date
-	 * 
-	 * @return the acc transactions
-	 */
-	public Set getAccTransactions(int accountID, Date startDate, Date endDate) {
-		// TODO Auto-generated method stub
-		return null;
-
-	}
-
-	/**
 	 * Return the currency amount available in the account.
 	 * 
 	 * @param accountID
@@ -154,7 +135,26 @@ public class SmsBillingImpl implements SmsBilling {
 	public int getAccountID(String sakaiSiteID, String sakaiUserID,
 			Integer accountType) {
 		// TODO Auto-generated method stub
-		return 0;
+		return 1;
+	}
+
+	/**
+	 * Return a list of all transactions between startDate and endDate for the
+	 * specific account.
+	 * 
+	 * @param accountID
+	 *            the account id
+	 * @param startDate
+	 *            the start date
+	 * @param endDate
+	 *            the end date
+	 * 
+	 * @return the acc transactions
+	 */
+	public Set getAccTransactions(int accountID, Date startDate, Date endDate) {
+		// TODO Auto-generated method stub
+		return null;
+
 	}
 
 	/**
