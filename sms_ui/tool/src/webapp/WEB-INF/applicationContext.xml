@@ -46,7 +46,11 @@
   
   <bean id="smsMessageGuard" parent="writeGuardParent">
      <property name="guardedPath" value="SmsMessageLocator.*"/>
-	 <property name="guard"> <bean class="org.sakaiproject.sms.validators.SmsMessageValidator" /></property>
+	 <property name="guard"> 
+	 	<bean class="org.sakaiproject.sms.validators.SmsMessageValidator">
+	 		<property name="smsBilling" ref="org.sakaiproject.sms.api.SmsBilling" />
+	 	</bean>
+	 </property>
   </bean>
   
   <bean id="smsConfigGaurd" parent="writeGuardParent">

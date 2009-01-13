@@ -17,9 +17,9 @@
  **********************************************************************************/
 package org.sakaiproject.sms.validators;
 
+import org.sakaiproject.sms.api.SmsBilling;
 import org.sakaiproject.sms.constants.SmsUiConstants;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
-import org.sakaiproject.sms.impl.SmsBillingImpl;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
@@ -28,6 +28,12 @@ import org.springframework.validation.Validator;
  * The Class SmsMessageValidator.
  */
 public class SmsMessageValidator implements Validator {
+
+	private SmsBilling smsBilling;
+
+	public void setSmsBilling(SmsBilling smsBilling) {
+		this.smsBilling = smsBilling;
+	}
 
 	/**
 	 * @see org.springframework.validation.Validator#supports(java.lang.Class)
@@ -79,8 +85,8 @@ public class SmsMessageValidator implements Validator {
 			}
 
 			// check for sufficient balance
-			SmsBillingImpl billing = new SmsBillingImpl();
-			boolean sufficientCredits = billing.checkSufficientCredits(msg
+
+			boolean sufficientCredits = smsBilling.checkSufficientCredits(msg
 					.getSmsTask().getSmsAccountId(), msg.getSmsTask()
 					.getCreditEstimate());
 			if (!sufficientCredits) {

@@ -28,6 +28,7 @@ import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
 import org.sakaiproject.sms.hibernate.util.AbstractBaseTestCase;
 import org.sakaiproject.sms.hibernate.util.HibernateUtil;
+import org.sakaiproject.sms.impl.SmsBillingImpl;
 import org.sakaiproject.sms.validators.SmsMessageValidator;
 import org.springframework.validation.BindException;
 
@@ -72,6 +73,7 @@ public class SmsMessageValidationTest extends AbstractBaseTestCase {
 		HibernateLogicFactory.getAccountLogic().persistSmsAccount(account);
 
 		validator = new SmsMessageValidator();
+		validator.setSmsBilling(new SmsBillingImpl());
 		msg = new SmsMessage();
 		smsTask = new SmsTask();
 		smsTask.setSakaiSiteId("sakaiSiteId");

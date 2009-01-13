@@ -134,6 +134,10 @@ public class SmsAccountValidatorTest extends TestCase {
 	 */
 	public void testMessageTypeCode_null() {
 		account.setMessageTypeCode(null);
+		account.setBalance(null);
+		account.setAccountName(null);
+		account.setOverdraftLimit(null);
+		account.setSakaiSiteId(null);
 		validator.validate(account, errors);
 		assertFalse(errors.hasErrors());
 		assertFalse(errors.hasFieldErrors());
