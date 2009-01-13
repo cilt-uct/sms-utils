@@ -18,6 +18,7 @@
 package org.sakaiproject.sms.producers;
 
 import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
+import org.sakaiproject.sms.params.DownloadReportViewParams;
 import org.sakaiproject.sms.params.SortPagerViewParams;
 import org.sakaiproject.sms.renderers.SearchCriteriaRenderer;
 import org.sakaiproject.sms.renderers.SearchResultsRenderer;
@@ -27,7 +28,9 @@ import org.springframework.util.Assert;
 import uk.org.ponder.rsf.components.UIBranchContainer;
 import uk.org.ponder.rsf.components.UICommand;
 import uk.org.ponder.rsf.components.UIContainer;
+import uk.org.ponder.rsf.components.UIInternalLink;
 import uk.org.ponder.rsf.components.UIJointContainer;
+import uk.org.ponder.rsf.components.UILink;
 import uk.org.ponder.rsf.components.UIMessage;
 import uk.org.ponder.rsf.view.ComponentChecker;
 import uk.org.ponder.rsf.view.ViewComponentProducer;
@@ -102,8 +105,12 @@ public abstract class AbstractSearchListProducer implements
 	private UIBranchContainer exportToCSV(UIContainer tofill) {
 		UIBranchContainer branchContainer = UIJointContainer.make(tofill,
 				"export:", "search-results:");
+		
+		DownloadReportViewParams downloadReportViewParams = new DownloadReportViewParams("downloadCsv", new Long(1), "export.csv");
+		UILink downloadall = UIInternalLink.make(tofill, "downloadCsv", UIMessage.make("sms.export.to.csv"), downloadReportViewParams);
+		
 		UICommand.make(branchContainer, "export-to-csv",
-				"#{csvActionBean.fireAction}");
+				"#{csvExportBean.fireAction}");
 		return branchContainer;
 	}
 

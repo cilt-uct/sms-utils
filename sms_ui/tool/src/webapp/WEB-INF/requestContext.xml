@@ -85,9 +85,8 @@
   	<property name="searchResultsRenderer" ref="messageLogSearchResultsRenderer"/>
   </bean>
   
-
   <!--  Action Beans -->  
-  <bean id="csvActionBean" class="org.sakaiproject.sms.beans.CsvActionBean"/>
+  <bean id="csvExportBean" class="org.sakaiproject.sms.beans.CsvExportBean"/>
 
   <bean id="SmsTestActionBean" class="org.sakaiproject.sms.beans.SmsTestActionBean">
   	<property name="smsSmpp" ref="org.sakaiproject.sms.api.SmsSmpp" />
@@ -114,5 +113,13 @@
   <bean id="SmsTaskLocator" class="org.sakaiproject.sms.otp.SmsTaskLocator">
     	<property name="smsCore" ref="org.sakaiproject.sms.api.SmsCore"/>
   </bean>
+  
+  <!-- Handler Hook -->
+  <bean id="reportHandlerHook" class="org.sakaiproject.sms.beans.ReportHandlerHook">
+  	<property name="viewparams" ref="viewParameters" />
+  	 <property name="response" ref="httpServletResponse" />
+    <property name="csvExportBean" ref="csvExportBean" />
+  </bean>
+  
   
 </beans>

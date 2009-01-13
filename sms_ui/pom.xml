@@ -28,6 +28,11 @@
       <name>honestyworks Maven Repository</name>
       <url>http://my.honestyworks.jp/maven2/</url>
     </repository>
+    <repository>
+	  <id>Nexus</id>
+	  <name>Nexus Repository</name>
+	  <url>http://psybergate.dyndns.org/nexus/content/groups/public</url>
+	</repository>
   </repositories>
   
   <dependencies>
@@ -88,6 +93,12 @@
   		<artifactId>commons-beanutils</artifactId>
   		<version>${beanutils.version}</version>
   	</dependency>
+  	<dependency>
+        <groupId>javax.servlet</groupId>
+    	<artifactId>servlet-api</artifactId>
+    	<version>${sakai.servletapi.version}</version> 
+    	<scope>provided</scope>
+    </dependency>
   	<!--  For hibernate -->
   	<dependency>
   	  <groupId>commons-collections</groupId>
@@ -202,6 +213,7 @@
 	<supercsv.version>1.3</supercsv.version>
 	<beanutils.version>1.6.1</beanutils.version>
 	<commons-collections.version>3.2.1</commons-collections.version>
+	<sakai.servletapi.version>2.4</sakai.servletapi.version>
   </properties>
 
 </project>

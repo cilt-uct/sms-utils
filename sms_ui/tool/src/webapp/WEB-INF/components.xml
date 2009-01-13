@@ -15,6 +15,7 @@
 
 	<bean id="org.sakaiproject.sms.api.SmsBilling" class="org.sakaiproject.sms.impl.SmsBillingImpl" />
 
+	<!--  
 	<bean id="org.sakaiproject.sms.api.SmsSmpp" class="org.sakaiproject.sms.impl.SmsSmppImpl"
 		init-method="init">
 	</bean>
@@ -29,5 +30,5 @@
 		init-method="init">
 		<property name="smsCore" ref="org.sakaiproject.sms.api.SmsCore" />
 	</bean>
-
+	-->
 </beans>
