@@ -42,7 +42,7 @@ public interface SmsService {
 	 * @param sakaiToolId
 	 * @return
 	 */
-	public SmsTask insertNewTask(String sakaiGroupId, Date dateToSend,
+	public SmsTask getPreliminaryTask(String sakaiGroupId, Date dateToSend,
 			String messageBody, String sakaiToolId);
 
 	/**
@@ -52,14 +52,11 @@ public interface SmsService {
 	 * @param sakaiUserIds
 	 * @param dateToSend
 	 * @param messageBody
-	 *            , the actual sms body.
 	 * @param sakaiToolId
-	 *            , If the message originated from a sakai tool, then give id
-	 *            here, otherwise use null.
 	 * @return
 	 */
-	public SmsTask insertNewTask(Set<String> sakaiUserIds, Date dateToSend,
-			String messageBody, String sakaiToolId);
+	public SmsTask getPreliminaryTask(Set<String> sakaiUserIds,
+			Date dateToSend, String messageBody, String sakaiToolId);
 
 	/**
 	 * Return true of the account has the required credits available to send the

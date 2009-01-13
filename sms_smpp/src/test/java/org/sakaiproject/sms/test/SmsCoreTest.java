@@ -96,7 +96,7 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 		if (smsCoreImpl.getSmsSmpp().getConnectionStatus()) {
 
 			Calendar now = Calendar.getInstance();
-			SmsTask smsTask3 = smsCoreImpl.insertNewTask(
+			SmsTask smsTask3 = smsCoreImpl.getPreliminaryTask(
 					"testProcessNextTask-smsTask3", new Date(now
 							.getTimeInMillis()),
 					"testProcessNextTask-smsTask3", null);
@@ -104,14 +104,14 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 			smsTask3.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
 
 			now.add(Calendar.MINUTE, -1);
-			SmsTask smsTask2 = smsCoreImpl.insertNewTask(
+			SmsTask smsTask2 = smsCoreImpl.getPreliminaryTask(
 					"testProcessNextTask-smsTask2", new Date(now
 							.getTimeInMillis()),
 					"testProcessNextTask-smsTask2MessageBody", null);
 			smsTask2.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
 
 			now.add(Calendar.MINUTE, -3);
-			SmsTask smsTask1 = smsCoreImpl.insertNewTask(
+			SmsTask smsTask1 = smsCoreImpl.getPreliminaryTask(
 					"testProcessNextTask-smsTask1", new Date(now
 							.getTimeInMillis()),
 					"testProcessNextTask-smsTask1MessageBody", null);
@@ -119,17 +119,16 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 			smsTask1.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
 
 			now.add(Calendar.MINUTE, 60);
-			SmsTask smsTask4 = smsCoreImpl.insertNewTask(
+			SmsTask smsTask4 = smsCoreImpl.getPreliminaryTask(
 					"testProcessNextTask-smsTask4", new Date(now
 							.getTimeInMillis()),
 					"testProcessNextTask-smsTask4MessageBody", null);
 
 			smsTask4.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
-
-			HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask3);
-			HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask2);
-			HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask1);
-			HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask4);
+			smsCoreImpl.insertTask(smsTask3);
+			smsCoreImpl.insertTask(smsTask2);
+			smsCoreImpl.insertTask(smsTask1);
+			smsCoreImpl.insertTask(smsTask4);
 
 			assertEquals(true, smsTask1.getId().equals(
 					smsCoreImpl.getNextSmsTask().getId()));
@@ -185,21 +184,21 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 
 			Calendar now = Calendar.getInstance();
 			now.add(Calendar.MINUTE, -1);
-			SmsTask smsTask2 = smsCoreImpl.insertNewTask(
+			SmsTask smsTask2 = smsCoreImpl.getPreliminaryTask(
 					"TestTaskStatuses-SusscessFullTask", new Date(now
 							.getTimeInMillis()),
 					"TestTaskStatuses-SmsTask2MessageBody", null);
 
 			smsTask2.setMaxTimeToLive(300);
 			now.add(Calendar.MINUTE, -3);
-			SmsTask smsTask1 = smsCoreImpl.insertNewTask(
+			SmsTask smsTask1 = smsCoreImpl.getPreliminaryTask(
 					"TestTaskStatuses-ExpiresTask", new Date(now
 							.getTimeInMillis()),
 					"TestTaskStatuses-ExpiresTask", null);
 			smsTask1.setMaxTimeToLive(60);
 
-			HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask2);
-			HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask1);
+			smsCoreImpl.insertTask(smsTask2);
+			smsCoreImpl.insertTask(smsTask1);
 
 			assertEquals(true, smsTask1.getId().equals(
 					smsCoreImpl.getNextSmsTask().getId()));
@@ -274,9 +273,10 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 	 */
 	public void testProcessTaskFail() {
 		smsSmppImpl.connectToGateway();
-		SmsTask smsTask = smsCoreImpl.insertNewTask("testProcessTaskFail",
+		SmsTask smsTask = smsCoreImpl.getPreliminaryTask("testProcessTaskFail",
 				new Date(System.currentTimeMillis()),
 				"testProcessTaskFailMessageBody", null);
+		smsCoreImpl.insertTask(smsTask);
 		smsTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
 		smsTask.setAttemptCount(0);
 		smsSmppImpl.setLogLevel(Level.OFF);
@@ -324,7 +324,7 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 		smsSmppImpl.connectToGateway();
 		smsSmppImpl.setLogLevel(Level.ALL);
 		if (smsCoreImpl.getSmsSmpp().getConnectionStatus()) {
-			SmsTask statusUpdateTask = smsCoreImpl.insertNewTask(
+			SmsTask statusUpdateTask = smsCoreImpl.getPreliminaryTask(
 					"TestTimeoutAndMessageStatusUpdate-StatusUpdateTask",
 					new Date(System.currentTimeMillis()),
 					"TestTimeoutAndMessageStatusUpdate-StatusUpdateTask", null);
@@ -343,8 +343,7 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 			LOG.info("Sending Messages To Gateway");
 			statusUpdateTask
 					.setMessageTypeId(SmsHibernateConstants.SMS_TASK_TYPE_PROCESS_NOW);
-			HibernateLogicFactory.getTaskLogic().persistSmsTask(
-					statusUpdateTask);
+			smsCoreImpl.insertTask(statusUpdateTask);
 			smsSmppImpl
 					.sendMessagesToGateway(statusUpdateTask.getSmsMessages());
 			LOG.info("SMS-messages Pending: "
@@ -356,13 +355,13 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 			assertEquals(true, statusUpdateTask.getMessagesWithStatus(
 					SmsConst_DeliveryStatus.STATUS_PENDING).size() == 0);
 
-			SmsTask timeOutTask = smsCoreImpl.insertNewTask(
+			SmsTask timeOutTask = smsCoreImpl.getPreliminaryTask(
 					"testTimeoutAndMessageStatusUpdate-TIMEOUT", new Date(),
 					"testTimeoutAndMessageStatusUpdate-TIMEOUT", null);
 			timeOutTask.setDelReportTimeoutDuration(1);
 			timeOutTask.setSmsMessagesOnTask(smsCoreImpl.generateSmsMessages(
 					timeOutTask, null));
-			HibernateLogicFactory.getTaskLogic().persistSmsTask(timeOutTask);
+			smsCoreImpl.insertTask(timeOutTask);
 			smsSmppImpl.getSession().setMessageReceiverListener(null);
 			smsCoreImpl.processNextTask();
 

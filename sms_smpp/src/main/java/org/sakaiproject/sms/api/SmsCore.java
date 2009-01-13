@@ -66,14 +66,10 @@ public interface SmsCore {
 	 * numbers of Sakai group x (phase II). Validation will be done to make sure
 	 * that the preliminary values are supplied.
 	 * 
-	 * @param deliverGroupId
-	 * @param dateToSend
-	 * @param messageBody
-	 * @param sakaiToolId
+	 * @param smsTask
 	 * @return
 	 */
-	public SmsTask insertNewTask(String deliverGroupId, Date dateToSend,
-			String messageBody, String sakaiToolId);
+	public SmsTask insertTask(SmsTask smsTask);
 
 	/**
 	 * Add a new task to the sms task list, for eg. send message to all
@@ -86,8 +82,8 @@ public interface SmsCore {
 	 * @param sakaiToolId
 	 * @return
 	 */
-	public SmsTask insertNewTask(Set<String> sakaiUserIds, Date dateToSend,
-			String messageBody, String sakaiToolId);
+	public SmsTask getPreliminaryTask(Set<String> sakaiUserIds,
+			Date dateToSend, String messageBody, String sakaiToolId);
 
 	/**
 	 * Try to process an incoming message in real-time by inserting it into the

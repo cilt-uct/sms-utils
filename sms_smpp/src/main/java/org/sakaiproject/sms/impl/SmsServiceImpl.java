@@ -55,10 +55,10 @@ public class SmsServiceImpl implements SmsService {
 	 * @param sakaiToolId
 	 * @return
 	 */
-	public SmsTask insertNewTask(String sakaiGroupId, Date dateToSend,
+	public SmsTask getPreliminaryTask(String sakaiGroupId, Date dateToSend,
 			String messageBody, String sakaiToolId) {
-		return smsCore.insertNewTask(sakaiGroupId, dateToSend, messageBody,
-				sakaiToolId);
+		return smsCore.getPreliminaryTask(sakaiGroupId, dateToSend,
+				messageBody, sakaiToolId);
 
 	}
 
@@ -75,10 +75,10 @@ public class SmsServiceImpl implements SmsService {
 	 *            here, otherwise use null.
 	 * @return
 	 */
-	public SmsTask insertNewTask(Set<String> sakaiUserIds, Date dateToSend,
-			String messageBody, String sakaiToolId) {
-		return smsCore.insertNewTask(sakaiUserIds, dateToSend, messageBody,
-				sakaiToolId);
+	public SmsTask getPreliminaryTask(Set<String> sakaiUserIds,
+			Date dateToSend, String messageBody, String sakaiToolId) {
+		return smsCore.getPreliminaryTask(sakaiUserIds, dateToSend,
+				messageBody, sakaiToolId);
 	}
 
 	/**

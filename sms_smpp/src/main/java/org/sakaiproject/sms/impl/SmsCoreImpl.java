@@ -158,9 +158,9 @@ public class SmsCoreImpl implements SmsCore {
 	 * @param sakaiToolId
 	 * @return
 	 */
-	public SmsTask insertNewTask(String deliverGroupId, Date dateToSend,
+	public SmsTask getPreliminaryTask(String deliverGroupId, Date dateToSend,
 			String messageBody, String sakaiToolId) {
-		return insertNewTask(deliverGroupId, null, null, dateToSend,
+		return getPreliminaryTask(deliverGroupId, null, null, dateToSend,
 				messageBody, sakaiToolId);
 	}
 
@@ -175,11 +175,11 @@ public class SmsCoreImpl implements SmsCore {
 	 * @param sakaiToolId
 	 * @return
 	 */
-	public SmsTask insertNewTask(Set<String> sakaiUserIds, Date dateToSend,
-			String messageBody, String sakaiToolId) {
+	public SmsTask getPreliminaryTask(Set<String> sakaiUserIds,
+			Date dateToSend, String messageBody, String sakaiToolId) {
 
-		return insertNewTask(null, null, sakaiUserIds, dateToSend, messageBody,
-				sakaiToolId);
+		return getPreliminaryTask(null, null, sakaiUserIds, dateToSend,
+				messageBody, sakaiToolId);
 
 	}
 
@@ -196,31 +196,12 @@ public class SmsCoreImpl implements SmsCore {
 	 * @param sakaiToolId
 	 * @return
 	 */
-	public synchronized SmsTask insertNewTask(String deliverGroupId,
-			Set<String> mobileNumbers, Set<String> sakaiUserIds,
-			Date dateToSend, String messageBody, String sakaiToolId) {
-		// TODO mobileNumbers must be implemented
-		// TODO, call task validation here and throw exception if failed.
-		SmsTask smsTask = new SmsTask();
+	public synchronized SmsTask insertTask(SmsTask smsTask) {
 		smsTask.setDateCreated(DateUtil.getCurrentDate());
-		smsTask.setSmsAccountId(smsBilling.getAccountID("1", "1", 1));
-		smsTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
-		smsTask.setSakaiSiteId(SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_ID);
-		// TODO Populate from Sakai
-		smsTask
-				.setMessageTypeId(SmsHibernateConstants.SMS_TASK_TYPE_PROCESS_SCHEDULED);
-		smsTask.setSakaiToolId(sakaiToolId);// TODO Populate from Sakai
-		smsTask.setSenderUserName("senderUserName");// TODO Populate from Sakai
-		smsTask.setDeliveryGroupName(deliverGroupId);// TODO Populate from Sakai
-		smsTask.setDateToSend(dateToSend);
-		smsTask.setAttemptCount(0);
-		smsTask.setMessageBody(messageBody);
-		Set<SmsMessage> deliverGroupMessages = generateSmsMessages(smsTask,
-				sakaiUserIds);
-		smsTask.setGroupSizeEstimate(smsTask.getSmsMessages().size());
-		smsTask.setCreditEstimate(deliverGroupMessages.size());
-		smsTask.setMaxTimeToLive(300000);
-		smsTask.setDelReportTimeoutDuration(300000);
+		smsBilling.reserveCredits(smsBilling.getAccountID(smsTask
+				.getSakaiSiteId(), smsTask.getSenderUserName(), smsTask
+				.getSmsAccountId()), smsTask.getSmsMessages().size());
+
 		HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask);
 		return smsTask;
 	}
@@ -403,9 +384,29 @@ public class SmsCoreImpl implements SmsCore {
 
 	}
 
-	public SmsTask getPreliminaryTask(String deliverGroupId, Date dateToSend,
-			String messageBody, String sakaiToolId) {
-		// TODO Auto-generated method stub
-		return null;
+	public SmsTask getPreliminaryTask(String deliverGroupId,
+			Set<String> mobileNumbers, Set<String> sakaiUserIds,
+			Date dateToSend, String messageBody, String sakaiToolId) {
+		SmsTask smsTask = new SmsTask();
+
+		smsTask.setSmsAccountId(smsBilling.getAccountID("1", "1", 1));
+		smsTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
+		smsTask.setSakaiSiteId(SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_ID);
+		// TODO Populate from Sakai
+		smsTask
+				.setMessageTypeId(SmsHibernateConstants.SMS_TASK_TYPE_PROCESS_SCHEDULED);
+		smsTask.setSakaiToolId(sakaiToolId);// TODO Populate from Sakai
+		smsTask.setSenderUserName("senderUserName");// TODO Populate from Sakai
+		smsTask.setDeliveryGroupName(deliverGroupId);// TODO Populate from Sakai
+		smsTask.setDateToSend(dateToSend);
+		smsTask.setAttemptCount(0);
+		smsTask.setMessageBody(messageBody);
+		Set<SmsMessage> deliverGroupMessages = generateSmsMessages(smsTask,
+				sakaiUserIds);
+		smsTask.setGroupSizeEstimate(smsTask.getSmsMessages().size());
+		smsTask.setCreditEstimate(deliverGroupMessages.size());
+		smsTask.setMaxTimeToLive(300000);
+		smsTask.setDelReportTimeoutDuration(300000);
+		return smsTask;
 	}
 }

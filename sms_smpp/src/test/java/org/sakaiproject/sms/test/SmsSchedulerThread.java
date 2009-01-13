@@ -77,18 +77,19 @@ public class SmsSchedulerThread extends TestRunnable {
 		LOG.info(sessionName + ": Inserting tasks ");
 		smsSmppImpl.setLogLevel(Level.ALL);
 		Calendar now = Calendar.getInstance();
-		smsCoreImpl
-				.insertNewTask("SmsTask3" + sessionName, new Date(now
-						.getTimeInMillis()),
-						"-ThreadingTest-SmsTask3MessageBody", null);
+		smsCoreImpl.insertTask(smsCoreImpl.getPreliminaryTask("SmsTask3"
+				+ sessionName, new Date(now.getTimeInMillis()),
+				"-ThreadingTest-SmsTask3MessageBody", null));
 
 		now.add(Calendar.MINUTE, -1);
-		smsCoreImpl.insertNewTask("SmsTask2" + sessionName, new Date(now
-				.getTimeInMillis()), "ThreadingTest-SmsTask2MessageBody", null);
+		smsCoreImpl.insertTask(smsCoreImpl.getPreliminaryTask("SmsTask2"
+				+ sessionName, new Date(now.getTimeInMillis()),
+				"ThreadingTest-SmsTask2MessageBody", null));
 
 		now.add(Calendar.MINUTE, -3);
-		smsCoreImpl.insertNewTask("SmsTask1" + sessionName, new Date(now
-				.getTimeInMillis()), "ThreadingTest-SmsTask1MessageBody", null);
+		smsCoreImpl.insertTask(smsCoreImpl.getPreliminaryTask("SmsTask1"
+				+ sessionName, new Date(now.getTimeInMillis()),
+				"ThreadingTest-SmsTask1MessageBody", null));
 		LOG.info(sessionName + ": Starting Sms Scheduler ");
 
 		try {

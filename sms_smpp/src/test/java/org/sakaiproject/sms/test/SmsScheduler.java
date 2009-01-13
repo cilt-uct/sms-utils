@@ -48,16 +48,20 @@ public class SmsScheduler extends AbstractBaseTestCase {
 	 */
 	public void testTaskProcessing() {
 		Calendar now = Calendar.getInstance();
-		SmsTask smsTask3 = smsCoreImpl.insertNewTask("smsTask3", new Date(now
-				.getTimeInMillis()), "smsTask3", null);
+		SmsTask smsTask3 = smsCoreImpl.getPreliminaryTask("smsTask3", new Date(
+				now.getTimeInMillis()), "smsTask3", null);
+		smsCoreImpl.insertTask(smsTask3);
 
 		now.add(Calendar.MINUTE, -1);
-		SmsTask smsTask2 = smsCoreImpl.insertNewTask("smsTask2", new Date(now
-				.getTimeInMillis()), "smsTask2MessageBody", null);
+		SmsTask smsTask2 = smsCoreImpl.getPreliminaryTask("smsTask2", new Date(
+				now.getTimeInMillis()), "smsTask2MessageBody", null);
+		smsCoreImpl.insertTask(smsTask2);
 
 		now.add(Calendar.MINUTE, -3);
-		SmsTask smsTask1 = smsCoreImpl.insertNewTask("smsTask1", new Date(now
-				.getTimeInMillis()), "smsTask1MessageBody", null);
+		SmsTask smsTask1 = smsCoreImpl.getPreliminaryTask("smsTask1", new Date(
+				now.getTimeInMillis()), "smsTask1MessageBody", null);
+
+		smsCoreImpl.insertTask(smsTask1);
 
 		try {
 			Thread.sleep(60000);
