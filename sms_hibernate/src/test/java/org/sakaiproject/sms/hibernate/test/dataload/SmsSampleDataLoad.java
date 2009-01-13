@@ -43,7 +43,7 @@ public class SmsSampleDataLoad {
 	}
 
 	private void persistSmsTransactions() {
-
+		smsTransactionLogic = HibernateLogicFactory.getTransactionLogic();
 		deleteSmsAccounts(HibernateLogicFactory.getAccountLogic());
 		deleteSmsTransactions(smsTransactionLogic);
 
@@ -56,7 +56,6 @@ public class SmsSampleDataLoad {
 				.getAccountLogic().getAllSmsAccounts();
 
 		System.out.println("Inserting SmsTransactions:");
-		
 
 		int index = 0;
 		for (int i = 0; i < NUMBER_OF_REPETITIONS; i++) {
@@ -66,7 +65,7 @@ public class SmsSampleDataLoad {
 			for (SmsTransaction smsTransaction : smsTransactions) {
 
 				smsTransaction.setSmsAccount(persistedSmsAccounts.get(0));
-				smsTransaction.setSmsTaskId(new Long(index +1));
+				smsTransaction.setSmsTaskId(new Long(index + 1));
 				smsTransactionLogic.persistSmsTransaction(smsTransaction);
 				index++;
 			}
