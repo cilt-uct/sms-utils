@@ -136,7 +136,11 @@ public class SmsConfigLogicImpl extends SmsDao implements SmsConfigLogic {
 		config.setPagingSize(SmsHibernateConstants.DEFAULT_PAGE_SIZE);
 		config.setSakaiSiteId(sakaiSiteId);
 		config.setSchedulerInterval(3);
-		config.setSakaiToolId("DummyToolId");
+		if (sakaiSiteId != null && sakaiSiteId.equals("")) {
+			config.setSakaiToolId("");
+		} else {
+			config.setSakaiToolId("DummyToolId");
+		}
 		config.setSendSmsEnabled(false);
 		config.setSmsRetryMaxCount(SmsHibernateConstants.MAXIMUM_RETRY_COUNT);
 		config
