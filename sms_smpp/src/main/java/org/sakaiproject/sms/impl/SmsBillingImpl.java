@@ -78,11 +78,6 @@ public class SmsBillingImpl implements SmsBilling {
 			sufficientCredit = true;
 		}
 
-		if (sufficientCredit) {
-			// Reserve credits and check return if reservation was succesful.
-			return reserveCredits(accountID, creditsRequired);
-		}
-
 		return sufficientCredit;
 	}
 
