@@ -36,7 +36,8 @@ public class SmppTestSuite {
 		// $JUnit-BEGIN$
 		suite.addTestSuite(SmsCoreTest.class);
 		suite.addTestSuite(SmppAPITest.class);
-		suite.addTestSuite(SmppThreadingTest.class);
+		suite.addTestSuite(TaskValidatorTest.class);
+		suite.addTestSuite(MessageValidatorTest.class);
 		// $JUnit-END$
 		return suite;
 	}
