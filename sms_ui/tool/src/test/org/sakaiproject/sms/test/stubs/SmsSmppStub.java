@@ -122,4 +122,14 @@ public class SmsSmppStub implements SmsSmpp {
 		return msg;
 	}
 
+	public boolean notifyDeliveryReportRemotely(SmsMessage arg0) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public boolean processOutgoingMessageRemotely(SmsMessage arg0) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

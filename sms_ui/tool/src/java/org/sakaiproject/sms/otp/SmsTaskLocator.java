@@ -64,7 +64,8 @@ public class SmsTaskLocator implements BeanLocator {
 								null,
 								"",
 								SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_TOOL_ID,
-								"");
+								"",
+								SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID);
 			} else {
 				// TODO: Code to retrieve existing SmsTask
 			}
