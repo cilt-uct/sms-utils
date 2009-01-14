@@ -99,7 +99,8 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 					"testProcessNextTask-smsTask3", new Date(now
 							.getTimeInMillis()),
 					"testProcessNextTask-smsTask3",
-					SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_ID, null);
+					SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_SITE_ID, null,
+					SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID);
 
 			smsTask3.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
 
@@ -108,7 +109,8 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 					"testProcessNextTask-smsTask2", new Date(now
 							.getTimeInMillis()),
 					"testProcessNextTask-smsTask2MessageBody",
-					SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_ID, null);
+					SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_SITE_ID, null,
+					SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID);
 			smsTask2.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
 
 			now.add(Calendar.MINUTE, -3);
@@ -116,7 +118,8 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 					"testProcessNextTask-smsTask1", new Date(now
 							.getTimeInMillis()),
 					"testProcessNextTask-smsTask1MessageBody",
-					SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_ID, null);
+					SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_SITE_ID, null,
+					SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID);
 
 			smsTask1.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
 
@@ -125,7 +128,8 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 					"testProcessNextTask-smsTask4", new Date(now
 							.getTimeInMillis()),
 					"testProcessNextTask-smsTask4MessageBody",
-					SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_ID, null);
+					SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_SITE_ID, null,
+					SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID);
 
 			smsTask4.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
 			smsCoreImpl.insertTask(smsTask3);
@@ -191,7 +195,8 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 					"TestTaskStatuses-SusscessFullTask", new Date(now
 							.getTimeInMillis()),
 					"TestTaskStatuses-SmsTask2MessageBody",
-					SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_ID, null);
+					SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_SITE_ID, null,
+					SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID);
 
 			smsTask2.setMaxTimeToLive(300);
 			now.add(Calendar.MINUTE, -3);
@@ -199,7 +204,8 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 					"TestTaskStatuses-ExpiresTask", new Date(now
 							.getTimeInMillis()),
 					"TestTaskStatuses-ExpiresTask",
-					SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_ID, null);
+					SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_SITE_ID, null,
+					SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID);
 			smsTask1.setMaxTimeToLive(60);
 
 			smsCoreImpl.insertTask(smsTask2);
@@ -250,7 +256,8 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 		SmsTask smsTask = smsCoreImpl.getPreliminaryTask("testProcessTaskFail",
 				new Date(System.currentTimeMillis()),
 				"testProcessTaskFailMessageBody",
-				SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_ID, null);
+				SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_SITE_ID, null,
+				SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID);
 		smsCoreImpl.insertTask(smsTask);
 		smsTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
 		smsTask.setAttemptCount(0);
@@ -303,7 +310,8 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 					"TestTimeoutAndMessageStatusUpdate-StatusUpdateTask",
 					new Date(System.currentTimeMillis()),
 					"TestTimeoutAndMessageStatusUpdate-StatusUpdateTask",
-					SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_ID, null);
+					SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_SITE_ID, null,
+					SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID);
 			statusUpdateTask
 					.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
 			statusUpdateTask.setAttemptCount(0);
@@ -334,7 +342,8 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 			SmsTask timeOutTask = smsCoreImpl.getPreliminaryTask(
 					"testTimeoutAndMessageStatusUpdate-TIMEOUT", new Date(),
 					"testTimeoutAndMessageStatusUpdate-TIMEOUT",
-					SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_ID, null);
+					SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_SITE_ID, null,
+					SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID);
 			timeOutTask.setDelReportTimeoutDuration(60);
 			timeOutTask.setSmsMessagesOnTask(smsCoreImpl
 					.generateSmsMessages(timeOutTask));

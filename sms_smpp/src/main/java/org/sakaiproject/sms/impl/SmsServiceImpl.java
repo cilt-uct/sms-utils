@@ -74,9 +74,10 @@ public class SmsServiceImpl implements SmsService {
 	 * @return
 	 */
 	public SmsTask getPreliminaryTask(String sakaiGroupId, Date dateToSend,
-			String messageBody, String sakaiSiteId, String sakaiToolId) {
+			String messageBody, String sakaiSiteId, String sakaiToolId,
+			String sakaiSenderID) {
 		return smsCore.getPreliminaryTask(sakaiGroupId, dateToSend,
-				messageBody, sakaiSiteId, sakaiToolId);
+				messageBody, sakaiSiteId, sakaiToolId, sakaiSenderID);
 
 	}
 
@@ -95,9 +96,9 @@ public class SmsServiceImpl implements SmsService {
 	 */
 	public SmsTask getPreliminaryTask(Set<String> sakaiUserIds,
 			Date dateToSend, String messageBody, String sakaiSiteId,
-			String sakaiToolId) {
+			String sakaiToolId, String sakaiSenderID) {
 		return smsCore.getPreliminaryTask(sakaiUserIds, dateToSend,
-				messageBody, sakaiSiteId, sakaiToolId);
+				messageBody, sakaiSiteId, sakaiToolId, sakaiSenderID);
 	}
 
 	/**

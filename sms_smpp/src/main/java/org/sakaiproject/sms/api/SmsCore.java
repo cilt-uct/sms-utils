@@ -81,7 +81,7 @@ public interface SmsCore {
 	 */
 	public SmsTask getPreliminaryTask(Set<String> sakaiUserIds,
 			Date dateToSend, String messageBody, String sakaiSiteID,
-			String sakaiToolId);
+			String sakaiToolId, String sakaiSenderID);
 
 	/**
 	 * Some delivery report might arive after the predefined timeout period. Wee
@@ -143,7 +143,8 @@ public interface SmsCore {
 	 * 
 	 */
 	public SmsTask getPreliminaryTask(String deliverGroupId, Date dateToSend,
-			String messageBody, String sakaiSiteID, String sakaiToolId);
+			String messageBody, String sakaiSiteID, String sakaiToolId,
+			String sakaiSenderID);
 
 	/**
 	 * Calculate the number of messages to be sent when the new sms task is

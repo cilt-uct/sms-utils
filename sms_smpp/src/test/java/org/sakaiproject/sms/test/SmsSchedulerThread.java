@@ -81,19 +81,22 @@ public class SmsSchedulerThread extends TestRunnable {
 		smsCoreImpl.insertTask(smsCoreImpl.getPreliminaryTask("SmsTask3"
 				+ sessionName, new Date(now.getTimeInMillis()),
 				"-ThreadingTest-SmsTask3MessageBody",
-				SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_ID, null));
+				SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_SITE_ID, null,
+				SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID));
 
 		now.add(Calendar.MINUTE, -1);
 		smsCoreImpl.insertTask(smsCoreImpl.getPreliminaryTask("SmsTask2"
 				+ sessionName, new Date(now.getTimeInMillis()),
 				"ThreadingTest-SmsTask2MessageBody",
-				SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_ID, null));
+				SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_SITE_ID, null,
+				SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID));
 
 		now.add(Calendar.MINUTE, -3);
 		smsCoreImpl.insertTask(smsCoreImpl.getPreliminaryTask("SmsTask1"
 				+ sessionName, new Date(now.getTimeInMillis()),
 				"ThreadingTest-SmsTask1MessageBody",
-				SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_ID, null));
+				SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_SITE_ID, null,
+				SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID));
 		LOG.info(sessionName + ": Starting Sms Scheduler ");
 
 		try {

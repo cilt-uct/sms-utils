@@ -44,7 +44,8 @@ public interface SmsService {
 	 * @return
 	 */
 	public SmsTask getPreliminaryTask(String sakaiGroupId, Date dateToSend,
-			String messageBody, String sakaiSiteId, String sakaiToolId);
+			String messageBody, String sakaiSiteId, String sakaiToolId,
+			String sakaiSenderID);
 
 	/**
 	 * Add a new task to the sms task list. In this case you must supply a list
@@ -58,7 +59,7 @@ public interface SmsService {
 	 */
 	public SmsTask getPreliminaryTask(Set<String> sakaiUserIds,
 			Date dateToSend, String messageBody, String sakaiSiteId,
-			String sakaiToolId);
+			String sakaiToolId, String sakaiSenderID);
 
 	/**
 	 * Return true of the account has the required credits available to send the

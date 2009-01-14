@@ -275,19 +275,19 @@ public class SmsCoreImpl implements SmsCore {
 	private SmsTask getPreliminaryTask(String deliverGroupId,
 			Set<String> mobileNumbers, Set<String> sakaiUserIds,
 			Date dateToSend, String messageBody, String sakaiSiteID,
-			String sakaiToolId) {
+			String sakaiToolId, String sakaiSenderID) {
 		SmsConfig config = HibernateLogicFactory.getConfigLogic()
 				.getOrCreateSystemSmsConfig();
 		SmsTask smsTask = new SmsTask();
-		smsTask.setSmsAccountId(smsBilling.getAccountID("1", "1", 1));
+		smsTask.setSmsAccountId(smsBilling.getAccountID(sakaiSiteID,
+				sakaiSenderID, 1));
 		smsTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
-		smsTask.setSakaiSiteId(SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_ID);
-		// TODO Populate from Sakai
+		smsTask.setSakaiSiteId(sakaiSiteID);
 		smsTask
 				.setMessageTypeId(SmsHibernateConstants.SMS_TASK_TYPE_PROCESS_SCHEDULED);
-		smsTask.setSakaiToolId(sakaiToolId);// TODO Populate from Sakai
-		smsTask.setSenderUserName("senderUserName");// TODO Populate from Sakai
-		smsTask.setDeliveryGroupName(deliverGroupId);// TODO Populate from Sakai
+		smsTask.setSakaiToolId(sakaiToolId);
+		smsTask.setSenderUserName(sakaiSenderID);
+		smsTask.setDeliveryGroupName(deliverGroupId);
 		smsTask.setDateToSend(dateToSend);
 		smsTask.setAttemptCount(0);
 		smsTask.setMessageBody(messageBody);
@@ -308,16 +308,17 @@ public class SmsCoreImpl implements SmsCore {
 
 	public SmsTask getPreliminaryTask(Set<String> sakaiUserIds,
 			Date dateToSend, String messageBody, String sakaiSiteID,
-			String sakaiToolId) {
+			String sakaiToolId, String sakaiSenderID) {
 
 		return getPreliminaryTask(null, null, sakaiUserIds, dateToSend,
-				messageBody, sakaiSiteID, sakaiToolId);
+				messageBody, sakaiSiteID, sakaiToolId, sakaiSenderID);
 	}
 
 	public SmsTask getPreliminaryTask(String deliverGroupId, Date dateToSend,
-			String messageBody, String sakaiSiteID, String sakaiToolId) {
+			String messageBody, String sakaiSiteID, String sakaiToolId,
+			String sakaiSenderID) {
 		return getPreliminaryTask(deliverGroupId, null, null, dateToSend,
-				messageBody, sakaiSiteID, sakaiToolId);
+				messageBody, sakaiSiteID, sakaiToolId, sakaiSenderID);
 	}
 
 	public void processVeryLateDeliveryReports() {
