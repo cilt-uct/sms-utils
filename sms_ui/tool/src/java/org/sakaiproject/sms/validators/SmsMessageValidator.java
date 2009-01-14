@@ -20,8 +20,7 @@ package org.sakaiproject.sms.validators;
 import java.util.ArrayList;
 
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
-import org.sakaiproject.sms.hibernate.model.SmsTask;
-import org.sakaiproject.sms.impl.validate.TaskValidator;
+import org.sakaiproject.sms.impl.validate.MessageValidator;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
@@ -49,8 +48,8 @@ public class SmsMessageValidator implements Validator {
 	 */
 	public void validate(Object obj, Errors err) {
 
-		ArrayList<String> errors = TaskValidator
-				.validateInsertTask((SmsTask) obj);
+		ArrayList<String> errors = MessageValidator
+				.validateMessage((SmsMessage) obj);
 
 		for (String error : errors) {
 			err.reject(error, error);
