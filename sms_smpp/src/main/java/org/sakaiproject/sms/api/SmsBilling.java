@@ -126,7 +126,7 @@ public interface SmsBilling {
 	 * 
 	 * @return the double
 	 */
-	public float convertCreditsToAmount(int creditCount);
+	public Double convertCreditsToAmount(int creditCount);
 
 	/**
 	 * Insert a new account and return the new account id.

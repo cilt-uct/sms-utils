@@ -90,9 +90,9 @@ public class SmsBillingImpl implements SmsBilling {
 	 * 
 	 * @return the double
 	 */
-	public float convertCreditsToAmount(int creditCount) {
+	public Double convertCreditsToAmount(int creditCount) {
 		// TODO Auto-generated method stub
-		return 0;
+		return 0D;
 	}
 
 	/**

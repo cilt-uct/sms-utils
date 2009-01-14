@@ -50,6 +50,8 @@
 			not-null="false" />
 		<property name="maxTimeToLive" type="integer" column="MAX_TIME_TO_LIVE"
 			not-null="true" />
+		<property name="costEstimate" type="double" column="COST_ESTIMATE"
+			not-null="false" />
 		<property name="delReportTimeoutDuration" type="integer"
 			column="DEL_REPORT_TIMEOUT_DURATION" not-null="true" />
 		<set name="smsMessages" lazy="false" inverse="true" cascade="all-delete-orphan">

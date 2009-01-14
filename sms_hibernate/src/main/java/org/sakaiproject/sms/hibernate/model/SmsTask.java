@@ -79,7 +79,7 @@ public class SmsTask extends BaseModel {
 	 * The estimated currency cost of this sms task. Based on the cost per
 	 * credit at the time of calculation.
 	 */
-	private float costEstimate;
+	private Double costEstimate;
 
 	/** The message body. Already validated for character set, length etc. */
 	private String messageBody;
@@ -325,7 +325,7 @@ public class SmsTask extends BaseModel {
 		return count;
 	}
 
-	public float getCostEstimate() {
+	public Double getCostEstimate() {
 		return costEstimate;
 	}
 
@@ -637,7 +637,7 @@ public class SmsTask extends BaseModel {
 		this.attemptCount = attemptCount;
 	}
 
-	public void setCostEstimate(float costEstimate) {
+	public void setCostEstimate(Double costEstimate) {
 		this.costEstimate = costEstimate;
 	}
 
