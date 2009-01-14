@@ -19,7 +19,6 @@ package org.sakaiproject.sms.test;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.log4j.Level;
@@ -236,37 +235,6 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 	}
 
 	/**
-	 * In this test the populating of the task messages is tested. The test
-	 * succeeds if the smsTask's message count is > 0.
-	 */
-	public void testGenerateSmsMessages() {
-
-		SmsTask smsTask = new SmsTask();
-		Set<String> userIds = new HashSet<String>();
-		smsTask.setMessageBody("tesing sms");
-		smsTask.setSakaiSiteId("sakaiSiteId");
-		smsTask.setDeliveryGroupId("deliveryGroupId");
-		// smsTask.setSmsMessagesOnTask(smsCoreImpl.generateSmsMessages(smsTask,
-		// null));
-		// assertEquals(true, smsTask.getSmsMessages() != null
-		// && smsTask.getSmsMessages().size() > 0);
-
-		userIds.add("Sakaiuser1");
-		userIds.add("Sakaiuser2");
-		userIds.add("Sakaiuser3");
-		userIds.add("Sakaiuser4");
-
-		smsTask.setSmsMessagesOnTask(smsCoreImpl.generateSmsMessages(smsTask,
-				userIds));
-
-		for (SmsMessage message : smsTask.getSmsMessages()) {
-			assertTrue(userIds.contains(message.getSakaiUserId()));
-
-		}
-
-	}
-
-	/**
 	 * In this test the smsc (gateway) is not bound (disconnected). The task is
 	 * executed 5 times to simulate the scheduler retrying and eventually
 	 * failing.
@@ -333,7 +301,7 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 			statusUpdateTask.setAttemptCount(0);
 			statusUpdateTask.setDateProcessed(new Date());
 			statusUpdateTask.setSmsMessagesOnTask(smsCoreImpl
-					.generateSmsMessages(statusUpdateTask, null));
+					.generateSmsMessages(statusUpdateTask));
 
 			LOG.info("SMS-messages on task: "
 					+ statusUpdateTask.getSmsMessages().size());
@@ -359,8 +327,8 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 					"testTimeoutAndMessageStatusUpdate-TIMEOUT", new Date(),
 					"testTimeoutAndMessageStatusUpdate-TIMEOUT", null);
 			timeOutTask.setDelReportTimeoutDuration(60);
-			timeOutTask.setSmsMessagesOnTask(smsCoreImpl.generateSmsMessages(
-					timeOutTask, null));
+			timeOutTask.setSmsMessagesOnTask(smsCoreImpl
+					.generateSmsMessages(timeOutTask));
 			smsCoreImpl.insertTask(timeOutTask);
 			smsSmppImpl.getSession().setMessageReceiverListener(null);
 			smsCoreImpl.processNextTask();

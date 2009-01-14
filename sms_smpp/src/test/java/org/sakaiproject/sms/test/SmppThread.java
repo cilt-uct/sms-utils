@@ -105,6 +105,7 @@ public class SmppThread extends TestRunnable {
 			message.setSakaiUserId(this.sessionName);
 			message.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
 			message.setSmsTask(insertTask);
+			HibernateLogicFactory.getMessageLogic().persistSmsMessage(message);
 			smsSmppImpl.sendMessageToGateway(message);
 
 			if (message.isSubmitResult()) {

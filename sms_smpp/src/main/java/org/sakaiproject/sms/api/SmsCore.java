@@ -38,13 +38,10 @@ public interface SmsCore {
 	 * Get the group list from Sakai and remove users with invalid/empty mobile
 	 * numbers or opted out profiles.
 	 * 
-	 * @param sakaiSiteID
-	 *            (e.g. !admin)
-	 * @param sakaiGroupID
-	 *            (the Sakai group UID)
 	 * @param smsTask
+	 * @return
 	 */
-	public Set generateSmsMessages(SmsTask smsTask, Set<String> sakaiUserIDs);
+	public Set generateSmsMessages(SmsTask smsTask);
 
 	/**
 	 * Find the next sms task to process from the task queue. Determine tasks
@@ -139,4 +136,11 @@ public interface SmsCore {
 	public SmsTask getPreliminaryTask(String deliverGroupId, Date dateToSend,
 			String messageBody, String sakaiToolId);
 
+	/**
+	 * Will calculate the all the group estimates.
+	 * 
+	 * @param smsTask
+	 * @return
+	 */
+	public SmsTask calculateGroupSize(SmsTask smsTask);
 }

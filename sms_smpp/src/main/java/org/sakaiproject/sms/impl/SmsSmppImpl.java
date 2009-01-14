@@ -170,11 +170,15 @@ public class SmsSmppImpl implements SmsSmpp {
 					if (smsMessage == null) {
 						for (int i = 0; i < 5; i++) {
 							System.out.println("SMSC_DEL_RECEIPT retry " + i
-									+ " out of 5");
+									+ " out of 5 for messageSmscID"
+									+ deliveryReceipt.getId());
 							smsMessage = HibernateLogicFactory
 									.getMessageLogic()
 									.getSmsMessageBySmscMessageId(
 											deliveryReceipt.getId());
+							if (smsMessage != null) {
+								break;
+							}
 							try {
 								Thread.sleep(5000);
 							} catch (InterruptedException e) {

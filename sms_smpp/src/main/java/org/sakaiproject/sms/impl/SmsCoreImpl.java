@@ -75,9 +75,8 @@ public class SmsCoreImpl implements SmsCore {
 	 */
 	// TODO Why pass three args when they can all come from the SmsTask?? Only 1
 	// arg needed.. smsTask
-	public Set<SmsMessage> generateSmsMessages(SmsTask smsTask,
-			Set<String> sakaiUserIDs) {
-		return generateDummySmsMessages(smsTask, sakaiUserIDs);
+	public Set<SmsMessage> generateSmsMessages(SmsTask smsTask) {
+		return generateDummySmsMessages(smsTask);
 		// TODO must make a Sakai call here
 	}
 
@@ -88,24 +87,19 @@ public class SmsCoreImpl implements SmsCore {
 	 * @param smsTask
 	 * @return
 	 */
-	private Set<SmsMessage> generateDummySmsMessages(SmsTask smsTask,
-			Set<String> sakaiUserIDs) {
+	private Set<SmsMessage> generateDummySmsMessages(SmsTask smsTask) {
 		Set<SmsMessage> messages = new HashSet<SmsMessage>();
 
 		String[] users;
 		int numberOfMessages = (int) Math.round(Math.random() * 100);
-		if (sakaiUserIDs != null) {
-			users = sakaiUserIDs.toArray(new String[0]);
-			numberOfMessages = users.length;
-		} else {
-			users = new String[100];
-		}
+
+		users = new String[100];
 
 		String[] celnumbers = new String[100];
 		for (int i = 0; i < users.length; i++) {
-			if (sakaiUserIDs == null) {
-				users[i] = "SakaiUser" + i;
-			}
+
+			users[i] = "SakaiUser" + i;
+
 			celnumbers[i] = "+2773"
 					+ (int) Math.round(Math.random() * 10000000);
 		}
@@ -114,13 +108,9 @@ public class SmsCoreImpl implements SmsCore {
 			SmsMessage message = new SmsMessage();
 			message.setMobileNumber(celnumbers[(int) Math
 					.round(Math.random() * 99)]);
-			if (sakaiUserIDs != null) {
-				message.setSakaiUserId(users[i]);
 
-			} else {
-				message.setSakaiUserId(users[(int) Math
-						.round(Math.random() * 99)]);
-			}
+			message.setSakaiUserId(users[(int) Math.round(Math.random() * 99)]);
+
 			message.setSmsTask(smsTask);
 			messages.add(message);
 		}
@@ -262,8 +252,7 @@ public class SmsCoreImpl implements SmsCore {
 
 				// TODO: we need to generate messages based on a list of userIDs
 				// or mobileNumbers
-				smsTask.setSmsMessagesOnTask(this.generateSmsMessages(smsTask,
-						null));
+				smsTask.setSmsMessagesOnTask(this.generateSmsMessages(smsTask));
 				LOG.info("Total messages on task:="
 						+ smsTask.getSmsMessages().size());
 				HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask);
@@ -339,7 +328,6 @@ public class SmsCoreImpl implements SmsCore {
 			Set<String> mobileNumbers, Set<String> sakaiUserIds,
 			Date dateToSend, String messageBody, String sakaiToolId) {
 		SmsTask smsTask = new SmsTask();
-
 		smsTask.setSmsAccountId(smsBilling.getAccountID("1", "1", 1));
 		smsTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
 		smsTask.setSakaiSiteId(SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_ID);
@@ -352,12 +340,15 @@ public class SmsCoreImpl implements SmsCore {
 		smsTask.setDateToSend(dateToSend);
 		smsTask.setAttemptCount(0);
 		smsTask.setMessageBody(messageBody);
-		Set<SmsMessage> deliverGroupMessages = generateSmsMessages(smsTask,
-				sakaiUserIds);
-		smsTask.setGroupSizeEstimate(smsTask.getSmsMessages().size());
-		smsTask.setCreditEstimate(deliverGroupMessages.size());
 		smsTask.setMaxTimeToLive(300000);
 		smsTask.setDelReportTimeoutDuration(300000);
+		return smsTask;
+	}
+
+	public SmsTask calculateGroupSize(SmsTask smsTask) {
+		Set<SmsMessage> deliverGroupMessages = generateSmsMessages(smsTask);
+		smsTask.setGroupSizeEstimate(smsTask.getSmsMessages().size());
+		smsTask.setCreditEstimate(deliverGroupMessages.size());
 		return smsTask;
 	}
 }

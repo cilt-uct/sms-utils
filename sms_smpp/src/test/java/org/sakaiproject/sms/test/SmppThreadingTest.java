@@ -67,7 +67,7 @@ public class SmppThreadingTest extends AbstractBaseTestCase {
 	static {
 		HibernateUtil.createSchema();
 	}
-	private int delay_between_messages = 10; // ms
+	private int delay_between_messages = 100; // ms
 
 	private int session1_message_count = 300;
 
