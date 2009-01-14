@@ -422,15 +422,6 @@ public class SmsSmppImpl implements SmsSmpp {
 	}
 
 	/**
-	 * Call an external service to handle the processing of an outgoing message.
-	 * This could be a simple php script or another Java service.
-	 */
-	public void processMessageRemotely() {
-		// TODO Auto-generated method stub
-
-	}
-
-	/**
 	 * Send a list of Bulk messages to the gateway. This method is not
 	 * implemented because it does not return a list of message id's. The
 	 * optional parameters are causing an exception.
@@ -605,6 +596,16 @@ public class SmsSmppImpl implements SmsSmpp {
 	public void setLogLevel(Level level) {
 		LOG.setLevel(level);
 
+	}
+
+	public boolean processOutgoingMessageRemotely(SmsMessage smsMessage) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public boolean notifyDeliveryReportRemotely(SmsMessage smsMessage) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

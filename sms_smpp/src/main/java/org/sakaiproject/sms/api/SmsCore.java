@@ -96,7 +96,7 @@ public interface SmsCore {
 	public void processIncomingMessage(SmsMessage smsMessage);
 
 	/**
-	 * Updates the messages status to timedout which did not receive a delivery
+	 * Updates the messages status to timed out which did not receive a delivery
 	 * report within the valid period.As determined by
 	 * DEL_REPORT_TIMEOUT_DURATION on the task.
 	 */
@@ -123,4 +123,5 @@ public interface SmsCore {
 	 */
 	public SmsTask getPreliminaryTask(String deliverGroupId, Date dateToSend,
 			String messageBody, String sakaiToolId);
+
 }

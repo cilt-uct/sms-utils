@@ -46,10 +46,14 @@ public interface SmsSmpp {
 	public String getGatewayInfo();
 
 	/**
-	 * Call an external service to handle the processing of an outgoing message.
-	 * This could be a simple php script or another Java service.
+	 * Outgoing sms messages may be processed (delivered) by and external
+	 * service. We simply pass the messages on to that service via http. By
+	 * default disabled.
+	 * 
+	 * @param smsMessage
+	 * @return
 	 */
-	public void processMessageRemotely();
+	public boolean processOutgoingMessageRemotely(SmsMessage smsMessage);
 
 	/**
 	 * Send a list of messages to the gateway. Abort if the gateway connection
@@ -63,4 +67,13 @@ public interface SmsSmpp {
 	 */
 	public SmsMessage sendMessageToGateway(SmsMessage message);
 
+	/**
+	 * The Sakai Sms service process the incoming delivery report, but it also
+	 * notifies an external service of the delivery report via http. By default
+	 * disabled.
+	 * 
+	 * @param smsMessage
+	 * @return
+	 */
+	public boolean notifyDeliveryReportRemotely(SmsMessage smsMessage);
 }
