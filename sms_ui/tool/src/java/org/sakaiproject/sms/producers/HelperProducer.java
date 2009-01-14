@@ -62,7 +62,6 @@ public class HelperProducer implements ViewComponentProducer,
 		UIMessage.make(form, "message-body-label", "sms.helper.message-body");
 		UIInput messageBody = UIInput.make(form, "message-body", smsTaskOTP
 				+ ".messageBody");
-		messageBody.mustapply = true; // Force to apply
 
 		UIMessage.make(form, "chars-remaining-label",
 				"sms.helper.chars-remaining");
@@ -80,7 +79,6 @@ public class HelperProducer implements ViewComponentProducer,
 			UICommand.make(form, "action-button", UIMessage
 					.make("sms.general.continue"),
 					"HelperActionBean.doContinue");
-
 		}
 		UICommand.make(form, "cancel-button",
 				UIMessage.make("sms.general.cancel")).setReturn(
@@ -135,7 +133,7 @@ public class HelperProducer implements ViewComponentProducer,
 				new SimpleViewParameters(HelperProducer.VIEW_ID)));
 		list.add(new NavigationCase(ActionResults.CONTINUE,
 				new SimpleViewParameters(HelperProducer.VIEW_ID),
-				ARIResult.FLOW_ONESTEP));
+				ARIResult.FLOW_FASTSTART));
 		list.add(new NavigationCase(ActionResults.SUCCESS,
 				new SimpleViewParameters(HelperProducer.VIEW_ID)));
 		return list;

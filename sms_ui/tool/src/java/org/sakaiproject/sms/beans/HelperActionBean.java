@@ -39,7 +39,7 @@ public class HelperActionBean {
 			SmsTask smsTask = (SmsTask) smsTaskLocator
 					.locateBean(SmsTaskLocator.NEW_1);
 			smsService.calculateEstimatedGroupSize(smsTask);
-			// After validation groupsize must be calculated
+
 			return ActionResults.CONTINUE;
 		} else {
 			return ActionResults.CANCEL; // TODO: Change to error message
@@ -67,6 +67,7 @@ public class HelperActionBean {
 				// TODO: Give error message
 			}
 
+			smsTaskLocator.clearBeans();
 			return ActionResults.SUCCESS;
 		} else {
 			return ActionResults.CANCEL; // TODO: Change to error message

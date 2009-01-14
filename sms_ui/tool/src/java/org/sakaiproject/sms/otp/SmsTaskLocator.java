@@ -46,6 +46,13 @@ public class SmsTaskLocator implements BeanLocator {
 	private final Map<String, SmsTask> delivered = new HashMap<String, SmsTask>();
 
 	/**
+	 * Clear all beans on this locator
+	 */
+	public void clearBeans() {
+		delivered.clear();
+	}
+
+	/**
 	 * Checks if locator already contains NEW_1 entry
 	 * 
 	 * @return {@link Boolean}
