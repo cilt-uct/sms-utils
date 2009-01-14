@@ -162,11 +162,11 @@ public class SmsCoreImpl implements SmsCore {
 	 */
 	public synchronized SmsTask insertTask(SmsTask smsTask) {
 		smsTask.setDateCreated(DateUtil.getCurrentDate());
+		HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask);
 		smsBilling.reserveCredits(smsBilling.getAccountID(smsTask
 				.getSakaiSiteId(), smsTask.getSenderUserName(), smsTask
-				.getSmsAccountId()), smsTask.getSmsMessages().size());
+				.getSmsAccountId()), smsTask.getCreditEstimate());
 
-		HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask);
 		tryProcessTaskRealTime(smsTask);
 		return smsTask;
 	}
@@ -322,6 +322,8 @@ public class SmsCoreImpl implements SmsCore {
 	public SmsTask getPreliminaryTask(String deliverGroupId,
 			Set<String> mobileNumbers, Set<String> sakaiUserIds,
 			Date dateToSend, String messageBody, String sakaiToolId) {
+		SmsConfig config = HibernateLogicFactory.getConfigLogic()
+				.getOrCreateSystemSmsConfig();
 		SmsTask smsTask = new SmsTask();
 		smsTask.setSmsAccountId(smsBilling.getAccountID("1", "1", 1));
 		smsTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
@@ -335,8 +337,9 @@ public class SmsCoreImpl implements SmsCore {
 		smsTask.setDateToSend(dateToSend);
 		smsTask.setAttemptCount(0);
 		smsTask.setMessageBody(messageBody);
-		smsTask.setMaxTimeToLive(300000);
-		smsTask.setDelReportTimeoutDuration(300000);
+		smsTask.setMaxTimeToLive(config.getSmsTaskMaxLifeTime());
+		smsTask.setDelReportTimeoutDuration(config
+				.getDelReportTimeoutDuration());
 		return smsTask;
 	}
 

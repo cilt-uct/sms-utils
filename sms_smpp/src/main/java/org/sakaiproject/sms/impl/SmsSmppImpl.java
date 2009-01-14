@@ -603,12 +603,13 @@ public class SmsSmppImpl implements SmsSmpp {
 	}
 
 	public boolean processOutgoingMessageRemotely(SmsMessage smsMessage) {
-		// TODO Auto-generated method stub
+		// TODO To be discussed with UCT
+
 		return false;
 	}
 
 	public boolean notifyDeliveryReportRemotely(SmsMessage smsMessage) {
-		// TODO Auto-generated method stub
+		// TODO To be discussed with UCT
 		return false;
 	}
 
