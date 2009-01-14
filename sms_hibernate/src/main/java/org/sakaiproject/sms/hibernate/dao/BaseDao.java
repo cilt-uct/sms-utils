@@ -27,8 +27,7 @@ abstract public class BaseDao {
 	 *                if any error occurs while saving or updating data in the
 	 *                database
 	 */
-	protected synchronized void persist(BaseModel object)
-			throws HibernateException {
+	protected void persist(BaseModel object) throws HibernateException {
 		Session session = HibernateUtil.getSession();
 		try {
 			HibernateUtil.beginTransaction();
