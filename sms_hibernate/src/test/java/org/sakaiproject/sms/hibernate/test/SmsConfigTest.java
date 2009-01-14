@@ -20,7 +20,7 @@ public class SmsConfigTest extends AbstractBaseTestCase {
 		HibernateUtil.setTestConfiguration(true);
 		HibernateUtil.createSchema();
 		insertSmsConfig = new SmsConfig();
-		insertSmsConfig.setSakaiSiteId("sakaiSiteId");
+		insertSmsConfig.setSakaiSiteId("sakaiSiteId2");
 		insertSmsConfig.setSakaiToolId("sakaiToolId");
 		insertSmsConfig.setNotificationEmail("notification@Email.Address");
 		insertSmsConfig.setSendSmsEnabled(false);
