@@ -17,11 +17,9 @@
  **********************************************************************************/
 package org.sakaiproject.sms.producers;
 
-import static org.sakaiproject.sms.constants.SmsUiConstants.MAX_SMS_LENGTH;
-
 import java.util.ArrayList;
 import java.util.List;
-
+import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
 import org.sakaiproject.sms.beans.ActionResults;
 import org.sakaiproject.sms.hibernate.model.SmsAccount;
 import org.sakaiproject.sms.otp.SmsTaskLocator;
@@ -66,7 +64,7 @@ public class HelperProducer implements ViewComponentProducer,
 		UIMessage.make(form, "chars-remaining-label",
 				"sms.helper.chars-remaining");
 		UIInput charsRemaining = UIInput.make(form, "chars-remaining", null,
-				Integer.toString(MAX_SMS_LENGTH));
+				Integer.toString(SmsHibernateConstants.MAX_SMS_LENGTH));
 		// Disables the characters remaining input
 		charsRemaining.decorate(new UIDisabledDecorator());
 
@@ -100,9 +98,16 @@ public class HelperProducer implements ViewComponentProducer,
 		estimatedCost.decorate(new UIDisabledDecorator());
 		estimatedCost.fossilize = false;
 
-		UIInitBlock.make(tofill, "init-msg-body-change", "initMsgBodyChange",
-				new Object[] { messageBody, charsRemaining,
-						Integer.toString(MAX_SMS_LENGTH) });
+		UIInitBlock
+				.make(
+						tofill,
+						"init-msg-body-change",
+						"initMsgBodyChange",
+						new Object[] {
+								messageBody,
+								charsRemaining,
+								Integer
+										.toString(SmsHibernateConstants.MAX_SMS_LENGTH) });
 
 	}
 
