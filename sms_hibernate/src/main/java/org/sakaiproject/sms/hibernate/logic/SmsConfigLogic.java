@@ -23,8 +23,10 @@ import java.util.List;
 import org.sakaiproject.sms.hibernate.model.SmsConfig;
 
 /**
- * The data service will handle all sms config database transactions for the sms
- * tool in Sakai.
+ * SMS configuration is stored in SMS_CONFIG. It caters for site-specific
+ * settings as well as system-wide settings. System settings are stored in the
+ * record with SAKAI_SITE_ID="". Settings could also be specific to a Sakai tool
+ * by setting SAKAI_TOOL_ID.
  * 
  * @author julian@psybergate.com
  * @version 1.0
@@ -63,7 +65,7 @@ public interface SmsConfigLogic {
 	 * @param smsConfig
 	 *            the sms config
 	 */
-	public void deleteSmsCongif(SmsConfig smsConfig);
+	public void deleteSmsConfig(SmsConfig smsConfig);
 
 	/**
 	 * Gets the sms config by sakai site id.

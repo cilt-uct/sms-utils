@@ -52,7 +52,7 @@ public class SmsConfigLogicImpl extends SmsDao implements SmsConfigLogic {
 	/**
 	 * Deletes and the given entity from the DB
 	 */
-	public void deleteSmsCongif(SmsConfig smsConfig) {
+	public void deleteSmsConfig(SmsConfig smsConfig) {
 		delete(smsConfig);
 	}
 
