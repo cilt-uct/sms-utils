@@ -1,5 +1,5 @@
 /***********************************************************************************
- * ActionResults.java
+ * SmsTaskValidator.java
  * Copyright (c) 2008 Sakai Project/Sakai Foundation
  * 
  * Licensed under the Educational Community License, Version 2.0 (the "License"); 
@@ -15,13 +15,22 @@
  * limitations under the License.
  *
  **********************************************************************************/
-package org.sakaiproject.sms.beans;
+package org.sakaiproject.sms.validators;
 
-/**
- * Specifies ActionResults to be used by ActionBeans
- */
-public class ActionResults {
-	public static final String SUCCESS = "success";
-	public static final String CANCEL = "cancel";
-	public static final String CONTINUE = "continue";
+import org.sakaiproject.sms.hibernate.model.SmsTask;
+import org.springframework.validation.Errors;
+import org.springframework.validation.Validator;
+
+public class SmsTaskValidator implements Validator {
+
+	public boolean supports(Class clazz) {
+		if (SmsTask.class.equals(clazz.getClass())) {
+			return true;
+		}
+		return false;
+	}
+
+	public void validate(Object obj, Errors err) {
+		// TODO: Validations for SmsTask
+	}
 }

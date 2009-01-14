@@ -45,6 +45,15 @@ public class SmsTaskLocator implements BeanLocator {
 	/** The delivered map (used to store beans). */
 	private final Map<String, SmsTask> delivered = new HashMap<String, SmsTask>();
 
+	/**
+	 * Checks if locator already contains NEW_1 entry
+	 * 
+	 * @return {@link Boolean}
+	 */
+	public boolean containsNew() {
+		return delivered.containsKey(NEW_1);
+	}
+
 	public Object locateBean(String name) {
 		SmsTask togo = delivered.get(name);
 		if (togo == null) {

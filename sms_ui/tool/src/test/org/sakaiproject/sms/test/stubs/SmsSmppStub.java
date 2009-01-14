@@ -40,6 +40,11 @@ public class SmsSmppStub implements SmsSmpp {
 	public void disconnectGateWay() {
 	}
 
+	public void enableDebugInformation(boolean arg0) {
+		// TODO Auto-generated method stub
+
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -67,12 +72,27 @@ public class SmsSmppStub implements SmsSmpp {
 		return null;
 	}
 
+	public boolean notifyDeliveryReportRemotely(SmsMessage arg0) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see org.sakaiproject.sms.api.SmsSmpp#processMessageRemotely()
 	 */
 	public void processMessageRemotely() {
+	}
+
+	public boolean processOutgoingMessageRemotely(SmsMessage arg0) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public String sendMessagesToGateway(Set<SmsMessage> arg0) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	/*
@@ -100,16 +120,6 @@ public class SmsSmppStub implements SmsSmpp {
 		}
 
 		return msg;
-	}
-
-	public void enableDebugInformation(boolean arg0) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public String sendMessagesToGateway(Set<SmsMessage> arg0) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }

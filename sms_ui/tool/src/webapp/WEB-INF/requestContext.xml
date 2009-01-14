@@ -53,6 +53,7 @@
   
   <bean class="org.sakaiproject.sms.producers.HelperProducer">
  	<property name="accountHelper" ref="accountHelper" />
+ 	<property name="smsTaskLocator" ref="SmsTaskLocator" />
   </bean>
   
   <bean class="org.sakaiproject.sms.producers.SmsConfigProducer"/>
@@ -98,6 +99,12 @@
   <bean id="smsConfigActionBean" class="org.sakaiproject.sms.beans.SmsConfigActionBean">
   	 <property name="smsConfigLocator" ref="SmsConfigLocator"/>
   	 <property name="smsConfigLogic" ref="smsConfigLogic"/>
+  </bean>
+  
+  <bean id="HelperActionBean" class="org.sakaiproject.sms.beans.HelperActionBean" >
+  	<property name="smsTaskLocator" ref="SmsTaskLocator" />
+  	<property name="smsService" ref="org.sakaiproject.sms.api.SmsService" />
+  	<property name="smsCore" ref="org.sakaiproject.sms.api.SmsCore" />
   </bean>
   
   <!-- Helpers -->

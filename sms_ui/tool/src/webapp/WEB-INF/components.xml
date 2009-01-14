@@ -30,4 +30,8 @@
 		<property name="smsCore" ref="org.sakaiproject.sms.api.SmsCore" />
 	</bean>
 	
+	<bean id="org.sakaiproject.sms.api.SmsService" class="org.sakaiproject.sms.impl.SmsServiceImpl" >
+		<property name="smsCore" ref="org.sakaiproject.sms.api.SmsCore"/>
+	</bean>
+	
 </beans>

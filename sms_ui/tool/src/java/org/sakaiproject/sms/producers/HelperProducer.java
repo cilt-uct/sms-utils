@@ -19,9 +19,10 @@ package org.sakaiproject.sms.producers;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
+
 import org.sakaiproject.sms.beans.ActionResults;
 import org.sakaiproject.sms.hibernate.model.SmsAccount;
+import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
 import org.sakaiproject.sms.otp.SmsTaskLocator;
 import org.sakaiproject.sms.util.SmsAccountHelper;
 
@@ -32,6 +33,7 @@ import uk.org.ponder.rsf.components.UIInitBlock;
 import uk.org.ponder.rsf.components.UIInput;
 import uk.org.ponder.rsf.components.UIMessage;
 import uk.org.ponder.rsf.components.decorators.UIDisabledDecorator;
+import uk.org.ponder.rsf.flow.ARIResult;
 import uk.org.ponder.rsf.flow.jsfnav.NavigationCase;
 import uk.org.ponder.rsf.flow.jsfnav.NavigationCaseReporter;
 import uk.org.ponder.rsf.view.ComponentChecker;
@@ -45,6 +47,7 @@ public class HelperProducer implements ViewComponentProducer,
 	public static final String VIEW_ID = "helper";
 
 	private SmsAccountHelper accountHelper;
+	private SmsTaskLocator smsTaskLocator;
 
 	public void fillComponents(UIContainer tofill, ViewParameters viewparams,
 			ComponentChecker checker) {
@@ -69,8 +72,16 @@ public class HelperProducer implements ViewComponentProducer,
 		charsRemaining.decorate(new UIDisabledDecorator());
 
 		// TODO: Continue / Send button
-		UICommand.make(form, "action-button", UIMessage
-				.make("sms.general.send"));
+
+		if (smsTaskLocator.containsNew()) {
+			UICommand.make(form, "action-button", UIMessage
+					.make("sms.general.send"), "HelperActionBean.send");
+		} else {
+			UICommand.make(form, "action-button", UIMessage
+					.make("sms.general.continue"),
+					"HelperActionBean.doContinue");
+
+		}
 		UICommand.make(form, "cancel-button",
 				UIMessage.make("sms.general.cancel")).setReturn(
 				ActionResults.CANCEL);
@@ -121,7 +132,12 @@ public class HelperProducer implements ViewComponentProducer,
 	public List reportNavigationCases() {
 		List<NavigationCase> list = new ArrayList<NavigationCase>();
 		list.add(new NavigationCase(ActionResults.CANCEL,
-				new SimpleViewParameters(SmsTestProducer.VIEW_ID)));
+				new SimpleViewParameters(HelperProducer.VIEW_ID)));
+		list.add(new NavigationCase(ActionResults.CONTINUE,
+				new SimpleViewParameters(HelperProducer.VIEW_ID),
+				ARIResult.FLOW_ONESTEP));
+		list.add(new NavigationCase(ActionResults.SUCCESS,
+				new SimpleViewParameters(HelperProducer.VIEW_ID)));
 		return list;
 	}
 
@@ -129,4 +145,7 @@ public class HelperProducer implements ViewComponentProducer,
 		this.accountHelper = accountHelper;
 	}
 
+	public void setSmsTaskLocator(SmsTaskLocator smsTaskLocator) {
+		this.smsTaskLocator = smsTaskLocator;
+	}
 }

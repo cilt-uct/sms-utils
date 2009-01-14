@@ -32,12 +32,12 @@
     via incoming request URL -->
   <bean parent="requestAddressibleParent">
     <property name="value" value="searchTaskList, searchTransactionLog, searchMessageLog, smsConfig, 
-    smsConfigActionBean, SmsTestActionBean, SmsMessageLocator, SmsConfigLocator, csvExportBean, SmsAccountLocator"/>
+    smsConfigActionBean, HelperActionBean, SmsTestActionBean, SmsMessageLocator, SmsConfigLocator, csvExportBean, SmsAccountLocator, SmsTaskLocator"/>
   </bean>
 
   <!-- The beans which will be preserved across a flow via simple instance copying -->
   <bean parent="copyPreservingParent">
-    <property name="value" value="SmsMessageLocator, SmsConfigLocator"/>
+    <property name="value" value="SmsMessageLocator, SmsConfigLocator, SmsTaskLocator"/>
   </bean>
   
   <bean id="searchScope" parent="beanScopeParent">
@@ -47,10 +47,8 @@
   <bean id="smsMessageGuard" parent="writeGuardParent">
      <property name="guardedPath" value="SmsMessageLocator.*"/>
 	 <property name="guard"> 
-	 	<bean class="org.sakaiproject.sms.validators.SmsMessageValidator">
-	 		<property name="smsBilling" ref="org.sakaiproject.sms.api.SmsBilling" />
-	 	</bean>
-	 </property>
+	 	<bean class="org.sakaiproject.sms.validators.SmsMessageValidator" />
+	 </property> 
   </bean>
   
   <bean id="smsConfigGaurd" parent="writeGuardParent">
@@ -69,6 +67,12 @@
  	<property name="guardedPath" value="SmsAccountLocator.*" />
  	<property name="guard"><bean class="org.sakaiproject.sms.validators.SmsAccountValidator" /></property>
  </bean>
+ 
+ <bean id="smsTaskGuard" parent="writeGuardParent">
+ 	<property name="guardedPath" value="SmsTaskLocator.*" />
+ 	<property name="guard"><bean class="org.sakaiproject.sms.validators.SmsTaskValidator" /></property>
+ </bean> 
+  
   
  <!-- Data Converters for Float values -->  
  <bean class="uk.org.ponder.mapping.DataConverter">
