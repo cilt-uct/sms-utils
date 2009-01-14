@@ -151,7 +151,7 @@ public class SmsConfigTest extends AbstractBaseTestCase {
 	public void testFindByIdDevMode() {
 		SmsConfig getSmsConfig = HibernateLogicFactory.getConfigLogic()
 				.getOrCreateSmsConfigBySakaiSiteId(
-						SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_ID);
+						SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_SITE_ID);
 		assertNotNull(getSmsConfig);
 
 	}
