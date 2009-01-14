@@ -89,7 +89,7 @@ public interface SmsCore {
 	 * Try to process an incoming message in real-time by inserting it into the
 	 * queue and calling processMessage immediately. If unable to process, then
 	 * leave in the queue for the job scheduler to handle. Incoming messages are
-	 * for later development.
+	 * for later development in phase II.
 	 * 
 	 * @param messageID
 	 */
@@ -109,11 +109,26 @@ public interface SmsCore {
 	public void processNextTask();
 
 	/**
-	 * Get the list of users that must receive the message. Send messages to
-	 * SMPP service and also add them to SMS_MESSAGE table as pending. (Statuses
-	 * will be updated when the gateway delivery notifications comes in)
+	 * Process is specific task. A task can be retried if a previous send
+	 * attempt was unsuccessful due to gateway connection problems. A retry will
+	 * be re-scheduled some time in the future. When the max retry attempts are
+	 * reached or if credits are insufficient, the task is marked as failed.
+	 * 
+	 * The task will also expire if it cannot be processed in a specified time.
+	 * See http://jira.sakaiproject.org/jira/browse/SMS-9
 	 */
 	public void processTask(SmsTask smsTask);
+
+	/**
+	 * If a new task is scheduled for immediate processing, then we try to
+	 * process it in real-time. If it is not possible (too many threads) then
+	 * the task will be handled by the scheduler. If the scheduler is too busy
+	 * and the task is picked up too late, then the task is marked as
+	 * SmsConst_DeliveryStatus.STATUS_EXPIRE
+	 * 
+	 * @param smsTask
+	 */
+	public void tryProcessTaskRealTime(SmsTask smsTask);
 
 	/**
 	 * We calculate the group size and cost of the task without persisting any

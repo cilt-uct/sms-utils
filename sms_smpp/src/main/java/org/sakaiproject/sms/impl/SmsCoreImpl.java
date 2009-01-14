@@ -127,10 +127,6 @@ public class SmsCoreImpl implements SmsCore {
 		return messages;
 	}
 
-	/**
-	 * Find the next sms task to process from the task queue. Determine tasks
-	 * with highest priority. Priority is based on message age and type.
-	 */
 	public SmsTask getNextSmsTask() {
 		return HibernateLogicFactory.getTaskLogic().getNextSmsTask();
 
@@ -147,34 +143,12 @@ public class SmsCoreImpl implements SmsCore {
 		return null;
 	}
 
-	/**
-	 * Add a new task to the sms task list, for eg. send message to all
-	 * administrators at 10:00, or get latest announcements and send to mobile
-	 * numbers of Sakai group x (phase II).
-	 * 
-	 * @param deliverGroupId
-	 * @param dateToSend
-	 * @param messageBody
-	 * @param sakaiToolId
-	 * @return
-	 */
 	public SmsTask getPreliminaryTask(String deliverGroupId, Date dateToSend,
 			String messageBody, String sakaiToolId) {
 		return getPreliminaryTask(deliverGroupId, null, null, dateToSend,
 				messageBody, sakaiToolId);
 	}
 
-	/**
-	 * Add a new task to the sms task list, for eg. send message to all
-	 * administrators at 10:00, or get latest announcements and send to mobile
-	 * numbers of Sakai group x (phase II).
-	 * 
-	 * @param sakaiUserIds
-	 * @param dateToSend
-	 * @param messageBody
-	 * @param sakaiToolId
-	 * @return
-	 */
 	public SmsTask getPreliminaryTask(Set<String> sakaiUserIds,
 			Date dateToSend, String messageBody, String sakaiToolId) {
 
@@ -203,17 +177,10 @@ public class SmsCoreImpl implements SmsCore {
 				.getSmsAccountId()), smsTask.getSmsMessages().size());
 
 		HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask);
+		tryProcessTaskRealTime(smsTask);
 		return smsTask;
 	}
 
-	/**
-	 * Try to process an incoming message in real-time by inserting it into the
-	 * queue and calling processMessage immediately. If unable to process, then
-	 * leave in the queue for the job scheduler to handle. Incoming messages are
-	 * for later development.
-	 * 
-	 * @param messageID
-	 */
 	// TODO Why does this not process all the messages for a group
 	public void processIncomingMessage(SmsMessage smsMessage) {
 
@@ -263,30 +230,14 @@ public class SmsCoreImpl implements SmsCore {
 		}
 	}
 
-	public void processRealTimeMessage(SmsTask smsTask) {
+	public void tryProcessTaskRealTime(SmsTask smsTask) {
 
+		// TODO also check number of process threads
 		if (smsTask.getDateToSend().getTime() <= System.currentTimeMillis()) {
-
-		} else {
-			// ???
+			this.processTask(smsTask);
 		}
-
-		/*
-		 * check date to send insert new task insert task call the insert new
-		 * task validation call processTask(smsTask);
-		 */
-
 	}
 
-	/**
-	 * Process is specific task. A task can be retried if a previous send
-	 * attempt was unsuccessful due to gateway connection problems. A retry will
-	 * be re-scheduled some time in the future. When the max retry attempts are
-	 * reached or if credits are insufficient, the task is marked as failed.
-	 * 
-	 * The task will also fail if it cannot be processed in a specified time.
-	 * See http://jira.sakaiproject.org/jira/browse/SMS-9
-	 */
 	public void processTask(SmsTask smsTask) {
 		SmsConfig config = HibernateLogicFactory.getConfigLogic()
 				.getOrCreateSmsConfigBySakaiSiteId(smsTask.getSakaiSiteId());

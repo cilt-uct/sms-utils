@@ -6,69 +6,74 @@ import java.util.List;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
 
-public class SampleSmsMessageFactory implements Listable{
+public class SampleSmsMessageFactory implements Listable {
 
 	private List<SmsMessage> smsMessages;
 	private RandomUtils randomUtils = new RandomUtils();
+	private static int theYear = 2009;
 
 	public SampleSmsMessageFactory() {
 		creatSampleSmsMessages();
 	}
-	
+
 	public Object getElementAt(int i) {
 		return getTestSmsMessage(i);
 	}
-	
+
 	public void refreshList() {
 		creatSampleSmsMessages();
-		
+
 	}
 
 	private void creatSampleSmsMessages() {
 		smsMessages = new ArrayList<SmsMessage>();
-		
-		SmsMessage message1 = new SmsMessage("083468221", "Test date moved form 12 Jan to 15 Jan");
+
+		SmsMessage message1 = new SmsMessage("083468221",
+				"Test date moved form 12 Jan to 15 Jan");
 		message1.setSakaiUserId("SNK111");
 		message1.setStatusCode(SmsConst_DeliveryStatus.STATUS_DELIVERED);
-		message1.setDateDelivered(randomUtils.getBoundRandomDate(2008));
+		message1.setDateDelivered(randomUtils.getBoundRandomDate(theYear));
 		smsMessages.add(message1);
-		SmsMessage message2 = new SmsMessage("0823456789", "Matlab tutorial move to Science labs D");
+		SmsMessage message2 = new SmsMessage("0823456789",
+				"Matlab tutorial move to Science labs D");
 		message2.setSakaiUserId("BIT111");
 		message2.setStatusCode(SmsConst_DeliveryStatus.STATUS_SENT);
-		message2.setDateDelivered(randomUtils.getBoundRandomDate(2008));
+		message2.setDateDelivered(randomUtils.getBoundRandomDate(theYear));
 		smsMessages.add(message2);
-		SmsMessage message3 = new SmsMessage("08255552222", "Location of tut changed to Science Block");
+		SmsMessage message3 = new SmsMessage("08255552222",
+				"Location of tut changed to Science Block");
 		message3.setSakaiUserId("BAT111");
 		message3.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
-		message3.setDateDelivered(randomUtils.getBoundRandomDate(2008));
+		message3.setDateDelivered(randomUtils.getBoundRandomDate(theYear));
 		smsMessages.add(message3);
-		SmsMessage message4 = new SmsMessage("08266661122", "Problem set to be handed in by 15 Jan");
+		SmsMessage message4 = new SmsMessage("08266661122",
+				"Problem set to be handed in by 15 Jan");
 		message4.setSakaiUserId("RAT111");
 		message4.setStatusCode(SmsConst_DeliveryStatus.STATUS_DELIVERED);
-		message4.setDateDelivered(randomUtils.getBoundRandomDate(2008));
+		message4.setDateDelivered(randomUtils.getBoundRandomDate(theYear));
 		smsMessages.add(message4);
-		SmsMessage message5 = new SmsMessage("084444667", "No tutorial required this month");
+		SmsMessage message5 = new SmsMessage("084444667",
+				"No tutorial required this month");
 		message5.setSakaiUserId("COW111");
 		message5.setStatusCode(SmsConst_DeliveryStatus.STATUS_DELIVERED);
-		message5.setDateDelivered(randomUtils.getBoundRandomDate(2008));
-		smsMessages.add(message5);	
+		message5.setDateDelivered(randomUtils.getBoundRandomDate(theYear));
+		smsMessages.add(message5);
 	}
-	
-	public List<SmsMessage> getAllTestSmsMessages(){
+
+	public List<SmsMessage> getAllTestSmsMessages() {
 		return smsMessages;
 	}
 
-	public SmsMessage getTestSmsMessage(int index){
-		
-		if(index >= smsMessages.size())
+	public SmsMessage getTestSmsMessage(int index) {
+
+		if (index >= smsMessages.size())
 			throw new RuntimeException("The specified index is too high");
-			
-		return smsMessages.get(index);	
+
+		return smsMessages.get(index);
 	}
-	
-	public int getTotalSmsMessages(){
+
+	public int getTotalSmsMessages() {
 		return smsMessages.size();
 	}
 
-	
 }

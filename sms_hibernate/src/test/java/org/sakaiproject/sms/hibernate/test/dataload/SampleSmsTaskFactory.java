@@ -7,6 +7,7 @@ import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
 
 public class SampleSmsTaskFactory implements Listable {
+	private static int theYear = 2009;
 
 	List<SmsTask> smsTasks;
 	RandomUtils randomUtils = new RandomUtils();
@@ -27,8 +28,8 @@ public class SampleSmsTaskFactory implements Listable {
 	private SmsTask setTaskProperties(SmsTask task) {
 		task.setGroupSizeEstimate((int) (Math.random() * 1000 + 10));
 		task.setGroupSizeActual((int) (Math.random() * 1000 + 10));
-		// task.setDateToSend(randomUtils.getBoundRandomDate(2008));
-		task.setDateProcessed(randomUtils.getBoundRandomDate(2008));
+		// task.setDateToSend(randomUtils.getBoundRandomDate(theYear));
+		task.setDateProcessed(randomUtils.getBoundRandomDate(theYear));
 		task.setSakaiToolName("Sakai tool");
 		task.setMaxTimeToLive(1000);
 		task.setDelReportTimeoutDuration(1000);
@@ -51,8 +52,8 @@ public class SampleSmsTaskFactory implements Listable {
 		task1.setSmsAccountId(123456);
 		task1.setMessageBody("Test date moved form 12 Jan to 15 Jan");
 		task1 = setTaskProperties(task1);
-		task1.setDateCreated(randomUtils.getBoundRandomDate(2008));
-		task1.setDateToSend(randomUtils.getBoundRandomDate(2008));
+		task1.setDateCreated(randomUtils.getBoundRandomDate(theYear));
+		task1.setDateToSend(randomUtils.getBoundRandomDate(theYear));
 		task1.setSenderUserName("Prof Blue");
 		task1.setStatusCode(SmsConst_DeliveryStatus.STATUS_RETRY);
 		smsTasks.add(task1);
@@ -68,8 +69,8 @@ public class SampleSmsTaskFactory implements Listable {
 		task2.setSmsAccountId(123457);
 		task2.setMessageBody("Matlab tutorial move to Science labs D");
 		task2 = setTaskProperties(task2);
-		task2.setDateCreated(randomUtils.getBoundRandomDate(2008));
-		task2.setDateToSend(randomUtils.getBoundRandomDate(2008));
+		task2.setDateCreated(randomUtils.getBoundRandomDate(theYear));
+		task2.setDateToSend(randomUtils.getBoundRandomDate(theYear));
 		task2.setSenderUserName("Prof Green");
 		task2.setStatusCode(SmsConst_DeliveryStatus.STATUS_SENT);
 		smsTasks.add(task2);
@@ -85,8 +86,8 @@ public class SampleSmsTaskFactory implements Listable {
 		task3.setSmsAccountId(123458);
 		task3.setMessageBody("Location of tut changed to Science Block");
 		task3 = setTaskProperties(task3);
-		task3.setDateCreated(randomUtils.getBoundRandomDate(2008));
-		task3.setDateToSend(randomUtils.getBoundRandomDate(2008));
+		task3.setDateCreated(randomUtils.getBoundRandomDate(theYear));
+		task3.setDateToSend(randomUtils.getBoundRandomDate(theYear));
 		task3.setSenderUserName("Prof Red");
 		task3.setStatusCode(SmsConst_DeliveryStatus.STATUS_DELIVERED);
 		smsTasks.add(task3);
@@ -102,8 +103,8 @@ public class SampleSmsTaskFactory implements Listable {
 		task4.setSmsAccountId(123459);
 		task4.setMessageBody("Problem set to be handed in by 15 Jan");
 		task4 = setTaskProperties(task4);
-		task4.setDateCreated(randomUtils.getBoundRandomDate(2008));
-		task4.setDateToSend(randomUtils.getBoundRandomDate(2008));
+		task4.setDateCreated(randomUtils.getBoundRandomDate(theYear));
+		task4.setDateToSend(randomUtils.getBoundRandomDate(theYear));
 		task4.setSenderUserName("Prof Lime");
 		task4.setStatusCode(SmsConst_DeliveryStatus.STATUS_FAIL);
 		smsTasks.add(task4);
@@ -119,8 +120,8 @@ public class SampleSmsTaskFactory implements Listable {
 		task5.setSmsAccountId(123460);
 		task5.setMessageBody("No tutorial required this month");
 		task5 = setTaskProperties(task5);
-		task5.setDateCreated(randomUtils.getBoundRandomDate(2008));
-		task5.setDateToSend(randomUtils.getBoundRandomDate(2008));
+		task5.setDateCreated(randomUtils.getBoundRandomDate(theYear));
+		task5.setDateToSend(randomUtils.getBoundRandomDate(theYear));
 		task5.setSenderUserName("Prof Orange");
 		task5.setStatusCode(SmsConst_DeliveryStatus.STATUS_INCOMPLETE);
 		smsTasks.add(task5);
