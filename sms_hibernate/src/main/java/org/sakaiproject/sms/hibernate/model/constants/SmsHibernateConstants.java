@@ -67,7 +67,7 @@ public class SmsHibernateConstants {
 	/**
 	 * The default sakai_userId to be used in development mode.
 	 */
-	public static final String SMS_DEV_DEFAULT_SAKAI_USER_ID = "SakaiSiteID";
+	public static final String SMS_DEV_DEFAULT_SAKAI_USER_ID = "SakaiUserID";
 
 	/**
 	 * The default testing sakai tool id
