@@ -103,6 +103,7 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 					SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID);
 
 			smsTask3.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
+			smsTask3 = smsCoreImpl.calculateEstimatedGroupSize(smsTask3);
 
 			now.add(Calendar.MINUTE, -1);
 			SmsTask smsTask2 = smsCoreImpl.getPreliminaryTask(
@@ -111,7 +112,9 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 					"testProcessNextTask-smsTask2MessageBody",
 					SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_SITE_ID, null,
 					SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID);
+
 			smsTask2.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
+			smsTask2 = smsCoreImpl.calculateEstimatedGroupSize(smsTask2);
 
 			now.add(Calendar.MINUTE, -3);
 			SmsTask smsTask1 = smsCoreImpl.getPreliminaryTask(
@@ -122,6 +125,7 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 					SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID);
 
 			smsTask1.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
+			smsTask1 = smsCoreImpl.calculateEstimatedGroupSize(smsTask1);
 
 			now.add(Calendar.MINUTE, 60);
 			SmsTask smsTask4 = smsCoreImpl.getPreliminaryTask(
@@ -132,6 +136,8 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 					SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID);
 
 			smsTask4.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
+			smsTask4 = smsCoreImpl.calculateEstimatedGroupSize(smsTask4);
+
 			smsCoreImpl.insertTask(smsTask3);
 			smsCoreImpl.insertTask(smsTask2);
 			smsCoreImpl.insertTask(smsTask1);
