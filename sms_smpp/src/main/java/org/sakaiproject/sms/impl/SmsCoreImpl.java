@@ -296,11 +296,6 @@ public class SmsCoreImpl implements SmsCore {
 		}
 	}
 
-	/**
-	 * Updates the messages status to timedout which did not receive a delivery
-	 * report within the valid period.As determined by
-	 * DEL_REPORT_TIMEOUT_DURATION on the task.
-	 */
 	public void processTimedOutDeliveryReports() {
 		List<SmsMessage> smsMessages = HibernateLogicFactory.getMessageLogic()
 				.getSmsMessagesWithStatus(null,
@@ -345,10 +340,12 @@ public class SmsCoreImpl implements SmsCore {
 		return smsTask;
 	}
 
-	public SmsTask calculateGroupSize(SmsTask smsTask) {
+	public SmsTask calculateEstimatedGroupSize(SmsTask smsTask) {
 		Set<SmsMessage> deliverGroupMessages = generateSmsMessages(smsTask);
-		smsTask.setGroupSizeEstimate(smsTask.getSmsMessages().size());
-		smsTask.setCreditEstimate(deliverGroupMessages.size());
+		int groupSize = deliverGroupMessages.size();
+		smsTask.setGroupSizeEstimate(groupSize);
+		smsTask.setCreditEstimate(groupSize);
+		smsTask.setCostEstimate(smsBilling.convertCreditsToAmount(groupSize));
 		return smsTask;
 	}
 }

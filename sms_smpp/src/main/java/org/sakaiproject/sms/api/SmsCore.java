@@ -94,8 +94,8 @@ public interface SmsCore {
 
 	/**
 	 * Updates the messages status to timed out which did not receive a delivery
-	 * report within the valid period.As determined by
-	 * DEL_REPORT_TIMEOUT_DURATION on the task.
+	 * report within the valid period. As determined by
+	 * DEL_REPORT_TIMEOUT_DURATION on the task. These messages are not billable.
 	 */
 	public void processTimedOutDeliveryReports();
 
@@ -137,10 +137,11 @@ public interface SmsCore {
 			String messageBody, String sakaiToolId);
 
 	/**
-	 * Will calculate the all the group estimates.
+	 * Calculate the number of messages to be sent when the new sms task is
+	 * created. Also populate other estimated values on the task.
 	 * 
 	 * @param smsTask
 	 * @return
 	 */
-	public SmsTask calculateGroupSize(SmsTask smsTask);
+	public SmsTask calculateEstimatedGroupSize(SmsTask smsTask);
 }
