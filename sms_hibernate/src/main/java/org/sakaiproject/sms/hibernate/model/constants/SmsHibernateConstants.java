@@ -68,7 +68,7 @@ public class SmsHibernateConstants {
 	 * The default testing sakai tool id
 	 */
 	public static final String SMS_DEV_DEFAULT_SAKAI_TOOL_ID = "SakaiToolID";
-	
+
 	/** Enable or disable sms functionality for the site or tool. */
 	public static final boolean SMS_ENABLED_FOR_SITE = true;
 
@@ -114,5 +114,11 @@ public class SmsHibernateConstants {
 	 * The default initial balance for an account
 	 */
 	public static final Float INITIAL_BALANACE = 100.0f;
+
+	/** Max sms length */
+	public static final int MAX_SMS_LENGTH = 160;
+
+	/** Max mobile number length. */
+	public static final int MAX_MOBILE_NR_LENGTH = 20;
 
 }
