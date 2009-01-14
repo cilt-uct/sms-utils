@@ -98,7 +98,8 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 			SmsTask smsTask3 = smsCoreImpl.getPreliminaryTask(
 					"testProcessNextTask-smsTask3", new Date(now
 							.getTimeInMillis()),
-					"testProcessNextTask-smsTask3", null);
+					"testProcessNextTask-smsTask3",
+					SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_ID, null);
 
 			smsTask3.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
 
@@ -106,14 +107,16 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 			SmsTask smsTask2 = smsCoreImpl.getPreliminaryTask(
 					"testProcessNextTask-smsTask2", new Date(now
 							.getTimeInMillis()),
-					"testProcessNextTask-smsTask2MessageBody", null);
+					"testProcessNextTask-smsTask2MessageBody",
+					SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_ID, null);
 			smsTask2.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
 
 			now.add(Calendar.MINUTE, -3);
 			SmsTask smsTask1 = smsCoreImpl.getPreliminaryTask(
 					"testProcessNextTask-smsTask1", new Date(now
 							.getTimeInMillis()),
-					"testProcessNextTask-smsTask1MessageBody", null);
+					"testProcessNextTask-smsTask1MessageBody",
+					SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_ID, null);
 
 			smsTask1.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
 
@@ -121,7 +124,8 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 			SmsTask smsTask4 = smsCoreImpl.getPreliminaryTask(
 					"testProcessNextTask-smsTask4", new Date(now
 							.getTimeInMillis()),
-					"testProcessNextTask-smsTask4MessageBody", null);
+					"testProcessNextTask-smsTask4MessageBody",
+					SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_ID, null);
 
 			smsTask4.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
 			smsCoreImpl.insertTask(smsTask3);
@@ -186,14 +190,16 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 			SmsTask smsTask2 = smsCoreImpl.getPreliminaryTask(
 					"TestTaskStatuses-SusscessFullTask", new Date(now
 							.getTimeInMillis()),
-					"TestTaskStatuses-SmsTask2MessageBody", null);
+					"TestTaskStatuses-SmsTask2MessageBody",
+					SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_ID, null);
 
 			smsTask2.setMaxTimeToLive(300);
 			now.add(Calendar.MINUTE, -3);
 			SmsTask smsTask1 = smsCoreImpl.getPreliminaryTask(
 					"TestTaskStatuses-ExpiresTask", new Date(now
 							.getTimeInMillis()),
-					"TestTaskStatuses-ExpiresTask", null);
+					"TestTaskStatuses-ExpiresTask",
+					SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_ID, null);
 			smsTask1.setMaxTimeToLive(60);
 
 			smsCoreImpl.insertTask(smsTask2);
@@ -243,7 +249,8 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 		smsSmppImpl.connectToGateway();
 		SmsTask smsTask = smsCoreImpl.getPreliminaryTask("testProcessTaskFail",
 				new Date(System.currentTimeMillis()),
-				"testProcessTaskFailMessageBody", null);
+				"testProcessTaskFailMessageBody",
+				SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_ID, null);
 		smsCoreImpl.insertTask(smsTask);
 		smsTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
 		smsTask.setAttemptCount(0);
@@ -295,7 +302,8 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 			SmsTask statusUpdateTask = smsCoreImpl.getPreliminaryTask(
 					"TestTimeoutAndMessageStatusUpdate-StatusUpdateTask",
 					new Date(System.currentTimeMillis()),
-					"TestTimeoutAndMessageStatusUpdate-StatusUpdateTask", null);
+					"TestTimeoutAndMessageStatusUpdate-StatusUpdateTask",
+					SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_ID, null);
 			statusUpdateTask
 					.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
 			statusUpdateTask.setAttemptCount(0);
@@ -325,7 +333,8 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 
 			SmsTask timeOutTask = smsCoreImpl.getPreliminaryTask(
 					"testTimeoutAndMessageStatusUpdate-TIMEOUT", new Date(),
-					"testTimeoutAndMessageStatusUpdate-TIMEOUT", null);
+					"testTimeoutAndMessageStatusUpdate-TIMEOUT",
+					SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_ID, null);
 			timeOutTask.setDelReportTimeoutDuration(60);
 			timeOutTask.setSmsMessagesOnTask(smsCoreImpl
 					.generateSmsMessages(timeOutTask));

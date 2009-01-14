@@ -5,6 +5,7 @@ import java.util.Date;
 
 import org.apache.log4j.Level;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
+import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
 import org.sakaiproject.sms.hibernate.util.AbstractBaseTestCase;
 import org.sakaiproject.sms.hibernate.util.HibernateUtil;
 import org.sakaiproject.sms.impl.SmsBillingImpl;
@@ -49,17 +50,20 @@ public class SmsScheduler extends AbstractBaseTestCase {
 	public void testTaskProcessing() {
 		Calendar now = Calendar.getInstance();
 		SmsTask smsTask3 = smsCoreImpl.getPreliminaryTask("smsTask3", new Date(
-				now.getTimeInMillis()), "smsTask3", null);
+				now.getTimeInMillis()), "smsTask3",
+				SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_ID, null);
 		smsCoreImpl.insertTask(smsTask3);
 
 		now.add(Calendar.MINUTE, -1);
 		SmsTask smsTask2 = smsCoreImpl.getPreliminaryTask("smsTask2", new Date(
-				now.getTimeInMillis()), "smsTask2MessageBody", null);
+				now.getTimeInMillis()), "smsTask2MessageBody",
+				SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_ID, null);
 		smsCoreImpl.insertTask(smsTask2);
 
 		now.add(Calendar.MINUTE, -3);
 		SmsTask smsTask1 = smsCoreImpl.getPreliminaryTask("smsTask1", new Date(
-				now.getTimeInMillis()), "smsTask1MessageBody", null);
+				now.getTimeInMillis()), "smsTask1MessageBody",
+				SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_ID, null);
 
 		smsCoreImpl.insertTask(smsTask1);
 

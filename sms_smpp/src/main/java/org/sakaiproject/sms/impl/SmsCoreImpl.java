@@ -37,9 +37,9 @@ import org.sakaiproject.sms.hibernate.util.DateUtil;
 
 /**
  * Handle all logic regarding SMPP gateway communication.
- * 
+ *
  * @author etienne@psybergate.co.za
- * 
+ *
  */
 public class SmsCoreImpl implements SmsCore {
 
@@ -83,7 +83,7 @@ public class SmsCoreImpl implements SmsCore {
 	/**
 	 * For now we just generate the list. Will get it from Sakai later on. So we
 	 * generate a random number of users with random mobile numbers.
-	 * 
+	 *
 	 * @param smsTask
 	 * @return
 	 */
@@ -125,7 +125,7 @@ public class SmsCoreImpl implements SmsCore {
 	/**
 	 * Get Sakai user's mobile number from member profile. Return the mobile
 	 * number, null if not found.
-	 * 
+	 *
 	 * @param sakaiUserID
 	 */
 	public String getSakaiMobileNumber(String sakaiUserID) {
@@ -133,25 +133,11 @@ public class SmsCoreImpl implements SmsCore {
 		return null;
 	}
 
-	public SmsTask getPreliminaryTask(String deliverGroupId, Date dateToSend,
-			String messageBody, String sakaiToolId) {
-		return getPreliminaryTask(deliverGroupId, null, null, dateToSend,
-				messageBody, sakaiToolId);
-	}
-
-	public SmsTask getPreliminaryTask(Set<String> sakaiUserIds,
-			Date dateToSend, String messageBody, String sakaiToolId) {
-
-		return getPreliminaryTask(null, null, sakaiUserIds, dateToSend,
-				messageBody, sakaiToolId);
-
-	}
-
 	/**
 	 * Add a new task to the sms task list, for eg. send message to all
 	 * administrators at 10:00, or get latest announcements and send to mobile
 	 * numbers of Sakai group x (phase II).
-	 * 
+	 *
 	 * @param deliverGroupId
 	 * @param mobileNumbers
 	 * @param sakaiUserIds
@@ -285,7 +271,7 @@ public class SmsCoreImpl implements SmsCore {
 
 	/**
 	 * Enables or disables the debug Information
-	 * 
+	 *
 	 * @param debug
 	 */
 	public void enableDebugInformation(boolean debug) {
@@ -350,5 +336,19 @@ public class SmsCoreImpl implements SmsCore {
 		smsTask.setCreditEstimate(groupSize);
 		smsTask.setCostEstimate(smsBilling.convertCreditsToAmount(groupSize));
 		return smsTask;
+	}
+
+	public SmsTask getPreliminaryTask(Set<String> sakaiUserIds,
+			Date dateToSend, String messageBody, String sakaiSiteID,
+			String sakaiToolId) {
+
+		return getPreliminaryTask(null, null, sakaiUserIds, dateToSend,
+				messageBody, sakaiToolId);
+	}
+
+	public SmsTask getPreliminaryTask(String deliverGroupId, Date dateToSend,
+			String messageBody, String sakaiSiteID, String sakaiToolId) {
+		return getPreliminaryTask(deliverGroupId, null, null, dateToSend,
+				messageBody, sakaiToolId);
 	}
 }
