@@ -106,11 +106,9 @@ public abstract class AbstractSearchListProducer implements
 		UIBranchContainer branchContainer = UIJointContainer.make(tofill,
 				"export:", "search-results:");
 		
-		DownloadReportViewParams downloadReportViewParams = new DownloadReportViewParams("downloadCsv", new Long(1), "export.csv");
-		UILink downloadall = UIInternalLink.make(tofill, "downloadCsv", UIMessage.make("sms.export.to.csv"), downloadReportViewParams);
-		
-		UICommand.make(branchContainer, "export-to-csv",
-				"#{csvExportBean.fireAction}");
+		DownloadReportViewParams downloadReportViewParams = new DownloadReportViewParams("downloadCsv", "export.csv");
+		UILink downloadall = UIInternalLink.make(tofill, "export-to-csv", UIMessage.make("sms.export.to.csv"), downloadReportViewParams);
+		UICommand command = UICommand.make(branchContainer, "export-button");
 		return branchContainer;
 	}
 

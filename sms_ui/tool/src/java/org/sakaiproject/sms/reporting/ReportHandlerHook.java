@@ -1,4 +1,4 @@
-package org.sakaiproject.sms.beans;
+package org.sakaiproject.sms.reporting;
 
 import javax.servlet.http.HttpServletResponse;
 

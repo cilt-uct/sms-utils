@@ -87,7 +87,7 @@
   </bean>
   
   <!--  Action Beans -->  
-  <bean id="csvExportBean" class="org.sakaiproject.sms.beans.CsvExportBean"/>
+  <bean id="csvExportBean" class="org.sakaiproject.sms.reporting.CsvExportBean"/>
 
   <bean id="SmsTestActionBean" class="org.sakaiproject.sms.beans.SmsTestActionBean">
   	<property name="smsSmpp" ref="org.sakaiproject.sms.api.SmsSmpp" />
@@ -122,7 +122,7 @@
   </bean>
   
   <!-- Handler Hook -->
-  <bean id="reportHandlerHook" class="org.sakaiproject.sms.beans.ReportHandlerHook">
+  <bean id="reportHandlerHook" class="org.sakaiproject.sms.reporting.ReportHandlerHook">
   	<property name="viewparams" ref="viewParameters" />
   	 <property name="response" ref="httpServletResponse" />
     <property name="csvExportBean" ref="csvExportBean" />

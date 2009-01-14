@@ -104,9 +104,9 @@
   </bean>
   
   <!-- View Params for Downloadable content -->
-    <bean parent="viewParamsRegistrarParent">
-        <property name="viewID" value="downloadCsv" />
-        <property name="viewParamsClass" value="org.sakaiproject.sms.params.DownloadReportViewParams" />
-    </bean>
+  <bean parent="viewParamsRegistrarParent">
+    <property name="viewID" value="downloadCsv" />
+    <property name="viewParamsClass" value="org.sakaiproject.sms.params.DownloadReportViewParams" />
+  </bean>
   
 </beans>
