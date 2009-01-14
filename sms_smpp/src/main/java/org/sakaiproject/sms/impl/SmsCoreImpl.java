@@ -159,40 +159,7 @@ public class SmsCoreImpl implements SmsCore {
 
 	// TODO Why does this not process all the messages for a group
 	public void processIncomingMessage(SmsMessage smsMessage) {
-
-		// insert into queue
-		HibernateLogicFactory.getTaskLogic().persistSmsTask(
-				smsMessage.getSmsTask());
-
-		// TODO Check with Louis about this functionality
-		// TODO Check what the status codes should be set to for task and
-		// messages
-		if (smsMessage.getSmsTask().getDateToSend().getTime() <= System
-				.currentTimeMillis()) {
-			// Send to gateway
-			smsMessage = smsSmpp.sendMessageToGateway(smsMessage);
-
-			// Check if there were any problems sending the message
-			if (!smsMessage.getStatusCode().equals(
-					SmsConst_DeliveryStatus.STATUS_SENT)) {
-				// Problem experienced, set as incomplete and leave for the
-				// scheduler to process
-				smsMessage.getSmsTask().setStatusCode(
-						SmsConst_DeliveryStatus.STATUS_INCOMPLETE);
-				smsMessage.getSmsTask().setMessageTypeId(
-						SmsHibernateConstants.SMS_TASK_TYPE_PROCESS_SCHEDULED);
-				HibernateLogicFactory.getTaskLogic().persistSmsTask(
-						smsMessage.getSmsTask());
-			}
-		} else {
-			// Add to the que for the scheduler to process
-			smsMessage.getSmsTask().setStatusCode(
-					SmsConst_DeliveryStatus.STATUS_PENDING);
-			smsMessage.getSmsTask().setMessageTypeId(
-					SmsHibernateConstants.SMS_TASK_TYPE_PROCESS_SCHEDULED);
-			HibernateLogicFactory.getTaskLogic().persistSmsTask(
-					smsMessage.getSmsTask());
-		}
+		// TODO For phase 2
 	}
 
 	/**
