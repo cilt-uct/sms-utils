@@ -17,23 +17,18 @@
  **********************************************************************************/
 package org.sakaiproject.sms.validators;
 
-import org.sakaiproject.sms.api.SmsBilling;
-import org.sakaiproject.sms.constants.SmsUiConstants;
+import java.util.ArrayList;
+
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
+import org.sakaiproject.sms.hibernate.model.SmsTask;
+import org.sakaiproject.sms.impl.validate.TaskValidator;
 import org.springframework.validation.Errors;
-import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
 /**
  * The Class SmsMessageValidator.
  */
 public class SmsMessageValidator implements Validator {
-
-	private SmsBilling smsBilling;
-
-	public void setSmsBilling(SmsBilling smsBilling) {
-		this.smsBilling = smsBilling;
-	}
 
 	/**
 	 * @see org.springframework.validation.Validator#supports(java.lang.Class)
@@ -53,46 +48,12 @@ public class SmsMessageValidator implements Validator {
 	 *      org.springframework.validation.Errors)
 	 */
 	public void validate(Object obj, Errors err) {
-		ValidationUtils.rejectIfEmptyOrWhitespace(err, "mobileNumber",
-				"sms.errors.mobileNumber.empty");
-		ValidationUtils.rejectIfEmptyOrWhitespace(err, "messageBody",
-				"sms.errors.messageBody.empty");
 
-		SmsMessage msg = (SmsMessage) obj;
+		ArrayList<String> errors = TaskValidator
+				.validateInsertTask((SmsTask) obj);
 
-		if (msg.getMessageBody() != null && !"".equals(msg.getMessageBody())) {
-			// Check length of messageBody
-			if (msg.getMessageBody().length() > SmsUiConstants.MAX_SMS_LENGTH) {
-				err
-						.rejectValue("messageBody",
-								"sms.errors.messageBody.tooLong");
-			}
-		}
-
-		if (msg.getMobileNumber() != null && !"".equals(msg.getMobileNumber())) {
-			String trimmedNumber = msg.getMobileNumber().trim().replaceAll(" ",
-					"");
-			// Check length of mobile number
-			if (trimmedNumber.length() > SmsUiConstants.MAX_MOBILE_NR_LENGTH) {
-				err.rejectValue("mobileNumber",
-						"sms.errors.mobileNumber.tooLong");
-			}
-
-			// Can start with + or not and can only contain digits
-			if (!trimmedNumber.matches("[+]?[0-9 ]+")) {
-				err.rejectValue("mobileNumber",
-						"sms.errors.mobileNumber.invalid");
-			}
-
-			// check for sufficient balance
-
-			boolean sufficientCredits = smsBilling.checkSufficientCredits(msg
-					.getSmsTask().getSmsAccountId(), msg.getSmsTask()
-					.getCreditEstimate());
-			if (!sufficientCredits) {
-				err.reject("sms.errors.credit.insufficient");
-			}
-
+		for (String error : errors) {
+			err.reject(error, error);
 		}
 	}
 }

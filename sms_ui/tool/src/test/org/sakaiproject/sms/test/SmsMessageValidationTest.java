@@ -20,39 +20,45 @@ package org.sakaiproject.sms.test;
 import java.sql.Timestamp;
 import java.util.Date;
 
-import org.sakaiproject.sms.constants.SmsUiConstants;
 import org.sakaiproject.sms.hibernate.logic.impl.HibernateLogicFactory;
 import org.sakaiproject.sms.hibernate.model.SmsAccount;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
+import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
+import org.sakaiproject.sms.hibernate.model.constants.ValidationConstants;
 import org.sakaiproject.sms.hibernate.util.AbstractBaseTestCase;
 import org.sakaiproject.sms.hibernate.util.HibernateUtil;
-import org.sakaiproject.sms.impl.SmsBillingImpl;
 import org.sakaiproject.sms.validators.SmsMessageValidator;
 import org.springframework.validation.BindException;
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class SmsMessageValidationTest. Runs tests for {@link SmsMessage}
  * validation that is run by {@link SmsMessageValidator}
  */
 public class SmsMessageValidationTest extends AbstractBaseTestCase {
 
+	/** The validator. */
 	private SmsMessageValidator validator;
+
+	/** The errors. */
 	private BindException errors;
+
+	/** The sms task. */
 	private SmsTask smsTask;
+
+	/** The msg. */
 	private SmsMessage msg;
 
-	private static String VALID_MOBILE_NR = "0123456789";
+	/** The VALI d_ ms g_ body. */
 	private static String VALID_MSG_BODY = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
-
-	private static String MOBILE_NR_FIELD = "mobileNumber";
-	private static String MSG_BODY_FIELD = "messageBody";
 
 	static {
 		HibernateUtil.createSchema();
 	}
 
+	/** The account. */
 	private SmsAccount account;
 
 	/**
@@ -73,7 +79,6 @@ public class SmsMessageValidationTest extends AbstractBaseTestCase {
 		HibernateLogicFactory.getAccountLogic().persistSmsAccount(account);
 
 		validator = new SmsMessageValidator();
-		validator.setSmsBilling(new SmsBillingImpl());
 		msg = new SmsMessage();
 		smsTask = new SmsTask();
 		smsTask.setSakaiSiteId("sakaiSiteId");
@@ -88,160 +93,265 @@ public class SmsMessageValidationTest extends AbstractBaseTestCase {
 		smsTask.setDelReportTimeoutDuration(1);
 		smsTask.getSmsMessages().add(msg);
 		smsTask.setCreditEstimate(5);
+		smsTask.setDeliveryGroupId("delGrpId");
 		msg.setSmsTask(smsTask);
-		errors = new BindException(msg, "SmsMessage");
+		errors = new BindException(smsTask, "SmsTask");
 
-	}
-
-	/**
-	 * Test insufficient funds.
-	 */
-	public void testInsufficientCredit() {
-		msg.getSmsTask().setCreditEstimate(15);
-		msg.setMessageBody(VALID_MSG_BODY);
-		msg.setMobileNumber(VALID_MOBILE_NR);
-		validator.validate(msg, errors);
-		assertTrue(errors.hasErrors());
-	}
-
-	/**
-	 * Test empty message body
-	 */
-	public void testMessageBody_empty() {
-		msg.setMessageBody("");
-		msg.setMobileNumber(VALID_MOBILE_NR);
-		validator.validate(msg, errors);
-		assertTrue(errors.hasFieldErrors(MSG_BODY_FIELD));
-		assertEquals("sms.errors.messageBody.empty", errors.getFieldError()
-				.getCode());
-	}
-
-	/**
-	 * Test null message body
-	 */
-	public void testMessageBody_null() {
-		msg.setMessageBody(null);
-		msg.setMobileNumber(VALID_MOBILE_NR);
-		validator.validate(msg, errors);
-		assertTrue(errors.hasFieldErrors(MSG_BODY_FIELD));
-		assertEquals("sms.errors.messageBody.empty", errors.getFieldError()
-				.getCode());
-	}
-
-	/**
-	 * Test too long message body
-	 */
-	public void testMessageBody_tooLong() {
-		msg.setMobileNumber(VALID_MOBILE_NR);
-		msg.setMessageBody(VALID_MSG_BODY + VALID_MSG_BODY);
-		assertTrue(msg.getMessageBody().length() > SmsUiConstants.MAX_SMS_LENGTH);
-		validator.validate(msg, errors);
-		assertTrue(errors.hasFieldErrors(MSG_BODY_FIELD));
-		assertEquals("sms.errors.messageBody.tooLong", errors.getFieldError()
-				.getCode());
-	}
-
-	/**
-	 * Test empty message body (with whitespace)
-	 */
-	public void testMessageBody_whitespace() {
-		msg.setMessageBody("   ");
-		msg.setMobileNumber(VALID_MOBILE_NR);
-		validator.validate(msg, errors);
-		assertTrue(errors.hasFieldErrors(MSG_BODY_FIELD));
-		assertEquals("sms.errors.messageBody.empty", errors.getFieldError()
-				.getCode());
-	}
-
-	/**
-	 * Test empty mobile number
-	 */
-	public void testMobileNumber_empty() {
-		msg.setMobileNumber("");
-		msg.setMessageBody(VALID_MSG_BODY);
-		validator.validate(msg, errors);
-		assertTrue(errors.hasFieldErrors(MOBILE_NR_FIELD));
-		assertEquals("sms.errors.mobileNumber.empty", errors.getFieldError()
-				.getCode());
-	}
-
-	/**
-	 * Test invalid mobile number
-	 */
-	public void testMobileNumber_invalid() {
-		msg.setMobileNumber("this is text");
-		msg.setMessageBody(VALID_MSG_BODY);
-		validator.validate(msg, errors);
-		assertTrue(errors.hasFieldErrors(MOBILE_NR_FIELD));
-		assertEquals("sms.errors.mobileNumber.invalid", errors.getFieldError()
-				.getCode());
-	}
-
-	/**
-	 * Test invalid mobile number (invalid plus location)
-	 */
-	public void testMobileNumber_invalidPlusLocation() {
-		msg.setMobileNumber("012345+678");
-		msg.setMessageBody(VALID_MSG_BODY);
-		validator.validate(msg, errors);
-		assertTrue(errors.hasFieldErrors(MOBILE_NR_FIELD));
-		assertEquals("sms.errors.mobileNumber.invalid", errors.getFieldError()
-				.getCode());
-	}
-
-	/**
-	 * Test null mobile number
-	 */
-	public void testMobileNumber_null() {
-		msg.setMobileNumber(null);
-		msg.setMessageBody(VALID_MSG_BODY);
-		validator.validate(msg, errors);
-		assertTrue(errors.hasFieldErrors(MOBILE_NR_FIELD));
-		assertEquals("sms.errors.mobileNumber.empty", errors.getFieldError()
-				.getCode());
-	}
-
-	/**
-	 * Test too long mobile number This is in fact just some arbitary number
-	 * specified, no specifics lengths given yet
-	 */
-	public void testMobileNumber_tooLong() {
-		msg.setMobileNumber("012345678901234567890123456789");
-		assertTrue(msg.getMobileNumber().length() > SmsUiConstants.MAX_MOBILE_NR_LENGTH);
-		msg.setMessageBody(VALID_MSG_BODY);
-		validator.validate(msg, errors);
-		assertTrue(errors.hasFieldErrors(MOBILE_NR_FIELD));
-		assertEquals("sms.errors.mobileNumber.tooLong", errors.getFieldError()
-				.getCode());
-	}
-
-	/**
-	 * Test valid mobile number with plus sign at start
-	 */
-	public void testMobileNumber_validWithPlus() {
-		msg.setMessageBody(VALID_MSG_BODY);
-		msg.setMobileNumber("+2712 345 6789");
-		validator.validate(msg, errors);
-		assertFalse(errors.hasFieldErrors(MOBILE_NR_FIELD));
-	}
-
-	/**
-	 * Test valid mobile number with removing whitespace
-	 */
-	public void testMobileNumber_validWithWhitepsace() {
-		msg.setMessageBody(VALID_MSG_BODY);
-		msg.setMobileNumber(" 012 345 6785 ");
-		validator.validate(msg, errors);
-		assertFalse(errors.hasFieldErrors(MOBILE_NR_FIELD));
 	}
 
 	/**
 	 * Test valid message.
 	 */
 	public void testValidMessage() {
-		msg.setMessageBody(VALID_MSG_BODY);
-		msg.setMobileNumber(VALID_MOBILE_NR);
-		validator.validate(msg, errors);
+		validator.validate(smsTask, errors);
 		assertFalse(errors.hasErrors());
+		assertFalse(errors.hasGlobalErrors());
 	}
+
+	/**
+	 * Test empty message body.
+	 */
+	public void testMessageBody_empty() {
+		smsTask.setMessageBody("");
+		validator.validate(smsTask, errors);
+		assertTrue(errors.hasGlobalErrors());
+		assertEquals(ValidationConstants.MESSAGE_BODY_EMPTY, errors
+				.getGlobalError().getCode());
+	}
+
+	/**
+	 * Test null message body.
+	 */
+	public void testMessageBody_null() {
+		smsTask.setMessageBody(null);
+		validator.validate(smsTask, errors);
+		assertTrue(errors.hasGlobalErrors());
+		assertEquals(ValidationConstants.MESSAGE_BODY_EMPTY, errors
+				.getGlobalError().getCode());
+	}
+
+	/**
+	 * Test too long message body.
+	 */
+	public void testMessageBody_tooLong() {
+		smsTask.setMessageBody(VALID_MSG_BODY + VALID_MSG_BODY);
+		assertTrue(msg.getMessageBody().length() > SmsHibernateConstants.MAX_SMS_LENGTH);
+		validator.validate(smsTask, errors);
+		assertTrue(errors.hasGlobalErrors());
+		assertEquals(ValidationConstants.MESSAGE_BODY_TOO_LONG, errors
+				.getGlobalError().getCode());
+	}
+
+	/**
+	 * Test empty message body (with whitespace).
+	 */
+	public void testMessageBody_whitespace() {
+		smsTask.setMessageBody("   ");
+		validator.validate(smsTask, errors);
+		assertTrue(errors.hasGlobalErrors());
+		assertEquals(ValidationConstants.MESSAGE_BODY_EMPTY, errors
+				.getGlobalError().getCode());
+	}
+
+	/**
+	 * Test sakai site id.
+	 */
+	public void testSakaiSiteId() {
+
+		// null
+		smsTask.setSakaiSiteId(null);
+		validator.validate(smsTask, errors);
+		assertTrue(errors.hasGlobalErrors());
+		assertEquals(ValidationConstants.TASK_SAKAI_SITE_ID_EMPTY, errors
+				.getGlobalError().getCode());
+
+		// empty String
+		smsTask.setSakaiSiteId("");
+		validator.validate(smsTask, errors);
+		assertTrue(errors.hasGlobalErrors());
+		assertEquals(ValidationConstants.TASK_SAKAI_SITE_ID_EMPTY, errors
+				.getGlobalError().getCode());
+
+		// Blank space
+		smsTask.setSakaiSiteId("   ");
+		validator.validate(smsTask, errors);
+		assertTrue(errors.hasGlobalErrors());
+		assertEquals(ValidationConstants.TASK_SAKAI_SITE_ID_EMPTY, errors
+				.getGlobalError().getCode());
+	}
+
+	/**
+	 * Test account id.
+	 */
+	public void testAccountId() {
+
+		// account exists
+		smsTask.setSmsAccountId(account.getId().intValue());
+		validator.validate(smsTask, errors);
+		assertFalse(errors.hasGlobalErrors());
+
+		// account does not exist
+		smsTask.setSmsAccountId(0);
+		validator.validate(smsTask, errors);
+		assertTrue(errors.hasGlobalErrors());
+		assertEquals(ValidationConstants.TASK_ACCOUNT_INVALID, errors
+				.getGlobalError().getCode());
+	}
+
+	/**
+	 * Test date created.
+	 */
+	public void testDateCreated() {
+
+		// null
+		smsTask.setDateCreated(null);
+		validator.validate(smsTask, errors);
+		assertTrue(errors.hasGlobalErrors());
+		assertEquals(ValidationConstants.TASK_DATE_CREATED_EMPTY, errors
+				.getGlobalError().getCode());
+	}
+
+	/**
+	 * Test date to send.
+	 */
+	public void testDateToSend() {
+
+		// null
+		smsTask.setDateToSend(null);
+		validator.validate(smsTask, errors);
+		assertTrue(errors.hasGlobalErrors());
+		assertEquals(ValidationConstants.TASK_DATE_TO_SEND_EMPTY, errors
+				.getGlobalError().getCode());
+	}
+
+	/**
+	 * Test status code.
+	 */
+	public void testStatusCode() {
+
+		// null
+		smsTask.setStatusCode(null);
+		validator.validate(smsTask, errors);
+		assertTrue(errors.hasGlobalErrors());
+		assertEquals(ValidationConstants.TASK_STATUS_CODE_EMPTY, errors
+				.getGlobalError().getCode());
+
+		// empty String
+		smsTask.setStatusCode("");
+		validator.validate(smsTask, errors);
+		assertTrue(errors.hasGlobalErrors());
+		assertEquals(ValidationConstants.TASK_STATUS_CODE_EMPTY, errors
+				.getGlobalError().getCode());
+
+		// Blank space
+		smsTask.setStatusCode("   ");
+		validator.validate(smsTask, errors);
+		assertTrue(errors.hasGlobalErrors());
+		assertEquals(ValidationConstants.TASK_STATUS_CODE_EMPTY, errors
+				.getGlobalError().getCode());
+	}
+
+	/**
+	 * Test message type id.
+	 */
+	public void testMessageTypeId() {
+		// null
+		smsTask.setMessageTypeId(null);
+		validator.validate(smsTask, errors);
+		assertTrue(errors.hasGlobalErrors());
+		assertEquals(ValidationConstants.TASK_MESSAGE_TYPE_EMPTY, errors
+				.getGlobalError().getCode());
+	}
+
+	/**
+	 * Test sender user name.
+	 */
+	public void testSenderUserName() {
+
+		// null
+		smsTask.setSenderUserName(null);
+		validator.validate(smsTask, errors);
+		assertTrue(errors.hasGlobalErrors());
+		assertEquals(ValidationConstants.TASK_SENDER_USER_NAME_EMPTY, errors
+				.getGlobalError().getCode());
+
+		// empty String
+		smsTask.setSenderUserName("");
+		validator.validate(smsTask, errors);
+		assertTrue(errors.hasGlobalErrors());
+		assertEquals(ValidationConstants.TASK_SENDER_USER_NAME_EMPTY, errors
+				.getGlobalError().getCode());
+
+		// Blank space
+		smsTask.setSenderUserName("   ");
+		validator.validate(smsTask, errors);
+		assertTrue(errors.hasGlobalErrors());
+		assertEquals(ValidationConstants.TASK_SENDER_USER_NAME_EMPTY, errors
+				.getGlobalError().getCode());
+	}
+
+	/**
+	 * Test max time to live.
+	 */
+	public void testMaxTimeToLive() {
+		// null
+		smsTask.setMaxTimeToLive(null);
+		validator.validate(smsTask, errors);
+		assertTrue(errors.hasGlobalErrors());
+		assertEquals(ValidationConstants.TASK_MAX_TIME_TO_LIVE_INVALID, errors
+				.getGlobalError().getCode());
+
+		// invalid
+		smsTask.setMaxTimeToLive(0);
+		validator.validate(smsTask, errors);
+		assertTrue(errors.hasGlobalErrors());
+		assertEquals(ValidationConstants.TASK_MAX_TIME_TO_LIVE_INVALID, errors
+				.getGlobalError().getCode());
+	}
+
+	/**
+	 * Test delivery report timeout duration.
+	 */
+	public void testDelReportTimeoutDuration() {
+		// null
+		smsTask.setDelReportTimeoutDuration(null);
+		validator.validate(smsTask, errors);
+		assertTrue(errors.hasGlobalErrors());
+		assertEquals(ValidationConstants.TASK_DELIVERY_REPORT_TIMEOUT_INVALID,
+				errors.getGlobalError().getCode());
+
+		// invalid
+		smsTask.setDelReportTimeoutDuration(0);
+		validator.validate(smsTask, errors);
+		assertTrue(errors.hasGlobalErrors());
+		assertEquals(ValidationConstants.TASK_DELIVERY_REPORT_TIMEOUT_INVALID,
+				errors.getGlobalError().getCode());
+	}
+
+	/**
+	 * Test delivery group id.
+	 */
+	public void testDeliveryGroupId() {
+		// null
+		smsTask.setDeliveryGroupId(null);
+		validator.validate(smsTask, errors);
+		assertTrue(errors.hasGlobalErrors());
+		assertEquals(ValidationConstants.TASK_DELIVERY_GROUP_ID_EMPTY, errors
+				.getGlobalError().getCode());
+
+		// empty String
+		smsTask.setDeliveryGroupId("");
+		validator.validate(smsTask, errors);
+		assertTrue(errors.hasGlobalErrors());
+		assertEquals(ValidationConstants.TASK_DELIVERY_GROUP_ID_EMPTY, errors
+				.getGlobalError().getCode());
+
+		// Blank space
+		smsTask.setDeliveryGroupId("   ");
+		validator.validate(smsTask, errors);
+		assertTrue(errors.hasGlobalErrors());
+		assertEquals(ValidationConstants.TASK_DELIVERY_GROUP_ID_EMPTY, errors
+				.getGlobalError().getCode());
+	}
+
 }
