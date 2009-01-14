@@ -80,7 +80,8 @@ public interface SmsCore {
 	 * @return
 	 */
 	public SmsTask getPreliminaryTask(Set<String> sakaiUserIds,
-			Date dateToSend, String messageBody, String sakaiToolId);
+			Date dateToSend, String messageBody, String sakaiSiteID,
+			String sakaiToolId);
 
 	/**
 	 * Try to process an incoming message in real-time by inserting it into the
@@ -134,7 +135,7 @@ public interface SmsCore {
 	 * 
 	 */
 	public SmsTask getPreliminaryTask(String deliverGroupId, Date dateToSend,
-			String messageBody, String sakaiToolId);
+			String messageBody, String sakaiSiteID, String sakaiToolId);
 
 	/**
 	 * Calculate the number of messages to be sent when the new sms task is
