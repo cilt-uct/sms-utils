@@ -109,7 +109,7 @@ public class SmsConfigTest extends AbstractBaseTestCase {
 			assertNotNull("Object not found", conf);
 			assertEquals("Incorrect object returned", conf, insertSmsConfig);
 		} finally {
-			HibernateLogicFactory.getConfigLogic().deleteSmsCongif(
+			HibernateLogicFactory.getConfigLogic().deleteSmsConfig(
 					insertSmsConfig);
 		}
 	}
@@ -140,7 +140,7 @@ public class SmsConfigTest extends AbstractBaseTestCase {
 			assertNull("No object should be found", conf);
 
 		} finally {
-			HibernateLogicFactory.getConfigLogic().deleteSmsCongif(
+			HibernateLogicFactory.getConfigLogic().deleteSmsConfig(
 					insertSmsConfig);
 		}
 	}
@@ -160,7 +160,7 @@ public class SmsConfigTest extends AbstractBaseTestCase {
 	 * Test delete sms config.
 	 */
 	public void testDeleteSmsConfig() {
-		HibernateLogicFactory.getConfigLogic().deleteSmsCongif(insertSmsConfig);
+		HibernateLogicFactory.getConfigLogic().deleteSmsConfig(insertSmsConfig);
 		SmsConfig getSmsConfig = HibernateLogicFactory.getConfigLogic()
 				.getSmsConfig(insertSmsConfig.getId());
 		assertNull(getSmsConfig);
