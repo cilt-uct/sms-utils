@@ -41,8 +41,11 @@
   </bean>
   
   <bean id="searchScope" parent="beanScopeParent">
-    <property name="copyPreservingBeans" value="searchTaskList, searchTransactionLog, searchMessageLog"/>
+  	<property name="alwaysPreserve" value="true"/>
+    <property name="copyPreservingBeans" value="searchTaskList"/>
   </bean>
+  
+  <!-- , searchTransactionLog, searchMessageLog -->
   
   <bean id="smsMessageGuard" parent="writeGuardParent">
      <property name="guardedPath" value="SmsMessageLocator.*"/>
@@ -98,6 +101,12 @@
 	<constructor-arg value="/" />
   </bean>
   
+  <!-- View Params for Downloadable content -->
+  <bean parent="viewParamsRegistrarParent">
+    <property name="viewID" value="downloadCsv" />
+    <property name="viewParamsClass" value="org.sakaiproject.sms.params.DownloadReportViewParams" />
+  </bean>
+    
   <!-- Custom request cycle for downloads --> 
   <bean parent="handlerHookParent">
     <property name="value">
@@ -105,12 +114,7 @@
         <property name="targetBeanName" value="reportHandlerHook" />
       </bean>
     </property>
-  </bean>
+  </bean>  
   
-  <!-- View Params for Downloadable content -->
-  <bean parent="viewParamsRegistrarParent">
-    <property name="viewID" value="downloadCsv" />
-    <property name="viewParamsClass" value="org.sakaiproject.sms.params.DownloadReportViewParams" />
-  </bean>
   
 </beans>

@@ -16,6 +16,7 @@ public class ReportHandlerHook implements HandlerHook{
 	private CsvExportBean csvExportBean;
 	private HttpServletResponse response;
 	private ViewParameters viewparams;
+	
 
 	public void setViewparams(ViewParameters viewparams) {
 		this.viewparams = viewparams;
@@ -30,10 +31,11 @@ public class ReportHandlerHook implements HandlerHook{
 	}
 
 	public boolean handle() {
+		
 		if (viewparams instanceof DownloadReportViewParams) {
 			log.debug("Handing viewparams and response off to the csvExportBean");
 			return csvExportBean.createCsv((DownloadReportViewParams) viewparams, response);
 		}
 		return false;
-	}
+	}	
 }

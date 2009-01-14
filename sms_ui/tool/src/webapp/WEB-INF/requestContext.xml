@@ -32,17 +32,14 @@
   </bean>	
   
   <bean id="taskListSearchResultsRenderer" class="org.sakaiproject.sms.renderers.TaskListResultsRenderer">  
-  	 <property name="searchFilterBean" ref="searchTaskList"/>
   	 <property name="smsTaskLogic" ref="smsTaskLogic"/>
   </bean>
   
   <bean id="transactionLogSearchResultsRenderer" class="org.sakaiproject.sms.renderers.TransactionLogResultsRenderer">  
-  	 <property name="searchFilterBean" ref="searchTransactionLog"/>
   	 <property name="smsTransactionLogic" ref="smsTransactionLogic"/> 
   </bean>
   
   <bean id="messageLogSearchResultsRenderer" class="org.sakaiproject.sms.renderers.MessageLogResultsRenderer">  
-  	 <property name="searchFilterBean" ref="searchMessageLog"/>
   	 <property name="smsMessageLogic" ref="smsMessageLogic"/>
   </bean>
 
@@ -62,7 +59,6 @@
   	<property name="smsTaskLogic" ref="smsTaskLogic"/>
   </bean>
   
-  
   <bean class="org.sakaiproject.sms.producers.AccountProducer" >
   	<property name="dateEvolver" ref="fieldDateInputEvolver" />
   </bean>
@@ -74,21 +70,27 @@
   <bean id="taskListProducer" class="org.sakaiproject.sms.producers.TaskListProducer">
   	<property name="searchCriteriaRenderer" ref="taskListCriteriaRenderer"/>  
   	<property name="searchResultsRenderer" ref="taskListSearchResultsRenderer"/>
+  	<property name="searchFilterBean" ref="searchTaskList"/>
   </bean>
    
   <bean id="transactionLogProducer" class="org.sakaiproject.sms.producers.TransactionLogProducer">
   	<property name="searchCriteriaRenderer" ref="transactionLogCriteriaRenderer"/>  
   	<property name="searchResultsRenderer" ref="transactionLogSearchResultsRenderer"/>
+  	<property name="searchFilterBean" ref="searchTransactionLog"/>
   </bean>
 
-  
   <bean id="messageLogProducer" class="org.sakaiproject.sms.producers.MessageLogProducer">
   	<property name="searchCriteriaRenderer" ref="messageLogCriteriaRenderer"/>  
   	<property name="searchResultsRenderer" ref="messageLogSearchResultsRenderer"/>
+  	<property name="searchFilterBean" ref="searchMessageLog"/>
   </bean>
   
   <!--  Action Beans -->  
-  <bean id="csvExportBean" class="org.sakaiproject.sms.reporting.CsvExportBean"/>
+  <bean id="csvExportBean" class="org.sakaiproject.sms.reporting.CsvExportBean">
+	<property name="smsTaskLogic" ref="smsTaskLogic"/>		
+  	<property name="smsTransactionLogic" ref="smsTransactionLogic"/>	
+  	<property name="smsMessageLogic" ref="smsMessageLogic"/>
+  </bean>
 
   <bean id="SmsTestActionBean" class="org.sakaiproject.sms.beans.SmsTestActionBean">
   	<property name="smsSmpp" ref="org.sakaiproject.sms.api.SmsSmpp" />
@@ -131,9 +133,8 @@
   <!-- Handler Hook -->
   <bean id="reportHandlerHook" class="org.sakaiproject.sms.reporting.ReportHandlerHook">
   	<property name="viewparams" ref="viewParameters" />
-  	 <property name="response" ref="httpServletResponse" />
-    <property name="csvExportBean" ref="csvExportBean" />
-  </bean>
-  
-  
+  	<property name="response" ref="httpServletResponse" />
+  	<property name="csvExportBean" ref="csvExportBean" />
+  </bean>	
+
 </beans>

@@ -17,6 +17,9 @@
  **********************************************************************************/
 package org.sakaiproject.sms.producers;
 
+import java.text.SimpleDateFormat;
+
+import org.sakaiproject.sms.hibernate.bean.SearchFilterBean;
 import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
 import org.sakaiproject.sms.params.DownloadReportViewParams;
 import org.sakaiproject.sms.params.SortPagerViewParams;
@@ -30,7 +33,6 @@ import uk.org.ponder.rsf.components.UICommand;
 import uk.org.ponder.rsf.components.UIContainer;
 import uk.org.ponder.rsf.components.UIInternalLink;
 import uk.org.ponder.rsf.components.UIJointContainer;
-import uk.org.ponder.rsf.components.UILink;
 import uk.org.ponder.rsf.components.UIMessage;
 import uk.org.ponder.rsf.view.ComponentChecker;
 import uk.org.ponder.rsf.view.ViewComponentProducer;
@@ -43,6 +45,8 @@ public abstract class AbstractSearchListProducer implements
 	private SearchCriteriaRenderer searchCriteriaRenderer;
 	private SearchResultsRenderer searchResultsRenderer;
 	private TablePagerRenderer tablePagerRenderer;
+	
+	private SearchFilterBean searchFilterBean;
 
 	public abstract String getViewID();
 
@@ -50,6 +54,10 @@ public abstract class AbstractSearchListProducer implements
 
 	public abstract String getDefaultSortColumn();
 
+	public void setSearchFilterBean(SearchFilterBean searchFilterBean) {
+		this.searchFilterBean = searchFilterBean;
+	}
+	
 	public void setSearchResultsRenderer(
 			SearchResultsRenderer searchResultsRenderer) {
 		this.searchResultsRenderer = searchResultsRenderer;
@@ -63,6 +71,7 @@ public abstract class AbstractSearchListProducer implements
 	public void init() {
 		Assert.notNull(searchCriteriaRenderer);
 		Assert.notNull(searchResultsRenderer);
+		searchResultsRenderer.setSearchFilterBean(searchFilterBean);
 	}
 
 	public void fillComponents(UIContainer tofill, ViewParameters viewparams,
@@ -106,9 +115,16 @@ public abstract class AbstractSearchListProducer implements
 		UIBranchContainer branchContainer = UIJointContainer.make(tofill,
 				"export:", "search-results:");
 		
-		DownloadReportViewParams downloadReportViewParams = new DownloadReportViewParams("downloadCsv", "export.csv");
-		UILink downloadall = UIInternalLink.make(tofill, "export-to-csv", UIMessage.make("sms.export.to.csv"), downloadReportViewParams);
-		UICommand command = UICommand.make(branchContainer, "export-button");
+		SimpleDateFormat sdf = new SimpleDateFormat();
+		
+		//Search criteria set as parameter since beans are not available when the handler hook intercepts
+		DownloadReportViewParams downloadReportViewParams = new DownloadReportViewParams("downloadCsv", "export.csv",
+				getViewID(), sdf.format(searchFilterBean.getDateFrom()),
+				sdf.format(searchFilterBean.getDateTo()),  searchFilterBean.getNumber(), searchFilterBean.getOrderBy(),
+				searchFilterBean.getSender(), searchFilterBean.getSortDirection(),
+				searchFilterBean.getStatus(), searchFilterBean.getToolName(), searchFilterBean.getTransactionType());
+		UIInternalLink.make(tofill, "export-to-csv", downloadReportViewParams);
+		UICommand.make(branchContainer, "export-button");
 		return branchContainer;
 	}
 

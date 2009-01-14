@@ -25,40 +25,35 @@ public class BeanToCSVReflectorTest extends TestCase{
 		
 		List<SimpleResultSet> list = createSimpleTestRow();
 		
-		StringBuffer buffer = beanToCSVReflector.toCSV(list);
-		
-		String csvRow = buffer.toString();
-
-		
-		assertTrue(csvRow.contains(","));
-		assertTrue(csvRow.contains("Row 1"));
-		assertTrue(csvRow.contains("2000"));
-		assertTrue(csvRow.contains("255"));
+		String csvHeaderAndRow = beanToCSVReflector.toCSV(list);
+				
+		assertTrue(csvHeaderAndRow.contains(","));
+		assertTrue(csvHeaderAndRow.contains("label"));
+		assertTrue(csvHeaderAndRow.contains("Row 1"));
+		assertTrue(csvHeaderAndRow.contains("2000"));
+		assertTrue(csvHeaderAndRow.contains("255"));
 	}
 
 	public void testSimpleResultSetWithOrder() throws Exception {
 		List<SimpleResultSet> list = createSimpleTestRow();
 		String[] fieldNames = new String []{ "longValue", "label"};
 		
-		StringBuffer csvBuffer = beanToCSVReflector.toCSV(list, fieldNames);
-		String csvRow = csvBuffer.toString();
+		String csvHeaderAndRow = beanToCSVReflector.toCSV(list, fieldNames);		
+		assertTrue(csvHeaderAndRow.length() > 0);
 		
-		assertTrue(csvRow.length() > 0);
+		StringTokenizer stringTokenizer = new StringTokenizer(csvHeaderAndRow, "\n");
 		
-		StringTokenizer stringTokenizer = new StringTokenizer(csvRow, ",");
-		
-		assertEquals("2000", stringTokenizer.nextElement());
-		assertEquals("Row 1\n", stringTokenizer.nextElement());
+		assertEquals("longValue, label", stringTokenizer.nextElement());
+		assertEquals("2000, Row 1", stringTokenizer.nextElement());
 	}
 	
 	public void testExtendedResultNoOrder() throws Exception {
 		
 		List<ExtendedResultSet> list = createExtendedTestRow();
-		StringBuffer buffer = beanToCSVReflector.toCSV(list);
-		String extendCsvRow = buffer.toString();
+		String extendedCsvHeaderAndRow  = beanToCSVReflector.toCSV(list);
 		
-		assertTrue(extendCsvRow.contains("Row 1"));
-		assertTrue(extendCsvRow.contains("More info"));
+		assertTrue(extendedCsvHeaderAndRow.contains("Row 1"));
+		assertTrue(extendedCsvHeaderAndRow.contains("More info"));
 	}
 	
 	private List<ExtendedResultSet> createExtendedTestRow(){

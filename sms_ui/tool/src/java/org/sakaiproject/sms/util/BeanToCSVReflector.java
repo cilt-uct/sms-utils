@@ -13,42 +13,57 @@ import java.util.TreeMap;
 public class BeanToCSVReflector {
 
 
-	public StringBuffer toCSV(List<?> list) {
+	public String toCSV(List<?> list) {
 		return toCSV(list, (String[])null);
 	}
 
-	public StringBuffer toCSV(List<?> list, String[] fieldNames) {
+	public String toCSV(List<?> list, String[] fieldNames) {
 		
 		StringBuffer buffer = new StringBuffer();
 		
 		if(list.size() == 0){
-			return buffer;
+			return "There is no data for this report";
 		}
 		
 		Object objectToReflectOn = list.get(0);
 		Method[] methodArray =  getAllPublicAccesorMethods(objectToReflectOn);
 		methodArray = createOrderedMethodArray(methodArray, fieldNames);
 		
+		for (int i = 0; i < methodArray.length; i++) {
+			String fieldName = convertMethodNameToFieldName(methodArray[i].getName());
+
+			if(i == methodArray.length - 1){
+				buffer.append(fieldName + "\n");
+			}
+			else{
+				buffer.append(fieldName + ", ");
+			}
+		}
+		
 		
 		for (Object object : list) {
 			for (int i = 0; i < methodArray.length; i++) {
 				try {
-					String value = methodArray[i].invoke(object).toString();
+					String value = "N/A";
+					Object fieldValue = methodArray[i].invoke(object);
 					
+					if(fieldValue != null)
+						value = fieldValue.toString();
+						
 					if(i == methodArray.length - 1){
 						buffer.append(value + "\n");
 					}
 					else{
-						buffer.append(value + ",");
+						buffer.append(value + ", ");
 					}
 					
 				} catch (Exception e) {
-					throw new RuntimeException("Faile to obtain value from method"  + methodArray[i].toString());
+					throw new RuntimeException("Failed to obtain value from method "  + methodArray[i].toString() + " cause " + e.toString());
 				} 
 			}
 		}
 			
-		return buffer;
+		return buffer.toString();
 	}
 
 	private Method[] getAllPublicAccesorMethods(Object objectToReflectOn) {
@@ -94,7 +109,7 @@ public class BeanToCSVReflector {
 			Method tempMethod = methodMap.get(fieldNames[i]);
 			
 			if(tempMethod == null){
-				throw new RuntimeException("The Field value " + fieldNames[i]  + " does not exsist in the supplied Object List");
+				throw new RuntimeException("The Field value [" + fieldNames[i]  + "] does not exsist in the supplied Object List");
 			}
 			
 			methodsToInvoke[i] = tempMethod;

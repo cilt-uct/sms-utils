@@ -44,6 +44,7 @@ public class TaskListResultsRenderer implements SearchResultsRenderer {
 	private SearchFilterBean searchFilterBean;
 	private SortHeaderRenderer sortHeaderRenderer;
 	private SmsTaskLogic smsTaskLogic;
+	
 
 	public void setSmsTaskLogic(SmsTaskLogic smsTaskLogic) {
 		this.smsTaskLogic = smsTaskLogic;
