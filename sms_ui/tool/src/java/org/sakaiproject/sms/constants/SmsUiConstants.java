@@ -26,10 +26,6 @@ public class SmsUiConstants {
 	// for spring OTP
 	public static final String NEW_1 = "new 1";
 
-	// This should probably defined by SMS API
-	public static final int MAX_SMS_LENGTH = 160;
-	public static final int MAX_MOBILE_NR_LENGTH = 20; // Just arbitary
-
 	// Table Sort by Columns
 	public static final String SORT_BY_NAME = "name";
 	public static final String SORT_BY_HOUSE = "house";
