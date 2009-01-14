@@ -18,16 +18,16 @@
 package org.sakaiproject.sms.impl;
 
 /** To sms-enabled a existing Sakai tool, the following guidelines must be followed:
- * 
- * call sms.getPreliminaryTask to get a new sms task 
+ *
+ * call sms.getPreliminaryTask to get a new sms task
  * Display the sms window
- * User press the “continue” button
+ * User press the ï¿½continueï¿½ button
  * Post UI values to smsTask (body)
  * call sms.validateTask(smsTask) and show any errors in UI
  * call sms.calculateGroupSize to calculate estimated group size on smsTask
  * Display estimated values in UI
- * Change button to “Save”
- * User press the “Save” button
+ * Change button to ï¿½Saveï¿½
+ * User press the ï¿½Saveï¿½ button
  * call sms.checkSufficientCredits
  * Report insufficient credits in UI
  * call sms.insertTask(smsTask) for scheduler to handle
@@ -112,5 +112,15 @@ public class SmsServiceImpl implements SmsService {
 			String sakaiUserID, int creditsRequired) {
 		// TODO Will be completed with the billing delivery
 		return false;
+	}
+
+	/**
+	 * Will calculate the all the group estimates.
+	 * 
+	 * @param smsTask
+	 * @return
+	 */
+	public SmsTask calculateGroupSize(SmsTask smsTask) {
+		return smsCore.calculateGroupSize(smsTask);
 	}
 }

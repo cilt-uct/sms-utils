@@ -71,4 +71,12 @@ public interface SmsService {
 	 */
 	public boolean checkSufficientCredits(String sakaiSiteID,
 			String sakaiUserID, int creditsRequired);
+
+	/**
+	 * Will calculate the all the group estimates.
+	 * 
+	 * @param smsTask
+	 * @return
+	 */
+	public SmsTask calculateGroupSize(SmsTask smsTask);
 }
