@@ -32,12 +32,14 @@ package org.sakaiproject.sms.impl;
  * Report insufficient credits in UI
  * call sms.insertTask(smsTask) for scheduler to handle
  */
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Set;
 
 import org.sakaiproject.sms.api.SmsCore;
 import org.sakaiproject.sms.api.SmsService;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
+import org.sakaiproject.sms.impl.validate.TaskValidator;
 
 /**
  * This API allows for easy implementation of SMS services in an existing or new
@@ -123,5 +125,17 @@ public class SmsServiceImpl implements SmsService {
 	 */
 	public SmsTask calculateEstimatedGroupSize(SmsTask smsTask) {
 		return smsCore.calculateEstimatedGroupSize(smsTask);
+	}
+
+	/**
+	 * Validate task.
+	 * 
+	 * @param smsTask
+	 *            the sms task
+	 * 
+	 * @return the array list< string>
+	 */
+	public ArrayList<String> validateTask(SmsTask smsTask) {
+		return TaskValidator.validateInsertTask(smsTask);
 	}
 }

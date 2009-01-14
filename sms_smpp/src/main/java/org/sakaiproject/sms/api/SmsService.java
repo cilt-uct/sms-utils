@@ -17,6 +17,7 @@
  **********************************************************************************/
 package org.sakaiproject.sms.api;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Set;
 
@@ -80,4 +81,14 @@ public interface SmsService {
 	 * @return
 	 */
 	public SmsTask calculateEstimatedGroupSize(SmsTask smsTask);
+
+	/**
+	 * Validate task.
+	 * 
+	 * @param smsTask
+	 *            the sms task
+	 * 
+	 * @return the array list< string>
+	 */
+	public ArrayList<String> validateTask(SmsTask smsTask);
 }
