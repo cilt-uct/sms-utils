@@ -75,6 +75,16 @@ public interface SmsTaskLogic {
 	 */
 	public void persistSmsTask(SmsTask smsTask);
 
+	
+	/**
+	 * Gets a all search results for the specified search criteria
+	 * 
+	 * @param searchBean
+	 * @return Search result container
+	 * @throws SmsSearchException
+	 */
+	public List<SmsTask> getAllSmsTasksForCriteria(SearchFilterBean searchBean) throws SmsSearchException;
+	
 	/**
 	 * Gets a search results container housing the result set for a particular
 	 * displayed page
@@ -83,7 +93,7 @@ public interface SmsTaskLogic {
 	 * @return Search result container
 	 * @throws SmsSearchException
 	 */
-	public SearchResultContainer<SmsTask> getSmsTasksForCriteria(
+	public SearchResultContainer<SmsTask> getPagedSmsTasksForCriteria(
 			SearchFilterBean searchBean) throws SmsSearchException;
 
 	/**

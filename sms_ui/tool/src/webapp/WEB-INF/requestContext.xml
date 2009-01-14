@@ -86,11 +86,7 @@
   </bean>
   
   <!--  Action Beans -->  
-  <bean id="csvExportBean" class="org.sakaiproject.sms.reporting.CsvExportBean">
-	<property name="smsTaskLogic" ref="smsTaskLogic"/>		
-  	<property name="smsTransactionLogic" ref="smsTransactionLogic"/>	
-  	<property name="smsMessageLogic" ref="smsMessageLogic"/>
-  </bean>
+  <bean id="csvExportBean" class="org.sakaiproject.sms.reporting.CsvExportBean"/>
 
   <bean id="SmsTestActionBean" class="org.sakaiproject.sms.beans.SmsTestActionBean">
   	<property name="smsSmpp" ref="org.sakaiproject.sms.api.SmsSmpp" />

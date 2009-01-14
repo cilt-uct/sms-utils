@@ -70,7 +70,7 @@ public class TaskListResultsRenderer implements SearchResultsRenderer {
 		
 		boolean fail = false;
 		try {
-				smsTaskList = smsTaskLogic.getSmsTasksForCriteria(searchFilterBean);
+				smsTaskList = smsTaskLogic.getPagedSmsTasksForCriteria(searchFilterBean);
 				sortViewParams.current_count = smsTaskList.getNumberOfPages();
 		} 
 		catch (SmsSearchException e) {
