@@ -319,4 +319,9 @@ public class SmsCoreImpl implements SmsCore {
 		return getPreliminaryTask(deliverGroupId, null, null, dateToSend,
 				messageBody, sakaiSiteID, sakaiToolId);
 	}
+
+	public void processVeryLateDeliveryReports() {
+		// TODO Auto-generated method stub
+
+	}
 }

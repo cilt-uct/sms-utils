@@ -84,6 +84,13 @@ public interface SmsCore {
 			String sakaiToolId);
 
 	/**
+	 * Some delivery report might arive after the predefined timeout period. Wee
+	 * still need to handle them because these messages are now billable. We
+	 * need to receive them, update SMS_MESSAGE and make a account entry.
+	 */
+	public void processVeryLateDeliveryReports();
+
+	/**
 	 * Try to process an incoming message in real-time by inserting it into the
 	 * queue and calling processMessage immediately. If unable to process, then
 	 * leave in the queue for the job scheduler to handle. Incoming messages are
@@ -94,9 +101,10 @@ public interface SmsCore {
 	public void processIncomingMessage(SmsMessage smsMessage);
 
 	/**
-	 * Updates the messages status to timed out which did not receive a delivery
-	 * report within the valid period. As determined by
-	 * DEL_REPORT_TIMEOUT_DURATION on the task. These messages are not billable.
+	 * If we did not receive gateway delivery reports for messages that was sent
+	 * out, then we mark those messages as time out after a predefined period as
+	 * determined by DEL_REPORT_TIMEOUT_DURATION on the task. These messages are
+	 * not billable.
 	 */
 	public void processTimedOutDeliveryReports();
 
