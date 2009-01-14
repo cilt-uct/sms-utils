@@ -49,7 +49,7 @@ public class TaskValidator {
 
 		// Check sakai site id
 		if (smsTask.getSakaiSiteId() == null
-				|| smsTask.getSakaiSiteId().equals("")) {
+				|| smsTask.getSakaiSiteId().trim().equals("")) {
 			errors.add(ValidationConstants.TASK_SAKAI_SITE_ID_EMPTY);
 		}
 
@@ -76,7 +76,7 @@ public class TaskValidator {
 
 		// Check status code
 		if (smsTask.getStatusCode() == null
-				|| smsTask.getStatusCode().equals("")) {
+				|| smsTask.getStatusCode().trim().equals("")) {
 			errors.add(ValidationConstants.TASK_STATUS_CODE_EMPTY);
 		}
 
@@ -99,7 +99,7 @@ public class TaskValidator {
 
 		// Check sender user name
 		if (smsTask.getSenderUserName() == null
-				|| smsTask.getSenderUserName().equals("")) {
+				|| smsTask.getSenderUserName().trim().equals("")) {
 			errors.add(ValidationConstants.TASK_SENDER_USER_NAME_EMPTY);
 		}
 
@@ -117,7 +117,8 @@ public class TaskValidator {
 		}
 
 		// Check delivery group id
-		if (smsTask.getDeliveryGroupId() == null) {
+		if (smsTask.getDeliveryGroupId() == null
+				|| smsTask.getDeliveryGroupId().trim().equals("")) {
 			errors.add(ValidationConstants.TASK_DELIVERY_GROUP_ID_EMPTY);
 		}
 
