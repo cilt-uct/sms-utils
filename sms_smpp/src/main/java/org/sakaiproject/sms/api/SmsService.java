@@ -78,5 +78,5 @@ public interface SmsService {
 	 * @param smsTask
 	 * @return
 	 */
-	public SmsTask calculateGroupSize(SmsTask smsTask);
+	public SmsTask calculateEstimatedGroupSize(SmsTask smsTask);
 }

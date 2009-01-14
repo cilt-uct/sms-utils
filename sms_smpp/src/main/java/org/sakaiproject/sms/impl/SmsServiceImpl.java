@@ -72,9 +72,9 @@ public class SmsServiceImpl implements SmsService {
 	 * @return
 	 */
 	public SmsTask getPreliminaryTask(String sakaiGroupId, Date dateToSend,
-			String messageBody, String sakaiToolId) {
+			String messageBody, String sakaiSiteId, String sakaiToolId) {
 		return smsCore.getPreliminaryTask(sakaiGroupId, dateToSend,
-				messageBody, sakaiToolId);
+				messageBody, sakaiSiteId, sakaiToolId);
 
 	}
 
@@ -92,9 +92,10 @@ public class SmsServiceImpl implements SmsService {
 	 * @return
 	 */
 	public SmsTask getPreliminaryTask(Set<String> sakaiUserIds,
-			Date dateToSend, String messageBody, String sakaiToolId) {
+			Date dateToSend, String messageBody, String sakaiSiteId,
+			String sakaiToolId) {
 		return smsCore.getPreliminaryTask(sakaiUserIds, dateToSend,
-				messageBody, sakaiToolId);
+				messageBody, sakaiSiteId, sakaiToolId);
 	}
 
 	/**
@@ -120,7 +121,7 @@ public class SmsServiceImpl implements SmsService {
 	 * @param smsTask
 	 * @return
 	 */
-	public SmsTask calculateGroupSize(SmsTask smsTask) {
-		return smsCore.calculateGroupSize(smsTask);
+	public SmsTask calculateEstimatedGroupSize(SmsTask smsTask) {
+		return smsCore.calculateEstimatedGroupSize(smsTask);
 	}
 }
