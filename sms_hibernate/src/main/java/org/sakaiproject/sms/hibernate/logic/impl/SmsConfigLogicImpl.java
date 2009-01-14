@@ -135,9 +135,9 @@ public class SmsConfigLogicImpl extends SmsDao implements SmsConfigLogic {
 		config.setNotificationEmailSent("notificationSent@instution.com");
 		config.setPagingSize(SmsHibernateConstants.DEFAULT_PAGE_SIZE);
 		config.setSakaiSiteId(sakaiSiteId);
-		config.setSchedulerInterval(3);
 		if (sakaiSiteId != null && sakaiSiteId.equals("")) {
 			config.setSakaiToolId("");
+			config.setSchedulerInterval(3);
 		} else {
 			config.setSakaiToolId("DummyToolId");
 		}
