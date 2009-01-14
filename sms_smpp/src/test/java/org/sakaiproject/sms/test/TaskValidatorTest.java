@@ -18,11 +18,9 @@ import org.sakaiproject.sms.impl.validate.TaskValidator;
 // TODO: Auto-generated Javadoc
 /**
  * The Class SmsMessageValidationTest. Runs tests for {@link SmsMessage}
- * validation that is run by {@link SmsMessageValidator}
+ * validation that is run by {@link SmsMessageTaskValidator}
  */
 public class TaskValidatorTest extends AbstractBaseTestCase {
-
-	TaskValidator validator;
 
 	/** The sms task. */
 	private SmsTask smsTask;
@@ -43,7 +41,8 @@ public class TaskValidatorTest extends AbstractBaseTestCase {
 	ArrayList<String> errors = new ArrayList<String>();
 
 	/**
-	 * setUp to run before every test. Create SmsMessage + validator + errors
+	 * setUp to run before every test. Create SmsMessage + TaskValidator +
+	 * errors
 	 * 
 	 * @see junit.framework.TestCase#setUp()
 	 */
@@ -82,7 +81,7 @@ public class TaskValidatorTest extends AbstractBaseTestCase {
 	 * Test valid message.
 	 */
 	public void testValidMessage() {
-		errors = validator.validateInsertTask(smsTask);
+		errors = TaskValidator.validateInsertTask(smsTask);
 		assertTrue(errors.size() == 0);
 	}
 
@@ -91,7 +90,7 @@ public class TaskValidatorTest extends AbstractBaseTestCase {
 	 */
 	public void testMessageBody_empty() {
 		smsTask.setMessageBody("");
-		errors = validator.validateInsertTask(smsTask);
+		errors = TaskValidator.validateInsertTask(smsTask);
 		assertTrue(errors.size() > 0);
 		assertTrue(errors.contains(ValidationConstants.MESSAGE_BODY_EMPTY));
 	}
@@ -101,7 +100,7 @@ public class TaskValidatorTest extends AbstractBaseTestCase {
 	 */
 	public void testMessageBody_null() {
 		smsTask.setMessageBody(null);
-		errors = validator.validateInsertTask(smsTask);
+		errors = TaskValidator.validateInsertTask(smsTask);
 		assertTrue(errors.size() > 0);
 		assertTrue(errors.contains(ValidationConstants.MESSAGE_BODY_EMPTY));
 	}
@@ -112,7 +111,7 @@ public class TaskValidatorTest extends AbstractBaseTestCase {
 	public void testMessageBody_tooLong() {
 		smsTask.setMessageBody(VALID_MSG_BODY + VALID_MSG_BODY);
 		assertTrue(msg.getMessageBody().length() > SmsHibernateConstants.MAX_SMS_LENGTH);
-		errors = validator.validateInsertTask(smsTask);
+		errors = TaskValidator.validateInsertTask(smsTask);
 		assertTrue(errors.size() > 0);
 		assertTrue(errors.contains(ValidationConstants.MESSAGE_BODY_TOO_LONG));
 	}
@@ -122,7 +121,7 @@ public class TaskValidatorTest extends AbstractBaseTestCase {
 	 */
 	public void testMessageBody_whitespace() {
 		smsTask.setMessageBody("   ");
-		errors = validator.validateInsertTask(smsTask);
+		errors = TaskValidator.validateInsertTask(smsTask);
 		assertTrue(errors.size() > 0);
 		assertTrue(errors.contains(ValidationConstants.MESSAGE_BODY_EMPTY));
 	}
@@ -134,21 +133,21 @@ public class TaskValidatorTest extends AbstractBaseTestCase {
 
 		// null
 		smsTask.setSakaiSiteId(null);
-		errors = validator.validateInsertTask(smsTask);
+		errors = TaskValidator.validateInsertTask(smsTask);
 		assertTrue(errors.size() > 0);
 		assertTrue(errors
 				.contains(ValidationConstants.TASK_SAKAI_SITE_ID_EMPTY));
 
 		// empty String
 		smsTask.setSakaiSiteId("");
-		errors = validator.validateInsertTask(smsTask);
+		errors = TaskValidator.validateInsertTask(smsTask);
 		assertTrue(errors.size() > 0);
 		assertTrue(errors
 				.contains(ValidationConstants.TASK_SAKAI_SITE_ID_EMPTY));
 
 		// Blank space
 		smsTask.setSakaiSiteId("   ");
-		errors = validator.validateInsertTask(smsTask);
+		errors = TaskValidator.validateInsertTask(smsTask);
 		assertTrue(errors.size() > 0);
 		assertTrue(errors
 				.contains(ValidationConstants.TASK_SAKAI_SITE_ID_EMPTY));
@@ -161,12 +160,12 @@ public class TaskValidatorTest extends AbstractBaseTestCase {
 
 		// account exists
 		smsTask.setSmsAccountId(account.getId().intValue());
-		errors = validator.validateInsertTask(smsTask);
+		errors = TaskValidator.validateInsertTask(smsTask);
 		assertTrue(errors.size() == 0);
 
 		// account does not exist
 		smsTask.setSmsAccountId(0);
-		errors = validator.validateInsertTask(smsTask);
+		errors = TaskValidator.validateInsertTask(smsTask);
 		assertTrue(errors.size() > 0);
 		assertTrue(errors.contains(ValidationConstants.TASK_ACCOUNT_INVALID));
 	}
@@ -178,7 +177,7 @@ public class TaskValidatorTest extends AbstractBaseTestCase {
 
 		// null
 		smsTask.setDateCreated(null);
-		errors = validator.validateInsertTask(smsTask);
+		errors = TaskValidator.validateInsertTask(smsTask);
 		assertTrue(errors.size() > 0);
 		assertTrue(errors.contains(ValidationConstants.TASK_DATE_CREATED_EMPTY));
 	}
@@ -190,7 +189,7 @@ public class TaskValidatorTest extends AbstractBaseTestCase {
 
 		// null
 		smsTask.setDateToSend(null);
-		errors = validator.validateInsertTask(smsTask);
+		errors = TaskValidator.validateInsertTask(smsTask);
 		assertTrue(errors.size() > 0);
 		assertTrue(errors.contains(ValidationConstants.TASK_DATE_TO_SEND_EMPTY));
 	}
@@ -202,19 +201,19 @@ public class TaskValidatorTest extends AbstractBaseTestCase {
 
 		// null
 		smsTask.setStatusCode(null);
-		errors = validator.validateInsertTask(smsTask);
+		errors = TaskValidator.validateInsertTask(smsTask);
 		assertTrue(errors.size() > 0);
 		assertTrue(errors.contains(ValidationConstants.TASK_STATUS_CODE_EMPTY));
 
 		// empty String
 		smsTask.setStatusCode("");
-		errors = validator.validateInsertTask(smsTask);
+		errors = TaskValidator.validateInsertTask(smsTask);
 		assertTrue(errors.size() > 0);
 		assertTrue(errors.contains(ValidationConstants.TASK_STATUS_CODE_EMPTY));
 
 		// Blank space
 		smsTask.setStatusCode("   ");
-		errors = validator.validateInsertTask(smsTask);
+		errors = TaskValidator.validateInsertTask(smsTask);
 		assertTrue(errors.size() > 0);
 		assertTrue(errors.contains(ValidationConstants.TASK_STATUS_CODE_EMPTY));
 	}
@@ -225,7 +224,7 @@ public class TaskValidatorTest extends AbstractBaseTestCase {
 	public void testMessageTypeId() {
 		// null
 		smsTask.setMessageTypeId(null);
-		errors = validator.validateInsertTask(smsTask);
+		errors = TaskValidator.validateInsertTask(smsTask);
 		assertTrue(errors.size() > 0);
 		assertTrue(errors.contains(ValidationConstants.TASK_MESSAGE_TYPE_EMPTY));
 	}
@@ -237,21 +236,21 @@ public class TaskValidatorTest extends AbstractBaseTestCase {
 
 		// null
 		smsTask.setSenderUserName(null);
-		errors = validator.validateInsertTask(smsTask);
+		errors = TaskValidator.validateInsertTask(smsTask);
 		assertTrue(errors.size() > 0);
 		assertTrue(errors
 				.contains(ValidationConstants.TASK_SENDER_USER_NAME_EMPTY));
 
 		// empty String
 		smsTask.setSenderUserName("");
-		errors = validator.validateInsertTask(smsTask);
+		errors = TaskValidator.validateInsertTask(smsTask);
 		assertTrue(errors.size() > 0);
 		assertTrue(errors
 				.contains(ValidationConstants.TASK_SENDER_USER_NAME_EMPTY));
 
 		// Blank space
 		smsTask.setSenderUserName("   ");
-		errors = validator.validateInsertTask(smsTask);
+		errors = TaskValidator.validateInsertTask(smsTask);
 		assertTrue(errors.size() > 0);
 		assertTrue(errors
 				.contains(ValidationConstants.TASK_SENDER_USER_NAME_EMPTY));
@@ -263,14 +262,14 @@ public class TaskValidatorTest extends AbstractBaseTestCase {
 	public void testMaxTimeToLive() {
 		// null
 		smsTask.setMaxTimeToLive(null);
-		errors = validator.validateInsertTask(smsTask);
+		errors = TaskValidator.validateInsertTask(smsTask);
 		assertTrue(errors.size() > 0);
 		assertTrue(errors
 				.contains(ValidationConstants.TASK_MAX_TIME_TO_LIVE_INVALID));
 
 		// invalid
 		smsTask.setMaxTimeToLive(0);
-		errors = validator.validateInsertTask(smsTask);
+		errors = TaskValidator.validateInsertTask(smsTask);
 		assertTrue(errors.size() > 0);
 		assertTrue(errors
 				.contains(ValidationConstants.TASK_MAX_TIME_TO_LIVE_INVALID));
@@ -282,14 +281,14 @@ public class TaskValidatorTest extends AbstractBaseTestCase {
 	public void testDelReportTimeoutDuration() {
 		// null
 		smsTask.setDelReportTimeoutDuration(null);
-		errors = validator.validateInsertTask(smsTask);
+		errors = TaskValidator.validateInsertTask(smsTask);
 		assertTrue(errors.size() > 0);
 		assertTrue(errors
 				.contains(ValidationConstants.TASK_DELIVERY_REPORT_TIMEOUT_INVALID));
 
 		// invalid
 		smsTask.setDelReportTimeoutDuration(0);
-		errors = validator.validateInsertTask(smsTask);
+		errors = TaskValidator.validateInsertTask(smsTask);
 		assertTrue(errors.size() > 0);
 		assertTrue(errors
 				.contains(ValidationConstants.TASK_DELIVERY_REPORT_TIMEOUT_INVALID));
@@ -301,21 +300,21 @@ public class TaskValidatorTest extends AbstractBaseTestCase {
 	public void testDeliveryGroupId() {
 		// null
 		smsTask.setDeliveryGroupId(null);
-		errors = validator.validateInsertTask(smsTask);
+		errors = TaskValidator.validateInsertTask(smsTask);
 		assertTrue(errors.size() > 0);
 		assertTrue(errors
 				.contains(ValidationConstants.TASK_DELIVERY_GROUP_ID_EMPTY));
 
 		// empty String
 		smsTask.setDeliveryGroupId("");
-		errors = validator.validateInsertTask(smsTask);
+		errors = TaskValidator.validateInsertTask(smsTask);
 		assertTrue(errors.size() > 0);
 		assertTrue(errors
 				.contains(ValidationConstants.TASK_DELIVERY_GROUP_ID_EMPTY));
 
 		// Blank space
 		smsTask.setDeliveryGroupId("   ");
-		errors = validator.validateInsertTask(smsTask);
+		errors = TaskValidator.validateInsertTask(smsTask);
 		assertTrue(errors.size() > 0);
 		assertTrue(errors
 				.contains(ValidationConstants.TASK_DELIVERY_GROUP_ID_EMPTY));

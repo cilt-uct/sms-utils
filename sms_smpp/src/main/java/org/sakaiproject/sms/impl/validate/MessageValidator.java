@@ -44,7 +44,7 @@ public class MessageValidator {
 		ArrayList<String> errors = new ArrayList<String>();
 
 		if (smsMessage.getMobileNumber() == null
-				|| !smsMessage.getMobileNumber().trim().equals("")) {
+				|| smsMessage.getMobileNumber().trim().equals("")) {
 			errors.add(ValidationConstants.MOBILE_NUMBER_EMPTY);
 		}
 
@@ -65,13 +65,13 @@ public class MessageValidator {
 
 		// Check sakai user id
 		if (smsMessage.getSakaiUserId() == null
-				|| smsMessage.getSakaiUserId().equals("")) {
+				|| smsMessage.getSakaiUserId().trim().equals("")) {
 			errors.add(ValidationConstants.MESSAGE_SAKAI_USER_ID_EMPTY);
 		}
 
 		// Check status code
 		if (smsMessage.getStatusCode() == null
-				|| !smsMessage.getStatusCode().equals("")) {
+				|| smsMessage.getStatusCode().trim().equals("")) {
 			errors.add(ValidationConstants.MESSAGE_STATUS_CODE_EMPTY);
 		}
 
@@ -81,5 +81,4 @@ public class MessageValidator {
 		}
 		return errors;
 	}
-
 }
