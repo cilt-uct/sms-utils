@@ -23,7 +23,6 @@ import org.sakaiproject.sms.util.BeanToCSVReflector;
 
 public class CsvExportBean {
 
-	
 	private static Log log = LogFactory.getLog(CsvExportBean.class);
 	private Map<String, CsvExportStrategy> csvExporters = new TreeMap<String, CsvExportStrategy>();
 	
@@ -36,10 +35,8 @@ public class CsvExportBean {
 
 	public boolean createCsv(DownloadReportViewParams viewparams, HttpServletResponse response) {
 		
-		System.err.println("Create CSV Data");
-		
 		if(log.isInfoEnabled())
-			log.info("Create csv data");
+			log.info("Create csv data for view " + viewparams.sourceView);
 
 		try {
 			 createResponse(response, viewparams);
@@ -47,7 +44,7 @@ public class CsvExportBean {
 			log.error("Failed to create csv output" + e);
 			throw new RuntimeException("Failed to create csv output", e);
 		}
-
+		
 		return true;
 	}
 
@@ -72,7 +69,6 @@ public class CsvExportBean {
 			response.setContentType("text/csv");
 			
 			response.setHeader("Content-Disposition", "attachment; filename=" + getFileNamePrefix() + sdf.format(date) + ".csv");
-			//response.setHeader("filename", getFileNamePrefix() + sdf.format(date) + ".csv");
 			
 			List<?> pageResults = null;	
 			try {

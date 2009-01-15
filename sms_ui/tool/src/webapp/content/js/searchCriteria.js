@@ -38,3 +38,10 @@ function openWindow(url, title, options)
 	win.focus();
 	return win;
 }
+
+
+function make_task_row_open_popup(row) {
+		
+	var link = document.getElementById(row.id + 'link');
+	openWindow(link.href, 'SMSTask', 'resizable=yes,toolbar=no,scrollbars=yes,menubar=yes,width=800,height=600'); 
+}

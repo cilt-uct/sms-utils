@@ -24,15 +24,19 @@ import org.sakaiproject.sms.hibernate.bean.SearchResultContainer;
 import org.sakaiproject.sms.hibernate.logic.SmsTaskLogic;
 import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsSearchException;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
+import org.sakaiproject.sms.params.IdParams;
 import org.sakaiproject.sms.params.SortPagerViewParams;
+import org.sakaiproject.sms.producers.TaskListPopupProducer;
 import org.sakaiproject.sms.util.NullHandling;
 import org.springframework.util.Assert;
 
 import uk.org.ponder.rsf.components.UIBranchContainer;
 import uk.org.ponder.rsf.components.UIContainer;
+import uk.org.ponder.rsf.components.UIInternalLink;
 import uk.org.ponder.rsf.components.UIJointContainer;
 import uk.org.ponder.rsf.components.UIMessage;
 import uk.org.ponder.rsf.components.UIOutput;
+import uk.org.ponder.rsf.components.decorators.UIIDStrategyDecorator;
 
 public class TaskListResultsRenderer implements SearchResultsRenderer {
 
@@ -115,12 +119,18 @@ public class TaskListResultsRenderer implements SearchResultsRenderer {
 					"tableheader-status:", sortViewParams, "statusCode",
 					"sms.task-list-search-results.status");
 
+			int id = 0;
 			for (SmsTask smsTask : smsTaskList.getPageResults()) {
 
 				UIBranchContainer row = UIBranchContainer.make(
 						searchResultsTable, "dataset:");
-				UIOutput.make(row, "row-data-id", NullHandling
+				
+				UIInternalLink link = UIInternalLink.make(row, "popup-link", new IdParams(TaskListPopupProducer.VIEW_ID, smsTask.getId().toString()));
+				link.decorate(new UIIDStrategyDecorator(new Integer(id).toString() + "link"));
+
+				UIOutput idRow = UIOutput.make(row, "row-data-id", NullHandling
 						.safeToString(smsTask.getId()));
+				idRow.decorate(new UIIDStrategyDecorator(new Integer(id).toString()));
 				UIOutput.make(row, "row-data-group", NullHandling
 						.safeToString(smsTask.getDeliveryGroupName()));
 				UIOutput.make(row, "row-data-size-estimate", NullHandling
@@ -136,6 +146,8 @@ public class TaskListResultsRenderer implements SearchResultsRenderer {
 				UIOutput.make(row, "row-data-process-date", NullHandling
 						.safeToStringFormated(smsTask.getDateProcessed()));
 				UIOutput.make(row, "row-data-status", NullHandling.safeToString(smsTask.getStatusCode()));
+				
+				id++;
 			}
 		}
 	}
