@@ -50,34 +50,26 @@ public class SmsCoreImpl implements SmsCore {
 
 	public SmsBilling smsBilling = null;
 
-	public SmsBilling getSmsBilling() {
-		return smsBilling;
-	}
-
-	public void setSmsBilling(SmsBilling smsBilling) {
-		this.smsBilling = smsBilling;
-	}
-
-	public void setSmsSmpp(SmsSmpp smsSmpp) {
-		this.smsSmpp = smsSmpp;
-	}
-
-	public SmsSmpp getSmsSmpp() {
-		return smsSmpp;
-	}
-
-	public void init() {
-
+	public SmsTask calculateEstimatedGroupSize(SmsTask smsTask) {
+		Set<SmsMessage> deliverGroupMessages = generateSmsMessages(smsTask);
+		int groupSize = deliverGroupMessages.size();
+		smsTask.setGroupSizeEstimate(groupSize);
+		smsTask.setCreditEstimate(groupSize);
+		smsTask.setCostEstimate(smsBilling.convertCreditsToAmount(groupSize));
+		return smsTask;
 	}
 
 	/**
-	 * Get the group list from Sakai
+	 * Enables or disables the debug Information
+	 * 
+	 * @param debug
 	 */
-	// TODO Why pass three args when they can all come from the SmsTask?? Only 1
-	// arg needed.. smsTask
-	public Set<SmsMessage> generateSmsMessages(SmsTask smsTask) {
-		return generateDummySmsMessages(smsTask);
-		// TODO must make a Sakai call here
+	public void enableDebugInformation(boolean debug) {
+		if (debug) {
+			LOG.setLevel(Level.ALL);
+		} else {
+			LOG.setLevel(Level.OFF);
+		}
 	}
 
 	/**
@@ -117,9 +109,62 @@ public class SmsCoreImpl implements SmsCore {
 		return messages;
 	}
 
+	/**
+	 * Get the group list from Sakai
+	 */
+	// TODO Why pass three args when they can all come from the SmsTask?? Only 1
+	// arg needed.. smsTask
+	public Set<SmsMessage> generateSmsMessages(SmsTask smsTask) {
+		return generateDummySmsMessages(smsTask);
+		// TODO must make a Sakai call here
+	}
+
 	public SmsTask getNextSmsTask() {
 		return HibernateLogicFactory.getTaskLogic().getNextSmsTask();
 
+	}
+
+	public SmsTask getPreliminaryTask(Set<String> sakaiUserIds,
+			Date dateToSend, String messageBody, String sakaiSiteID,
+			String sakaiToolId, String sakaiSenderID) {
+
+		return getPreliminaryTask(null, null, sakaiUserIds, dateToSend,
+				messageBody, sakaiSiteID, sakaiToolId, sakaiSenderID);
+	}
+
+	public SmsTask getPreliminaryTask(String deliverGroupId, Date dateToSend,
+			String messageBody, String sakaiSiteID, String sakaiToolId,
+			String sakaiSenderID) {
+		return getPreliminaryTask(deliverGroupId, null, null, dateToSend,
+				messageBody, sakaiSiteID, sakaiToolId, sakaiSenderID);
+	}
+
+	private SmsTask getPreliminaryTask(String deliverGroupId,
+			Set<String> mobileNumbers, Set<String> sakaiUserIds,
+			Date dateToSend, String messageBody, String sakaiSiteID,
+			String sakaiToolId, String sakaiSenderID) {
+		SmsConfig config = HibernateLogicFactory.getConfigLogic()
+				.getOrCreateSystemSmsConfig();
+		SmsTask smsTask = new SmsTask();
+		smsTask.setSmsAccountId(smsBilling.getAccountID(sakaiSiteID,
+				sakaiSenderID, 1));
+		smsTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
+		smsTask.setSakaiSiteId(sakaiSiteID);
+		smsTask
+				.setMessageTypeId(SmsHibernateConstants.SMS_TASK_TYPE_PROCESS_SCHEDULED);
+		smsTask.setSakaiToolId(sakaiToolId);
+		smsTask.setSenderUserName(sakaiSenderID);
+		smsTask.setDeliveryGroupName(deliverGroupId);
+		smsTask.setDeliveryGroupId(deliverGroupId);
+		smsTask.setDateCreated(new Date());
+		smsTask.setDateToSend(dateToSend);
+		smsTask.setAttemptCount(0);
+		smsTask.setMessageBody(messageBody);
+		smsTask.setMaxTimeToLive(config.getSmsTaskMaxLifeTime());
+		// smsTask.setDelReportTimeoutDuration(config
+		// .getDelReportTimeoutDuration());
+		smsTask.setDelReportTimeoutDuration(30000);
+		return smsTask;
 	}
 
 	/**
@@ -131,6 +176,18 @@ public class SmsCoreImpl implements SmsCore {
 	public String getSakaiMobileNumber(String sakaiUserID) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public SmsBilling getSmsBilling() {
+		return smsBilling;
+	}
+
+	public SmsSmpp getSmsSmpp() {
+		return smsSmpp;
+	}
+
+	public void init() {
+
 	}
 
 	/**
@@ -169,14 +226,6 @@ public class SmsCoreImpl implements SmsCore {
 	public synchronized void processNextTask() {
 		SmsTask smsTask = HibernateLogicFactory.getTaskLogic().getNextSmsTask();
 		if (smsTask != null) {
-			this.processTask(smsTask);
-		}
-	}
-
-	public void tryProcessTaskRealTime(SmsTask smsTask) {
-
-		// TODO also check number of process threads
-		if (smsTask.getDateToSend().getTime() <= System.currentTimeMillis()) {
 			this.processTask(smsTask);
 		}
 	}
@@ -236,19 +285,6 @@ public class SmsCoreImpl implements SmsCore {
 		HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask);
 	}
 
-	/**
-	 * Enables or disables the debug Information
-	 * 
-	 * @param debug
-	 */
-	public void enableDebugInformation(boolean debug) {
-		if (debug) {
-			LOG.setLevel(Level.ALL);
-		} else {
-			LOG.setLevel(Level.OFF);
-		}
-	}
-
 	public void processTimedOutDeliveryReports() {
 		List<SmsMessage> smsMessages = HibernateLogicFactory.getMessageLogic()
 				.getSmsMessagesWithStatus(null,
@@ -272,57 +308,6 @@ public class SmsCoreImpl implements SmsCore {
 
 	}
 
-	private SmsTask getPreliminaryTask(String deliverGroupId,
-			Set<String> mobileNumbers, Set<String> sakaiUserIds,
-			Date dateToSend, String messageBody, String sakaiSiteID,
-			String sakaiToolId, String sakaiSenderID) {
-		SmsConfig config = HibernateLogicFactory.getConfigLogic()
-				.getOrCreateSystemSmsConfig();
-		SmsTask smsTask = new SmsTask();
-		smsTask.setSmsAccountId(smsBilling.getAccountID(sakaiSiteID,
-				sakaiSenderID, 1));
-		smsTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
-		smsTask.setSakaiSiteId(sakaiSiteID);
-		smsTask
-				.setMessageTypeId(SmsHibernateConstants.SMS_TASK_TYPE_PROCESS_SCHEDULED);
-		smsTask.setSakaiToolId(sakaiToolId);
-		smsTask.setSenderUserName(sakaiSenderID);
-		smsTask.setDeliveryGroupName(deliverGroupId);
-		smsTask.setDateCreated(new Date());
-		smsTask.setDateToSend(dateToSend);
-		smsTask.setAttemptCount(0);
-		smsTask.setMessageBody(messageBody);
-		smsTask.setMaxTimeToLive(config.getSmsTaskMaxLifeTime());
-		smsTask.setDelReportTimeoutDuration(config
-				.getDelReportTimeoutDuration());
-		// smsTask.setDelReportTimeoutDuration(30000);
-		return smsTask;
-	}
-
-	public SmsTask calculateEstimatedGroupSize(SmsTask smsTask) {
-		Set<SmsMessage> deliverGroupMessages = generateSmsMessages(smsTask);
-		int groupSize = deliverGroupMessages.size();
-		smsTask.setGroupSizeEstimate(groupSize);
-		smsTask.setCreditEstimate(groupSize);
-		smsTask.setCostEstimate(smsBilling.convertCreditsToAmount(groupSize));
-		return smsTask;
-	}
-
-	public SmsTask getPreliminaryTask(Set<String> sakaiUserIds,
-			Date dateToSend, String messageBody, String sakaiSiteID,
-			String sakaiToolId, String sakaiSenderID) {
-
-		return getPreliminaryTask(null, null, sakaiUserIds, dateToSend,
-				messageBody, sakaiSiteID, sakaiToolId, sakaiSenderID);
-	}
-
-	public SmsTask getPreliminaryTask(String deliverGroupId, Date dateToSend,
-			String messageBody, String sakaiSiteID, String sakaiToolId,
-			String sakaiSenderID) {
-		return getPreliminaryTask(deliverGroupId, null, null, dateToSend,
-				messageBody, sakaiSiteID, sakaiToolId, sakaiSenderID);
-	}
-
 	public void processVeryLateDeliveryReports() {
 		// TODO Auto-generated method stub
 
@@ -332,5 +317,21 @@ public class SmsCoreImpl implements SmsCore {
 			String body) {
 		// TODO Auto-generated method stub
 		return true;
+	}
+
+	public void setSmsBilling(SmsBilling smsBilling) {
+		this.smsBilling = smsBilling;
+	}
+
+	public void setSmsSmpp(SmsSmpp smsSmpp) {
+		this.smsSmpp = smsSmpp;
+	}
+
+	public void tryProcessTaskRealTime(SmsTask smsTask) {
+
+		// TODO also check number of process threads
+		if (smsTask.getDateToSend().getTime() <= System.currentTimeMillis()) {
+			this.processTask(smsTask);
+		}
 	}
 }
