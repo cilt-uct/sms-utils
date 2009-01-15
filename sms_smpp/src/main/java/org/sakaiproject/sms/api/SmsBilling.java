@@ -129,6 +129,16 @@ public interface SmsBilling {
 	public Double convertCreditsToAmount(int creditCount);
 
 	/**
+	 * Convert amount to credits.
+	 * 
+	 * @param amount
+	 *            the amount
+	 * 
+	 * @return the double
+	 */
+	public Integer convertAmountToCredits(Float amount);
+
+	/**
 	 * Insert a new account and return the new account id.
 	 * 
 	 * @param sakaiSiteID

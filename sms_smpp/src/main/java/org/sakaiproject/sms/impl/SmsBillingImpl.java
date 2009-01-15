@@ -211,4 +211,17 @@ public class SmsBillingImpl implements SmsBilling {
 	public boolean reserveCredits(int accountID, int credits) {
 		return true;
 	}
+
+	/**
+	 * Convert amount to credits.
+	 * 
+	 * @param amount
+	 *            the amount
+	 * 
+	 * @return the double
+	 */
+	public Integer convertAmountToCredits(Float amount) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }
