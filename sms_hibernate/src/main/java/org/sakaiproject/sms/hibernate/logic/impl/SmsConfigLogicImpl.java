@@ -147,8 +147,6 @@ public class SmsConfigLogicImpl extends SmsDao implements SmsConfigLogic {
 		} else {
 			config.setSakaiToolId("DummyToolId");
 			config
-					.setGateWayReportTimeout(SmsHibernateConstants.GATEWAY_REPORT_TIMEOUT);
-			config
 					.setNotificationEmail(SmsHibernateConstants.NOTIFICATION_EMAIL);
 			config
 					.setNotificationEmailBilling("notificationBilling@instution.com");

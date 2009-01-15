@@ -31,12 +31,6 @@ package org.sakaiproject.sms.hibernate.model;
 public class SmsConfig extends BaseModel {
 
 	/**
-	 * The sms gateway report timeout in seconds. If a delivery report takes
-	 * longer that this, the message will be marked as failed.
-	 */
-	private Integer gateWayReportTimeout;
-
-	/**
 	 * Person(s) who will receive notifications regarding transactions and sms
 	 * delivery reports. A comma list is allowed.
 	 */
@@ -364,10 +358,11 @@ public class SmsConfig extends BaseModel {
 		if (!(obj instanceof SmsConfig))
 			return false;
 		SmsConfig other = (SmsConfig) obj;
-		if (gateWayReportTimeout == null) {
-			if (other.gateWayReportTimeout != null)
+		if (delReportTimeoutDuration == null) {
+			if (other.delReportTimeoutDuration != null)
 				return false;
-		} else if (!gateWayReportTimeout.equals(other.gateWayReportTimeout))
+		} else if (!delReportTimeoutDuration
+				.equals(other.delReportTimeoutDuration))
 			return false;
 		if (notificationEmail == null) {
 			if (other.notificationEmail != null)
