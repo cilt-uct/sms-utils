@@ -124,6 +124,9 @@ public class SmsHibernateConstants {
 	/** Max mobile number length. */
 	public static final int MAX_MOBILE_NR_LENGTH = 20;
 
+	/** The Constant catelog message not found */
+	public static final String CATELOG_MESSAGE_NOT_FOUND = "<Property not found>";
+
 	/**
 	 * The delivery report timeout duration.
 	 */
