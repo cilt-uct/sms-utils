@@ -122,7 +122,7 @@ public class SmsHibernateConstants {
 	/**
 	 * The default initial balance for an account
 	 */
-	public static final Float INITIAL_BALANACE = 100.0f;
+	public static final Float INITIAL_BALANCE = 0.0f;
 
 	/** Max sms length */
 	public static final int MAX_SMS_LENGTH = 160;
