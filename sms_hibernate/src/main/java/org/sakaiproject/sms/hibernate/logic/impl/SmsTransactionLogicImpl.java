@@ -104,7 +104,7 @@ public class SmsTransactionLogicImpl extends SmsDao implements
 	}
 
 	/**
-	 * Gets a list of SmsTransaction objects for the specified search criteria
+	 * Gets a list of all SmsTransaction objects for the specified search criteria
 	 * 
 	 * @param search
 	 *            Bean containing the search criteria
@@ -112,9 +112,36 @@ public class SmsTransactionLogicImpl extends SmsDao implements
 	 * @throws SmsSearchException
 	 *             when an invalid search criteria is specified
 	 */
-	public SearchResultContainer<SmsTransaction> getSmsTransactionsForCriteria(
+	public List<SmsTransaction> getAllSmsTransactionsForCriteria(
+			SearchFilterBean searchBean) throws SmsSearchException {
+		return getSmsTransactionsForCriteria(searchBean);
+	}
+	
+	
+	/**
+	 * Gets a search results container housing the result set for a particular
+	 * displayed page
+	 * 
+	 * @param searchBean
+	 * @return Search result container
+	 * @throws SmsSearchException
+	 */
+	public SearchResultContainer<SmsTransaction> getPagedSmsTransactionsForCriteria(
 			SearchFilterBean searchBean) throws SmsSearchException {
 
+		List<SmsTransaction> transactions = getSmsTransactionsForCriteria(searchBean);
+
+		SearchResultContainer<SmsTransaction> con = new SearchResultContainer<SmsTransaction>(
+				getPageSize());
+		con.setTotalResultSetSize(new Long(transactions.size()));
+		con.calculateAndSetPageResults(transactions, searchBean
+				.getCurrentPage());
+
+		return con;
+	}
+
+	private List<SmsTransaction> getSmsTransactionsForCriteria(
+			SearchFilterBean searchBean) throws SmsSearchException {
 		Criteria crit = HibernateUtil.getSession().createCriteria(
 				SmsTransaction.class).createAlias("smsAccount", "smsAccount");
 
@@ -171,14 +198,7 @@ public class SmsTransactionLogicImpl extends SmsDao implements
 		}
 		transactions = crit.list();
 		HibernateUtil.closeSession();
-
-		SearchResultContainer<SmsTransaction> con = new SearchResultContainer<SmsTransaction>(
-				getPageSize());
-		con.setTotalResultSetSize(new Long(transactions.size()));
-		con.calculateAndSetPageResults(transactions, searchBean
-				.getCurrentPage());
-
-		return con;
+		return transactions;
 	}
 
 	private int getPageSize() {

@@ -7,16 +7,33 @@ import java.util.Map;
 import java.util.TreeMap;
 
 /**
- * A Utility class to convert a List of java beans to a CSV list does not fetch nested objects
+ * A Utility class to convert a List of java beans to a CSV list, does not fetch nested objects
  *
  */
 public class BeanToCSVReflector {
 
 
+	private static final String NOT_FOUND = "N/A";
+	private static final String IS = "is";
+	private static final String GET = "get";
+
+	/**
+	 * Returns a CSV list of all the java accessors
+	 *  
+	 * @param list ist a list of objects
+	 * @return a string containing a CSV report
+	 */
 	public String toCSV(List<?> list) {
 		return toCSV(list, (String[])null);
 	}
-
+	
+	/**
+	 * Returns a CSV list of only the specified field
+	 * 
+	 * @param list a list of objects
+	 * @param fieldNames the Fields to reflect on
+	 * @return a string containing a CSV report
+	 */
 	public String toCSV(List<?> list, String[] fieldNames) {
 		
 		StringBuffer buffer = new StringBuffer();
@@ -44,7 +61,7 @@ public class BeanToCSVReflector {
 		for (Object object : list) {
 			for (int i = 0; i < methodArray.length; i++) {
 				try {
-					String value = "N/A";
+					String value = NOT_FOUND;
 					Object fieldValue = methodArray[i].invoke(object);
 					
 					if(fieldValue != null)
@@ -75,7 +92,9 @@ public class BeanToCSVReflector {
 			
 			String methodName = allMethods[i].getName();
 			
-			if(methodName.startsWith("get"))
+			if(methodName.startsWith(GET))
+				accesorMethods.add(allMethods[i]);
+			if(methodName.startsWith(IS))
 				accesorMethods.add(allMethods[i]);
 		}
 		
@@ -89,7 +108,6 @@ public class BeanToCSVReflector {
 	}
 
 	private Method[] createOrderedMethodArray(Method[] methodArray, String[] fieldNames) {
-		
 		
 		if(fieldNames == null){
 			return methodArray;
@@ -119,14 +137,16 @@ public class BeanToCSVReflector {
 	}
 
 	private String convertMethodNameToFieldName(String methodName) {
-		//remove "get"
-		methodName = methodName.substring(3);
+		//remove "get" or "is"
+		if(methodName.startsWith(GET) && methodName.length() > 0)
+			methodName = methodName.substring(3);
+		if(methodName.startsWith(IS)  && methodName.length() > 0)
+			methodName = methodName.substring(2);
 		
 		if(methodName.length() >= 2)
 			methodName = methodName.substring(0, 1).toLowerCase() + methodName.substring(1);
 		else
-			methodName = methodName.toUpperCase();
+			methodName = methodName.toLowerCase();
 		return methodName;
 	}
-
 }

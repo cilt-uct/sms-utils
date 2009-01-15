@@ -74,6 +74,18 @@ public interface SmsTransactionLogic {
 	 * @return Search result container
 	 * @throws SmsSearchException
 	 */
-	public SearchResultContainer<SmsTransaction> getSmsTransactionsForCriteria(
+	public SearchResultContainer<SmsTransaction> getPagedSmsTransactionsForCriteria(
+			SearchFilterBean searchBean) throws SmsSearchException;
+	
+	/**
+	 * Gets a list of all SmsTransaction objects for the specified search criteria
+	 * 
+	 * @param search
+	 *            Bean containing the search criteria
+	 * @return List of SmsTransactions
+	 * @throws SmsSearchException
+	 *             when an invalid search criteria is specified
+	 */
+	public List<SmsTransaction> getAllSmsTransactionsForCriteria(
 			SearchFilterBean searchBean) throws SmsSearchException;
 }

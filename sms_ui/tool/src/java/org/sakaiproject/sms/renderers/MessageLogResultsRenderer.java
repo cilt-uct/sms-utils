@@ -70,7 +70,7 @@ public class MessageLogResultsRenderer implements SearchResultsRenderer {
 		boolean fail = false;
 		try {
 			if(NullHandling.safeDateCheck(searchFilterBean.getDateFrom(), searchFilterBean.getDateTo())){
-				smsMessageList = smsMessageLogic.getSmsMessagesForCriteria(searchFilterBean);
+				smsMessageList = smsMessageLogic.getPagedSmsMessagesForCriteria(searchFilterBean);
 				sortViewParams.current_count = smsMessageList.getNumberOfPages();
 			}
 			else{

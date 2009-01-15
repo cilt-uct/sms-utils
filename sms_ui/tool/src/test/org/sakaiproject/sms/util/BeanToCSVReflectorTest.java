@@ -56,6 +56,18 @@ public class BeanToCSVReflectorTest extends TestCase{
 		assertTrue(extendedCsvHeaderAndRow.contains("More info"));
 	}
 	
+	public void testResultSetWithBoolean(){
+		
+		List<BooleanResultSet> booleanResults = new ArrayList<BooleanResultSet>();
+		BooleanResultSet booleanResult1 = new BooleanResultSet(false);
+		booleanResults.add(booleanResult1);
+		
+		String csvResults = beanToCSVReflector.toCSV(booleanResults, new String[]{"endOfTime"});
+		
+		assertTrue(csvResults.contains("endOfTime"));
+		assertTrue(csvResults.contains("false"));
+	}
+	
 	private List<ExtendedResultSet> createExtendedTestRow(){
 		ExtendedResultSet extendedResultSet = new ExtendedResultSet("Row 1", new Long(2000), 255, "More info");
 		List<ExtendedResultSet> list = new ArrayList<ExtendedResultSet>();
@@ -69,6 +81,24 @@ public class BeanToCSVReflectorTest extends TestCase{
 		List<SimpleResultSet> list = new ArrayList<SimpleResultSet>();
 		list.add(simpleResultSet1);
 		return list;
+	}
+	
+	static class BooleanResultSet{
+		
+		private boolean endOfTime;
+
+		public BooleanResultSet(boolean endOfTime) {
+			super();
+			this.endOfTime = endOfTime;
+		}
+
+		public boolean isEndOfTime() {
+			return endOfTime;
+		}
+
+		public void setEndOfTime(boolean endOfTime) {
+			this.endOfTime = endOfTime;
+		}
 	}
 	
 	static class SimpleResultSet{

@@ -89,6 +89,16 @@ public interface SmsMessageLogic {
 			String... statusCodes);
 
 	/**
+	 * Gets a search results for all SmsMessages that match the specified criteria  
+	 * 
+	 * @param searchBean
+	 * @return Search result container
+	 * @throws SmsSearchException
+	 */
+	public List<SmsMessage> getAllSmsMessagesForCriteria(
+			SearchFilterBean searchBean) throws SmsSearchException;
+	
+	/**
 	 * Gets a search results container housing the result set for a particular
 	 * displayed page
 	 * 
@@ -96,7 +106,7 @@ public interface SmsMessageLogic {
 	 * @return Search result container
 	 * @throws SmsSearchException
 	 */
-	public SearchResultContainer<SmsMessage> getSmsMessagesForCriteria(
+	public SearchResultContainer<SmsMessage> getPagedSmsMessagesForCriteria(
 			SearchFilterBean searchBean) throws SmsSearchException;
 
 	/**

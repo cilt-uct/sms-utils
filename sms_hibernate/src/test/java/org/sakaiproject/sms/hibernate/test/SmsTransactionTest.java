@@ -156,7 +156,7 @@ public class SmsTransactionTest extends AbstractBaseTestCase {
 			bean.setSender(insertSmsTransaction.getSakaiUserId());
 
 			List<SmsTransaction> transactions = HibernateLogicFactory
-					.getTransactionLogic().getSmsTransactionsForCriteria(bean)
+					.getTransactionLogic().getPagedSmsTransactionsForCriteria(bean)
 					.getPageResults();
 			assertTrue("Collection returned has no objects", transactions
 					.size() > 0);
@@ -219,7 +219,7 @@ public class SmsTransactionTest extends AbstractBaseTestCase {
 			bean.setCurrentPage(2);
 
 			SearchResultContainer<SmsTransaction> con = HibernateLogicFactory
-					.getTransactionLogic().getSmsTransactionsForCriteria(bean);
+					.getTransactionLogic().getPagedSmsTransactionsForCriteria(bean);
 			List<SmsTransaction> tasks = con.getPageResults();
 			assertTrue("Incorrect collection size returned",
 					tasks.size() == SmsHibernateConstants.DEFAULT_PAGE_SIZE);
@@ -236,7 +236,7 @@ public class SmsTransactionTest extends AbstractBaseTestCase {
 			}
 
 			con = HibernateLogicFactory.getTransactionLogic()
-					.getSmsTransactionsForCriteria(bean);
+					.getPagedSmsTransactionsForCriteria(bean);
 			tasks = con.getPageResults();
 			// int lastPageRecordCount = recordsToInsert % pages;
 			int lastPageRecordCount = recordsToInsert

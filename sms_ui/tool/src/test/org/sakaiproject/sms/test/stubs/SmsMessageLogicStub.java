@@ -78,4 +78,16 @@ public class SmsMessageLogicStub implements SmsMessageLogic {
 
 	}
 
+	public List<SmsMessage> getAllSmsMessagesForCriteria(SearchFilterBean arg0)
+			throws SmsSearchException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public SearchResultContainer<SmsMessage> getPagedSmsMessagesForCriteria(
+			SearchFilterBean arg0) throws SmsSearchException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

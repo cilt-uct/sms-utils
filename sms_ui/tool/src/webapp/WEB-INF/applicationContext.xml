@@ -42,11 +42,9 @@
   
   <bean id="searchScope" parent="beanScopeParent">
   	<property name="alwaysPreserve" value="true"/>
-    <property name="copyPreservingBeans" value="searchTaskList"/>
+    <property name="copyPreservingBeans" value="searchTaskList, searchTransactionLog, searchMessageLog"/>
   </bean>
-  
-  <!-- , searchTransactionLog, searchMessageLog -->
-  
+    
   <bean id="smsMessageGuard" parent="writeGuardParent">
      <property name="guardedPath" value="SmsMessageLocator.*"/>
 	 <property name="guard"> 

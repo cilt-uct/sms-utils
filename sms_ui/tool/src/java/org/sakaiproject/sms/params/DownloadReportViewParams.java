@@ -10,7 +10,6 @@ import uk.org.ponder.rsf.viewstate.SimpleViewParameters;
 
 public class DownloadReportViewParams extends SimpleViewParameters{
 	
-	public String filename;
 	public String sourceView;
 	
 	public String number;
@@ -26,14 +25,13 @@ public class DownloadReportViewParams extends SimpleViewParameters{
 
 	public DownloadReportViewParams() {}
 
-	public DownloadReportViewParams(String viewID, String filename, String sourceView, String dateFrom,
-			String dateTo,  String number, String orderBy,
-			String sender, String sortDirection,
-			String status, String toolName, String transactionType) {
+	public DownloadReportViewParams(String viewID, String sourceView, String dateFrom, String dateTo,
+			String number,  String orderBy, String sender,
+			String sortDirection, String status,
+			String toolName, String transactionType) {
 		super();
 		this.viewID = viewID;
 		this.sourceView = sourceView;
-		this.filename = filename;
 		this.dateFrom = dateFrom;
 		this.dateTo = dateTo;
 		this.number = number;

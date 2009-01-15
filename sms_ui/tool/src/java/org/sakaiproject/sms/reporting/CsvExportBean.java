@@ -1,6 +1,8 @@
 package org.sakaiproject.sms.reporting;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -14,7 +16,9 @@ import org.sakaiproject.sms.hibernate.bean.SearchFilterBean;
 import org.sakaiproject.sms.hibernate.logic.impl.HibernateLogicFactory;
 import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsSearchException;
 import org.sakaiproject.sms.params.DownloadReportViewParams;
+import org.sakaiproject.sms.producers.MessageLogProducer;
 import org.sakaiproject.sms.producers.TaskListProducer;
+import org.sakaiproject.sms.producers.TransactionLogProducer;
 import org.sakaiproject.sms.util.BeanToCSVReflector;
 
 public class CsvExportBean {
@@ -26,6 +30,8 @@ public class CsvExportBean {
 
 	public CsvExportBean() {
 		csvExporters.put(TaskListProducer.VIEW_ID, new SmsTaskExportStrategy());
+		csvExporters.put(MessageLogProducer.VIEW_ID, new SmsMessageExportStrategy());
+		csvExporters.put(TransactionLogProducer.VIEW_ID, new SmsTransactionLogExportStrategy());
 	}
 
 	public boolean createCsv(DownloadReportViewParams viewparams, HttpServletResponse response) {
@@ -35,14 +41,8 @@ public class CsvExportBean {
 		if(log.isInfoEnabled())
 			log.info("Create csv data");
 
-		// Set the response headers
-		response.setHeader("Content-disposition", "inline");
-		response.setHeader("filename", viewparams.filename);
-		response.setContentType("text/csv");
-
 		try {
-			 ServletOutputStream outputStream = response.getOutputStream();
-			 createResponse(outputStream, viewparams);
+			 createResponse(response, viewparams);
 		} catch (IOException e) {
 			log.error("Failed to create csv output" + e);
 			throw new RuntimeException("Failed to create csv output", e);
@@ -51,18 +51,29 @@ public class CsvExportBean {
 		return true;
 	}
 
-	private void createResponse(ServletOutputStream outputStream, DownloadReportViewParams viewparams)
+	private void createResponse(HttpServletResponse response, DownloadReportViewParams viewparams)
 			throws IOException {
 		
 		SearchFilterBean searchFilterBean = viewparams.extractSearchFilter();
-		csvExporters.get(viewparams.sourceView).createCsvData(outputStream, searchFilterBean);
+		csvExporters.get(viewparams.sourceView).createCsvResponse(response, searchFilterBean);
 	}
 
 	private abstract class CsvExportStrategy{
 		
 		protected BeanToCSVReflector beanToCSVReflector = new BeanToCSVReflector();
 
-		public void createCsvData(ServletOutputStream outputStream, SearchFilterBean searchFilterBean) {
+		public void createCsvResponse(HttpServletResponse response, SearchFilterBean searchFilterBean) {
+
+			Date date = new Date();
+			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+			
+			// Set the response headers
+			response.setHeader("Content-disposition", "inline");
+			response.setContentType("text/csv");
+			
+			response.setHeader("Content-Disposition", "attachment; filename=" + getFileNamePrefix() + sdf.format(date) + ".csv");
+			//response.setHeader("filename", getFileNamePrefix() + sdf.format(date) + ".csv");
+			
 			List<?> pageResults = null;	
 			try {
 				 pageResults = getCriteriaResults(searchFilterBean);
@@ -73,14 +84,16 @@ public class CsvExportBean {
 			String csvText = beanToCSVReflector.toCSV(pageResults, getCsvColumns());
 			
 			try {
+				ServletOutputStream outputStream = response.getOutputStream();
 				outputStream.print(csvText);
 			} catch (IOException e) {
 				throw new RuntimeException("Failed to write csv to output stream");
 			}			
 		}
 		
-		public abstract String[] getCsvColumns();
-		public abstract List<?> getCriteriaResults(SearchFilterBean searchFilterBean) throws SmsSearchException;
+		protected abstract String[] getCsvColumns();
+		protected abstract List<?> getCriteriaResults(SearchFilterBean searchFilterBean) throws SmsSearchException;
+		protected abstract String getFileNamePrefix();  
 	}
 	
 	private final class SmsTaskExportStrategy extends CsvExportStrategy{
@@ -106,8 +119,8 @@ public class CsvExportBean {
 			"smsAccountId",
 			"statusCode",
 			"maxTimeToLive",
-			"delReportTimeoutDuration"};
-		
+			"delReportTimeoutDuration"
+		};
 
 		@Override
 		public String[] getCsvColumns() {
@@ -118,6 +131,69 @@ public class CsvExportBean {
 		public List<?> getCriteriaResults(SearchFilterBean searchFilterBean) throws SmsSearchException {
 			return HibernateLogicFactory.getTaskLogic().getAllSmsTasksForCriteria(searchFilterBean);
 		}
+
+		@Override
+		protected String getFileNamePrefix() {
+			return "smsTask";
+		}
 	}
 	
+	private final class SmsMessageExportStrategy extends CsvExportStrategy{
+
+		private final String[] messageColumns = new String[]{
+				"dateDelivered",
+				"mobileNumber",
+				"sakaiUserId",
+				"smscMessageId",
+				"statusCode",
+				"submitResult",
+				"smscDeliveryStatusCode",
+				"smscId"
+		};
+		
+		@Override
+		public String[] getCsvColumns() {
+			return messageColumns;
+		}
+
+		@Override
+		public List<?> getCriteriaResults(SearchFilterBean searchFilterBean)
+				throws SmsSearchException {
+			return HibernateLogicFactory.getMessageLogic().getAllSmsMessagesForCriteria(searchFilterBean);
+		}
+
+		@Override
+		protected String getFileNamePrefix() {
+			return "smsMessage";
+		}
+	}
+	
+	private final class SmsTransactionLogExportStrategy extends CsvExportStrategy{
+
+		private final String[] transactionLogColumns = new String[]{
+				"balance",
+				"sakaiUserId",
+				"transactionAmount",
+				"transactionCredits",
+				"transactionDate",
+				"transactionTypeCode",
+				"smsTaskId"
+		};
+		
+		@Override
+		public String[] getCsvColumns() {
+			return transactionLogColumns;
+		}
+
+		@Override
+		public List<?> getCriteriaResults(SearchFilterBean searchFilterBean)
+				throws SmsSearchException {
+			return HibernateLogicFactory.getTransactionLogic().getAllSmsTransactionsForCriteria(searchFilterBean);
+		}
+
+		@Override
+		protected String getFileNamePrefix() {
+			return "smsTransactionLog";
+		}
+	}
 }

@@ -29,7 +29,6 @@ import org.sakaiproject.sms.renderers.TablePagerRenderer;
 import org.springframework.util.Assert;
 
 import uk.org.ponder.rsf.components.UIBranchContainer;
-import uk.org.ponder.rsf.components.UICommand;
 import uk.org.ponder.rsf.components.UIContainer;
 import uk.org.ponder.rsf.components.UIInternalLink;
 import uk.org.ponder.rsf.components.UIJointContainer;
@@ -118,13 +117,13 @@ public abstract class AbstractSearchListProducer implements
 		SimpleDateFormat sdf = new SimpleDateFormat();
 		
 		//Search criteria set as parameter since beans are not available when the handler hook intercepts
-		DownloadReportViewParams downloadReportViewParams = new DownloadReportViewParams("downloadCsv", "export.csv",
-				getViewID(), sdf.format(searchFilterBean.getDateFrom()),
-				sdf.format(searchFilterBean.getDateTo()),  searchFilterBean.getNumber(), searchFilterBean.getOrderBy(),
-				searchFilterBean.getSender(), searchFilterBean.getSortDirection(),
-				searchFilterBean.getStatus(), searchFilterBean.getToolName(), searchFilterBean.getTransactionType());
-		UIInternalLink.make(tofill, "export-to-csv", downloadReportViewParams);
-		UICommand.make(branchContainer, "export-button");
+		DownloadReportViewParams downloadReportViewParams = new DownloadReportViewParams("downloadCsv", getViewID(),
+				sdf.format(searchFilterBean.getDateFrom()), sdf.format(searchFilterBean.getDateTo()),
+				searchFilterBean.getNumber(),  searchFilterBean.getOrderBy(), searchFilterBean.getSender(),
+				searchFilterBean.getSortDirection(), searchFilterBean.getStatus(),
+				searchFilterBean.getToolName(), searchFilterBean.getTransactionType());
+		UIInternalLink.make(tofill, "export-to-csv", downloadReportViewParams);		
+		
 		return branchContainer;
 	}
 

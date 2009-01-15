@@ -74,7 +74,7 @@ public class TransactionLogResultsRenderer implements SearchResultsRenderer {
 		boolean fail = false;
 		try {
 			if (NullHandling.safeDateCheck(searchFilterBean.getDateFrom(), searchFilterBean.getDateTo())) {
-				smsTransactions = smsTransactionLogic.getSmsTransactionsForCriteria(searchFilterBean);
+				smsTransactions = smsTransactionLogic.getPagedSmsTransactionsForCriteria(searchFilterBean);
 				sortViewParams.current_count = smsTransactions.getNumberOfPages();
 			}else{
 				sortViewParams.current_count = 1;				

@@ -228,7 +228,7 @@ public class SmsMessageTest extends AbstractBaseTestCase {
 			bean.setCurrentPage(1);
 
 			SearchResultContainer<SmsMessage> con = HibernateLogicFactory
-					.getMessageLogic().getSmsMessagesForCriteria(bean);
+					.getMessageLogic().getPagedSmsMessagesForCriteria(bean);
 			List<SmsMessage> messages = con.getPageResults();
 			assertTrue("Collection returned has no objects",
 					messages.size() > 0);
@@ -295,7 +295,7 @@ public class SmsMessageTest extends AbstractBaseTestCase {
 			bean.setCurrentPage(2);
 
 			SearchResultContainer<SmsMessage> con = HibernateLogicFactory
-					.getMessageLogic().getSmsMessagesForCriteria(bean);
+					.getMessageLogic().getPagedSmsMessagesForCriteria(bean);
 			List<SmsMessage> messages = con.getPageResults();
 			assertTrue("Incorrect collection size returned",
 					messages.size() == SmsHibernateConstants.DEFAULT_PAGE_SIZE);
@@ -313,7 +313,7 @@ public class SmsMessageTest extends AbstractBaseTestCase {
 			}
 
 			con = HibernateLogicFactory.getMessageLogic()
-					.getSmsMessagesForCriteria(bean);
+					.getPagedSmsMessagesForCriteria(bean);
 			messages = con.getPageResults();
 			int lastPageRecordCount = recordsToInsert
 					- (pages * SmsHibernateConstants.DEFAULT_PAGE_SIZE);
