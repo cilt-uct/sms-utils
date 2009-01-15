@@ -154,10 +154,11 @@ public class SmsConfigLogicImpl extends SmsDao implements SmsConfigLogic {
 					.setNotificationEmailBilling("notificationBilling@instution.com");
 			config.setNotificationEmailSent("notificationSent@instution.com");
 			config.setPagingSize(SmsHibernateConstants.DEFAULT_PAGE_SIZE);
-			config.setSakaiSiteId(sakaiSiteId);
+
 			config.setSendSmsEnabled(false);
 
 		}
+		config.setSakaiSiteId(sakaiSiteId);
 
 		return config;
 
