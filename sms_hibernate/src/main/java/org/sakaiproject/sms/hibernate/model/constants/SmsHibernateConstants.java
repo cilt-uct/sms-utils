@@ -88,6 +88,12 @@ public class SmsHibernateConstants {
 	public static final String NOTIFICATION_EMAIL = "notification@instution.com";
 
 	/**
+	 * The sms gateway report timeout in seconds. If a delivery report takes
+	 * longer that this, the message will be marked as failed.
+	 */
+	public static final Integer GATEWAY_REPORT_TIMEOUT = (60 * 10);
+
+	/**
 	 * The maximum amount of time an smsTask can be retried.
 	 */
 	public static final Integer MAXIMUM_RETRY_COUNT = 5;
@@ -125,9 +131,17 @@ public class SmsHibernateConstants {
 	public static final int MAX_MOBILE_NR_LENGTH = 20;
 
 	/**
-	 * The sms delivery report timeout in seconds. If a delivery report takes
-	 * longer that this, the message will be marked as timedout.
+	 * The delivery report timeout duration.
 	 */
 	public static final int DEL_REPORT_TIMEOUT_DURATION = 1800;
+
+	/** The Constant for task notification failed */
+	public static final int TASK_NOTIFICATION_FAILED = 1;
+
+	/** The Constant for task notification sent */
+	public static final int TASK_NOTIFICATION_SENT = 1;
+
+	/** The Constant for task notification started */
+	public static final int TASK_NOTIFICATION_STARTED = 1;
 
 }
