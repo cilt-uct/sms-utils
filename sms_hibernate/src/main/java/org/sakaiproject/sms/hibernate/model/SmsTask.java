@@ -339,6 +339,19 @@ public class SmsTask extends BaseModel {
 	}
 
 	/**
+	 * Gets the credit estimate.
+	 * 
+	 * @return the credit estimate
+	 */
+	public Integer getCreditEstimateInt() {
+		if (creditEstimate == null) {
+			return 0;
+		} else {
+			return creditEstimate;
+		}
+	}
+
+	/**
 	 * Gets the date created.
 	 * 
 	 * @return the date created

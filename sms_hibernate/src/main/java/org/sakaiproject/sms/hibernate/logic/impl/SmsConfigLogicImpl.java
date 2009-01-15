@@ -137,16 +137,27 @@ public class SmsConfigLogicImpl extends SmsDao implements SmsConfigLogic {
 		config.setSakaiSiteId(sakaiSiteId);
 		if (sakaiSiteId != null && sakaiSiteId.equals("")) {
 			config.setSakaiToolId("");
-			config.setSchedulerInterval(3);
+			config
+
+			.setSmsRetryMaxCount(SmsHibernateConstants.MAXIMUM_RETRY_COUNT);
+
+			config
+					.setDelReportTimeoutDuration(SmsHibernateConstants.GATEWAY_REPORT_TIMEOUT);
+
+			config
+					.setSmsRetryScheduleInterval(SmsHibernateConstants.RETRY_SCHEDULE_INTERVAL);
+			config
+					.setGateWayReportTimeout(SmsHibernateConstants.GATEWAY_REPORT_TIMEOUT);
+			config
+					.setSmsTaskMaxLifeTime(SmsHibernateConstants.MAXIMUM_TASK_LIFETIME);
+			config
+					.setSchedulerInterval(SmsHibernateConstants.SCHEDULER_INTERVAL);
 		} else {
 			config.setSakaiToolId("DummyToolId");
+
 		}
 		config.setSendSmsEnabled(false);
-		config.setSmsRetryMaxCount(SmsHibernateConstants.MAXIMUM_RETRY_COUNT);
-		config
-				.setSmsRetryScheduleInterval(SmsHibernateConstants.RETRY_SCHEDULE_INTERVAL);
-		config
-				.setSmsTaskMaxLifeTime(SmsHibernateConstants.MAXIMUM_TASK_LIFETIME);
+
 		return config;
 
 	}

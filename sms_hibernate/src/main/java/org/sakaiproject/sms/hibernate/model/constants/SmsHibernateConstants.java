@@ -70,6 +70,10 @@ public class SmsHibernateConstants {
 	public static final String SMS_DEV_DEFAULT_SAKAI_USER_ID = "SakaiUserID";
 
 	/**
+	 * The default interval to look for new tasks to process.
+	 */
+	public static final int SCHEDULER_INTERVAL = 3;
+	/**
 	 * The default testing sakai tool id
 	 */
 	public static final String SMS_DEV_DEFAULT_SAKAI_TOOL_ID = "SakaiToolID";
