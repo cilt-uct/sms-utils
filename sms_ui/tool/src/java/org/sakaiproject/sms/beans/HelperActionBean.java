@@ -66,11 +66,11 @@ public class HelperActionBean {
 	}
 
 	/**
-	 * Checks sufficient credits and then sends
+	 * Checks sufficient credits and then inserts task
 	 * 
 	 * @return {@link ActionResults}
 	 */
-	public String send() {
+	public String save() {
 		if (smsTaskLocator.containsNew()) {
 			SmsTask smsTask = (SmsTask) smsTaskLocator
 					.locateBean(SmsTaskLocator.NEW_1);

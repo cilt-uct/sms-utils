@@ -62,6 +62,7 @@ public class HelperProducer implements ViewComponentProducer,
 		UIMessage.make(form, "message-body-label", "sms.helper.message-body");
 		UIInput messageBody = UIInput.make(form, "message-body", smsTaskOTP
 				+ ".messageBody");
+		messageBody.mustapply = true;
 
 		UIMessage.make(form, "chars-remaining-label",
 				"sms.helper.chars-remaining");
@@ -74,7 +75,7 @@ public class HelperProducer implements ViewComponentProducer,
 
 		if (smsTaskLocator.containsNew()) {
 			UICommand.make(form, "action-button", UIMessage
-					.make("sms.general.send"), "HelperActionBean.send");
+					.make("sms.general.save"), "HelperActionBean.save");
 		} else {
 			UICommand.make(form, "action-button", UIMessage
 					.make("sms.general.continue"),

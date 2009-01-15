@@ -94,14 +94,14 @@ public class HelperActionTest extends TestCase {
 	}
 
 	/**
-	 * Test send with insufficient credits
+	 * Test save with insufficient credits
 	 */
-	public void testSend_insufficientCredits() {
+	public void testSave_insufficientCredits() {
 		SmsTask task = (SmsTask) smsTaskLocator
 				.locateBean(SmsTaskLocator.NEW_1);
 		task.setCreditEstimate(2);
 		smsService.sufficientCredits = false;
-		String result = helperAction.send();
+		String result = helperAction.save();
 		assertEquals(ActionResults.ERROR, result);
 		assertFalse(smsCore.insertTaskCalled);
 		assertEquals("sms.errors.insufficient-credits", messages.messageAt(0)
@@ -112,9 +112,9 @@ public class HelperActionTest extends TestCase {
 	/**
 	 * If no beans on tasklocator
 	 */
-	public void testSend_invalid() {
+	public void testSave_invalid() {
 		assertFalse(smsTaskLocator.containsNew());
-		String result = helperAction.send();
+		String result = helperAction.save();
 		assertEquals(ActionResults.ERROR, result);
 		assertFalse(smsCore.insertTaskCalled);
 		assertEquals("sms.errors.unexpected-error", messages.messageAt(0)
@@ -122,14 +122,14 @@ public class HelperActionTest extends TestCase {
 	}
 
 	/**
-	 * Test send with sufficient credits
+	 * Test save with sufficient credits
 	 */
-	public void testSend_sufficientCredits() {
+	public void testSave_sufficientCredits() {
 		SmsTask task = (SmsTask) smsTaskLocator
 				.locateBean(SmsTaskLocator.NEW_1);
 		task.setCreditEstimate(2);
 		smsService.sufficientCredits = true;
-		String result = helperAction.send();
+		String result = helperAction.save();
 		assertEquals(ActionResults.SUCCESS, result);
 		assertTrue(smsCore.insertTaskCalled);
 		assertEquals("sms.helper.task-success", messages.messageAt(0)
