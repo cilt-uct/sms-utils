@@ -38,8 +38,7 @@ public class SmppTestSuite {
 		suite.addTestSuite(SmppAPITest.class);
 		suite.addTestSuite(TaskValidatorTest.class);
 		suite.addTestSuite(MessageValidatorTest.class);
-		suite.addTestSuite(TaskValidatorTest.class);
-		suite.addTestSuite(MessageValidatorTest.class);
+		suite.addTestSuite(MessageCatelogTest.class);
 		// $JUnit-END$
 		return suite;
 	}

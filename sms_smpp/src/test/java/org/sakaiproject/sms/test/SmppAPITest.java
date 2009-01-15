@@ -53,7 +53,6 @@ public class SmppAPITest extends AbstractBaseTestCase {
 		HibernateUtil.createSchema();
 		smsSmppImpl = new SmsSmppImpl();
 		smsSmppImpl.init();
-
 	}
 
 	/*

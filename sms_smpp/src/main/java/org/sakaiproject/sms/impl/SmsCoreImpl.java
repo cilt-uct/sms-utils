@@ -34,6 +34,7 @@ import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
 import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
 import org.sakaiproject.sms.hibernate.util.DateUtil;
+import org.sakaiproject.sms.smpp.util.MessageCatelog;
 
 /**
  * Handle all logic regarding SMPP gateway communication.
@@ -244,6 +245,8 @@ public class SmsCoreImpl implements SmsCore {
 			smsTask.setStatusForMessages(
 					SmsConst_DeliveryStatus.STATUS_PENDING,
 					SmsConst_DeliveryStatus.STATUS_EXPIRE);
+			sendTaskNotification(smsTask,
+					SmsHibernateConstants.TASK_NOTIFICATION_FAILED);
 			HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask);
 			return;
 		}
@@ -281,6 +284,8 @@ public class SmsCoreImpl implements SmsCore {
 			smsTask.setStatusForMessages(
 					SmsConst_DeliveryStatus.STATUS_PENDING,
 					SmsConst_DeliveryStatus.STATUS_FAIL);
+			sendTaskNotification(smsTask,
+					SmsHibernateConstants.TASK_NOTIFICATION_FAILED);
 		}
 		HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask);
 	}
@@ -334,4 +339,54 @@ public class SmsCoreImpl implements SmsCore {
 			this.processTask(smsTask);
 		}
 	}
+
+	/**
+	 * Send task notification.
+	 * 
+	 * @param smsTask
+	 *            the sms task
+	 * @param taskMessageType
+	 *            the task message type
+	 * 
+	 * @return true, if successful
+	 */
+	private boolean sendTaskNotification(SmsTask smsTask,
+			Integer taskMessageType) {
+
+		String subject = null;
+		String body = null;
+
+		String creditsAvailable = 0.0f + ""; // GET THIS
+		String creditsRequired = smsTask.getCreditEstimate() + "";
+
+		if (taskMessageType
+				.equals(SmsHibernateConstants.TASK_NOTIFICATION_STARTED)) {
+			subject = MessageCatelog.getMessage(
+					"messages.notificationSubjectStarted", smsTask.getId()
+							.toString());
+			body = MessageCatelog.getMessage(
+					"messages.notificationBodyStarted", creditsRequired,
+					creditsAvailable);
+
+		} else if (taskMessageType
+				.equals(SmsHibernateConstants.TASK_NOTIFICATION_SENT)) {
+			subject = MessageCatelog.getMessage(
+					"messages.notificationSubjectSent", smsTask.getId()
+							.toString());
+			body = MessageCatelog.getMessage("messages.notificationBodySent",
+					creditsRequired, creditsAvailable);
+
+		} else if (taskMessageType
+				.equals(SmsHibernateConstants.TASK_NOTIFICATION_FAILED)) {
+			subject = MessageCatelog.getMessage(
+					"messages.notificationSubjectFailed", smsTask.getId()
+							.toString());
+			body = MessageCatelog.getMessage("messages.notificationBodyFailed",
+					creditsRequired, creditsAvailable);
+		}
+
+		return sendNotificationEmail(smsTask.getSakaiSiteId(), subject, body);
+
+	}
+
 }

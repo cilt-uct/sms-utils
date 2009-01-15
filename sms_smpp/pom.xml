@@ -81,6 +81,7 @@
 				<directory>${basedir}</directory>
 				<includes>
 					<include>smpp.properties</include>
+					<include>messages_en.properties</include>
 				</includes>
 				<excludes>
 					<exclude>src/*</exclude>
