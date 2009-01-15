@@ -154,4 +154,15 @@ public interface SmsCore {
 	 * @return
 	 */
 	public SmsTask calculateEstimatedGroupSize(SmsTask smsTask);
+
+	/**
+	 * Send a email to a Sakai user
+	 * 
+	 * @param sakaiuserID
+	 * @param subject
+	 * @param body
+	 * @return
+	 */
+	public boolean sendNotificationEmail(String sakaiuserID, String subject,
+			String body);
 }

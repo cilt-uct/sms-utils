@@ -294,6 +294,7 @@ public class SmsCoreImpl implements SmsCore {
 		smsTask.setMaxTimeToLive(config.getSmsTaskMaxLifeTime());
 		smsTask.setDelReportTimeoutDuration(config
 				.getDelReportTimeoutDuration());
+		// smsTask.setDelReportTimeoutDuration(30000);
 		return smsTask;
 	}
 
@@ -324,5 +325,11 @@ public class SmsCoreImpl implements SmsCore {
 	public void processVeryLateDeliveryReports() {
 		// TODO Auto-generated method stub
 
+	}
+
+	public boolean sendNotificationEmail(String sakaiuserID, String subject,
+			String body) {
+		// TODO Auto-generated method stub
+		return true;
 	}
 }
