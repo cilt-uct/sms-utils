@@ -72,7 +72,7 @@ public class SmsHibernateConstants {
 	/**
 	 * The default interval to look for new tasks to process.
 	 */
-	public static final int SCHEDULER_INTERVAL = 3;
+	public static final int SCHEDULER_INTERVAL = 30;
 	/**
 	 * The default testing sakai tool id
 	 */
