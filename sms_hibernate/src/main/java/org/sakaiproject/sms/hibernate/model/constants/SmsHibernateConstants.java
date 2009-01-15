@@ -130,4 +130,9 @@ public class SmsHibernateConstants {
 	/** Max mobile number length. */
 	public static final int MAX_MOBILE_NR_LENGTH = 20;
 
+	/**
+	 * The delivery report timeout duration.
+	 */
+	public static final int DEL_REPORT_TIMEOUT_DURATION = 1800;
+
 }

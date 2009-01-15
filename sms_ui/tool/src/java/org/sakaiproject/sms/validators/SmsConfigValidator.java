@@ -1,17 +1,17 @@
 /***********************************************************************************
  * SmsConfigValidator.java
  * Copyright (c) 2008 Sakai Project/Sakai Foundation
- * 
- * Licensed under the Educational Community License, Version 2.0 (the "License"); 
- * you may not use this file except in compliance with the License. 
+ *
+ * Licensed under the Educational Community License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.osedu.org/licenses/ECL-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software 
- * distributed under the License is distributed on an "AS IS" BASIS, 
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
- * See the License for the specific language governing permissions and 
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
  * limitations under the License.
  *
  **********************************************************************************/
@@ -38,19 +38,28 @@ public class SmsConfigValidator implements Validator {
 	public void validate(Object obj, Errors err) {
 		SmsConfig smsConfig = (SmsConfig) obj;
 
-		
-		if(smsConfig.getGateWayReportTimeout() == null)
-			err.rejectValue("gateWayReportTimeout","sms.errors.gateway.empty");
-		if(smsConfig.getSmsRetryMaxCount() == null)
-			err.rejectValue("smsRetryMaxCount", "sms.errors.maxretry.empty");
-		if(smsConfig.getSmsTaskMaxLifeTime() == null)
-			err.rejectValue("smsTaskMaxLifeTime", "sms.errors.tasklifetime.empty");
-		if(smsConfig.getSmsRetryScheduleInterval() == null)
-			err.rejectValue("smsRetryScheduleInterval", "sms.errors.retryschedule.empty");
-		if(smsConfig.getPagingSize() == null)
+		if (smsConfig.getSakaiSiteId() == null
+				|| smsConfig.getSakaiSiteId().equals("")) {
+
+			if (smsConfig.getDelReportTimeoutDuration() == null)
+				err.rejectValue("delreporttimeoutduration",
+						"sms.errors.gateway.empty");
+			if (smsConfig.getSmsRetryMaxCount() == null)
+				err
+						.rejectValue("smsRetryMaxCount",
+								"sms.errors.maxretry.empty");
+			if (smsConfig.getSmsTaskMaxLifeTime() == null)
+				err.rejectValue("smsTaskMaxLifeTime",
+						"sms.errors.tasklifetime.empty");
+			if (smsConfig.getSmsRetryScheduleInterval() == null)
+				err.rejectValue("smsRetryScheduleInterval",
+						"sms.errors.retryschedule.empty");
+
+		}
+
+		if (smsConfig.getPagingSize() == null)
 			err.rejectValue("pagingSize", "sms.errors.paging.empty");
-		
-		
+
 		if (smsConfig.isSendSmsEnabled()) {
 
 			ValidationUtils.rejectIfEmptyOrWhitespace(err, "notificationEmail",
@@ -72,5 +81,4 @@ public class SmsConfigValidator implements Validator {
 			}
 		}
 	}
-
 }

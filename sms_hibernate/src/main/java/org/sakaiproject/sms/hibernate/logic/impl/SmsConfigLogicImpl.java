@@ -142,12 +142,10 @@ public class SmsConfigLogicImpl extends SmsDao implements SmsConfigLogic {
 			.setSmsRetryMaxCount(SmsHibernateConstants.MAXIMUM_RETRY_COUNT);
 
 			config
-					.setDelReportTimeoutDuration(SmsHibernateConstants.GATEWAY_REPORT_TIMEOUT);
+					.setDelReportTimeoutDuration(SmsHibernateConstants.DEL_REPORT_TIMEOUT_DURATION);
 
 			config
 					.setSmsRetryScheduleInterval(SmsHibernateConstants.RETRY_SCHEDULE_INTERVAL);
-			config
-					.setGateWayReportTimeout(SmsHibernateConstants.GATEWAY_REPORT_TIMEOUT);
 			config
 					.setSmsTaskMaxLifeTime(SmsHibernateConstants.MAXIMUM_TASK_LIFETIME);
 			config

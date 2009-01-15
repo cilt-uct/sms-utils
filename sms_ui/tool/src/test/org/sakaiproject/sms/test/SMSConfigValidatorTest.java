@@ -19,7 +19,7 @@ public class SMSConfigValidatorTest extends TestCase {
 	protected void setUp() throws Exception {
 		validator = new SmsConfigValidator();
 		smsConfig = new SmsConfig();
-		smsConfig.setGateWayReportTimeout(new Integer(1));
+		smsConfig.setDelReportTimeoutDuration(new Integer(1));
 		smsConfig.setPagingSize(new Integer(20));
 		smsConfig.setSmsRetryMaxCount(new Integer(3));
 		smsConfig.setSmsTaskMaxLifeTime(new Integer(3));
@@ -55,12 +55,12 @@ public class SMSConfigValidatorTest extends TestCase {
 		validator.validate(smsConfig, bindException);
 		assertFalse(bindException.hasErrors());
 	}
-	
+
 	public void testPagingSizeNotSet() throws Exception {
 		smsConfig.setSendSmsEnabled(false);
 		smsConfig.setPagingSize(null);
 		validator.validate(smsConfig, bindException);
 		assertTrue(bindException.hasErrors());
 	}
-	
+
 }
