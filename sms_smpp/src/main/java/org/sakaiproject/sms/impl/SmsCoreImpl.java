@@ -28,6 +28,7 @@ import org.sakaiproject.sms.api.SmsBilling;
 import org.sakaiproject.sms.api.SmsCore;
 import org.sakaiproject.sms.api.SmsSmpp;
 import org.sakaiproject.sms.hibernate.logic.impl.HibernateLogicFactory;
+import org.sakaiproject.sms.hibernate.model.SmsAccount;
 import org.sakaiproject.sms.hibernate.model.SmsConfig;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
@@ -356,7 +357,20 @@ public class SmsCoreImpl implements SmsCore {
 		String subject = null;
 		String body = null;
 
-		String creditsAvailable = 0.0f + ""; // GET THIS
+		// Get the balance available to calculate the available credit.
+		SmsAccount account = HibernateLogicFactory.getAccountLogic()
+				.getSmsAccount(smsTask.getSmsAccountId().longValue());
+		Float amount = account.getBalance();
+
+		if (!account.getAccountEnabled()) {
+			amount = 0.0f;
+		} else if (account.getOverdraftLimit() != null) {
+			// Add the overdraft to the available balance
+			amount += account.getOverdraftLimit();
+		}
+
+		String creditsAvailable = smsBilling.convertAmountToCredits(amount)
+				+ ""; // GET THIS
 		String creditsRequired = smsTask.getCreditEstimate() + "";
 
 		if (taskMessageType
