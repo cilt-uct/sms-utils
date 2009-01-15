@@ -22,16 +22,30 @@ import org.sakaiproject.sms.api.SmsService;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.otp.SmsTaskLocator;
 
+import uk.org.ponder.messageutil.TargettedMessage;
+import uk.org.ponder.messageutil.TargettedMessageList;
+
 public class HelperActionBean {
 
 	private SmsTaskLocator smsTaskLocator;
 	private SmsService smsService;
 	private SmsCore smsCore;
+	private TargettedMessageList messages;
+
+	/**
+	 * Cancel Action
+	 * 
+	 * @return {@link ActionResults}
+	 */
+	public String cancel() {
+		smsTaskLocator.clearBeans();
+		return ActionResults.CANCEL;
+	}
 
 	/**
 	 * Calculates estimated group size and continues to next page
 	 * 
-	 * @return
+	 * @return {@link ActionResults}
 	 */
 	public String doContinue() {
 		if (smsTaskLocator.containsNew()) {
@@ -42,7 +56,11 @@ public class HelperActionBean {
 
 			return ActionResults.CONTINUE;
 		} else {
-			return ActionResults.CANCEL; // TODO: Change to error message
+			// Unexpected error
+			messages.addMessage(new TargettedMessage(
+					"sms.errors.unexpected-error", null,
+					TargettedMessage.SEVERITY_ERROR));
+			return ActionResults.ERROR;
 		}
 
 	}
@@ -50,7 +68,7 @@ public class HelperActionBean {
 	/**
 	 * Checks sufficient credits and then sends
 	 * 
-	 * @return
+	 * @return {@link ActionResults}
 	 */
 	public String send() {
 		if (smsTaskLocator.containsNew()) {
@@ -62,17 +80,30 @@ public class HelperActionBean {
 					smsTask.getSenderUserName(), smsTask.getCreditEstimate())) {
 				// do sending
 				smsCore.insertTask(smsTask);
-				// TODO: Give success message
+				messages.addMessage(new TargettedMessage(
+						"sms.helper.task-success", null,
+						TargettedMessage.SEVERITY_INFO));
+				smsTaskLocator.clearBeans();
+				return ActionResults.SUCCESS;
 			} else {
-				// TODO: Give error message
+				messages.addMessage(new TargettedMessage(
+						"sms.errors.insufficient-credits", null,
+						TargettedMessage.SEVERITY_ERROR));
+				smsTaskLocator.clearBeans();
+				return ActionResults.ERROR;
 			}
 
-			smsTaskLocator.clearBeans();
-			return ActionResults.SUCCESS;
 		} else {
-			return ActionResults.CANCEL; // TODO: Change to error message
+			messages.addMessage(new TargettedMessage(
+					"sms.errors.unexpected-error", null,
+					TargettedMessage.SEVERITY_ERROR));
+			return ActionResults.ERROR;
 		}
 
+	}
+
+	public void setMessages(TargettedMessageList messages) {
+		this.messages = messages;
 	}
 
 	public void setSmsCore(SmsCore smsCore) {

@@ -80,9 +80,8 @@ public class HelperProducer implements ViewComponentProducer,
 					.make("sms.general.continue"),
 					"HelperActionBean.doContinue");
 		}
-		UICommand.make(form, "cancel-button",
-				UIMessage.make("sms.general.cancel")).setReturn(
-				ActionResults.CANCEL);
+		UICommand.make(form, "cancel-button", UIMessage
+				.make("sms.general.cancel"), "HelperActionBean.cancel");
 
 		UIMessage.make(form, "estimated-group-size-label",
 				"sms.helper.estimated-group-size");
@@ -130,6 +129,8 @@ public class HelperProducer implements ViewComponentProducer,
 	public List reportNavigationCases() {
 		List<NavigationCase> list = new ArrayList<NavigationCase>();
 		list.add(new NavigationCase(ActionResults.CANCEL,
+				new SimpleViewParameters(HelperProducer.VIEW_ID)));
+		list.add(new NavigationCase(ActionResults.ERROR,
 				new SimpleViewParameters(HelperProducer.VIEW_ID)));
 		list.add(new NavigationCase(ActionResults.CONTINUE,
 				new SimpleViewParameters(HelperProducer.VIEW_ID),

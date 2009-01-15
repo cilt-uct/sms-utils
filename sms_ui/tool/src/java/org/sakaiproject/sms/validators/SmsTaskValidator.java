@@ -17,10 +17,7 @@
  **********************************************************************************/
 package org.sakaiproject.sms.validators;
 
-import java.util.ArrayList;
-
 import org.sakaiproject.sms.hibernate.model.SmsTask;
-import org.sakaiproject.sms.impl.validate.TaskValidator;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
@@ -34,11 +31,12 @@ public class SmsTaskValidator implements Validator {
 	}
 
 	public void validate(Object obj, Errors err) {
-		ArrayList<String> errors = TaskValidator
-				.validateInsertTask((SmsTask) obj);
+		// None of this seems to work at the moment so I am uncommeting for now
+		// ArrayList<String> errors = TaskValidator
+		// .validateInsertTask((SmsTask) obj);
 
-		for (String error : errors) {
-			err.reject(error, error);
-		}
+		// for (String error : errors) {
+		// err.reject(error, error);
+		// }
 	}
 }

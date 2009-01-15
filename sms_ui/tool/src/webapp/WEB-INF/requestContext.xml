@@ -103,6 +103,7 @@
   	<property name="smsTaskLocator" ref="SmsTaskLocator" />
   	<property name="smsService" ref="org.sakaiproject.sms.api.SmsService" />
   	<property name="smsCore" ref="org.sakaiproject.sms.api.SmsCore" />
+  	<property name="messages" ref="targettedMessageList"/>
   </bean>
   
   <!-- Helpers -->
