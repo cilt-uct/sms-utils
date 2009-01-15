@@ -114,8 +114,8 @@ public class SmsServiceImpl implements SmsService {
 	 */
 	public boolean checkSufficientCredits(String sakaiSiteID,
 			String sakaiUserID, int creditsRequired) {
-		// TODO Will be completed with the billing delivery
-		return false;
+		// TODO Will be completed with the billing service
+		return true;
 	}
 
 	/**
