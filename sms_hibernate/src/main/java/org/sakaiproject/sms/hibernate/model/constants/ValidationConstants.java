@@ -73,7 +73,7 @@ public class ValidationConstants {
 	public static String TASK_MAX_TIME_TO_LIVE_INVALID = "sms.errors.task.maxTimeToLive.invalid";
 
 	/** Delivery report timeout invalid. */
-	public static String TASK_DELIVERY_REPORT_TIMEOUT_INVALID = "sms.errors.task.delveryReportTimeout.invalid";
+	public static String TASK_DELIVERY_REPORT_TIMEOUT_INVALID = "sms.errors.task.deliveryReportTimeout.invalid";
 
 	/** Delivery group id empty. */
 	public static String TASK_DELIVERY_GROUP_ID_EMPTY = "sms.errors.task.deliverGroupId.empty";
