@@ -151,7 +151,7 @@ public class SmsCoreImpl implements SmsCore {
 		HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask);
 		smsBilling.reserveCredits(smsBilling.getAccountID(smsTask
 				.getSakaiSiteId(), smsTask.getSenderUserName(), smsTask
-				.getSmsAccountId()), smsTask.getCreditEstimate());
+				.getSmsAccountId()), smsTask.getCreditEstimateInt());
 
 		tryProcessTaskRealTime(smsTask);
 		return smsTask;
@@ -182,8 +182,8 @@ public class SmsCoreImpl implements SmsCore {
 	}
 
 	public void processTask(SmsTask smsTask) {
-		SmsConfig config = HibernateLogicFactory.getConfigLogic()
-				.getOrCreateSmsConfigBySakaiSiteId(smsTask.getSakaiSiteId());
+		SmsConfig systemConfig = HibernateLogicFactory.getConfigLogic()
+				.getOrCreateSystemSmsConfig();
 		smsTask.setDateProcessed(new Date());
 		smsTask.setAttemptCount((smsTask.getAttemptCount()) + 1);
 		Calendar cal = Calendar.getInstance();
@@ -200,7 +200,7 @@ public class SmsCoreImpl implements SmsCore {
 		}
 
 		smsTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_BUSY);
-		if (smsTask.getAttemptCount() < config.getSmsRetryMaxCount()) {
+		if (smsTask.getAttemptCount() < systemConfig.getSmsRetryMaxCount()) {
 			if (smsTask.getAttemptCount() <= 1) {
 
 				// TODO: we need to generate messages based on a list of userIDs
@@ -222,8 +222,8 @@ public class SmsCoreImpl implements SmsCore {
 					|| smsTask.getStatusCode().equals(
 							SmsConst_DeliveryStatus.STATUS_RETRY)) {
 				Calendar now = Calendar.getInstance();
-				now.add(Calendar.MINUTE,
-						+(config.getSmsRetryScheduleInterval()));
+				now.add(Calendar.MINUTE, +(systemConfig
+						.getSmsRetryScheduleInterval()));
 				smsTask.rescheduleDateToSend(new Date(now.getTimeInMillis()));
 			}
 
@@ -288,6 +288,7 @@ public class SmsCoreImpl implements SmsCore {
 		smsTask.setSakaiToolId(sakaiToolId);
 		smsTask.setSenderUserName(sakaiSenderID);
 		smsTask.setDeliveryGroupName(deliverGroupId);
+		smsTask.setDateCreated(new Date());
 		smsTask.setDateToSend(dateToSend);
 		smsTask.setAttemptCount(0);
 		smsTask.setMessageBody(messageBody);

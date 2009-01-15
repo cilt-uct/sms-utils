@@ -29,6 +29,7 @@ import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_SmscDeliveryStatus;
 import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
 import org.sakaiproject.sms.hibernate.util.AbstractBaseTestCase;
+import org.sakaiproject.sms.hibernate.util.DateUtil;
 import org.sakaiproject.sms.hibernate.util.HibernateUtil;
 import org.sakaiproject.sms.impl.SmsBillingImpl;
 import org.sakaiproject.sms.impl.SmsCoreImpl;
@@ -38,9 +39,9 @@ import org.sakaiproject.sms.impl.SmsSmppImpl;
  * This test also send messages to the smpp simulator but it check the specific
  * statuses of sent messages. It also test the retrieval of the next sms task
  * from the SMS_TASK table.
- * 
+ *
  * @author etienne@psybergate.co.za
- * 
+ *
  */
 
 public class SmsCoreTest extends AbstractBaseTestCase {
@@ -85,7 +86,7 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 	 * must pick up the oldest SmsTask with an (pending/incomplete/reply)
 	 * status. The test succeeds if the Smstasks are returned in the proper
 	 * order and the correct amount of delivery reports were received.
-	 * 
+	 *
 	 * NOTE: Make sure that the SMS_TASK table is empty before running this
 	 * test, else it will fail.
 	 */
@@ -102,9 +103,6 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 					SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_SITE_ID, null,
 					SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID);
 
-			smsTask3.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
-			smsTask3 = smsCoreImpl.calculateEstimatedGroupSize(smsTask3);
-
 			now.add(Calendar.MINUTE, -1);
 			SmsTask smsTask2 = smsCoreImpl.getPreliminaryTask(
 					"testProcessNextTask-smsTask2", new Date(now
@@ -114,7 +112,6 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 					SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID);
 
 			smsTask2.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
-			smsTask2 = smsCoreImpl.calculateEstimatedGroupSize(smsTask2);
 
 			now.add(Calendar.MINUTE, -3);
 			SmsTask smsTask1 = smsCoreImpl.getPreliminaryTask(
@@ -125,7 +122,6 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 					SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID);
 
 			smsTask1.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
-			smsTask1 = smsCoreImpl.calculateEstimatedGroupSize(smsTask1);
 
 			now.add(Calendar.MINUTE, 60);
 			SmsTask smsTask4 = smsCoreImpl.getPreliminaryTask(
@@ -136,12 +132,15 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 					SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID);
 
 			smsTask4.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
-			smsTask4 = smsCoreImpl.calculateEstimatedGroupSize(smsTask4);
 
-			smsCoreImpl.insertTask(smsTask3);
-			smsCoreImpl.insertTask(smsTask2);
-			smsCoreImpl.insertTask(smsTask1);
-			smsCoreImpl.insertTask(smsTask4);
+			smsTask1.setDateCreated(DateUtil.getCurrentDate());
+			HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask1);
+			smsTask2.setDateCreated(DateUtil.getCurrentDate());
+			HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask2);
+			smsTask3.setDateCreated(DateUtil.getCurrentDate());
+			HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask3);
+			smsTask4.setDateCreated(DateUtil.getCurrentDate());
+			HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask4);
 
 			assertEquals(true, smsTask1.getId().equals(
 					smsCoreImpl.getNextSmsTask().getId()));
@@ -214,8 +213,10 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 					SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID);
 			smsTask1.setMaxTimeToLive(60);
 
-			smsCoreImpl.insertTask(smsTask2);
-			smsCoreImpl.insertTask(smsTask1);
+			smsTask1.setDateCreated(DateUtil.getCurrentDate());
+			HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask1);
+			smsTask2.setDateCreated(DateUtil.getCurrentDate());
+			HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask2);
 
 			assertEquals(true, smsTask1.getId().equals(
 					smsCoreImpl.getNextSmsTask().getId()));
@@ -264,7 +265,10 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 				"testProcessTaskFailMessageBody",
 				SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_SITE_ID, null,
 				SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID);
-		smsCoreImpl.insertTask(smsTask);
+
+		smsTask.setDateCreated(DateUtil.getCurrentDate());
+		HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask);
+
 		smsTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
 		smsTask.setAttemptCount(0);
 		smsSmppImpl.setLogLevel(Level.OFF);
