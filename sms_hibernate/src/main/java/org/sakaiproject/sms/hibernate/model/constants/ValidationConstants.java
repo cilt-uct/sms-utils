@@ -76,7 +76,7 @@ public class ValidationConstants {
 	public static String TASK_DELIVERY_REPORT_TIMEOUT_INVALID = "sms.errors.task.deliveryReportTimeout.invalid";
 
 	/** Delivery group id empty. */
-	public static String TASK_DELIVERY_GROUP_ID_EMPTY = "sms.errors.task.deliverGroupId.empty";
+	public static String TASK_DELIVERY_GROUP_ID_EMPTY = "sms.errors.task.deliveryGroupId.empty";
 
 	/** Message sakai user id empty */
 	public static String MESSAGE_SAKAI_USER_ID_EMPTY = "sms.errors.message.sakaiUserId.empty";
