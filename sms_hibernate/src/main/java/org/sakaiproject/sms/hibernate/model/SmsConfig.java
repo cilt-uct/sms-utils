@@ -90,15 +90,6 @@ public class SmsConfig extends BaseModel {
 	}
 
 	/**
-	 * Gets the gateway report timeout.
-	 * 
-	 * @return the gate way report timeout
-	 */
-	public Integer getGateWayReportTimeout() {
-		return gateWayReportTimeout;
-	}
-
-	/**
 	 * Gets the notification email.
 	 * 
 	 * @return the notification email
@@ -134,16 +125,6 @@ public class SmsConfig extends BaseModel {
 	 */
 	private String getSmsEnabled() {
 		return smsEnabled;
-	}
-
-	/**
-	 * Sets the gateway report timeout.
-	 * 
-	 * @param gateWayReportTimeout
-	 *            the new gateway report timeout
-	 */
-	public void setGateWayReportTimeout(Integer gateWayReportTimeout) {
-		this.gateWayReportTimeout = gateWayReportTimeout;
 	}
 
 	/**
@@ -338,8 +319,8 @@ public class SmsConfig extends BaseModel {
 		int result = 1;
 		result = prime
 				* result
-				+ ((gateWayReportTimeout == null) ? 0 : gateWayReportTimeout
-						.hashCode());
+				+ ((delReportTimeoutDuration == null) ? 0
+						: delReportTimeoutDuration.hashCode());
 		result = prime
 				* result
 				+ ((notificationEmail == null) ? 0 : notificationEmail
