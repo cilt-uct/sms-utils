@@ -17,6 +17,7 @@
  **********************************************************************************/
 package org.sakaiproject.sms.otp;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -67,8 +68,8 @@ public class SmsTaskLocator implements BeanLocator {
 			if (name.startsWith(NEW_PREFIX)) {
 				togo = smsCore
 						.getPreliminaryTask(
-								"",
-								null,
+								"deliveryGroup",
+								new Date(),
 								"",
 								SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_TOOL_ID,
 								"",
