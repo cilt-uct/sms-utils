@@ -128,13 +128,7 @@ public class SmsConfigLogicImpl extends SmsDao implements SmsConfigLogic {
 
 	public SmsConfig createDefaultSmsConfig(String sakaiSiteId) {
 		SmsConfig config = new SmsConfig();
-		config
-				.setGateWayReportTimeout(SmsHibernateConstants.GATEWAY_REPORT_TIMEOUT);
-		config.setNotificationEmail(SmsHibernateConstants.NOTIFICATION_EMAIL);
-		config.setNotificationEmailBilling("notificationBilling@instution.com");
-		config.setNotificationEmailSent("notificationSent@instution.com");
-		config.setPagingSize(SmsHibernateConstants.DEFAULT_PAGE_SIZE);
-		config.setSakaiSiteId(sakaiSiteId);
+
 		if (sakaiSiteId != null && sakaiSiteId.equals("")) {
 			config.setSakaiToolId("");
 			config
@@ -152,9 +146,18 @@ public class SmsConfigLogicImpl extends SmsDao implements SmsConfigLogic {
 					.setSchedulerInterval(SmsHibernateConstants.SCHEDULER_INTERVAL);
 		} else {
 			config.setSakaiToolId("DummyToolId");
+			config
+					.setGateWayReportTimeout(SmsHibernateConstants.GATEWAY_REPORT_TIMEOUT);
+			config
+					.setNotificationEmail(SmsHibernateConstants.NOTIFICATION_EMAIL);
+			config
+					.setNotificationEmailBilling("notificationBilling@instution.com");
+			config.setNotificationEmailSent("notificationSent@instution.com");
+			config.setPagingSize(SmsHibernateConstants.DEFAULT_PAGE_SIZE);
+			config.setSakaiSiteId(sakaiSiteId);
+			config.setSendSmsEnabled(false);
 
 		}
-		config.setSendSmsEnabled(false);
 
 		return config;
 
