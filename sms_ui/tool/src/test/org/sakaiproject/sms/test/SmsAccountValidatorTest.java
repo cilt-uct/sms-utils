@@ -144,17 +144,16 @@ public class SmsAccountValidatorTest extends TestCase {
 	}
 
 	/**
-	 * Test null OverdraftLimit
+	 * Test null OverdraftLimit (not applicable at the moment)
 	 */
-	public void testOverdraftLimit_null() {
-		account.setOverdraftLimit(null);
-		validator.validate(account, errors);
-		assertTrue(errors.hasFieldErrors(OVERDRAFT_LIMIT_FIELD));
-		assertEquals("sms.errors.overdraftLimit.invalid", errors
-				.getFieldError().getCode());
-
-	}
-
+	// public void testOverdraftLimit_null() {
+	// account.setOverdraftLimit(null);
+	// validator.validate(account, errors);
+	// assertTrue(errors.hasFieldErrors(OVERDRAFT_LIMIT_FIELD));
+	// assertEquals("sms.errors.overdraftLimit.invalid", errors
+	// .getFieldError().getCode());
+	//
+	// }
 	/**
 	 * Test empty SakaiSiteId
 	 */

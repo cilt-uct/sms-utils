@@ -51,8 +51,7 @@ public class SmsAccountLocator implements BeanLocator {
 		if (togo == null) {
 			if (name.startsWith(NEW_PREFIX)) {
 				togo = new SmsAccount();
-				togo.setBalance(SmsHibernateConstants.INITIAL_BALANACE);
-				togo.setOverdraftLimit(SmsHibernateConstants.OVERDRAFT_LIMIT);
+				togo.setBalance(SmsHibernateConstants.INITIAL_BALANCE);
 			} else {
 				togo = smsAccountLogic.getSmsAccount(Long.parseLong(name));
 			}

@@ -57,8 +57,9 @@ public class SmsAccountValidator implements Validator {
 
 		// Because SmsCustomNumberEditor sets all invalid number values as null
 		// we must give generic message for null values
-		ValidationUtils.rejectIfEmpty(err, "overdraftLimit",
-				"sms.errors.overdraftLimit.invalid");
+
+		// ValidationUtils.rejectIfEmpty(err, "overdraftLimit",
+		// "sms.errors.overdraftLimit.invalid");
 		ValidationUtils.rejectIfEmpty(err, "balance",
 				"sms.errors.balance.invalid");
 
