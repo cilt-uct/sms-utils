@@ -27,7 +27,8 @@ import org.sakaiproject.sms.hibernate.model.constants.ValidationConstants;
 import org.sakaiproject.sms.impl.SmsBillingImpl;
 
 /**
- * This class is used to do varaious validations involving SmsTasks
+ * This class is used to do various validations involving SmsTasks. It is called
+ * from the UI and also when a test is persisted.
  * 
  * @author julian@psybergate.com
  * @version 1.0
@@ -95,7 +96,7 @@ public class TaskValidator {
 		} else {
 			errors.add(ValidationConstants.MESSAGE_BODY_EMPTY);
 		}
-		// TODO also check characer set on message body
+		// TODO also check character set on message body
 
 		// Check sender user name
 		if (smsTask.getSenderUserName() == null
