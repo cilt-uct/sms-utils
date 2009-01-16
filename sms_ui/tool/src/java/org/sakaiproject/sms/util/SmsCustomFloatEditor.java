@@ -28,6 +28,8 @@ import org.springframework.beans.propertyeditors.CustomNumberEditor;
  */
 public class SmsCustomFloatEditor extends CustomNumberEditor {
 
+	private final String field;
+
 	/**
 	 * Constructor sets NumberClass as {@link Float}
 	 * 
@@ -35,9 +37,10 @@ public class SmsCustomFloatEditor extends CustomNumberEditor {
 	 *            if null values are allowed
 	 * @throws IllegalArgumentException
 	 */
-	public SmsCustomFloatEditor(boolean allowEmpty)
+	public SmsCustomFloatEditor(boolean allowEmpty, String field)
 			throws IllegalArgumentException {
 		super(Float.class, allowEmpty);
+		this.field = field;
 	}
 
 	/**
@@ -49,12 +52,16 @@ public class SmsCustomFloatEditor extends CustomNumberEditor {
 	public void setAsText(String text) {
 		if (text == null) {
 			super.setAsText(text);
+		} else if ("".equals(text.trim())) {
+			super.setAsText(null);
 		} else {
 			try {
 				Float value = Float.valueOf(text);
 				super.setValue(value);
 			} catch (NumberFormatException e) {
-				super.setAsText(null); // Set value as null if not able to parse
+				// Throw specific message
+				throw new NumberFormatException("sms.errors." + field
+						+ ".invalid");
 			}
 		}
 	}

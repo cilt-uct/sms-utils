@@ -25,6 +25,8 @@ import org.sakaiproject.sms.constants.SmsUiConstants;
 import org.sakaiproject.sms.otp.SmsAccountLocator;
 import org.sakaiproject.sms.params.IdParams;
 
+import uk.org.ponder.messageutil.TargettedMessage;
+import uk.org.ponder.messageutil.TargettedMessageList;
 import uk.org.ponder.rsf.components.ELReference;
 import uk.org.ponder.rsf.components.UIBoundList;
 import uk.org.ponder.rsf.components.UICommand;
@@ -42,6 +44,7 @@ import uk.org.ponder.rsf.view.ViewComponentProducer;
 import uk.org.ponder.rsf.viewstate.SimpleViewParameters;
 import uk.org.ponder.rsf.viewstate.ViewParameters;
 import uk.org.ponder.rsf.viewstate.ViewParamsReporter;
+import uk.org.ponder.util.UniversalRuntimeException;
 
 public class AccountProducer implements ViewComponentProducer,
 		NavigationCaseReporter, ViewParamsReporter {
@@ -49,6 +52,7 @@ public class AccountProducer implements ViewComponentProducer,
 	public static final String VIEW_ID = "account";
 
 	private FormatAwareDateInputEvolver dateEvolver;
+	private TargettedMessageList messages;
 
 	private void createAccountEnabledBooleanSelection(String accountOTP,
 			UIForm form) {
@@ -141,6 +145,26 @@ public class AccountProducer implements ViewComponentProducer,
 
 	}
 
+	// DataConverter still tries to bind invalid number to bean which causes
+	// another message on list. This is to remove the extra messages.
+	private void fixupMessages() {
+		if (messages.size() > 1) {
+			for (int i = 1; i < messages.size(); i++) {
+				TargettedMessage message = messages.messageAt(i);
+				// If the message is a UniversalRuntimeException for one of the
+				// numeric fields
+				if (message.exception instanceof UniversalRuntimeException
+						&& (message.targetid.equals("overdraft-limit") || message.targetid
+								.equals("balance"))) {
+					// Remove it because an error is already registered on the
+					// message list
+					messages.removeMessageAt(i);
+					i--;
+				}
+			}
+		}
+	}
+
 	public String getViewID() {
 		return VIEW_ID;
 	}
@@ -151,6 +175,7 @@ public class AccountProducer implements ViewComponentProducer,
 
 	public void init() {
 		dateEvolver.setStyle(FormatAwareDateInputEvolver.DATE_INPUT);
+		fixupMessages();
 	}
 
 	public List reportNavigationCases() {
@@ -165,4 +190,9 @@ public class AccountProducer implements ViewComponentProducer,
 	public void setDateEvolver(FormatAwareDateInputEvolver dateEvolver) {
 		this.dateEvolver = dateEvolver;
 	}
+
+	public void setMessages(TargettedMessageList messages) {
+		this.messages = messages;
+	}
+
 }

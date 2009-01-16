@@ -27,8 +27,13 @@ import uk.org.ponder.mapping.PropertyEditorFactory;
  */
 public class FloatEditorFactory implements PropertyEditorFactory {
 
+	private String field;
+
 	public PropertyEditor getPropertyEditor() {
-		return new SmsCustomFloatEditor(true);
+		return new SmsCustomFloatEditor(true, field);
 	}
 
+	public void setField(String field) {
+		this.field = field;
+	}
 }

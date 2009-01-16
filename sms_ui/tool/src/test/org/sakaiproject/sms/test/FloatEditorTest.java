@@ -65,7 +65,13 @@ public class FloatEditorTest extends TestCase {
 	public void testSmsCustomFloatEditor_invalid() {
 		SmsCustomFloatEditor editor = (SmsCustomFloatEditor) floatEditorFactory
 				.getPropertyEditor();
-		editor.setAsText("xXxxX");
+		try {
+			editor.setAsText("xXxxX");
+			fail("NumberFormatException should be thrown");
+		} catch (NumberFormatException nfe) {
+			assertNotNull(nfe);
+		}
+
 		assertNull(editor.getValue());
 	}
 
