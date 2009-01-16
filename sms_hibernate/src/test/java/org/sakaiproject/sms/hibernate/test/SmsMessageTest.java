@@ -49,12 +49,14 @@ public class SmsMessageTest extends AbstractBaseTestCase {
 		insertMessage1 = new SmsMessage();
 		insertMessage1.setMobileNumber("0721998919");
 		insertMessage1.setSmscMessageId("smscMessageId1");
+		insertMessage1.setSmscId(SmsHibernateConstants.SMSC_ID);
 		insertMessage1.setSakaiUserId("sakaiUserId");
 		insertMessage1.setStatusCode(SmsConst_DeliveryStatus.STATUS_DELIVERED);
 
 		insertMessage2 = new SmsMessage();
 		insertMessage2.setMobileNumber("0823450983");
 		insertMessage2.setSmscMessageId("smscMessageId2");
+		insertMessage2.setSmscId(SmsHibernateConstants.SMSC_ID);
 		insertMessage2.setSakaiUserId("sakaiUserId");
 		insertMessage2.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
 	}
@@ -138,9 +140,10 @@ public class SmsMessageTest extends AbstractBaseTestCase {
 	 * Test get sms message by smsc message id.
 	 */
 	public void testGetSmsMessageBySmscMessageId() {
-		SmsMessage smsMessage = HibernateLogicFactory
-				.getMessageLogic()
-				.getSmsMessageBySmscMessageId(insertMessage2.getSmscMessageId());
+		SmsMessage smsMessage = HibernateLogicFactory.getMessageLogic()
+				.getSmsMessageBySmscMessageId(
+						insertMessage2.getSmscMessageId(),
+						SmsHibernateConstants.SMSC_ID);
 		assertTrue(smsMessage.equals(insertMessage2));
 		assertEquals(smsMessage.getSmscMessageId(), insertMessage2
 				.getSmscMessageId());

@@ -113,11 +113,13 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 	 *            message id
 	 * @return sms message
 	 */
-	public SmsMessage getSmsMessageBySmscMessageId(String smscMessageId) {
+	public SmsMessage getSmsMessageBySmscMessageId(String smscMessageId,
+			String smscID) {
 		Session s = HibernateUtil.getSession();
 		Query query = s
-				.createQuery("from SmsMessage mes where mes.smscMessageId = :smscId ");
-		query.setParameter("smscId", smscMessageId, Hibernate.STRING);
+				.createQuery("from SmsMessage mes where mes.smscMessageId = :smscMessageId and mes.smscId = :smscID");
+		query.setParameter("smscMessageId", smscMessageId, Hibernate.STRING);
+		query.setParameter("smscID", smscID, Hibernate.STRING);
 		List<SmsMessage> messages = query.list();
 		if (messages != null && messages.size() > 0) {
 			return messages.get(0);
@@ -170,18 +172,6 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 	}
 
 	/**
-	 * Gets a search results for all SmsMessages that match the specified criteria  
-	 * 
-	 * @param searchBean
-	 * @return Search result container
-	 * @throws SmsSearchException
-	 */
-	public List<SmsMessage> getAllSmsMessagesForCriteria(
-			SearchFilterBean searchBean) throws SmsSearchException {
-		return getSmsMessagesForCriteria(searchBean);
-	}
-	
-	/**
 	 * Gets a search results container housing the result set for a particular
 	 * displayed page
 	 * 
@@ -189,20 +179,9 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 	 * @return Search result container
 	 * @throws SmsSearchException
 	 */
-	public SearchResultContainer<SmsMessage> getPagedSmsMessagesForCriteria(
+	public SearchResultContainer<SmsMessage> getSmsMessagesForCriteria(
 			SearchFilterBean searchBean) throws SmsSearchException {
 
-		List<SmsMessage> messages = getSmsMessagesForCriteria(searchBean);
-		SearchResultContainer<SmsMessage> con = new SearchResultContainer<SmsMessage>(getPageSize());
-		con.setTotalResultSetSize(new Long(messages.size()));
-		con.calculateAndSetPageResults(messages, searchBean.getCurrentPage());
-		log.debug(con.toString());
-
-		return con;
-	}
-
-	private List<SmsMessage> getSmsMessagesForCriteria(
-			SearchFilterBean searchBean) throws SmsSearchException {
 		Criteria crit = HibernateUtil.getSession().createCriteria(
 				SmsMessage.class).createAlias("smsTask", "smsTask");
 
