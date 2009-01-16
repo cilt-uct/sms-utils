@@ -90,4 +90,9 @@ public class SmsMessageLogicStub implements SmsMessageLogic {
 		return null;
 	}
 
+	public SmsMessage getSmsMessageBySmscMessageId(String arg0, String arg1) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
