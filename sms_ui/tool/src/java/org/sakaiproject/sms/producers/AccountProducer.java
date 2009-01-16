@@ -25,6 +25,7 @@ import org.sakaiproject.sms.constants.SmsUiConstants;
 import org.sakaiproject.sms.otp.SmsAccountLocator;
 import org.sakaiproject.sms.params.IdParams;
 
+import uk.org.ponder.beanutil.BeanGetter;
 import uk.org.ponder.messageutil.TargettedMessage;
 import uk.org.ponder.messageutil.TargettedMessageList;
 import uk.org.ponder.rsf.components.ELReference;
@@ -33,6 +34,7 @@ import uk.org.ponder.rsf.components.UICommand;
 import uk.org.ponder.rsf.components.UIContainer;
 import uk.org.ponder.rsf.components.UIELBinding;
 import uk.org.ponder.rsf.components.UIForm;
+import uk.org.ponder.rsf.components.UIInitBlock;
 import uk.org.ponder.rsf.components.UIInput;
 import uk.org.ponder.rsf.components.UIMessage;
 import uk.org.ponder.rsf.components.UISelect;
@@ -53,6 +55,7 @@ public class AccountProducer implements ViewComponentProducer,
 
 	private FormatAwareDateInputEvolver dateEvolver;
 	private TargettedMessageList messages;
+	private BeanGetter ELEvaluator;
 
 	private void createAccountEnabledBooleanSelection(String accountOTP,
 			UIForm form) {
@@ -93,9 +96,12 @@ public class AccountProducer implements ViewComponentProducer,
 
 		String accountOTP = SmsAccountLocator.LOCATOR_NAME + ".";
 
+		boolean isNew = false;
+
 		IdParams params = (IdParams) viewparams;
 		if (params.id == null || "".equals(params.id)) {
 			accountOTP += SmsUiConstants.NEW_1;
+			isNew = true;
 		} else {
 			accountOTP += params.id;
 		}
@@ -129,7 +135,15 @@ public class AccountProducer implements ViewComponentProducer,
 
 		UIInput endDate = UIInput.make(form, "endDate:", accountOTP
 				+ ".enddate");
+
 		dateEvolver.evolveDateInput(endDate);
+
+		// to clear date input field
+		if (isNew || ELEvaluator.getBean(accountOTP + ".enddate") == null) {
+			UIInitBlock.make(tofill, "init-clear-date-input",
+					"initClearDateInput",
+					new Object[] { "endDate:1:date-field" });
+		}
 
 		UICommand cmd = UICommand.make(form, "save-btn",
 				SmsAccountLocator.LOCATOR_NAME + ".saveAll");
@@ -189,6 +203,10 @@ public class AccountProducer implements ViewComponentProducer,
 
 	public void setDateEvolver(FormatAwareDateInputEvolver dateEvolver) {
 		this.dateEvolver = dateEvolver;
+	}
+
+	public void setELEvaluator(BeanGetter ELEvaluator) {
+		this.ELEvaluator = ELEvaluator;
 	}
 
 	public void setMessages(TargettedMessageList messages) {

@@ -71,8 +71,6 @@ public class HelperProducer implements ViewComponentProducer,
 		// Disables the characters remaining input
 		charsRemaining.decorate(new UIDisabledDecorator());
 
-		// TODO: Continue / Send button
-
 		if (smsTaskLocator.containsNew()) {
 			UICommand.make(form, "action-button", UIMessage
 					.make("sms.general.save"), "HelperActionBean.save");
