@@ -152,9 +152,9 @@
 			<generator class="native" />
 		</id>
 		<property name="sakaiSiteId" type="string" column="SAKAI_SITE_ID"
-			not-null="false" length="99" unique="true" />
+			not-null="false" length="99" unique="true" index="sakai_site_tool_idx"/>
 		<property name="sakaiToolId" type="string" column="SAKAI_TOOL_ID"
-			not-null="false" length="99" unique="false" />
+			not-null="false" length="99" unique="false" index="sakai_site_tool_idx"/>
 		<property name="smsEnabled" type="string" column="SMS_ENABLED"
 			not-null="false" length="1" />
 		<property name="notificationEmail" type="string" column="NOTIFICATION_EMAIL"
