@@ -46,7 +46,7 @@ public class NullHandling {
 		if(dateProcessed == null)
 			return "N/A";
 		
-		SimpleDateFormat format = new SimpleDateFormat("yyyy/M/dd hh:mm");
+		SimpleDateFormat format = new SimpleDateFormat("yyyy/M/dd kk:mm");
 		
 		return format.format(dateProcessed);
 	}
