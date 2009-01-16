@@ -163,9 +163,8 @@ public class SmsCoreImpl implements SmsCore {
 		smsTask.setAttemptCount(0);
 		smsTask.setMessageBody(messageBody);
 		smsTask.setMaxTimeToLive(config.getSmsTaskMaxLifeTime());
-		// smsTask.setDelReportTimeoutDuration(config
-		// .getDelReportTimeoutDuration());
-		smsTask.setDelReportTimeoutDuration(30000);
+		smsTask.setDelReportTimeoutDuration(config
+				.getDelReportTimeoutDuration());
 		return smsTask;
 	}
 
@@ -319,9 +318,9 @@ public class SmsCoreImpl implements SmsCore {
 
 	}
 
-	public boolean sendNotificationEmail(String sakaiuserID, String subject,
+	public boolean sendNotificationEmail(String toAddress, String subject,
 			String body) {
-		// TODO Auto-generated method stub
+		// TODO Call sakai service to send the email
 		return true;
 	}
 
@@ -342,7 +341,7 @@ public class SmsCoreImpl implements SmsCore {
 	}
 
 	/**
-	 * Send task notification.
+	 * Send a email notification out.
 	 * 
 	 * @param smsTask
 	 *            the sms task
@@ -356,7 +355,10 @@ public class SmsCoreImpl implements SmsCore {
 
 		String subject = null;
 		String body = null;
+		String toAddress = null;
 
+		SmsConfig config = HibernateLogicFactory.getConfigLogic()
+				.getOrCreateSmsConfigBySakaiSiteId(smsTask.getSakaiSiteId());
 		// Get the balance available to calculate the available credit.
 		SmsAccount account = HibernateLogicFactory.getAccountLogic()
 				.getSmsAccount(smsTask.getSmsAccountId().longValue());
@@ -381,6 +383,7 @@ public class SmsCoreImpl implements SmsCore {
 			body = MessageCatelog.getMessage(
 					"messages.notificationBodyStarted", creditsRequired,
 					creditsAvailable);
+			toAddress = config.getNotificationEmail();
 
 		} else if (taskMessageType
 				.equals(SmsHibernateConstants.TASK_NOTIFICATION_SENT)) {
@@ -389,6 +392,7 @@ public class SmsCoreImpl implements SmsCore {
 							.toString());
 			body = MessageCatelog.getMessage("messages.notificationBodySent",
 					creditsRequired, creditsAvailable);
+			toAddress = config.getNotificationEmailSent();
 
 		} else if (taskMessageType
 				.equals(SmsHibernateConstants.TASK_NOTIFICATION_FAILED)) {
@@ -397,10 +401,10 @@ public class SmsCoreImpl implements SmsCore {
 							.toString());
 			body = MessageCatelog.getMessage("messages.notificationBodyFailed",
 					creditsRequired, creditsAvailable);
+			toAddress = config.getNotificationEmail();
 		}
 
-		return sendNotificationEmail(smsTask.getSakaiSiteId(), subject, body);
+		return sendNotificationEmail(toAddress, subject, body);
 
 	}
-
 }

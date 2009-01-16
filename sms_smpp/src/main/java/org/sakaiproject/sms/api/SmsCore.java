@@ -156,13 +156,13 @@ public interface SmsCore {
 	public SmsTask calculateEstimatedGroupSize(SmsTask smsTask);
 
 	/**
-	 * Send a email to a Sakai user
+	 * Send a email
 	 * 
-	 * @param sakaiuserID
+	 * @param toAddress
 	 * @param subject
 	 * @param body
 	 * @return
 	 */
-	public boolean sendNotificationEmail(String sakaiuserID, String subject,
+	public boolean sendNotificationEmail(String toAddress, String subject,
 			String body);
 }

@@ -136,9 +136,9 @@ public class SmsHibernateConstants {
 	public static final int TASK_NOTIFICATION_FAILED = 1;
 
 	/** The Constant for task notification sent */
-	public static final int TASK_NOTIFICATION_SENT = 1;
+	public static final int TASK_NOTIFICATION_SENT = 2;
 
 	/** The Constant for task notification started */
-	public static final int TASK_NOTIFICATION_STARTED = 1;
+	public static final int TASK_NOTIFICATION_STARTED = 3;
 
 }
