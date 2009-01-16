@@ -32,12 +32,13 @@
     via incoming request URL -->
   <bean parent="requestAddressibleParent">
     <property name="value" value="searchTaskList, searchTransactionLog, searchMessageLog, smsConfig, 
-    smsConfigActionBean, HelperActionBean, SmsTestActionBean, SmsMessageLocator, SmsConfigLocator, csvExportBean, SmsAccountLocator, SmsTaskLocator, nullableFieldDateTransit"/>
+    smsSiteConfigActionBean, HelperActionBean, SmsTestActionBean, SmsMessageLocator, SmsConfigLocator,  
+    SmsSystemConfigLocator, csvExportBean, SmsAccountLocator, SmsTaskLocator, nullableFieldDateTransit"/>
   </bean>
 
   <!-- The beans which will be preserved across a flow via simple instance copying -->
   <bean parent="copyPreservingParent">
-    <property name="value" value="SmsMessageLocator, SmsConfigLocator, SmsTaskLocator"/>
+    <property name="value" value="SmsMessageLocator, SmsConfigLocator, SmsTaskLocatorm, SmsSystemConfigLocator"/>
   </bean>
   
   <bean id="searchScope" parent="beanScopeParent">

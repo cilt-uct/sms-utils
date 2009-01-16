@@ -53,8 +53,10 @@
  	<property name="smsTaskLocator" ref="SmsTaskLocator" />
   </bean>
   
-  <bean class="org.sakaiproject.sms.producers.SmsConfigProducer"/>
+  <bean class="org.sakaiproject.sms.producers.SmsSiteConfigProducer"/>
   
+  <bean class="org.sakaiproject.sms.producers.SmsSystemConfigProducer"/>
+  											  
   <bean class="org.sakaiproject.sms.producers.TaskListPopupProducer" >
   	<property name="smsTaskLogic" ref="smsTaskLogic"/>
   </bean>
@@ -96,7 +98,7 @@
   	<property name="messages" ref="targettedMessageList"/>
   </bean>
 
-  <bean id="smsConfigActionBean" class="org.sakaiproject.sms.beans.SmsConfigActionBean">
+  <bean id="smsSiteConfigActionBean" class="org.sakaiproject.sms.beans.SmsSiteConfigActionBean">
   	 <property name="smsConfigLocator" ref="SmsConfigLocator"/>
   	 <property name="smsConfigLogic" ref="smsConfigLogic"/>
   </bean>
@@ -118,13 +120,20 @@
   <bean id="SmsMessageLocator" class="org.sakaiproject.sms.otp.SmsMessageLocator" >
   	<property name="smsMessageLogic" ref="smsMessageLogic" />
   </bean>
+  
   <bean id="SmsConfigLocator" class="org.sakaiproject.sms.otp.SmsConfigLocator">
   	<property name="smsConfigLogic" ref="smsConfigLogic"/>
   </bean>
+  
+  <bean id="SmsSystemConfigLocator" class="org.sakaiproject.sms.otp.SmsSystemConfigLocator">
+  	<property name="smsConfigLogic" ref="smsConfigLogic"/>
+  </bean>
+  
    <bean id="SmsAccountLocator" class="org.sakaiproject.sms.otp.SmsAccountLocator">
   	<property name="smsAccountLogic" ref="SmsAccountLogic"/>
   	<property name="messages" ref="targettedMessageList" />
   </bean>
+  
   <bean id="SmsTaskLocator" class="org.sakaiproject.sms.otp.SmsTaskLocator">
     	<property name="smsCore" ref="org.sakaiproject.sms.api.SmsCore"/>
   </bean>

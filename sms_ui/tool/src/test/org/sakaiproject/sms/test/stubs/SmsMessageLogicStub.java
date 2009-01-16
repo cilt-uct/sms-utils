@@ -94,5 +94,4 @@ public class SmsMessageLogicStub implements SmsMessageLogic {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 }

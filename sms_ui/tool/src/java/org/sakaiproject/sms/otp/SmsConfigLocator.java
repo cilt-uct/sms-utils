@@ -46,7 +46,7 @@ public class SmsConfigLocator implements BeanLocator{
 	private final Map<String, SmsConfig> delivered = new HashMap<String, SmsConfig>();
 
 	/**
-	 * Retrieves SmsMessage bean
+	 * Retrieves SmsConfig bean
 	 * 
 	 * @see uk.org.ponder.beanutil.BeanLocator#locateBean(java.lang.String)
 	 */

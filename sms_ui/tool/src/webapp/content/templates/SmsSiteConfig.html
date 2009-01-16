@@ -12,7 +12,7 @@
   	</div>
   	<div id='config_errorloc' style="color: red; font-weight: bold; display:inline"></div>  
 	<div align="left">
-	<form name="config" id="config" action="#" rsf:id="sms-config-form">
+	<form name="config" id="config" action="#" rsf:id="sms-site-config-form">
     	<h2 rsf:id="page-heading">SMS Config</h2>
     <table class="shorttext required" align="left">
       <tr>
@@ -28,24 +28,22 @@
         <td><label rsf:id="notification-email">Notification Email:</label></td>
         <td><input  style="width: 200px" maxLength="100" type="text" rsf:id="sms-config-notification-email"></input></td>
       </tr>
-      	<td><label rsf:id="gateway-report-timeout">Gateway report timeout:</label></td>
-      	<td><input style="width: 72px" maxLength="10" type="text" rsf:id="sms-config-report-timeout"></input></td>
       <tr>
-      </tr>
       	<td><label rsf:id="max-retry-count">Maximum retry count:</label></td>
       	<td><input  style="width: 72px" maxLength="10" type="text" rsf:id="sms-config-retry-count"></input></td>
-      <tr>
       </tr>
+      <tr>
       	<td><label rsf:id="max-task-lifetime">Maximum task lifetime:</label></td>
       	<td><input  style="width: 72px" maxLength="10" type="text" rsf:id="sms-config-task-max-lifetime"></input></td>
-      <tr>
       </tr>
+      <tr>
       	<td><label rsf:id="retry-schedule-interval">Retry schedule interval:</label></td>
       	<td><input  style="width: 72px" maxLength="10" type="text" rsf:id="sms-config-retry-interval" ></input></td>
-      <tr>
       </tr>
+      <tr>
       	<td><label rsf:id="paging-size">Paging size:</label></td>
       	<td><input style="width: 72px" maxLength="10" type="text" rsf:id="sms-config-paging-size"></input></td>
+      </tr>
       <tr>
       <td colspan="1" align="left">
         <input style="color:#0099CC;" rsf:id="save" type="submit" value="Save"/>
@@ -58,9 +56,7 @@
     <script language="JavaScript" type="text/javascript">
  		var frmvalidator = new Validator("config");
  		frmvalidator.EnableOnPageErrorDisplaySingleBox();
- 		frmvalidator.EnableMsgsTogether();
-		frmvalidator.addValidation("sms-config-report-timeout","minlen=1", "Please enter a number for Gateway report timeout");
-		frmvalidator.addValidation("sms-config-report-timeout","num", "Please enter a number for Gateway report timeout");
+ 		frmvalidator.EnableMsgsTogether();	
 		frmvalidator.addValidation("sms-config-retry-count","minlen=1", "Please enter a number for Maximum retry count");
 		frmvalidator.addValidation("sms-config-retry-count","num", "Please enter a number for Maximum retry count");
 		frmvalidator.addValidation("sms-config-task-max-lifetime","minlen=1", "Please enter a number for Maximum task lifetime");

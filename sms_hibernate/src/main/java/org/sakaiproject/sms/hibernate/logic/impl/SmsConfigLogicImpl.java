@@ -123,7 +123,7 @@ public class SmsConfigLogicImpl extends SmsDao implements SmsConfigLogic {
 	}
 
 	public SmsConfig getOrCreateSystemSmsConfig() {
-		return getOrCreateSmsConfigBySakaiSiteId("");
+		return getOrCreateSmsConfigBySakaiSiteId(SmsHibernateConstants.SMS_SYSTEM_SAKAI_SITE_ID);
 	}
 
 	public SmsConfig createDefaultSmsConfig(String sakaiSiteId) {

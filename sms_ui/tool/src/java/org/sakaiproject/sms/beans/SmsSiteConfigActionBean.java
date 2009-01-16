@@ -26,9 +26,9 @@ import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
 import org.sakaiproject.sms.otp.SmsConfigLocator;
 import org.springframework.util.Assert;
 
-public class SmsConfigActionBean {
+public class SmsSiteConfigActionBean {
 
-	private static Log log = LogFactory.getLog(SmsConfigActionBean.class);
+	private static Log log = LogFactory.getLog(SmsSiteConfigActionBean.class);
 
 	private SmsConfigLocator smsConfigLocator;
 	private SmsConfigLogic smsConfigLogic;

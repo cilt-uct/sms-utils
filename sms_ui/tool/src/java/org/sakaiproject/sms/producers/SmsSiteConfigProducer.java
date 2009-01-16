@@ -43,10 +43,10 @@ import uk.org.ponder.rsf.view.ViewComponentProducer;
 import uk.org.ponder.rsf.viewstate.SimpleViewParameters;
 import uk.org.ponder.rsf.viewstate.ViewParameters;
 
-public class SmsConfigProducer implements ViewComponentProducer,
+public class SmsSiteConfigProducer implements ViewComponentProducer,
 		NavigationCaseReporter {
 
-	public static final String VIEW_ID = "SmsConfig";
+	public static final String VIEW_ID = "SmsSiteConfig";
 
 	public String getViewID() {
 		return VIEW_ID;
@@ -58,12 +58,12 @@ public class SmsConfigProducer implements ViewComponentProducer,
 		String smsConfigOTP = SmsConfigLocator.LOCATOR_NAME + "."
 				+ SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_SITE_ID;
 
-		UIMessage.make(tofill, "page-title", "sms.config.title");
-		UIForm smsConfigform = UIForm.make(tofill, "sms-config-form");
-		UIMessage.make(tofill, "page-heading", "sms.config.title");
+		UIMessage.make(tofill, "page-title", "sms.site.config.title");
+		UIForm smsSiteConfigform = UIForm.make(tofill, "sms-site-config-form");
+		UIMessage.make(tofill, "page-heading", "sms.site.config.title");
 
-		UIMessage.make(smsConfigform, "sms-enabled", "sms.config.enabled");
-		UISelect combo = UISelect.make(smsConfigform, "sms-config-enabled");
+		UIMessage.make(smsSiteConfigform, "sms-enabled", "sms.site.config.enabled");
+		UISelect combo = UISelect.make(smsSiteConfigform, "sms-config-enabled");
 		combo.selection = new UIInput();
 		combo.selection.valuebinding = new ELReference(smsConfigOTP
 				+ ".sendSmsEnabled");
@@ -74,64 +74,56 @@ public class SmsConfigProducer implements ViewComponentProducer,
 		comboNames.setValue(new String[] { "Yes", "No" });
 		combo.optionnames = comboNames;
 
-		UIMessage.make(smsConfigform, "notification-email",
-				"sms.config.notification.email");
-		UIInput make = UIInput.make(smsConfigform,
+		UIMessage.make(smsSiteConfigform, "notification-email",
+				"sms.site.config.notification.email");
+		UIInput make = UIInput.make(smsSiteConfigform,
 				"sms-config-notification-email", smsConfigOTP
 						+ ".notificationEmail");
 
-		UIMessage.make(smsConfigform, "gateway-report-timeout",
-				"sms.config.gateway.timeout");
-		UIInput reportTimeoutInput = UIInput.make(smsConfigform,
-				"sms-config-report-timeout", smsConfigOTP
-						+ ".gateWayReportTimeout");
-		reportTimeoutInput.decorators = new DecoratorList(
-				new UITooltipDecorator(UIMessage
-						.make("sms.config.gateway.timeout-tooltip")));
 
 		UIMessage
-				.make(smsConfigform, "max-retry-count", "sms.config.max.retry");
-		UIInput retryCountInput = UIInput.make(smsConfigform,
+				.make(smsSiteConfigform, "max-retry-count", "sms.site.config.max.retry");
+		UIInput retryCountInput = UIInput.make(smsSiteConfigform,
 				"sms-config-retry-count", smsConfigOTP + ".smsRetryMaxCount");
 		retryCountInput.decorators = new DecoratorList(new UITooltipDecorator(
-				UIMessage.make("sms.config.max.retry-tooltip")));
+				UIMessage.make("sms.site.config.max.retry-tooltip")));
 
-		UIMessage.make(smsConfigform, "max-task-lifetime",
-				"sms.config.task.lifetime");
-		UIInput maxTaskLifetimeInput = UIInput.make(smsConfigform,
+		UIMessage.make(smsSiteConfigform, "max-task-lifetime",
+				"sms.site.config.task.lifetime");
+		UIInput maxTaskLifetimeInput = UIInput.make(smsSiteConfigform,
 				"sms-config-task-max-lifetime", smsConfigOTP
 						+ ".smsTaskMaxLifeTime");
 		maxTaskLifetimeInput.decorators = new DecoratorList(
 				new UITooltipDecorator(UIMessage
-						.make("sms.config.task.lifetime-tooltip")));
+						.make("sms.site.config.task.lifetime-tooltip")));
 
-		UIMessage.make(smsConfigform, "retry-schedule-interval",
-				"sms.config.retry.schedule");
-		UIInput retryIntervalInput = UIInput.make(smsConfigform,
+		UIMessage.make(smsSiteConfigform, "retry-schedule-interval",
+				"sms.site.config.retry.schedule");
+		UIInput retryIntervalInput = UIInput.make(smsSiteConfigform,
 				"sms-config-retry-interval", smsConfigOTP
 						+ ".smsRetryScheduleInterval");
 		retryIntervalInput.decorators = new DecoratorList(
 				new UITooltipDecorator(UIMessage
-						.make("sms.config.retry.schedule-tooltip")));
+						.make("sms.site.config.retry.schedule-tooltip")));
 
-		UIMessage.make(smsConfigform, "paging-size", "sms.config.paging.size");
-		UIInput pagingSizeInput = UIInput.make(smsConfigform,
+		UIMessage.make(smsSiteConfigform, "paging-size", "sms.site.config.paging.size");
+		UIInput pagingSizeInput = UIInput.make(smsSiteConfigform,
 				"sms-config-paging-size", smsConfigOTP + ".pagingSize");
 		pagingSizeInput.decorators = new DecoratorList(new UITooltipDecorator(
-				UIMessage.make("sms.config.paging.size-tooltip")));
+				UIMessage.make("sms.site.config.paging.size-tooltip")));
 
-		UICommand.make(smsConfigform, "save", "#{smsConfigActionBean.save}");
-		UICommand.make(smsConfigform, "cancel", "#");
+		UICommand.make(smsSiteConfigform, "save", "#{smsSiteConfigActionBean.save}");
+		UICommand.make(smsSiteConfigform, "cancel", "#");
 	}
 
 	@SuppressWarnings("unchecked")
 	public List reportNavigationCases() {
 		List<NavigationCase> list = new ArrayList<NavigationCase>();
 		list.add(new NavigationCase(ActionResults.SUCCESS,
-				new SimpleViewParameters(SmsConfigProducer.VIEW_ID),
+				new SimpleViewParameters(SmsSiteConfigProducer.VIEW_ID),
 				ARIResult.FLOW_ONESTEP));
 		list.add(new NavigationCase(ActionResults.CANCEL,
-				new SimpleViewParameters(SmsConfigProducer.VIEW_ID)));
+				new SimpleViewParameters(SmsSiteConfigProducer.VIEW_ID)));
 		return list;
 	}
 
