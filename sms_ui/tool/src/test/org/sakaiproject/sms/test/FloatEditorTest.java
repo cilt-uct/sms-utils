@@ -35,6 +35,7 @@ public class FloatEditorTest extends TestCase {
 	@Override
 	protected void setUp() throws Exception {
 		floatEditorFactory = new FloatEditorFactory();
+		floatEditorFactory.setField("test");
 	}
 
 	/**
@@ -69,9 +70,9 @@ public class FloatEditorTest extends TestCase {
 			editor.setAsText("xXxxX");
 			fail("NumberFormatException should be thrown");
 		} catch (NumberFormatException nfe) {
-			assertNotNull(nfe);
+			// Test message
+			assertEquals("sms.errors.test.invalid", nfe.getLocalizedMessage());
 		}
-
 		assertNull(editor.getValue());
 	}
 
