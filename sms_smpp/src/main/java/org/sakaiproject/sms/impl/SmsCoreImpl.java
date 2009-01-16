@@ -260,6 +260,7 @@ public class SmsCoreImpl implements SmsCore {
 				smsTask.setSmsMessagesOnTask(this.generateSmsMessages(smsTask));
 				LOG.info("Total messages on task:="
 						+ smsTask.getSmsMessages().size());
+				smsTask.setGroupSizeActual(smsTask.getSmsMessages().size());
 				HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask);
 			}
 			String submissionStatus = smsSmpp

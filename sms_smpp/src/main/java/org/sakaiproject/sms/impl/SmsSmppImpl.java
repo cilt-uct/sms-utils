@@ -94,7 +94,6 @@ public class SmsSmppImpl implements SmsSmpp {
 	private String addressRange;
 	private int transactionTimer;
 	private int sendingDelay;
-	private String smscID;
 
 	// provides access to the session for the units.
 	public SMPPSession getSession() {
@@ -166,7 +165,8 @@ public class SmsSmppImpl implements SmsSmpp {
 							+ deliveryReceipt);
 					SmsMessage smsMessage = HibernateLogicFactory
 							.getMessageLogic().getSmsMessageBySmscMessageId(
-									deliveryReceipt.getId());
+									deliveryReceipt.getId(),
+									SmsHibernateConstants.SMSC_ID);
 					if (smsMessage == null) {
 						for (int i = 0; i < 5; i++) {
 							System.out.println("SMSC_DEL_RECEIPT retry " + i
@@ -175,7 +175,8 @@ public class SmsSmppImpl implements SmsSmpp {
 							smsMessage = HibernateLogicFactory
 									.getMessageLogic()
 									.getSmsMessageBySmscMessageId(
-											deliveryReceipt.getId());
+											deliveryReceipt.getId(),
+											SmsHibernateConstants.SMSC_ID);
 							if (smsMessage != null) {
 								break;
 							}
@@ -401,7 +402,7 @@ public class SmsSmppImpl implements SmsSmpp {
 
 			sendingDelay = Integer.parseInt(properties
 					.getProperty("sendingDelay"));
-			smscID = properties.getProperty("SMSCid");
+
 		} catch (Exception e) {
 			LOG.error("Properies faild to load" + e);
 		}
@@ -546,7 +547,7 @@ public class SmsSmppImpl implements SmsSmpp {
 				message.setSmscMessageId(messageId);
 
 				message.setSubmitResult(true);
-				message.setSmscId(smscID);
+				message.setSmscId(SmsHibernateConstants.SMSC_ID);
 				message.setStatusCode(SmsConst_DeliveryStatus.STATUS_SENT);
 				message
 						.setSmscDeliveryStatusCode(SmsConst_SmscDeliveryStatus.ENROUTE);
