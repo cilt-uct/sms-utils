@@ -41,9 +41,7 @@ public class SmsConfigValidator implements Validator {
 		if (smsConfig.getSakaiSiteId() == null
 				|| smsConfig.getSakaiSiteId().equals("")) {
 
-			if (smsConfig.getDelReportTimeoutDuration() == null)
-				err.rejectValue("delreporttimeoutduration",
-						"sms.errors.gateway.empty");
+			
 			if (smsConfig.getSmsRetryMaxCount() == null)
 				err
 						.rejectValue("smsRetryMaxCount",

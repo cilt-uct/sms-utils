@@ -58,6 +58,11 @@
 	<property name="guard"><bean class="org.sakaiproject.sms.validators.SmsConfigValidator" /></property>
   </bean>
   
+  <bean id="smsSystemConfigGaurd" parent="writeGuardParent">
+  	<property name="guardedPath" value="SmsSystemConfigLocator.*"/>
+	<property name="guard"><bean class="org.sakaiproject.sms.validators.SmsSystemConfigValidator" /></property>
+  </bean>
+  
   <!--  
   <bean id="smsTaskListGaurd" parent="writeGuardParent">
   	<property name="guardedPath" value="searchTaskList"/>
