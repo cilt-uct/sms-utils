@@ -172,6 +172,19 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 	}
 
 	/**
+	 * Gets a search results for all SmsMessages that match the specified
+	 * criteria
+	 * 
+	 * @param searchBean
+	 * @return Search result container
+	 * @throws SmsSearchException
+	 */
+	public List<SmsMessage> getAllSmsMessagesForCriteria(
+			SearchFilterBean searchBean) throws SmsSearchException {
+		return getSmsMessagesForCriteria(searchBean);
+	}
+
+	/**
 	 * Gets a search results container housing the result set for a particular
 	 * displayed page
 	 * 
@@ -179,9 +192,21 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 	 * @return Search result container
 	 * @throws SmsSearchException
 	 */
-	public SearchResultContainer<SmsMessage> getSmsMessagesForCriteria(
+	public SearchResultContainer<SmsMessage> getPagedSmsMessagesForCriteria(
 			SearchFilterBean searchBean) throws SmsSearchException {
 
+		List<SmsMessage> messages = getSmsMessagesForCriteria(searchBean);
+		SearchResultContainer<SmsMessage> con = new SearchResultContainer<SmsMessage>(
+				getPageSize());
+		con.setTotalResultSetSize(new Long(messages.size()));
+		con.calculateAndSetPageResults(messages, searchBean.getCurrentPage());
+		log.debug(con.toString());
+
+		return con;
+	}
+
+	private List<SmsMessage> getSmsMessagesForCriteria(
+			SearchFilterBean searchBean) throws SmsSearchException {
 		Criteria crit = HibernateUtil.getSession().createCriteria(
 				SmsMessage.class).createAlias("smsTask", "smsTask");
 
