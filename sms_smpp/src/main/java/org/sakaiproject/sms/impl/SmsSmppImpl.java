@@ -17,10 +17,16 @@
  **********************************************************************************/
 package org.sakaiproject.sms.impl;
 
+import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.Properties;
 import java.util.Set;
@@ -94,6 +100,7 @@ public class SmsSmppImpl implements SmsSmpp {
 	private String addressRange;
 	private int transactionTimer;
 	private int sendingDelay;
+	private static final boolean ALLOW_PROCESS_REMOTELY = false;
 
 	// provides access to the session for the units.
 	public SMPPSession getSession() {
@@ -527,73 +534,81 @@ public class SmsSmppImpl implements SmsSmpp {
 	 * Send one message to the SMS gateway. Return result code to caller.
 	 */
 	public SmsMessage sendMessageToGateway(SmsMessage message) {
+		// Process remotely
+		if (ALLOW_PROCESS_REMOTELY) {
+			processOutgoingMessageRemotely(message);
+			return message;
+		}
 
-		if (gatewayBound) {
-			try {
-
-				String messageId = session.submitShortMessage(serviceType,
-						TypeOfNumber.valueOf(sourceAddressTON),
-						NumberingPlanIndicator.valueOf(sourceAddressNPI),
-						sourceAddress, TypeOfNumber.valueOf(destAddressTON),
-						NumberingPlanIndicator.valueOf(destAddressNPI), message
-								.getMobileNumber(), new ESMClass(), protocolId,
-						priorityFlag, timeFormatter.format(new Date()), null,
-						new RegisteredDelivery(
-								SMSCDeliveryReceipt.SUCCESS_FAILURE),
-						replaceIfPresentFlag, new GeneralDataCoding(false,
-								true, MessageClass.CLASS1,
-								Alphabet.ALPHA_DEFAULT), smDefaultMsgId,
-						message.getMessageBody().getBytes());
-				message.setSmscMessageId(messageId);
-
-				message.setSubmitResult(true);
-				message.setSmscId(SmsHibernateConstants.SMSC_ID);
-				message.setStatusCode(SmsConst_DeliveryStatus.STATUS_SENT);
-				message
-						.setSmscDeliveryStatusCode(SmsConst_SmscDeliveryStatus.ENROUTE);
-				if ((message.getSmsTask()).getMessageTypeId() == SmsHibernateConstants.SMS_TASK_TYPE_PROCESS_NOW) {
-					HibernateLogicFactory.getTaskLogic().persistSmsTask(
-							message.getSmsTask());
-				}
-				HibernateLogicFactory.getMessageLogic().persistSmsMessage(
-						message);
-
-				LOG.info("Message submitted, message_id is " + messageId);
-			} catch (PDUException e) {
-				// Invalid PDU parameter
-				message.setDebugInfo("Invalid PDU parameter Message failed");
-				message.setStatusCode(SmsConst_DeliveryStatus.STATUS_ERROR);
-				LOG.error(e);
-
-			} catch (ResponseTimeoutException e) {
-				// Response timeout
-				message.setDebugInfo("Response timeout Message failed");
-				message.setStatusCode(SmsConst_DeliveryStatus.STATUS_ERROR);
-				LOG.error(e);
-
-			} catch (InvalidResponseException e) {
-				// Invalid response
-				message.setDebugInfo("Receive invalid respose Message failed");
-				message.setStatusCode(SmsConst_DeliveryStatus.STATUS_ERROR);
-				LOG.error(e);
-
-			} catch (NegativeResponseException e) {
-				// Receiving negative response (non-zero command_status)
-				message
-						.setDebugInfo("Receive negative response Message failed");
-				message.setStatusCode(SmsConst_DeliveryStatus.STATUS_ERROR);
-				LOG.error(e);
-
-			} catch (IOException e) {
-				message.setDebugInfo("IO error occur Message failed");
-				message.setStatusCode(SmsConst_DeliveryStatus.STATUS_ERROR);
-				LOG.error(e);
-
-			}
-		} else {
+		// Not gateway bound
+		if (!gatewayBound) {
 			LOG.error("Sms Gateway is not bound sending failed");
 			message.setDebugInfo("Sms Gateway is not bound");
 			message.setStatusCode(SmsConst_DeliveryStatus.STATUS_ERROR);
+			return message;
+		}
+
+		// Continue to send message to gateway.
+		try {
+
+			String messageId = session
+					.submitShortMessage(serviceType, TypeOfNumber
+							.valueOf(sourceAddressTON), NumberingPlanIndicator
+							.valueOf(sourceAddressNPI), sourceAddress,
+							TypeOfNumber.valueOf(destAddressTON),
+							NumberingPlanIndicator.valueOf(destAddressNPI),
+							message.getMobileNumber(), new ESMClass(),
+							protocolId, priorityFlag, timeFormatter
+									.format(new Date()), null,
+							new RegisteredDelivery(
+									SMSCDeliveryReceipt.SUCCESS_FAILURE),
+							replaceIfPresentFlag, new GeneralDataCoding(false,
+									true, MessageClass.CLASS1,
+									Alphabet.ALPHA_DEFAULT), smDefaultMsgId,
+							message.getMessageBody().getBytes());
+			message.setSmscMessageId(messageId);
+
+			message.setSubmitResult(true);
+			message.setSmscId(SmsHibernateConstants.SMSC_ID);
+			message.setStatusCode(SmsConst_DeliveryStatus.STATUS_SENT);
+			message
+					.setSmscDeliveryStatusCode(SmsConst_SmscDeliveryStatus.ENROUTE);
+			if ((message.getSmsTask()).getMessageTypeId() == SmsHibernateConstants.SMS_TASK_TYPE_PROCESS_NOW) {
+				HibernateLogicFactory.getTaskLogic().persistSmsTask(
+						message.getSmsTask());
+			}
+			HibernateLogicFactory.getMessageLogic().persistSmsMessage(message);
+
+			LOG.info("Message submitted, message_id is " + messageId);
+		} catch (PDUException e) {
+			// Invalid PDU parameter
+			message.setDebugInfo("Invalid PDU parameter Message failed");
+			message.setStatusCode(SmsConst_DeliveryStatus.STATUS_ERROR);
+			LOG.error(e);
+
+		} catch (ResponseTimeoutException e) {
+			// Response timeout
+			message.setDebugInfo("Response timeout Message failed");
+			message.setStatusCode(SmsConst_DeliveryStatus.STATUS_ERROR);
+			LOG.error(e);
+
+		} catch (InvalidResponseException e) {
+			// Invalid response
+			message.setDebugInfo("Receive invalid respose Message failed");
+			message.setStatusCode(SmsConst_DeliveryStatus.STATUS_ERROR);
+			LOG.error(e);
+
+		} catch (NegativeResponseException e) {
+			// Receiving negative response (non-zero command_status)
+			message.setDebugInfo("Receive negative response Message failed");
+			message.setStatusCode(SmsConst_DeliveryStatus.STATUS_ERROR);
+			LOG.error(e);
+
+		} catch (IOException e) {
+			message.setDebugInfo("IO error occur Message failed");
+			message.setStatusCode(SmsConst_DeliveryStatus.STATUS_ERROR);
+			LOG.error(e);
+
 		}
 		return message;
 	}
@@ -603,10 +618,50 @@ public class SmsSmppImpl implements SmsSmpp {
 
 	}
 
+	/**
+	 * Outgoing sms messages may be processed (delivered) by and external
+	 * service. We simply pass the messages on to that service via http. By
+	 * default disabled.
+	 * <p>
+	 * NB: This is just example code of a possible implementation. The remote
+	 * service will need to handle the delivery reports. Other possible solution
+	 * is to use web services.
+	 * 
+	 * @param smsMessage
+	 * @return
+	 */
 	public boolean processOutgoingMessageRemotely(SmsMessage smsMessage) {
-		// TODO To be discussed with UCT
+		try {
+			// Construct data
+			String data = URLEncoder.encode("messageBody", "UTF-8") + "="
+					+ URLEncoder.encode(smsMessage.getMessageBody(), "UTF-8");
+			data += "&" + URLEncoder.encode("mobileNumber", "UTF-8") + "="
+					+ URLEncoder.encode(smsMessage.getMobileNumber(), "UTF-8");
 
-		return false;
+			// Send data
+			URL url = new URL("http://hostname:80/process.php");
+			URLConnection conn = url.openConnection();
+			conn.setDoOutput(true);
+			OutputStreamWriter wr = new OutputStreamWriter(conn
+					.getOutputStream());
+			wr.write(data);
+			wr.flush();
+
+			// Remote service can also return a smscMessage id and perhaps a
+			// status code.
+			BufferedReader rd = new BufferedReader(new InputStreamReader(conn
+					.getInputStream()));
+			String line;
+			while ((line = rd.readLine()) != null) {
+				// Process line...
+			}
+			wr.close();
+			rd.close();
+
+		} catch (Exception e) {
+			return false;
+		}
+		return true;
 	}
 
 	public boolean notifyDeliveryReportRemotely(SmsMessage smsMessage) {

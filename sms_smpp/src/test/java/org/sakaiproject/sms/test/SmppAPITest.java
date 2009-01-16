@@ -193,4 +193,18 @@ public class SmppAPITest extends AbstractBaseTestCase {
 
 	}
 
+	/**
+	 * Test process outgoing message remotely.
+	 */
+	public void testProcessOutgoingMessageRemotely() {
+		SmsTask task = new SmsTask();
+
+		SmsMessage message = new SmsMessage();
+		message.setSmsTask(task);
+		message.setMobileNumber("0721998919");
+		message.setMessageBody("This is message body text");
+		boolean processed = smsSmppImpl.processOutgoingMessageRemotely(message);
+		// Disabled
+		assertFalse(processed);
+	}
 }
