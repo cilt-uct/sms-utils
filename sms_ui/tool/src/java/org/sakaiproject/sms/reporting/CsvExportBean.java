@@ -95,6 +95,7 @@ public class CsvExportBean {
 	private final class SmsTaskExportStrategy extends CsvExportStrategy{
 
 		private  final String[] taskListColumns = new String[]{
+			"id",
 			"creditEstimate", 
 			"dateCreated", 
 			"dateProcessed", 
@@ -137,6 +138,7 @@ public class CsvExportBean {
 	private final class SmsMessageExportStrategy extends CsvExportStrategy{
 
 		private final String[] messageColumns = new String[]{
+				"id",
 				"dateDelivered",
 				"mobileNumber",
 				"sakaiUserId",
@@ -167,6 +169,7 @@ public class CsvExportBean {
 	private final class SmsTransactionLogExportStrategy extends CsvExportStrategy{
 
 		private final String[] transactionLogColumns = new String[]{
+				"id",
 				"balance",
 				"sakaiUserId",
 				"transactionAmount",

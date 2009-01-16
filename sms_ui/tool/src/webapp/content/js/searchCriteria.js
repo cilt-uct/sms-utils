@@ -43,5 +43,5 @@ function openWindow(url, title, options)
 function make_task_row_open_popup(row) {
 		
 	var link = document.getElementById(row.id + 'link');
-	openWindow(link.href, 'SMSTask', 'resizable=yes,toolbar=no,scrollbars=yes,menubar=yes,width=800,height=600'); 
+	openWindow(link.href, 'SMSTask', 'resizable=yes,toolbar=no,scrollbars=yes,menubar=yes,width=460,height=500'); 
 }
