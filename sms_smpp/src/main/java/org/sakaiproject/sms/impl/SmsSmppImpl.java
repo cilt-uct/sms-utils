@@ -619,9 +619,9 @@ public class SmsSmppImpl implements SmsSmpp {
 	}
 
 	/**
-	 * Outgoing sms messages may be processed (delivered) by and external
-	 * service. We simply pass the messages on to that service via http. By
-	 * default disabled.
+	 * Outgoing sms messages may be processed (delivered) by an external
+	 * service. We simply pass the messages on to that service via http POST for
+	 * now. By default disabled.
 	 * <p>
 	 * NB: This is just example code of a possible implementation. The remote
 	 * service will need to handle the delivery reports. Other possible solution
