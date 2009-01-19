@@ -6,6 +6,7 @@ import java.util.List;
 import org.sakaiproject.sms.hibernate.bean.SearchFilterBean;
 import org.sakaiproject.sms.hibernate.bean.SearchResultContainer;
 import org.sakaiproject.sms.hibernate.logic.impl.HibernateLogicFactory;
+import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsAccountNotFoundException;
 import org.sakaiproject.sms.hibernate.model.SmsAccount;
 import org.sakaiproject.sms.hibernate.model.SmsTransaction;
 import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
@@ -246,6 +247,32 @@ public class SmsTransactionTest extends AbstractBaseTestCase {
 
 		} catch (Exception se) {
 			fail(se.getMessage());
+		}
+	}
+	
+	public void testCreateReserveCreditsTaskFail() throws Exception {
+		
+		try{			
+			HibernateLogicFactory.getTransactionLogic().reserveCredits(123L, 123L, 110);
+			fail("Insert should fail since there is no account with id 12345");
+		}
+		catch (SmsAccountNotFoundException expected) {
+		}
+		catch (Exception notExpected) {
+			fail("An account not found exception should be thrown");
+		}
+	}	
+		
+	public void testCreateReserveCreditsTaskPass(){
+	
+		SmsAccount testAccount = SmsAccountTest.createTestAccount();	
+		HibernateLogicFactory.getAccountLogic().persistSmsAccount(testAccount);
+		
+		try{			
+			HibernateLogicFactory.getTransactionLogic().reserveCredits(100L,  testAccount.getId(), 110);
+		}
+		catch (Exception notExpected) {
+			fail("Task should save successfully" + notExpected);
 		}
 	}
 

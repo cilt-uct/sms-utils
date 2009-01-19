@@ -35,14 +35,6 @@ import org.sakaiproject.sms.hibernate.model.SmsTask;
  * @created 25-Nov-2008
  */
 public interface SmsTaskLogic {
-
-	/**
-	 * Persist a task to reserve credits for a sms sending
-	 * 
-	 * @param smsTask
-	 * @throws SmsAccountNotFoundException
-	 */
-	public void reserveCredits(String senderUsername, Integer credits, String sakaiSiteId, Long smsAccountId) throws SmsAccountNotFoundException;
 	
 	/**
 	 * Delete sms task.

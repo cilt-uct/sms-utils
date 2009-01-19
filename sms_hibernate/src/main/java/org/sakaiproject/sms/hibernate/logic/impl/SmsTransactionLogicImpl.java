@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.security.auth.login.AccountNotFoundException;
+
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -33,10 +35,12 @@ import org.sakaiproject.sms.hibernate.bean.SearchFilterBean;
 import org.sakaiproject.sms.hibernate.bean.SearchResultContainer;
 import org.sakaiproject.sms.hibernate.dao.SmsDao;
 import org.sakaiproject.sms.hibernate.logic.SmsTransactionLogic;
+import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsAccountNotFoundException;
 import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsSearchException;
 import org.sakaiproject.sms.hibernate.model.SmsConfig;
 import org.sakaiproject.sms.hibernate.model.SmsTransaction;
 import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
+import org.sakaiproject.sms.hibernate.model.factory.SmsTransactionFactory;
 import org.sakaiproject.sms.hibernate.util.DateUtil;
 import org.sakaiproject.sms.hibernate.util.HibernateUtil;
 
@@ -51,6 +55,18 @@ import org.sakaiproject.sms.hibernate.util.HibernateUtil;
 public class SmsTransactionLogicImpl extends SmsDao implements
 		SmsTransactionLogic {
 
+	/**
+	 * Persist a transaction to reserve credits for a sms sending
+	 * 
+	 * @param smsTask
+	 * @throws AccountNotFoundException
+	 */
+	public void reserveCredits(Long smsTaskId, Long smsAccountId, Integer credits) throws SmsAccountNotFoundException {
+		SmsTransaction smsTransaction = SmsTransactionFactory.createReserveCreditsTask(smsTaskId, smsAccountId, credits);
+		persistSmsTransaction(smsTransaction);
+	}
+	
+	
 	/**
 	 * Leave this as protected to try and prevent the random instantiation of
 	 * this class.
