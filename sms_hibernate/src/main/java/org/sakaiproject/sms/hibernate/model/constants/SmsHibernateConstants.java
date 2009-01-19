@@ -68,7 +68,7 @@ public class SmsHibernateConstants {
 	 * The Sakai site id used to store global system settings
 	 */
 	public static final String SMS_SYSTEM_SAKAI_SITE_ID = "";
-	
+
 	/**
 	 * The default sakai_userId to be used in development mode.
 	 */
@@ -148,5 +148,8 @@ public class SmsHibernateConstants {
 
 	/** The smsc_id is used to uniquely identify the smsc. */
 	public static final String SMSC_ID = "1";
+
+	/** The Constant for cost of credit. */
+	public static final Float COST_OF_CREDIT = 1.5f;
 
 }

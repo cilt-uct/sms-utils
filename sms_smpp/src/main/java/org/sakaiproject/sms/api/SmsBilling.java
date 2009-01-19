@@ -124,9 +124,9 @@ public interface SmsBilling {
 	 * @param creditCount
 	 *            the credit count
 	 * 
-	 * @return the double
+	 * @return the credit amount
 	 */
-	public Double convertCreditsToAmount(int creditCount);
+	public Float convertCreditsToAmount(int creditCount);
 
 	/**
 	 * Convert amount to credits.

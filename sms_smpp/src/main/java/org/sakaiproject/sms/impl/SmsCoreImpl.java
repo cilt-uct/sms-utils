@@ -57,7 +57,8 @@ public class SmsCoreImpl implements SmsCore {
 		int groupSize = deliverGroupMessages.size();
 		smsTask.setGroupSizeEstimate(groupSize);
 		smsTask.setCreditEstimate(groupSize);
-		smsTask.setCostEstimate(smsBilling.convertCreditsToAmount(groupSize));
+		smsTask.setCostEstimate(smsBilling.convertCreditsToAmount(groupSize)
+				.doubleValue());// TODO Change to Float?
 		return smsTask;
 	}
 

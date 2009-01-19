@@ -23,6 +23,7 @@ import java.util.Set;
 import org.sakaiproject.sms.api.SmsBilling;
 import org.sakaiproject.sms.hibernate.logic.impl.HibernateLogicFactory;
 import org.sakaiproject.sms.hibernate.model.SmsAccount;
+import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -88,11 +89,10 @@ public class SmsBillingImpl implements SmsBilling {
 	 * @param creditCount
 	 *            the credit count
 	 * 
-	 * @return the double
+	 * @return the credit amount
 	 */
-	public Double convertCreditsToAmount(int creditCount) {
-		// TODO Auto-generated method stub
-		return 0D;
+	public Float convertCreditsToAmount(int creditCount) {
+		return SmsHibernateConstants.COST_OF_CREDIT * creditCount;
 	}
 
 	/**
@@ -221,7 +221,7 @@ public class SmsBillingImpl implements SmsBilling {
 	 * @return the double
 	 */
 	public Integer convertAmountToCredits(Float amount) {
-		// TODO Auto-generated method stub
-		return 0;
+		Float result = (amount / SmsHibernateConstants.COST_OF_CREDIT);
+		return result.intValue();
 	}
 }

@@ -45,6 +45,12 @@ public class SmsBillingTest extends AbstractBaseTestCase {
 	/** The account. */
 	public static SmsAccount account;
 
+	/** The test amount. */
+	public final Float testAmount = 100F;
+
+	/** The test credits. */
+	public final int testCredits = 100;
+
 	/**
 	 * Instantiates a new sms billing test.
 	 */
@@ -177,6 +183,23 @@ public class SmsBillingTest extends AbstractBaseTestCase {
 		sufficientCredits = smsBillingImpl.checkSufficientCredits(account
 				.getId().intValue(), creditsRequired);
 		assertTrue("Expected sufficient credit", sufficientCredits);
+	}
+
+	/**
+	 * Test convert credits to amount.
+	 */
+	public void testConvertCreditsToAmount() {
+		int credits = smsBillingImpl.convertAmountToCredits(testAmount);
+		// Not sure how to test this properly.
+	}
+
+	/**
+	 * Test convert amount to credits.
+	 */
+	public void testConvertAmountToCredits() {
+		float amount = smsBillingImpl.convertCreditsToAmount(testCredits);
+		int credits = smsBillingImpl.convertAmountToCredits(amount);
+		assertTrue(credits == testCredits);
 	}
 
 }
