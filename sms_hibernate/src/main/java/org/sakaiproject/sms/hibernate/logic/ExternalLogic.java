@@ -26,10 +26,12 @@ public interface ExternalLogic {
 	// sample permissions for SMS
 	// TODO: Discuss and complete this list
 
-	public final static String SMS_SEND_SMS = "sms.send";
+	public final static String SMS_ACCOUNT_VIEW = "sms.account.view";
 	public final static String SMS_ACCOUNT_CREATE = "sms.account.create";
-	public final static String SMS_ACCOUNT_MODIFY = "sms.account.modify";
-	public final static String SMS_CONFIG_MODIFY = "sms.config.modify";
+	public final static String SMS_ACCOUNT_EDIT = "sms.account.edit";
+	public final static String SMS_CONFIG_SITE = "sms.config.site";
+	public final static String SMS_CONFIG_SYSTEM = "sms.config.system";
+	public final static String SMS_TASK_CREATE = "sms.task.create";
 	public final static String SMS_TASK_VIEW = "sms.task.view";
 	public final static String SMS_MESSAGE_VIEW = "sms.message.view";
 	public final static String SMS_TRANSACTION_VIEW = "sms.transaction.view";

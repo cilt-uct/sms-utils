@@ -32,6 +32,11 @@ import org.sakaiproject.sms.hibernate.logic.ExternalLogic;
  */
 public class ExternalLogicImpl implements ExternalLogic {
 
+	private static Log log = LogFactory.getLog(ExternalLogicImpl.class);
+
+	// private FunctionManager functionManager;
+	// private SecurityService securityService;
+
 	/**
 	 * Leave this as protected to try and prevent the random instantiation of
 	 * this class.
@@ -42,18 +47,16 @@ public class ExternalLogicImpl implements ExternalLogic {
 
 	}
 
-	// private FunctionManager functionManager;
-	// private SecurityService securityService;
-
-	private static Log log = LogFactory.getLog(ExternalLogicImpl.class);
-
 	public void init() {
 		log.debug("init");
 		// register Sakai permissions for this tool
-		// functionManager.registerFunction(SMS_SEND_SMS);
+
+		// functionManager.registerFunction(SMS_ACCOUNT_VIEW);
 		// functionManager.registerFunction(SMS_ACCOUNT_CREATE);
-		// functionManager.registerFunction(SMS_ACCOUNT_MODIFY);
-		// functionManager.registerFunction(SMS_CONFIG_MODIFY);
+		// functionManager.registerFunction(SMS_ACCOUNT_EDIT);
+		// functionManager.registerFunction(SMS_CONFIG_SITE);
+		// functionManager.registerFunction(SMS_CONFIG_SYSTEM);
+		// functionManager.registerFunction(SMS_TASK_CREATE);
 		// functionManager.registerFunction(SMS_TASK_VIEW);
 		// functionManager.registerFunction(SMS_MESSAGE_VIEW);
 		// functionManager.registerFunction(SMS_TRANSACTION_VIEW);
