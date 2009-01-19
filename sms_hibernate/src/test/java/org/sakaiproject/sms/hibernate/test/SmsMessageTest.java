@@ -35,7 +35,7 @@ public class SmsMessageTest extends AbstractBaseTestCase {
 
 		insertTask = new SmsTask();
 		insertTask.setSakaiSiteId("sakaiSiteId");
-		insertTask.setSmsAccountId(1);
+		insertTask.setSmsAccountId(1l);
 		insertTask.setDateCreated(new Date(System.currentTimeMillis()));
 		insertTask.setDateToSend(new Date(System.currentTimeMillis()));
 		insertTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
@@ -78,116 +78,14 @@ public class SmsMessageTest extends AbstractBaseTestCase {
 	}
 
 	/**
-	 * Test insert sms message.
+	 * Test delete sms message.
 	 */
-	public void testInsertSmsMessage() {
-		HibernateLogicFactory.getTaskLogic().persistSmsTask(insertTask);
-		assertTrue("Task for message not created", insertTask.exists());
-		insertMessage1.setSmsTask(insertTask);
-		insertMessage2.setSmsTask(insertTask);
-		HibernateLogicFactory.getMessageLogic().persistSmsMessage(
-				insertMessage1);
-		HibernateLogicFactory.getMessageLogic().persistSmsMessage(
-				insertMessage2);
-		assertTrue("Object not persisted", insertMessage1.exists());
-		assertTrue("Object not persisted", insertMessage2.exists());
-		Set<SmsMessage> smsMessages = new HashSet<SmsMessage>();
-		smsMessages.add(insertMessage2);
-		smsMessages.add(insertMessage1);
-		insertTask.setSmsMessagesOnTask(smsMessages);
-		assertTrue("", insertTask.getSmsMessages().contains(insertMessage1));
-		assertTrue("", insertTask.getSmsMessages().contains(insertMessage2));
-		HibernateLogicFactory.getTaskLogic().persistSmsTask(insertTask);
-
-	}
-
-	/**
-	 * Test get sms message by id.
-	 */
-	public void testGetSmsMessageById() {
-		SmsMessage getSmsMessage = HibernateLogicFactory.getMessageLogic()
-				.getSmsMessage(insertMessage1.getId());
-		assertTrue("Object not persisted", insertMessage1.exists());
-		assertNotNull(getSmsMessage);
-		assertEquals(insertMessage1, getSmsMessage);
-
-	}
-
-	/**
-	 * Test update sms message.
-	 */
-	public void testUpdateSmsMessage() {
-		SmsMessage smsMessage = HibernateLogicFactory.getMessageLogic()
-				.getSmsMessage(insertMessage1.getId());
-		smsMessage.setSakaiUserId("newSakaiUserId");
-		HibernateLogicFactory.getMessageLogic().persistSmsMessage(smsMessage);
-		smsMessage = HibernateLogicFactory.getMessageLogic().getSmsMessage(
-				insertMessage1.getId());
-		assertEquals("newSakaiUserId", smsMessage.getSakaiUserId());
-	}
-
-	/**
-	 * Test get sms messages.
-	 */
-	public void testGetSmsMessages() {
-		List<SmsMessage> messages = HibernateLogicFactory.getMessageLogic()
-				.getAllSmsMessages();
-		assertNotNull("Returned collection is null", messages);
-		assertTrue("No records returned", messages.size() > 0);
-	}
-
-	/**
-	 * Test get sms message by smsc message id.
-	 */
-	public void testGetSmsMessageBySmscMessageId() {
-		SmsMessage smsMessage = HibernateLogicFactory.getMessageLogic()
-				.getSmsMessageBySmscMessageId(
-						insertMessage2.getSmscMessageId(),
-						SmsHibernateConstants.SMSC_ID);
-		assertTrue(smsMessage.equals(insertMessage2));
-		assertEquals(smsMessage.getSmscMessageId(), insertMessage2
-				.getSmscMessageId());
-	}
-
-	/**
-	 * Tests getSmsMessagesWithStatus returns only messages with the specifed
-	 * status codes
-	 */
-	public void testGetSmsMessagesWithStatus() {
-
-		// Assert that messages exist for this task that have a status other
-		// than PENDING
-		SmsTask task = HibernateLogicFactory.getTaskLogic().getSmsTask(
+	public void testDeleteSmsMessage() {
+		// Delete the associated task too
+		HibernateLogicFactory.getTaskLogic().deleteSmsTask(insertTask);
+		SmsTask getSmsTask = HibernateLogicFactory.getTaskLogic().getSmsTask(
 				insertTask.getId());
-		task.getSmsMessages().size();
-		boolean otherStatusFound = false;
-		for (SmsMessage message : task.getSmsMessages()) {
-			if (message.getStatusCode().equals(
-					SmsConst_DeliveryStatus.STATUS_PENDING)) {
-				otherStatusFound = true;
-				break;
-			}
-		}
-		assertTrue(
-				"This test requires that messages exist for this task that have a status other than PENDING",
-				otherStatusFound);
-
-		List<SmsMessage> messages = HibernateLogicFactory.getMessageLogic()
-				.getSmsMessagesWithStatus(insertTask.getId(),
-						SmsConst_DeliveryStatus.STATUS_PENDING);
-
-		// We expect some records to be returned
-		assertTrue("Expected objects in collection", messages.size() > 0);
-
-		// We know there are messages for this task that have status codes other
-		// than the one specifies above
-		// So assert that the method only returned ones with the specified
-		// status.
-		for (SmsMessage message : messages) {
-			assertTrue("Incorrect value returned for object", message
-					.getStatusCode().equals(
-							SmsConst_DeliveryStatus.STATUS_PENDING));
-		}
+		assertNull("Object not removed", getSmsTask);
 	}
 
 	/**
@@ -197,7 +95,7 @@ public class SmsMessageTest extends AbstractBaseTestCase {
 
 		SmsTask insertTask = new SmsTask();
 		insertTask.setSakaiSiteId("sakaiSiteId");
-		insertTask.setSmsAccountId(1);
+		insertTask.setSmsAccountId(1l);
 		insertTask.setDateCreated(new Date(System.currentTimeMillis()));
 		insertTask.setDateToSend(new Date(System.currentTimeMillis()));
 		insertTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
@@ -260,7 +158,7 @@ public class SmsMessageTest extends AbstractBaseTestCase {
 
 		SmsTask insertTask = new SmsTask();
 		insertTask.setSakaiSiteId("sakaiSiteId");
-		insertTask.setSmsAccountId(1);
+		insertTask.setSmsAccountId(1l);
 		insertTask.setDateCreated(new Date(System.currentTimeMillis()));
 		insertTask.setDateToSend(new Date(System.currentTimeMillis()));
 		insertTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
@@ -333,17 +231,6 @@ public class SmsMessageTest extends AbstractBaseTestCase {
 	}
 
 	/**
-	 * Test delete sms message.
-	 */
-	public void testDeleteSmsMessage() {
-		// Delete the associated task too
-		HibernateLogicFactory.getTaskLogic().deleteSmsTask(insertTask);
-		SmsTask getSmsTask = HibernateLogicFactory.getTaskLogic().getSmsTask(
-				insertTask.getId());
-		assertNull("Object not removed", getSmsTask);
-	}
-
-	/**
 	 * Test get new test sms message instance.
 	 */
 	public void testGetNewTestSmsMessageInstance() {
@@ -355,5 +242,118 @@ public class SmsMessageTest extends AbstractBaseTestCase {
 		assertNotNull("", message.getSmsTask());
 		assertTrue("Associated SmsTask not created successfully", message
 				.getSmsTask().exists());
+	}
+
+	/**
+	 * Test get sms message by id.
+	 */
+	public void testGetSmsMessageById() {
+		SmsMessage getSmsMessage = HibernateLogicFactory.getMessageLogic()
+				.getSmsMessage(insertMessage1.getId());
+		assertTrue("Object not persisted", insertMessage1.exists());
+		assertNotNull(getSmsMessage);
+		assertEquals(insertMessage1, getSmsMessage);
+
+	}
+
+	/**
+	 * Test get sms message by smsc message id.
+	 */
+	public void testGetSmsMessageBySmscMessageId() {
+		SmsMessage smsMessage = HibernateLogicFactory.getMessageLogic()
+				.getSmsMessageBySmscMessageId(
+						insertMessage2.getSmscMessageId(),
+						SmsHibernateConstants.SMSC_ID);
+		assertTrue(smsMessage.equals(insertMessage2));
+		assertEquals(smsMessage.getSmscMessageId(), insertMessage2
+				.getSmscMessageId());
+	}
+
+	/**
+	 * Test get sms messages.
+	 */
+	public void testGetSmsMessages() {
+		List<SmsMessage> messages = HibernateLogicFactory.getMessageLogic()
+				.getAllSmsMessages();
+		assertNotNull("Returned collection is null", messages);
+		assertTrue("No records returned", messages.size() > 0);
+	}
+
+	/**
+	 * Tests getSmsMessagesWithStatus returns only messages with the specifed
+	 * status codes
+	 */
+	public void testGetSmsMessagesWithStatus() {
+
+		// Assert that messages exist for this task that have a status other
+		// than PENDING
+		SmsTask task = HibernateLogicFactory.getTaskLogic().getSmsTask(
+				insertTask.getId());
+		task.getSmsMessages().size();
+		boolean otherStatusFound = false;
+		for (SmsMessage message : task.getSmsMessages()) {
+			if (message.getStatusCode().equals(
+					SmsConst_DeliveryStatus.STATUS_PENDING)) {
+				otherStatusFound = true;
+				break;
+			}
+		}
+		assertTrue(
+				"This test requires that messages exist for this task that have a status other than PENDING",
+				otherStatusFound);
+
+		List<SmsMessage> messages = HibernateLogicFactory.getMessageLogic()
+				.getSmsMessagesWithStatus(insertTask.getId(),
+						SmsConst_DeliveryStatus.STATUS_PENDING);
+
+		// We expect some records to be returned
+		assertTrue("Expected objects in collection", messages.size() > 0);
+
+		// We know there are messages for this task that have status codes other
+		// than the one specifies above
+		// So assert that the method only returned ones with the specified
+		// status.
+		for (SmsMessage message : messages) {
+			assertTrue("Incorrect value returned for object", message
+					.getStatusCode().equals(
+							SmsConst_DeliveryStatus.STATUS_PENDING));
+		}
+	}
+
+	/**
+	 * Test insert sms message.
+	 */
+	public void testInsertSmsMessage() {
+		HibernateLogicFactory.getTaskLogic().persistSmsTask(insertTask);
+		assertTrue("Task for message not created", insertTask.exists());
+		insertMessage1.setSmsTask(insertTask);
+		insertMessage2.setSmsTask(insertTask);
+		HibernateLogicFactory.getMessageLogic().persistSmsMessage(
+				insertMessage1);
+		HibernateLogicFactory.getMessageLogic().persistSmsMessage(
+				insertMessage2);
+		assertTrue("Object not persisted", insertMessage1.exists());
+		assertTrue("Object not persisted", insertMessage2.exists());
+		Set<SmsMessage> smsMessages = new HashSet<SmsMessage>();
+		smsMessages.add(insertMessage2);
+		smsMessages.add(insertMessage1);
+		insertTask.setSmsMessagesOnTask(smsMessages);
+		assertTrue("", insertTask.getSmsMessages().contains(insertMessage1));
+		assertTrue("", insertTask.getSmsMessages().contains(insertMessage2));
+		HibernateLogicFactory.getTaskLogic().persistSmsTask(insertTask);
+
+	}
+
+	/**
+	 * Test update sms message.
+	 */
+	public void testUpdateSmsMessage() {
+		SmsMessage smsMessage = HibernateLogicFactory.getMessageLogic()
+				.getSmsMessage(insertMessage1.getId());
+		smsMessage.setSakaiUserId("newSakaiUserId");
+		HibernateLogicFactory.getMessageLogic().persistSmsMessage(smsMessage);
+		smsMessage = HibernateLogicFactory.getMessageLogic().getSmsMessage(
+				insertMessage1.getId());
+		assertEquals("newSakaiUserId", smsMessage.getSakaiUserId());
 	}
 }

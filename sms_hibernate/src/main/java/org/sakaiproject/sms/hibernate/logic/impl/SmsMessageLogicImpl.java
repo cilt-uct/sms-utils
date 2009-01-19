@@ -71,17 +71,6 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 	}
 
 	/**
-	 * Gets a SmsMessage entity for the given id
-	 * 
-	 * @param Long
-	 *            sms Message id
-	 * @return sms Message
-	 */
-	public SmsMessage getSmsMessage(Long smsMessageId) {
-		return (SmsMessage) findById(SmsMessage.class, smsMessageId);
-	}
-
-	/**
 	 * Gets all the sms Message records
 	 * 
 	 * @return List of SmsMessage objects
@@ -90,84 +79,6 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 		Session s = HibernateUtil.getSession();
 		Query query = s.createQuery("from SmsMessage");
 		List<SmsMessage> messages = query.list();
-		return messages;
-	}
-
-	/**
-	 * This method will persists the given object.
-	 * 
-	 * If the object is a new entity then it will be created on the DB. If it is
-	 * an existing entity then the record will be updated on the DB.
-	 * 
-	 * @param sms
-	 *            Message to be persisted
-	 */
-	public void persistSmsMessage(SmsMessage smsMessage) {
-		persist(smsMessage);
-	}
-
-	/**
-	 * Returns a message for the given smsc message id or null if nothing found
-	 * 
-	 * @param smsc
-	 *            message id
-	 * @return sms message
-	 */
-	public SmsMessage getSmsMessageBySmscMessageId(String smscMessageId,
-			String smscID) {
-		Session s = HibernateUtil.getSession();
-		Query query = s
-				.createQuery("from SmsMessage mes where mes.smscMessageId = :smscMessageId and mes.smscId = :smscID");
-		query.setParameter("smscMessageId", smscMessageId, Hibernate.STRING);
-		query.setParameter("smscID", smscID, Hibernate.STRING);
-		List<SmsMessage> messages = query.list();
-		if (messages != null && messages.size() > 0) {
-			return messages.get(0);
-		}
-		return null;
-	}
-
-	/**
-	 * Gets a list of SmsMessage objects for the specified and specified status
-	 * code(s).
-	 * 
-	 * It will ignore the smsTaskId if it is passed as null and return all
-	 * smsMessages with the specified status code(s).
-	 * 
-	 * @param sms
-	 *            task id
-	 * @param statusCode
-	 *            (s)
-	 * @return List<SmsMessage> - sms messages
-	 */
-	public List<SmsMessage> getSmsMessagesWithStatus(Long smsTaskId,
-			String... statusCodes) {
-		List<SmsMessage> messages = new ArrayList<SmsMessage>();
-
-		// Return empty list if no status codes were passed in
-		if (statusCodes.length > 0) {
-
-			StringBuilder hql = new StringBuilder();
-			hql.append(" from SmsMessage message where 1=1  ");
-			if (smsTaskId != null) {
-				hql.append(" and message.smsTask.id = :smsTaskId ");
-			}
-			hql.append(" and message.statusCode IN (:statusCodes) ");
-
-			log.debug("getSmsTasksFilteredByMessageStatus() HQL: "
-					+ hql.toString());
-			Query query = HibernateUtil.getSession()
-					.createQuery(hql.toString());
-			query
-					.setParameterList("statusCodes", statusCodes,
-							Hibernate.STRING);
-			if (smsTaskId != null) {
-				query.setParameter("smsTaskId", smsTaskId);
-			}
-			messages = query.list();
-			HibernateUtil.closeSession();
-
-		}
 		return messages;
 	}
 
@@ -182,6 +93,56 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 	public List<SmsMessage> getAllSmsMessagesForCriteria(
 			SearchFilterBean searchBean) throws SmsSearchException {
 		return getSmsMessagesForCriteria(searchBean);
+	}
+
+	/**
+	 * A new sms message factory method. Only used for testing.
+	 * 
+	 * This method will instantiate a SmsTask and return a SmsMessage with the
+	 * associated SmsTask object set on it.
+	 * <p>
+	 * The message will not be persisted.
+	 * 
+	 * @param mobileNumber
+	 *            the mobile number
+	 * @param messageBody
+	 *            the message body
+	 * 
+	 * @return the new sms message instance test
+	 */
+	public SmsMessage getNewTestSmsMessageInstance(String mobileNumber,
+			String messageBody) {
+		SmsTask smsTask = new SmsTask();
+		smsTask.setSakaiSiteId("sakaiSiteId");
+		smsTask.setSmsAccountId(1l);
+		smsTask.setDateCreated(new Date(System.currentTimeMillis()));
+		smsTask.setDateToSend(new Date(System.currentTimeMillis()));
+		smsTask.setDateProcessed(new Date(System.currentTimeMillis()));
+		smsTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_SENT);
+		smsTask.setAttemptCount(2);
+		smsTask
+				.setMessageTypeId(SmsHibernateConstants.SMS_TASK_TYPE_PROCESS_NOW);
+		smsTask.setMessageBody("messageBody");
+		smsTask.setSenderUserName("senderUserName");
+		smsTask.setMaxTimeToLive(1);
+		smsTask.setDelReportTimeoutDuration(1);
+		smsTask.setGroupSizeEstimate(1);
+		smsTask.setGroupSizeActual(1);
+		smsTask.setDeliveryUserId("sakaiUserID");
+		smsTask.setDeliveryGroupId("SakaiGroupID");
+		smsTask.setDeliveryGroupName("SakaiGroupName");
+		smsTask.setCreditEstimate(1);
+		SmsMessage smsMessage = new SmsMessage();
+		smsMessage.setSmsTask(smsTask);
+		smsMessage.setMobileNumber(mobileNumber);
+		smsMessage.setMessageBody(messageBody);
+		smsMessage.setSmscMessageId("smscMessageId");
+		smsMessage.setSakaiUserId("sakaiUserId");
+		smsMessage.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
+
+		smsTask.getSmsMessages().add(smsMessage);
+
+		return smsMessage;
 	}
 
 	/**
@@ -203,6 +164,48 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 		log.debug(con.toString());
 
 		return con;
+	}
+
+	private int getPageSize() {
+		SmsConfig smsConfig = HibernateLogicFactory.getConfigLogic()
+				.getOrCreateSmsConfigBySakaiSiteId(
+						SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_SITE_ID);
+		if (smsConfig == null)
+			return SmsHibernateConstants.DEFAULT_PAGE_SIZE;
+		else
+			return smsConfig.getPagingSize();
+	}
+
+	/**
+	 * Gets a SmsMessage entity for the given id
+	 * 
+	 * @param Long
+	 *            sms Message id
+	 * @return sms Message
+	 */
+	public SmsMessage getSmsMessage(Long smsMessageId) {
+		return (SmsMessage) findById(SmsMessage.class, smsMessageId);
+	}
+
+	/**
+	 * Returns a message for the given smsc message id or null if nothing found
+	 * 
+	 * @param smsc
+	 *            message id
+	 * @return sms message
+	 */
+	public SmsMessage getSmsMessageBySmscMessageId(String smscMessageId,
+			String smscID) {
+		Session s = HibernateUtil.getSession();
+		Query query = s
+				.createQuery("from SmsMessage mes where mes.smscMessageId = :smscMessageId and mes.smscId = :smscID");
+		query.setParameter("smscMessageId", smscMessageId, Hibernate.STRING);
+		query.setParameter("smscID", smscID, Hibernate.STRING);
+		List<SmsMessage> messages = query.list();
+		if (messages != null && messages.size() > 0) {
+			return messages.get(0);
+		}
+		return null;
 	}
 
 	private List<SmsMessage> getSmsMessagesForCriteria(
@@ -275,64 +278,61 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 		return messages;
 	}
 
-	private int getPageSize() {
-		SmsConfig smsConfig = HibernateLogicFactory.getConfigLogic()
-				.getOrCreateSmsConfigBySakaiSiteId(
-						SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_SITE_ID);
-		if (smsConfig == null)
-			return SmsHibernateConstants.DEFAULT_PAGE_SIZE;
-		else
-			return smsConfig.getPagingSize();
+	/**
+	 * Gets a list of SmsMessage objects for the specified and specified status
+	 * code(s).
+	 * 
+	 * It will ignore the smsTaskId if it is passed as null and return all
+	 * smsMessages with the specified status code(s).
+	 * 
+	 * @param sms
+	 *            task id
+	 * @param statusCode
+	 *            (s)
+	 * @return List<SmsMessage> - sms messages
+	 */
+	public List<SmsMessage> getSmsMessagesWithStatus(Long smsTaskId,
+			String... statusCodes) {
+		List<SmsMessage> messages = new ArrayList<SmsMessage>();
+
+		// Return empty list if no status codes were passed in
+		if (statusCodes.length > 0) {
+
+			StringBuilder hql = new StringBuilder();
+			hql.append(" from SmsMessage message where 1=1  ");
+			if (smsTaskId != null) {
+				hql.append(" and message.smsTask.id = :smsTaskId ");
+			}
+			hql.append(" and message.statusCode IN (:statusCodes) ");
+
+			log.debug("getSmsTasksFilteredByMessageStatus() HQL: "
+					+ hql.toString());
+			Query query = HibernateUtil.getSession()
+					.createQuery(hql.toString());
+			query
+					.setParameterList("statusCodes", statusCodes,
+							Hibernate.STRING);
+			if (smsTaskId != null) {
+				query.setParameter("smsTaskId", smsTaskId);
+			}
+			messages = query.list();
+			HibernateUtil.closeSession();
+
+		}
+		return messages;
 	}
 
 	/**
-	 * A new sms message factory method. Only used for testing.
+	 * This method will persists the given object.
 	 * 
-	 * This method will instantiate a SmsTask and return a SmsMessage with the
-	 * associated SmsTask object set on it.
-	 * <p>
-	 * The message will not be persisted.
+	 * If the object is a new entity then it will be created on the DB. If it is
+	 * an existing entity then the record will be updated on the DB.
 	 * 
-	 * @param mobileNumber
-	 *            the mobile number
-	 * @param messageBody
-	 *            the message body
-	 * 
-	 * @return the new sms message instance test
+	 * @param sms
+	 *            Message to be persisted
 	 */
-	public SmsMessage getNewTestSmsMessageInstance(String mobileNumber,
-			String messageBody) {
-		SmsTask smsTask = new SmsTask();
-		smsTask.setSakaiSiteId("sakaiSiteId");
-		smsTask.setSmsAccountId(1);
-		smsTask.setDateCreated(new Date(System.currentTimeMillis()));
-		smsTask.setDateToSend(new Date(System.currentTimeMillis()));
-		smsTask.setDateProcessed(new Date(System.currentTimeMillis()));
-		smsTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_SENT);
-		smsTask.setAttemptCount(2);
-		smsTask
-				.setMessageTypeId(SmsHibernateConstants.SMS_TASK_TYPE_PROCESS_NOW);
-		smsTask.setMessageBody("messageBody");
-		smsTask.setSenderUserName("senderUserName");
-		smsTask.setMaxTimeToLive(1);
-		smsTask.setDelReportTimeoutDuration(1);
-		smsTask.setGroupSizeEstimate(1);
-		smsTask.setGroupSizeActual(1);
-		smsTask.setDeliveryUserId("sakaiUserID");
-		smsTask.setDeliveryGroupId("SakaiGroupID");
-		smsTask.setDeliveryGroupName("SakaiGroupName");
-		smsTask.setCreditEstimate(1);
-		SmsMessage smsMessage = new SmsMessage();
-		smsMessage.setSmsTask(smsTask);
-		smsMessage.setMobileNumber(mobileNumber);
-		smsMessage.setMessageBody(messageBody);
-		smsMessage.setSmscMessageId("smscMessageId");
-		smsMessage.setSakaiUserId("sakaiUserId");
-		smsMessage.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
-
-		smsTask.getSmsMessages().add(smsMessage);
-
-		return smsMessage;
+	public void persistSmsMessage(SmsMessage smsMessage) {
+		persist(smsMessage);
 	}
 
 }

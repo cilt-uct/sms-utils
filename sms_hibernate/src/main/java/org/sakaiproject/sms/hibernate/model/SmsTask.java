@@ -107,7 +107,7 @@ public class SmsTask extends BaseModel {
 	private String senderUserName;
 
 	/** The sms account (cost centre) that will pay for the messages. */
-	private Integer smsAccountId;
+	private Long smsAccountId;
 
 	/**
 	 * The sms messages for this task. This will be generated when the task is
@@ -158,7 +158,7 @@ public class SmsTask extends BaseModel {
 	 * 
 	 */
 	private SmsTask(String sakaiSiteID, String deliveryUserID,
-			String deliveryGroupID, int accountID, String messageBody) {
+			String deliveryGroupID, Long accountID, String messageBody) {
 		this();
 		this.sakaiSiteId = sakaiSiteID;
 		this.deliveryUserId = deliveryUserID;
@@ -547,7 +547,7 @@ public class SmsTask extends BaseModel {
 	 * 
 	 * @return the sms account id
 	 */
-	public Integer getSmsAccountId() {
+	public Long getSmsAccountId() {
 		return smsAccountId;
 	}
 
@@ -834,7 +834,7 @@ public class SmsTask extends BaseModel {
 	 * @param smsAccountId
 	 *            the new sms account id
 	 */
-	public void setSmsAccountId(Integer smsAccountId) {
+	public void setSmsAccountId(Long smsAccountId) {
 		this.smsAccountId = smsAccountId;
 	}
 

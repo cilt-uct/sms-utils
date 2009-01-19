@@ -20,7 +20,7 @@
 			not-null="false" length="99" />
 		<property name="messageTypeId" type="integer" column="MESSAGE_TYPE_ID"
 			not-null="false" />
-		<property name="smsAccountId" type="integer" column="SMS_ACCOUNT_ID"
+		<property name="smsAccountId" type="long" column="SMS_ACCOUNT_ID"
 			not-null="true" />
 		<property name="dateCreated" type="timestamp" column="DATE_CREATED"
 			not-null="true" />

@@ -41,7 +41,7 @@ public class SmsTaskTest extends AbstractBaseTestCase {
 
 		insertTask = new SmsTask();
 		insertTask.setSakaiSiteId("sakaiSiteId");
-		insertTask.setSmsAccountId(1);
+		insertTask.setSmsAccountId(1l);
 		insertTask.setDateCreated(new Date(System.currentTimeMillis()));
 		insertTask.setDateToSend(new Date(System.currentTimeMillis()));
 		insertTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
@@ -82,35 +82,21 @@ public class SmsTaskTest extends AbstractBaseTestCase {
 	}
 
 	/**
-	 * Test insert sms task.
+	 * Test add sms messages to task.
 	 */
-	public void testInsertSmsTask() {
-		HibernateLogicFactory.getTaskLogic().persistSmsTask(insertTask);
-		assertTrue("Object not persisted", insertTask.exists());
-	}
+	public void testAddSmsMessagesToTask() {
+		insertMessage1.setSmsTask(insertTask);
+		insertMessage2.setSmsTask(insertTask);
+		insertTask.getSmsMessages().add(insertMessage1);
+		insertTask.getSmsMessages().add(insertMessage2);
 
-	/**
-	 * Test get sms task by id.
-	 */
-	public void testGetSmsTaskById() {
+		HibernateLogicFactory.getTaskLogic().persistSmsTask(insertTask);
 		SmsTask getSmsTask = HibernateLogicFactory.getTaskLogic().getSmsTask(
 				insertTask.getId());
-		assertNotNull(getSmsTask);
-		assertEquals(insertTask, getSmsTask);
-	}
+		assertNotNull(insertTask);
+		assertTrue("Collection size not correct", getSmsTask.getSmsMessages()
+				.size() == 4);
 
-	/**
-	 * Test update sms task.
-	 */
-	public void testUpdateSmsTask() {
-		SmsTask smsTask = HibernateLogicFactory.getTaskLogic().getSmsTask(
-				insertTask.getId());
-		assertFalse(smsTask.getSakaiSiteId().equals("newSakaiSiteId"));
-		smsTask.setSakaiSiteId("newSakaiSiteId");
-		HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask);
-		smsTask = HibernateLogicFactory.getTaskLogic().getSmsTask(
-				insertTask.getId());
-		assertEquals("newSakaiSiteId", smsTask.getSakaiSiteId());
 	}
 
 	/**
@@ -142,49 +128,13 @@ public class SmsTaskTest extends AbstractBaseTestCase {
 	}
 
 	/**
-	 * Test add sms messages to task.
+	 * Test delete sms task.
 	 */
-	public void testAddSmsMessagesToTask() {
-		insertMessage1.setSmsTask(insertTask);
-		insertMessage2.setSmsTask(insertTask);
-		insertTask.getSmsMessages().add(insertMessage1);
-		insertTask.getSmsMessages().add(insertMessage2);
-
-		HibernateLogicFactory.getTaskLogic().persistSmsTask(insertTask);
+	public void testDeleteSmsTask() {
+		HibernateLogicFactory.getTaskLogic().deleteSmsTask(insertTask);
 		SmsTask getSmsTask = HibernateLogicFactory.getTaskLogic().getSmsTask(
 				insertTask.getId());
-		assertNotNull(insertTask);
-		assertTrue("Collection size not correct", getSmsTask.getSmsMessages()
-				.size() == 4);
-
-	}
-
-	/**
-	 * Test remove sms messages from task.
-	 */
-	public void testRemoveSmsMessagesFromTask() {
-		insertTask.setSakaiSiteId("oldSakaiSiteId");
-		insertTask.getSmsMessages().remove(insertMessage1);
-		HibernateLogicFactory.getTaskLogic().persistSmsTask(insertTask);
-		SmsTask getSmsTask = HibernateLogicFactory.getTaskLogic().getSmsTask(
-				insertTask.getId());
-		assertTrue("Object not removed from collection", getSmsTask
-				.getSmsMessages().size() == 3);
-		// Check the right object was removed
-		assertFalse("The expected object was not removed from the collection",
-				getSmsTask.getSmsMessages().contains(insertMessage1));
-		assertTrue("The incorrect object was removed from the collection",
-				getSmsTask.getSmsMessages().contains(insertMessage2));
-	}
-
-	/**
-	 * Test get sms tasks.
-	 */
-	public void testGetSmsTasks() {
-		List<SmsTask> tasks = HibernateLogicFactory.getTaskLogic()
-				.getAllSmsTask();
-		assertNotNull("Returned list is null", tasks);
-		assertTrue("No records returned", tasks.size() > 0);
+		assertNull("Object not removed", getSmsTask);
 	}
 
 	/**
@@ -214,12 +164,32 @@ public class SmsTaskTest extends AbstractBaseTestCase {
 	}
 
 	/**
+	 * Test get sms task by id.
+	 */
+	public void testGetSmsTaskById() {
+		SmsTask getSmsTask = HibernateLogicFactory.getTaskLogic().getSmsTask(
+				insertTask.getId());
+		assertNotNull(getSmsTask);
+		assertEquals(insertTask, getSmsTask);
+	}
+
+	/**
+	 * Test get sms tasks.
+	 */
+	public void testGetSmsTasks() {
+		List<SmsTask> tasks = HibernateLogicFactory.getTaskLogic()
+				.getAllSmsTask();
+		assertNotNull("Returned list is null", tasks);
+		assertTrue("No records returned", tasks.size() > 0);
+	}
+
+	/**
 	 * Tests the getMessagesForCriteria method.
 	 */
 	public void testGetTasksForCriteria() {
 		SmsTask insertTask = new SmsTask();
 		insertTask.setSakaiSiteId("sakaiSiteId");
-		insertTask.setSmsAccountId(1);
+		insertTask.setSmsAccountId(1l);
 		insertTask.setDateCreated(new Date(System.currentTimeMillis()));
 		insertTask.setDateToSend(new Date(System.currentTimeMillis()));
 		insertTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
@@ -265,7 +235,7 @@ public class SmsTaskTest extends AbstractBaseTestCase {
 		for (int i = 0; i < recordsToInsert; i++) {
 			SmsTask insertTask = new SmsTask();
 			insertTask.setSakaiSiteId("sakaiSiteId");
-			insertTask.setSmsAccountId(1);
+			insertTask.setSmsAccountId(1l);
 			insertTask.setDateCreated(new Date(System.currentTimeMillis()));
 			insertTask.setDateToSend(new Date(System.currentTimeMillis()));
 			insertTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_FAIL);
@@ -307,8 +277,8 @@ public class SmsTaskTest extends AbstractBaseTestCase {
 				bean.setCurrentPage(pages + 1);
 			}
 
-			con = HibernateLogicFactory.getTaskLogic().getPagedSmsTasksForCriteria(
-					bean);
+			con = HibernateLogicFactory.getTaskLogic()
+					.getPagedSmsTasksForCriteria(bean);
 			tasks = con.getPageResults();
 			int lastPageRecordCount = recordsToInsert
 					- (pages * SmsHibernateConstants.DEFAULT_PAGE_SIZE);
@@ -321,12 +291,42 @@ public class SmsTaskTest extends AbstractBaseTestCase {
 	}
 
 	/**
-	 * Test delete sms task.
+	 * Test insert sms task.
 	 */
-	public void testDeleteSmsTask() {
-		HibernateLogicFactory.getTaskLogic().deleteSmsTask(insertTask);
+	public void testInsertSmsTask() {
+		HibernateLogicFactory.getTaskLogic().persistSmsTask(insertTask);
+		assertTrue("Object not persisted", insertTask.exists());
+	}
+
+	/**
+	 * Test remove sms messages from task.
+	 */
+	public void testRemoveSmsMessagesFromTask() {
+		insertTask.setSakaiSiteId("oldSakaiSiteId");
+		insertTask.getSmsMessages().remove(insertMessage1);
+		HibernateLogicFactory.getTaskLogic().persistSmsTask(insertTask);
 		SmsTask getSmsTask = HibernateLogicFactory.getTaskLogic().getSmsTask(
 				insertTask.getId());
-		assertNull("Object not removed", getSmsTask);
+		assertTrue("Object not removed from collection", getSmsTask
+				.getSmsMessages().size() == 3);
+		// Check the right object was removed
+		assertFalse("The expected object was not removed from the collection",
+				getSmsTask.getSmsMessages().contains(insertMessage1));
+		assertTrue("The incorrect object was removed from the collection",
+				getSmsTask.getSmsMessages().contains(insertMessage2));
+	}
+
+	/**
+	 * Test update sms task.
+	 */
+	public void testUpdateSmsTask() {
+		SmsTask smsTask = HibernateLogicFactory.getTaskLogic().getSmsTask(
+				insertTask.getId());
+		assertFalse(smsTask.getSakaiSiteId().equals("newSakaiSiteId"));
+		smsTask.setSakaiSiteId("newSakaiSiteId");
+		HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask);
+		smsTask = HibernateLogicFactory.getTaskLogic().getSmsTask(
+				insertTask.getId());
+		assertEquals("newSakaiSiteId", smsTask.getSakaiSiteId());
 	}
 }
