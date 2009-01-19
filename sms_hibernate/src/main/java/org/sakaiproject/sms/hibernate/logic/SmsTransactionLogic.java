@@ -36,10 +36,22 @@ import org.sakaiproject.sms.hibernate.model.SmsTransaction;
  */
 public interface SmsTransactionLogic {
 	
+
+	/**
+	 * Persist a transaction to when a task fails
+	 * 
+	 * @param smsTask
+	 * @throws SmsAccountNotFoundException
+	 */
+	public void cancelTransaction(Long smsTaskId, Long smsAccountId) throws SmsAccountNotFoundException;
+
+	
 	/**
 	 * Persist a transaction to reserve credits for a sms sending
 	 * 
-	 * @param smsTask
+	 * @param smsTaskId
+	 * @param smsAccountId
+	 * @param credits
 	 * @throws SmsAccountNotFoundException
 	 */
 	public void reserveCredits(Long smsTaskId, Long smsAccountId, Integer credits) throws SmsAccountNotFoundException;

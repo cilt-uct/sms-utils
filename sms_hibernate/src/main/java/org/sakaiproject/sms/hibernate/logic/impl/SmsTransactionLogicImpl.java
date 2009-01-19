@@ -56,10 +56,23 @@ public class SmsTransactionLogicImpl extends SmsDao implements
 		SmsTransactionLogic {
 
 	/**
-	 * Persist a transaction to reserve credits for a sms sending
+	 * Persist a transaction to when a task fails
 	 * 
 	 * @param smsTask
-	 * @throws AccountNotFoundException
+	 * @throws SmsAccountNotFoundException
+	 */
+	public void cancelTransaction(Long smsTaskId, Long smsAccountId) throws SmsAccountNotFoundException {
+		SmsTransaction smsTransaction = SmsTransactionFactory.createCancelTask(smsTaskId, smsAccountId);
+		persistSmsTransaction(smsTransaction);
+	}
+	
+	/**
+	 * Persist a transaction to reserve credits for a sms sending
+	 * 
+	 * @param smsTaskId
+	 * @param smsAccountId
+	 * @param credits
+	 * @throws SmsAccountNotFoundException
 	 */
 	public void reserveCredits(Long smsTaskId, Long smsAccountId, Integer credits) throws SmsAccountNotFoundException {
 		SmsTransaction smsTransaction = SmsTransactionFactory.createReserveCreditsTask(smsTaskId, smsAccountId, credits);

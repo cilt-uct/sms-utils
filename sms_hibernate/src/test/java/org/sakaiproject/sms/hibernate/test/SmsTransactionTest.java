@@ -250,11 +250,11 @@ public class SmsTransactionTest extends AbstractBaseTestCase {
 		}
 	}
 	
-	public void testCreateReserveCreditsTaskFail() throws Exception {
+	public void testCreateReserveCreditsTransactionNoAccountFound() throws Exception {
 		
 		try{			
 			HibernateLogicFactory.getTransactionLogic().reserveCredits(123L, 123L, 110);
-			fail("Insert should fail since there is no account with id 12345");
+			fail("Insert should fail since there is no account with id 123");
 		}
 		catch (SmsAccountNotFoundException expected) {
 		}
@@ -263,20 +263,36 @@ public class SmsTransactionTest extends AbstractBaseTestCase {
 		}
 	}	
 		
-	public void testCreateReserveCreditsTaskPass(){
+	public void testCreateReserveCreditsTask(){
 	
-		SmsAccount testAccount = SmsAccountTest.createTestAccount();	
+		SmsAccount testAccount = SmsAccountTest.createTestAccount();
+		testAccount.setBalance(1000f);
 		HibernateLogicFactory.getAccountLogic().persistSmsAccount(testAccount);
 		
 		try{			
 			HibernateLogicFactory.getTransactionLogic().reserveCredits(100L,  testAccount.getId(), 110);
 		}
 		catch (Exception notExpected) {
-			fail("Task should save successfully" + notExpected);
+			fail("Transaction should save successfully" + notExpected);
 		}
 	}
 
-	/**
+	public void testCreateCancelTransaction() throws Exception {
+	
+		SmsAccount testAccount = SmsAccountTest.createTestAccount();	
+		HibernateLogicFactory.getAccountLogic().persistSmsAccount(testAccount);
+	
+		try{			
+			HibernateLogicFactory.getTransactionLogic().cancelTransaction(101L,  testAccount.getId());
+		}
+		catch (Exception notExpected) {
+			fail("Transaction should save successfully" + notExpected);
+		}
+		
+	
+	}
+
+		/**
 	 * Test delete sms transaction.
 	 */
 	public void testDeleteSmsTransaction() {
