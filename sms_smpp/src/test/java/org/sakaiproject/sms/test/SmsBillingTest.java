@@ -179,48 +179,4 @@ public class SmsBillingTest extends AbstractBaseTestCase {
 		assertTrue("Expected sufficient credit", sufficientCredits);
 	}
 
-	/**
-	 * Test count billable messages.
-	 */
-	public void testCountBillableMessages() {
-		fail();
-		SmsTask task = new SmsTask();
-		task.setSakaiSiteId("sakaiSiteId");
-		task.setSmsAccountId(account.getId().intValue());
-		task.setDateCreated(new Date(System.currentTimeMillis()));
-		task.setDateToSend(new Date(System.currentTimeMillis()));
-		task.setStatusCode(SmsConst_DeliveryStatus.STATUS_DELIVERED);
-		task.setAttemptCount(2);
-		task.setMessageBody("messageCrit");
-		task.setSenderUserName("messageCrit");
-		task.setSakaiToolName("sakaiToolName");
-		task.setMaxTimeToLive(1);
-		task.setDelReportTimeoutDuration(1);
-		SmsMessage message1 = new SmsMessage();
-		message1.setMobileNumber("0721998919");
-		message1.setSmscMessageId("billable");
-		message1.setSakaiUserId("billable");
-		message1.setDateDelivered(new Date(System.currentTimeMillis()));
-		message1.setStatusCode(SmsConst_DeliveryStatus.STATUS_DELIVERED);
-		SmsMessage message2 = new SmsMessage();
-		message2.setMobileNumber("0721998919");
-		message2.setSmscMessageId("billable2");
-		message2.setSakaiUserId("billable2");
-		message2.setDateDelivered(new Date(System.currentTimeMillis()));
-		message2.setStatusCode(SmsConst_DeliveryStatus.STATUS_DELIVERED);
-		message1.setSmsTask(task);
-		message2.setSmsTask(task);
-		task.getSmsMessages().add(message1);
-		task.getSmsMessages().add(message2);
-		HibernateLogicFactory.getTaskLogic().persistSmsTask(task);
-
-		/*
-		 * int billableMessageCount = smsBillingImpl.countBillableMessages(task
-		 * .getSakaiSiteId(), task.getDeliveryUserId(), task
-		 * .getDeliveryGroupId(), 1);
-		 */
-		// assertTrue("Expected two billable messages", billableMessageCount ==
-		// 2);
-	}
-
 }
