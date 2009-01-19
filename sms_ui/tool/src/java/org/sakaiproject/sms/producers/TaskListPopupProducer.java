@@ -97,9 +97,6 @@ public class TaskListPopupProducer implements ViewComponentProducer, ViewParamsR
 				
 				UIMessage.make(tofill, "sms-account-status-code-label", "sms.sms-task.sms.status.code");
 				UIOutput.make(tofill, "sms-account-status-code", NullHandling.safeToString(smsTask.getStatusCode()));
-				
-				
-			
 			}
 		}
 	}

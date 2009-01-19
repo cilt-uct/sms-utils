@@ -31,7 +31,16 @@ public class SmsSystemConfigValidatorTest extends TestCase{
 	public void testValidConfigSettings() throws Exception {
 		smsConfig.setDelReportTimeoutDuration(new Integer(100));
 		smsConfig.setSchedulerInterval(new Integer(100));
+		smsConfig.setCreditCost(100.12f);
 		validator.validate(smsConfig, bindException);
 		assertFalse(bindException.hasErrors());
+	}
+	
+	public void testInvalidCreditCost() throws Exception {
+		smsConfig.setDelReportTimeoutDuration(new Integer(100));
+		smsConfig.setSchedulerInterval(new Integer(100));
+		smsConfig.setSchedulerInterval(null);
+		validator.validate(smsConfig, bindException);
+		assertTrue(bindException.hasErrors());
 	}
 }

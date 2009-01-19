@@ -31,8 +31,8 @@ public class SmsSystemConfigLocator implements BeanLocator{
 			if (name.startsWith(NEW_PREFIX)) {
 				togo = new SmsConfig();
 			} else {
-				togo = smsConfigLogic.getOrCreateSystemSmsConfig();
 			}
+			togo = smsConfigLogic.getOrCreateSystemSmsConfig();
 			delivered.put(name, togo);
 		}
 		return togo;
@@ -40,6 +40,8 @@ public class SmsSystemConfigLocator implements BeanLocator{
 	
 	public void save(){		
 		for (SmsConfig systemConfig : delivered.values()) {
+			//round by 2 decimal places, if logic is placed in SMSConfig a InvocationTargetException occurs
+			systemConfig.setCreditCost(Math.round(systemConfig.getCreditCost() * 100) * 0.01f);
 			smsConfigLogic.persistSmsConfig(systemConfig);
 		}
 	}

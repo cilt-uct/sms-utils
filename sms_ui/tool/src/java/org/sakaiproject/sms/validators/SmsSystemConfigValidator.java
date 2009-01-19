@@ -19,6 +19,7 @@ public class SmsSystemConfigValidator implements Validator{
 				
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "delReportTimeoutDuration", "sms.errors.gateway.empty");
 		ValidationUtils.rejectIfEmptyOrWhitespace(errors,"schedulerInterval", "sms.errors.scheduler.interval");
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors,"creditCost", "sms.errors.credit.cost");
 	}
 
 }

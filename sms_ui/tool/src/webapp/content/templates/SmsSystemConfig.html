@@ -27,6 +27,10 @@
       	<td><input style="width: 72px" maxLength="10" type="text" rsf:id="sms-config-report-timeout"></input></td>
       </tr>
       <tr>
+      	<td><label rsf:id="sms-credit-cost">Gateway report timeout:</label></td>
+      	<td><input style="width: 72px" maxLength="10" type="text" rsf:id="sms-config-sms-credit-cost"></input></td>
+      </tr>
+      <tr>
       <td colspan="1" align="left">
         <input style="color:#0099CC;" rsf:id="save" type="submit" value="Save"/>
         <input style="color:#0099CC;" rsf:id="cancel" type="button" value="Cancel" onclick="history.go(-1)"/>
@@ -43,6 +47,8 @@
 		frmvalidator.addValidation("sms-config-scheduler-interval","num", "Please enter a valid number for Scheduler Interval");
 		frmvalidator.addValidation("sms-config-report-timeout","minlen=1", "Please enter a number for Gateway report timeout");
 		frmvalidator.addValidation("sms-config-report-timeout","num", "Please enter a number for Gateway report timeout");
+		frmvalidator.addValidation("sms-config-sms-credit-cost","minlen=1", "Please enter a number for Credit Cost");
+		frmvalidator.addValidation("sms-config-sms-credit-cost","dec", "Please enter a valid number for Credit Cost");
 	</script>
     
 </div>

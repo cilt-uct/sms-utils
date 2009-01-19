@@ -45,6 +45,11 @@ public class SmsSystemConfigProducer implements ViewComponentProducer{
 		UIMessage.make(smsSystemForm, "gateway-report-timeout", "sms.system.config.gateway.timeout");
 		UIInput reportTimeoutInput = UIInput.make(smsSystemForm, "sms-config-report-timeout", smsSystemConfigOTP + ".delReportTimeoutDuration");
 		reportTimeoutInput.decorators = new DecoratorList(new UITooltipDecorator(UIMessage.make("sms.system.config.gateway.timeout-tooltip")));
+
+		UIMessage.make(smsSystemForm, "sms-credit-cost", "sms.system.config.sms.credit.cost");
+		UIInput smsCreditCost = UIInput.make(smsSystemForm, "sms-config-sms-credit-cost", smsSystemConfigOTP + ".creditCost");
+		smsCreditCost.decorators = new DecoratorList(new UITooltipDecorator(UIMessage.make("sms.system.config.sms.credit.cost-tooltip")));
+		
 		
 		UICommand.make(smsSystemForm, "save", SmsSystemConfigLocator.LOCATOR_NAME + ".save");
 		UICommand.make(smsSystemForm, "cancel", "#");
