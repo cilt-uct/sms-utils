@@ -364,6 +364,9 @@ public class SmsCoreImpl implements SmsCore {
 		// Get the balance available to calculate the available credit.
 		SmsAccount account = HibernateLogicFactory.getAccountLogic()
 				.getSmsAccount(smsTask.getSmsAccountId().longValue());
+		if (account == null) {
+			return false;
+		}
 		Float amount = account.getBalance();
 
 		if (!account.getAccountEnabled()) {
