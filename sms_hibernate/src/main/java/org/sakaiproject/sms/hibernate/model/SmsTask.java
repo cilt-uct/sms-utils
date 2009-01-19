@@ -294,6 +294,7 @@ public class SmsTask extends BaseModel {
 				.equals(other.delReportTimeoutDuration))
 			return false;
 
+		
 		return true;
 	}
 
