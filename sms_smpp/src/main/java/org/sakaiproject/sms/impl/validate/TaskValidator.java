@@ -37,6 +37,26 @@ import org.sakaiproject.sms.impl.SmsBillingImpl;
 public class TaskValidator {
 
 	/**
+	 * Check sufficient credits.
+	 * 
+	 * @param smsTask
+	 *            the sms task
+	 * 
+	 * @return the array list< string>
+	 */
+	public static ArrayList<String> checkSufficientCredits(SmsTask smsTask) {
+		ArrayList<String> errors = new ArrayList<String>();
+		// check for sufficient balance
+		SmsBillingImpl billing = new SmsBillingImpl();
+		boolean sufficientCredits = billing.checkSufficientCredits(smsTask
+				.getSmsAccountId(), smsTask.getCreditEstimate());
+		if (!sufficientCredits) {
+			errors.add(ValidationConstants.INSUFFICIENT_CREDIT);
+		}
+		return errors;
+	}
+
+	/**
 	 * Validate insert task.
 	 * 
 	 * @param smsTask
@@ -59,7 +79,7 @@ public class TaskValidator {
 			errors.add(ValidationConstants.TASK_ACCOUNT_EMPTY);
 		} else {
 			SmsAccount account = HibernateLogicFactory.getAccountLogic()
-					.getSmsAccount(smsTask.getSmsAccountId().longValue());
+					.getSmsAccount(smsTask.getSmsAccountId());
 			if (account == null) {
 				errors.add(ValidationConstants.TASK_ACCOUNT_INVALID);
 			}
@@ -123,26 +143,6 @@ public class TaskValidator {
 			errors.add(ValidationConstants.TASK_DELIVERY_GROUP_ID_EMPTY);
 		}
 
-		return errors;
-	}
-
-	/**
-	 * Check sufficient credits.
-	 * 
-	 * @param smsTask
-	 *            the sms task
-	 * 
-	 * @return the array list< string>
-	 */
-	public static ArrayList<String> checkSufficientCredits(SmsTask smsTask) {
-		ArrayList<String> errors = new ArrayList<String>();
-		// check for sufficient balance
-		SmsBillingImpl billing = new SmsBillingImpl();
-		boolean sufficientCredits = billing.checkSufficientCredits(smsTask
-				.getSmsAccountId(), smsTask.getCreditEstimate());
-		if (!sufficientCredits) {
-			errors.add(ValidationConstants.INSUFFICIENT_CREDIT);
-		}
 		return errors;
 	}
 

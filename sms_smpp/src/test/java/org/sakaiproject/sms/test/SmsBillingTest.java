@@ -45,6 +45,23 @@ public class SmsBillingTest extends AbstractBaseTestCase {
 	/** The account. */
 	public static SmsAccount account;
 
+	static {
+		HibernateUtil.createSchema();
+		smsBillingImpl = new SmsBillingImpl();
+		smsSmppImpl = new SmsSmppImpl();
+		smsSmppImpl.init();
+
+		account = new SmsAccount();
+		account.setSakaiSiteId("sakaiSiteId");
+		account.setMessageTypeCode("");
+		account.setBalance(10f);
+		account.setAccountName("account name");
+		account.setStartdate(new Date());
+		account.setAccountEnabled(true);
+		HibernateLogicFactory.getAccountLogic().persistSmsAccount(account);
+
+	}
+
 	/** The test amount. */
 	public final Float testAmount = 100F;
 
@@ -67,23 +84,6 @@ public class SmsBillingTest extends AbstractBaseTestCase {
 		super(name);
 	}
 
-	static {
-		HibernateUtil.createSchema();
-		smsBillingImpl = new SmsBillingImpl();
-		smsSmppImpl = new SmsSmppImpl();
-		smsSmppImpl.init();
-
-		account = new SmsAccount();
-		account.setSakaiSiteId("sakaiSiteId");
-		account.setMessageTypeCode("");
-		account.setBalance(10f);
-		account.setAccountName("account name");
-		account.setStartdate(new Date());
-		account.setAccountEnabled(true);
-		HibernateLogicFactory.getAccountLogic().persistSmsAccount(account);
-
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -91,34 +91,6 @@ public class SmsBillingTest extends AbstractBaseTestCase {
 	 */
 	@Override
 	protected void tearDown() throws Exception {
-	}
-
-	/**
-	 * Test check sufficient credits are available.
-	 */
-	public void testCheckSufficientCredits_True() {
-
-		int creditsRequired = 5;
-
-		SmsMessage msg = new SmsMessage();
-		SmsTask smsTask = new SmsTask();
-		smsTask.setSakaiSiteId("sakaiSiteId");
-		smsTask.setSmsAccountId(account.getId().intValue());
-		smsTask.setDateCreated(new Timestamp(System.currentTimeMillis()));
-		smsTask.setDateToSend(new Timestamp(System.currentTimeMillis()));
-		smsTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
-		smsTask.setAttemptCount(2);
-		smsTask.setMessageBody("messageBody");
-		smsTask.setSenderUserName("senderUserName");
-		smsTask.setMaxTimeToLive(1);
-		smsTask.setDelReportTimeoutDuration(1);
-		smsTask.getSmsMessages().add(msg);
-		smsTask.setCreditEstimate(creditsRequired);
-		msg.setSmsTask(smsTask);
-
-		boolean sufficientCredits = smsBillingImpl.checkSufficientCredits(
-				account.getId().intValue(), creditsRequired);
-		assertTrue("Expected sufficient credit", sufficientCredits);
 	}
 
 	/**
@@ -131,7 +103,7 @@ public class SmsBillingTest extends AbstractBaseTestCase {
 		SmsMessage msg = new SmsMessage();
 		SmsTask smsTask = new SmsTask();
 		smsTask.setSakaiSiteId("sakaiSiteId");
-		smsTask.setSmsAccountId(account.getId().intValue());
+		smsTask.setSmsAccountId(account.getId());
 		smsTask.setDateCreated(new Timestamp(System.currentTimeMillis()));
 		smsTask.setDateToSend(new Timestamp(System.currentTimeMillis()));
 		smsTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
@@ -145,7 +117,7 @@ public class SmsBillingTest extends AbstractBaseTestCase {
 		msg.setSmsTask(smsTask);
 
 		boolean sufficientCredits = smsBillingImpl.checkSufficientCredits(
-				account.getId().intValue(), creditsRequired);
+				account.getId(), creditsRequired);
 		assertFalse("Expected insufficient credit", sufficientCredits);
 	}
 
@@ -159,7 +131,7 @@ public class SmsBillingTest extends AbstractBaseTestCase {
 		SmsMessage msg = new SmsMessage();
 		SmsTask smsTask = new SmsTask();
 		smsTask.setSakaiSiteId("sakaiSiteId");
-		smsTask.setSmsAccountId(account.getId().intValue());
+		smsTask.setSmsAccountId(account.getId());
 		smsTask.setDateCreated(new Timestamp(System.currentTimeMillis()));
 		smsTask.setDateToSend(new Timestamp(System.currentTimeMillis()));
 		smsTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
@@ -173,7 +145,7 @@ public class SmsBillingTest extends AbstractBaseTestCase {
 		msg.setSmsTask(smsTask);
 
 		boolean sufficientCredits = smsBillingImpl.checkSufficientCredits(
-				account.getId().intValue(), creditsRequired);
+				account.getId(), creditsRequired);
 		assertFalse("Expected insufficient credit", sufficientCredits);
 
 		// Add overdraft to account
@@ -181,16 +153,36 @@ public class SmsBillingTest extends AbstractBaseTestCase {
 		HibernateLogicFactory.getAccountLogic().persistSmsAccount(account);
 
 		sufficientCredits = smsBillingImpl.checkSufficientCredits(account
-				.getId().intValue(), creditsRequired);
+				.getId(), creditsRequired);
 		assertTrue("Expected sufficient credit", sufficientCredits);
 	}
 
 	/**
-	 * Test convert credits to amount.
+	 * Test check sufficient credits are available.
 	 */
-	public void testConvertCreditsToAmount() {
-		int credits = smsBillingImpl.convertAmountToCredits(testAmount);
-		// Not sure how to test this properly.
+	public void testCheckSufficientCredits_True() {
+
+		int creditsRequired = 5;
+
+		SmsMessage msg = new SmsMessage();
+		SmsTask smsTask = new SmsTask();
+		smsTask.setSakaiSiteId("sakaiSiteId");
+		smsTask.setSmsAccountId(account.getId());
+		smsTask.setDateCreated(new Timestamp(System.currentTimeMillis()));
+		smsTask.setDateToSend(new Timestamp(System.currentTimeMillis()));
+		smsTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
+		smsTask.setAttemptCount(2);
+		smsTask.setMessageBody("messageBody");
+		smsTask.setSenderUserName("senderUserName");
+		smsTask.setMaxTimeToLive(1);
+		smsTask.setDelReportTimeoutDuration(1);
+		smsTask.getSmsMessages().add(msg);
+		smsTask.setCreditEstimate(creditsRequired);
+		msg.setSmsTask(smsTask);
+
+		boolean sufficientCredits = smsBillingImpl.checkSufficientCredits(
+				account.getId(), creditsRequired);
+		assertTrue("Expected sufficient credit", sufficientCredits);
 	}
 
 	/**
@@ -200,6 +192,14 @@ public class SmsBillingTest extends AbstractBaseTestCase {
 		float amount = smsBillingImpl.convertCreditsToAmount(testCredits);
 		int credits = smsBillingImpl.convertAmountToCredits(amount);
 		assertTrue(credits == testCredits);
+	}
+
+	/**
+	 * Test convert credits to amount.
+	 */
+	public void testConvertCreditsToAmount() {
+		int credits = smsBillingImpl.convertAmountToCredits(testAmount);
+		// Not sure how to test this properly.
 	}
 
 }

@@ -37,15 +37,15 @@ public class SmppThread extends TestRunnable {
 
 	private static final org.apache.log4j.Logger LOG = org.apache.log4j.Logger
 			.getLogger(SmppThread.class);
-	private int delay_between_messages;
+	private final int delay_between_messages;
 	/** some private stuff for each thread. */
 	public int reportsRemainingAfterSleep, sent_count, message_count;
 
 	/** The session name. */
-	private String sessionName;
+	private final String sessionName;
 
 	/** The sms smpp impl. */
-	private SmsSmppImpl smsSmppImpl;
+	private final SmsSmppImpl smsSmppImpl;
 
 	/**
 	 * Instantiates a new smpp session.
@@ -73,7 +73,7 @@ public class SmppThread extends TestRunnable {
 			Date dateToSend, int attemptCount) {
 		SmsTask insertTask = new SmsTask();
 		insertTask.setSakaiSiteId(sakaiID);
-		insertTask.setSmsAccountId(0);
+		insertTask.setSmsAccountId(0l);
 		insertTask.setDateCreated(new Date(System.currentTimeMillis()));
 		insertTask.setDateToSend(dateToSend);
 		insertTask.setStatusCode(status);

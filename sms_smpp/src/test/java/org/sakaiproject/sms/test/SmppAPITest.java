@@ -41,13 +41,6 @@ public class SmppAPITest extends AbstractBaseTestCase {
 
 	private static SmsSmppImpl smsSmppImpl = null;
 
-	public SmppAPITest() {
-	}
-
-	public SmppAPITest(String name) {
-		super(name);
-	}
-
 	static {
 		System.out.println("Static setUp");
 		HibernateUtil.createSchema();
@@ -55,14 +48,11 @@ public class SmppAPITest extends AbstractBaseTestCase {
 		smsSmppImpl.init();
 	}
 
-	/*
-	 * The tearDown method safely calls disconnectGateWay at the end of every
-	 * test.
-	 */
-	@Override
-	protected void tearDown() throws Exception {
-		smsSmppImpl.disconnectGateWay();
+	public SmppAPITest() {
+	}
 
+	public SmppAPITest(String name) {
+		super(name);
 	}
 
 	/**
@@ -79,7 +69,7 @@ public class SmppAPITest extends AbstractBaseTestCase {
 			Date dateToSend, int attemptCount) {
 		SmsTask insertTask = new SmsTask();
 		insertTask.setSakaiSiteId(sakaiID);
-		insertTask.setSmsAccountId(0);
+		insertTask.setSmsAccountId(0l);
 		insertTask.setDateCreated(new Date(System.currentTimeMillis()));
 		insertTask.setDateToSend(dateToSend);
 		insertTask.setStatusCode(status);
@@ -95,6 +85,54 @@ public class SmppAPITest extends AbstractBaseTestCase {
 				.setMessageTypeId(SmsHibernateConstants.SMS_TASK_TYPE_PROCESS_NOW);
 		HibernateLogicFactory.getTaskLogic().persistSmsTask(insertTask);
 		return insertTask;
+	}
+
+	/*
+	 * The tearDown method safely calls disconnectGateWay at the end of every
+	 * test.
+	 */
+	@Override
+	protected void tearDown() throws Exception {
+		smsSmppImpl.disconnectGateWay();
+
+	}
+
+	/**
+	 * Testing the connect and disconnecting from the smsc. The test succeeds if
+	 * the correct connectionStatus is returned.
+	 */
+
+	public void testGetConnectionStatus() {
+
+		smsSmppImpl.disconnectGateWay();
+		assertEquals(true, (!smsSmppImpl.getConnectionStatus()));
+
+		smsSmppImpl.connectToGateway();
+		assertEquals(true, (smsSmppImpl.getConnectionStatus()));
+
+	}
+
+	/**
+	 * The gateway return some information to us.
+	 */
+	public void testGetGatewayInfo() {
+		smsSmppImpl.connectToGateway();
+		System.out.println(smsSmppImpl.getGatewayInfo());
+	}
+
+	/**
+	 * Test process outgoing message remotely.
+	 */
+	public void testProcessOutgoingMessageRemotely() {
+		SmsTask task = new SmsTask();
+
+		SmsMessage message = new SmsMessage();
+		message.setSmsTask(task);
+		message.setMobileNumber("0721998919");
+		message.setMessageBody("This is message body text");
+		boolean processed = smsSmppImpl.processOutgoingMessageRemotely(message);
+		// Disabled
+		assertFalse(processed);
 	}
 
 	/**
@@ -168,43 +206,5 @@ public class SmppAPITest extends AbstractBaseTestCase {
 				SmsConst_SmscDeliveryStatus.ENROUTE).size() == 0);
 		HibernateLogicFactory.getTaskLogic().deleteSmsTask(insertTask1update);
 
-	}
-
-	/**
-	 * The gateway return some information to us.
-	 */
-	public void testGetGatewayInfo() {
-		smsSmppImpl.connectToGateway();
-		System.out.println(smsSmppImpl.getGatewayInfo());
-	}
-
-	/**
-	 * Testing the connect and disconnecting from the smsc. The test succeeds if
-	 * the correct connectionStatus is returned.
-	 */
-
-	public void testGetConnectionStatus() {
-
-		smsSmppImpl.disconnectGateWay();
-		assertEquals(true, (!smsSmppImpl.getConnectionStatus()));
-
-		smsSmppImpl.connectToGateway();
-		assertEquals(true, (smsSmppImpl.getConnectionStatus()));
-
-	}
-
-	/**
-	 * Test process outgoing message remotely.
-	 */
-	public void testProcessOutgoingMessageRemotely() {
-		SmsTask task = new SmsTask();
-
-		SmsMessage message = new SmsMessage();
-		message.setSmsTask(task);
-		message.setMobileNumber("0721998919");
-		message.setMessageBody("This is message body text");
-		boolean processed = smsSmppImpl.processOutgoingMessageRemotely(message);
-		// Disabled
-		assertFalse(processed);
 	}
 }

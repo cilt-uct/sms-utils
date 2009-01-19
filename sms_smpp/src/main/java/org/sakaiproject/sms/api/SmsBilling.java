@@ -41,7 +41,7 @@ public interface SmsBilling {
 	 * @param creditCount
 	 *            the credit count
 	 */
-	void allocateCredits(int accountID, int creditCount);
+	void allocateCredits(Long accountID, int creditCount);
 
 	/**
 	 * Return true of the account has the required credits available. Take into
@@ -54,7 +54,28 @@ public interface SmsBilling {
 	 * 
 	 * @return true, if check sufficient credits
 	 */
-	public boolean checkSufficientCredits(int accountID, int creditsRequired);
+	public boolean checkSufficientCredits(Long accountID, int creditsRequired);
+
+	/**
+	 * Convert amount to credits.
+	 * 
+	 * @param amount
+	 *            the amount
+	 * 
+	 * @return the double
+	 */
+	public Integer convertAmountToCredits(Float amount);
+
+	/**
+	 * Convert the given credits to currency base on the defined conversion
+	 * value at the given time.
+	 * 
+	 * @param creditCount
+	 *            the credit count
+	 * 
+	 * @return the credit amount
+	 */
+	public Float convertCreditsToAmount(int creditCount);
 
 	/**
 	 * Return the currency amount available in the account.
@@ -64,7 +85,7 @@ public interface SmsBilling {
 	 * 
 	 * @return the account balance
 	 */
-	public double getAccountBalance(int accountID);
+	public double getAccountBalance(Long accountID);
 
 	/**
 	 * Return credits available in the account.
@@ -74,7 +95,7 @@ public interface SmsBilling {
 	 * 
 	 * @return the account credits
 	 */
-	public int getAccountCredits(int accountID);
+	public int getAccountCredits(Long accountID);
 
 	/**
 	 * Use Sakai siteID, Sakai userID and account type to get a valid account
@@ -89,7 +110,7 @@ public interface SmsBilling {
 	 * 
 	 * @return the account id
 	 */
-	public int getAccountID(String sakaiSiteID, String sakaiUserID,
+	public Long getAccountID(String sakaiSiteID, String sakaiUserID,
 			Integer accountType);
 
 	/**
@@ -105,7 +126,7 @@ public interface SmsBilling {
 	 * 
 	 * @return the acc transactions
 	 */
-	public Set getAccTransactions(int accountID, Date startDate, Date endDate);
+	public Set getAccTransactions(Long accountID, Date startDate, Date endDate);
 
 	/**
 	 * Return all accounts linked to the given Sakai site.
@@ -116,27 +137,6 @@ public interface SmsBilling {
 	 * @return the all site accounts
 	 */
 	public Set getAllSiteAccounts(String sakaiSiteID);
-
-	/**
-	 * Convert the given credits to currency base on the defined conversion
-	 * value at the given time.
-	 * 
-	 * @param creditCount
-	 *            the credit count
-	 * 
-	 * @return the credit amount
-	 */
-	public Float convertCreditsToAmount(int creditCount);
-
-	/**
-	 * Convert amount to credits.
-	 * 
-	 * @param amount
-	 *            the amount
-	 * 
-	 * @return the double
-	 */
-	public Integer convertAmountToCredits(Float amount);
 
 	/**
 	 * Insert a new account and return the new account id.
@@ -160,7 +160,7 @@ public interface SmsBilling {
 	 * 
 	 * @return true, if insert transaction
 	 */
-	public Boolean insertTransaction(int accountID, int transCodeID,
+	public Boolean insertTransaction(Long accountID, int transCodeID,
 			int creditAmount);
 
 	/**
@@ -175,6 +175,6 @@ public interface SmsBilling {
 	 * 
 	 * @return true, if reserve credits
 	 */
-	public boolean reserveCredits(int accountID, int credits);
+	public boolean reserveCredits(Long accountID, int credits);
 
 }

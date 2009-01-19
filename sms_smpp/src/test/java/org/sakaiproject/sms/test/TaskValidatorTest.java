@@ -61,7 +61,7 @@ public class TaskValidatorTest extends AbstractBaseTestCase {
 		msg = new SmsMessage();
 		smsTask = new SmsTask();
 		smsTask.setSakaiSiteId("sakaiSiteId");
-		smsTask.setSmsAccountId(account.getId().intValue());
+		smsTask.setSmsAccountId(account.getId());
 		smsTask.setDateCreated(new Timestamp(System.currentTimeMillis()));
 		smsTask.setDateToSend(new Timestamp(System.currentTimeMillis()));
 		smsTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
@@ -78,11 +78,108 @@ public class TaskValidatorTest extends AbstractBaseTestCase {
 	}
 
 	/**
-	 * Test valid message.
+	 * Test account id.
 	 */
-	public void testValidMessage() {
+	public void testAccountId() {
+
+		// account exists
+		smsTask.setSmsAccountId(account.getId());
 		errors = TaskValidator.validateInsertTask(smsTask);
 		assertTrue(errors.size() == 0);
+
+		// account does not exist
+		smsTask.setSmsAccountId(0l);
+		errors = TaskValidator.validateInsertTask(smsTask);
+		assertTrue(errors.size() > 0);
+		assertTrue(errors.contains(ValidationConstants.TASK_ACCOUNT_INVALID));
+	}
+
+	/**
+	 * Test date created.
+	 */
+	public void testDateCreated() {
+
+		// null
+		smsTask.setDateCreated(null);
+		errors = TaskValidator.validateInsertTask(smsTask);
+		assertTrue(errors.size() > 0);
+		assertTrue(errors.contains(ValidationConstants.TASK_DATE_CREATED_EMPTY));
+	}
+
+	/**
+	 * Test date to send.
+	 */
+	public void testDateToSend() {
+
+		// null
+		smsTask.setDateToSend(null);
+		errors = TaskValidator.validateInsertTask(smsTask);
+		assertTrue(errors.size() > 0);
+		assertTrue(errors.contains(ValidationConstants.TASK_DATE_TO_SEND_EMPTY));
+	}
+
+	/**
+	 * Test delivery group id.
+	 */
+	public void testDeliveryGroupId() {
+		// null
+		smsTask.setDeliveryGroupId(null);
+		errors = TaskValidator.validateInsertTask(smsTask);
+		assertTrue(errors.size() > 0);
+		assertTrue(errors
+				.contains(ValidationConstants.TASK_DELIVERY_GROUP_ID_EMPTY));
+
+		// empty String
+		smsTask.setDeliveryGroupId("");
+		errors = TaskValidator.validateInsertTask(smsTask);
+		assertTrue(errors.size() > 0);
+		assertTrue(errors
+				.contains(ValidationConstants.TASK_DELIVERY_GROUP_ID_EMPTY));
+
+		// Blank space
+		smsTask.setDeliveryGroupId("   ");
+		errors = TaskValidator.validateInsertTask(smsTask);
+		assertTrue(errors.size() > 0);
+		assertTrue(errors
+				.contains(ValidationConstants.TASK_DELIVERY_GROUP_ID_EMPTY));
+	}
+
+	/**
+	 * Test delivery report timeout duration.
+	 */
+	public void testDelReportTimeoutDuration() {
+		// null
+		smsTask.setDelReportTimeoutDuration(null);
+		errors = TaskValidator.validateInsertTask(smsTask);
+		assertTrue(errors.size() > 0);
+		assertTrue(errors
+				.contains(ValidationConstants.TASK_DELIVERY_REPORT_TIMEOUT_INVALID));
+
+		// invalid
+		smsTask.setDelReportTimeoutDuration(0);
+		errors = TaskValidator.validateInsertTask(smsTask);
+		assertTrue(errors.size() > 0);
+		assertTrue(errors
+				.contains(ValidationConstants.TASK_DELIVERY_REPORT_TIMEOUT_INVALID));
+	}
+
+	/**
+	 * Test max time to live.
+	 */
+	public void testMaxTimeToLive() {
+		// null
+		smsTask.setMaxTimeToLive(null);
+		errors = TaskValidator.validateInsertTask(smsTask);
+		assertTrue(errors.size() > 0);
+		assertTrue(errors
+				.contains(ValidationConstants.TASK_MAX_TIME_TO_LIVE_INVALID));
+
+		// invalid
+		smsTask.setMaxTimeToLive(0);
+		errors = TaskValidator.validateInsertTask(smsTask);
+		assertTrue(errors.size() > 0);
+		assertTrue(errors
+				.contains(ValidationConstants.TASK_MAX_TIME_TO_LIVE_INVALID));
 	}
 
 	/**
@@ -127,6 +224,17 @@ public class TaskValidatorTest extends AbstractBaseTestCase {
 	}
 
 	/**
+	 * Test message type id.
+	 */
+	public void testMessageTypeId() {
+		// null
+		smsTask.setMessageTypeId(null);
+		errors = TaskValidator.validateInsertTask(smsTask);
+		assertTrue(errors.size() > 0);
+		assertTrue(errors.contains(ValidationConstants.TASK_MESSAGE_TYPE_EMPTY));
+	}
+
+	/**
 	 * Test sakai site id.
 	 */
 	public void testSakaiSiteId() {
@@ -151,82 +259,6 @@ public class TaskValidatorTest extends AbstractBaseTestCase {
 		assertTrue(errors.size() > 0);
 		assertTrue(errors
 				.contains(ValidationConstants.TASK_SAKAI_SITE_ID_EMPTY));
-	}
-
-	/**
-	 * Test account id.
-	 */
-	public void testAccountId() {
-
-		// account exists
-		smsTask.setSmsAccountId(account.getId().intValue());
-		errors = TaskValidator.validateInsertTask(smsTask);
-		assertTrue(errors.size() == 0);
-
-		// account does not exist
-		smsTask.setSmsAccountId(0);
-		errors = TaskValidator.validateInsertTask(smsTask);
-		assertTrue(errors.size() > 0);
-		assertTrue(errors.contains(ValidationConstants.TASK_ACCOUNT_INVALID));
-	}
-
-	/**
-	 * Test date created.
-	 */
-	public void testDateCreated() {
-
-		// null
-		smsTask.setDateCreated(null);
-		errors = TaskValidator.validateInsertTask(smsTask);
-		assertTrue(errors.size() > 0);
-		assertTrue(errors.contains(ValidationConstants.TASK_DATE_CREATED_EMPTY));
-	}
-
-	/**
-	 * Test date to send.
-	 */
-	public void testDateToSend() {
-
-		// null
-		smsTask.setDateToSend(null);
-		errors = TaskValidator.validateInsertTask(smsTask);
-		assertTrue(errors.size() > 0);
-		assertTrue(errors.contains(ValidationConstants.TASK_DATE_TO_SEND_EMPTY));
-	}
-
-	/**
-	 * Test status code.
-	 */
-	public void testStatusCode() {
-
-		// null
-		smsTask.setStatusCode(null);
-		errors = TaskValidator.validateInsertTask(smsTask);
-		assertTrue(errors.size() > 0);
-		assertTrue(errors.contains(ValidationConstants.TASK_STATUS_CODE_EMPTY));
-
-		// empty String
-		smsTask.setStatusCode("");
-		errors = TaskValidator.validateInsertTask(smsTask);
-		assertTrue(errors.size() > 0);
-		assertTrue(errors.contains(ValidationConstants.TASK_STATUS_CODE_EMPTY));
-
-		// Blank space
-		smsTask.setStatusCode("   ");
-		errors = TaskValidator.validateInsertTask(smsTask);
-		assertTrue(errors.size() > 0);
-		assertTrue(errors.contains(ValidationConstants.TASK_STATUS_CODE_EMPTY));
-	}
-
-	/**
-	 * Test message type id.
-	 */
-	public void testMessageTypeId() {
-		// null
-		smsTask.setMessageTypeId(null);
-		errors = TaskValidator.validateInsertTask(smsTask);
-		assertTrue(errors.size() > 0);
-		assertTrue(errors.contains(ValidationConstants.TASK_MESSAGE_TYPE_EMPTY));
 	}
 
 	/**
@@ -257,67 +289,35 @@ public class TaskValidatorTest extends AbstractBaseTestCase {
 	}
 
 	/**
-	 * Test max time to live.
+	 * Test status code.
 	 */
-	public void testMaxTimeToLive() {
+	public void testStatusCode() {
+
 		// null
-		smsTask.setMaxTimeToLive(null);
+		smsTask.setStatusCode(null);
 		errors = TaskValidator.validateInsertTask(smsTask);
 		assertTrue(errors.size() > 0);
-		assertTrue(errors
-				.contains(ValidationConstants.TASK_MAX_TIME_TO_LIVE_INVALID));
-
-		// invalid
-		smsTask.setMaxTimeToLive(0);
-		errors = TaskValidator.validateInsertTask(smsTask);
-		assertTrue(errors.size() > 0);
-		assertTrue(errors
-				.contains(ValidationConstants.TASK_MAX_TIME_TO_LIVE_INVALID));
-	}
-
-	/**
-	 * Test delivery report timeout duration.
-	 */
-	public void testDelReportTimeoutDuration() {
-		// null
-		smsTask.setDelReportTimeoutDuration(null);
-		errors = TaskValidator.validateInsertTask(smsTask);
-		assertTrue(errors.size() > 0);
-		assertTrue(errors
-				.contains(ValidationConstants.TASK_DELIVERY_REPORT_TIMEOUT_INVALID));
-
-		// invalid
-		smsTask.setDelReportTimeoutDuration(0);
-		errors = TaskValidator.validateInsertTask(smsTask);
-		assertTrue(errors.size() > 0);
-		assertTrue(errors
-				.contains(ValidationConstants.TASK_DELIVERY_REPORT_TIMEOUT_INVALID));
-	}
-
-	/**
-	 * Test delivery group id.
-	 */
-	public void testDeliveryGroupId() {
-		// null
-		smsTask.setDeliveryGroupId(null);
-		errors = TaskValidator.validateInsertTask(smsTask);
-		assertTrue(errors.size() > 0);
-		assertTrue(errors
-				.contains(ValidationConstants.TASK_DELIVERY_GROUP_ID_EMPTY));
+		assertTrue(errors.contains(ValidationConstants.TASK_STATUS_CODE_EMPTY));
 
 		// empty String
-		smsTask.setDeliveryGroupId("");
+		smsTask.setStatusCode("");
 		errors = TaskValidator.validateInsertTask(smsTask);
 		assertTrue(errors.size() > 0);
-		assertTrue(errors
-				.contains(ValidationConstants.TASK_DELIVERY_GROUP_ID_EMPTY));
+		assertTrue(errors.contains(ValidationConstants.TASK_STATUS_CODE_EMPTY));
 
 		// Blank space
-		smsTask.setDeliveryGroupId("   ");
+		smsTask.setStatusCode("   ");
 		errors = TaskValidator.validateInsertTask(smsTask);
 		assertTrue(errors.size() > 0);
-		assertTrue(errors
-				.contains(ValidationConstants.TASK_DELIVERY_GROUP_ID_EMPTY));
+		assertTrue(errors.contains(ValidationConstants.TASK_STATUS_CODE_EMPTY));
+	}
+
+	/**
+	 * Test valid message.
+	 */
+	public void testValidMessage() {
+		errors = TaskValidator.validateInsertTask(smsTask);
+		assertTrue(errors.size() == 0);
 	}
 
 }

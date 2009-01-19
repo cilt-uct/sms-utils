@@ -45,7 +45,7 @@ public class SmsBillingImpl implements SmsBilling {
 	 * @param creditCount
 	 *            the credit count
 	 */
-	public void allocateCredits(int accountID, int creditCount) {
+	public void allocateCredits(Long accountID, int creditCount) {
 		// TODO Auto-generated method stub
 
 	}
@@ -61,9 +61,9 @@ public class SmsBillingImpl implements SmsBilling {
 	 * 
 	 * @return true, if sufficient credits
 	 */
-	public boolean checkSufficientCredits(int accountID, int creditsRequired) {
+	public boolean checkSufficientCredits(Long accountID, int creditsRequired) {
 		SmsAccount account = HibernateLogicFactory.getAccountLogic()
-				.getSmsAccount(new Long(new Integer(accountID)));
+				.getSmsAccount(accountID);
 
 		// Account is null or disabled
 		if (account == null || !account.getAccountEnabled()) {
@@ -80,6 +80,19 @@ public class SmsBillingImpl implements SmsBilling {
 		}
 
 		return sufficientCredit;
+	}
+
+	/**
+	 * Convert amount to credits.
+	 * 
+	 * @param amount
+	 *            the amount
+	 * 
+	 * @return the double
+	 */
+	public Integer convertAmountToCredits(Float amount) {
+		Float result = (amount / SmsHibernateConstants.COST_OF_CREDIT);
+		return result.intValue();
 	}
 
 	/**
@@ -103,7 +116,7 @@ public class SmsBillingImpl implements SmsBilling {
 	 * 
 	 * @return the account balance
 	 */
-	public double getAccountBalance(int accountID) {
+	public double getAccountBalance(Long accountID) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
@@ -116,7 +129,7 @@ public class SmsBillingImpl implements SmsBilling {
 	 * 
 	 * @return the account credits
 	 */
-	public int getAccountCredits(int accountID) {
+	public int getAccountCredits(Long accountID) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
@@ -127,10 +140,10 @@ public class SmsBillingImpl implements SmsBilling {
 	 * @see org.sakaiproject.sms.api.SmsBilling#getAccountID(java.lang.String,
 	 * java.lang.String, java.lang.Integer)
 	 */
-	public int getAccountID(String sakaiSiteID, String sakaiUserID,
+	public Long getAccountID(String sakaiSiteID, String sakaiUserID,
 			Integer accountType) {
 		// TODO Auto-generated method stub
-		return 1;
+		return 1l;
 	}
 
 	/**
@@ -146,7 +159,7 @@ public class SmsBillingImpl implements SmsBilling {
 	 * 
 	 * @return the acc transactions
 	 */
-	public Set getAccTransactions(int accountID, Date startDate, Date endDate) {
+	public Set getAccTransactions(Long accountID, Date startDate, Date endDate) {
 		// TODO Auto-generated method stub
 		return null;
 
@@ -190,7 +203,7 @@ public class SmsBillingImpl implements SmsBilling {
 	 * 
 	 * @return true, if insert transaction
 	 */
-	public Boolean insertTransaction(int accountID, int transCodeID,
+	public Boolean insertTransaction(Long accountID, int transCodeID,
 			int creditAmount) {
 		// TODO Auto-generated method stub
 		return null;
@@ -208,20 +221,7 @@ public class SmsBillingImpl implements SmsBilling {
 	 * 
 	 * @return true, if reserve credits
 	 */
-	public boolean reserveCredits(int accountID, int credits) {
+	public boolean reserveCredits(Long accountID, int credits) {
 		return true;
-	}
-
-	/**
-	 * Convert amount to credits.
-	 * 
-	 * @param amount
-	 *            the amount
-	 * 
-	 * @return the double
-	 */
-	public Integer convertAmountToCredits(Float amount) {
-		Float result = (amount / SmsHibernateConstants.COST_OF_CREDIT);
-		return result.intValue();
 	}
 }

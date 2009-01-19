@@ -209,8 +209,8 @@ public class SmsCoreImpl implements SmsCore {
 		smsTask.setDateCreated(DateUtil.getCurrentDate());
 		HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask);
 		smsBilling.reserveCredits(smsBilling.getAccountID(smsTask
-				.getSakaiSiteId(), smsTask.getSenderUserName(), smsTask
-				.getSmsAccountId()), smsTask.getCreditEstimateInt());
+				.getSakaiSiteId(), smsTask.getSenderUserName(), 1), smsTask
+				.getCreditEstimateInt());
 
 		tryProcessTaskRealTime(smsTask);
 		return smsTask;
@@ -326,22 +326,6 @@ public class SmsCoreImpl implements SmsCore {
 		return true;
 	}
 
-	public void setSmsBilling(SmsBilling smsBilling) {
-		this.smsBilling = smsBilling;
-	}
-
-	public void setSmsSmpp(SmsSmpp smsSmpp) {
-		this.smsSmpp = smsSmpp;
-	}
-
-	public void tryProcessTaskRealTime(SmsTask smsTask) {
-
-		// TODO also check number of process threads
-		if (smsTask.getDateToSend().getTime() <= System.currentTimeMillis()) {
-			this.processTask(smsTask);
-		}
-	}
-
 	/**
 	 * Send a email notification out.
 	 * 
@@ -363,7 +347,7 @@ public class SmsCoreImpl implements SmsCore {
 				.getOrCreateSmsConfigBySakaiSiteId(smsTask.getSakaiSiteId());
 		// Get the balance available to calculate the available credit.
 		SmsAccount account = HibernateLogicFactory.getAccountLogic()
-				.getSmsAccount(smsTask.getSmsAccountId().longValue());
+				.getSmsAccount(smsTask.getSmsAccountId());
 		if (account == null) {
 			return false;
 		}
@@ -411,5 +395,21 @@ public class SmsCoreImpl implements SmsCore {
 
 		return sendNotificationEmail(toAddress, subject, body);
 
+	}
+
+	public void setSmsBilling(SmsBilling smsBilling) {
+		this.smsBilling = smsBilling;
+	}
+
+	public void setSmsSmpp(SmsSmpp smsSmpp) {
+		this.smsSmpp = smsSmpp;
+	}
+
+	public void tryProcessTaskRealTime(SmsTask smsTask) {
+
+		// TODO also check number of process threads
+		if (smsTask.getDateToSend().getTime() <= System.currentTimeMillis()) {
+			this.processTask(smsTask);
+		}
 	}
 }
