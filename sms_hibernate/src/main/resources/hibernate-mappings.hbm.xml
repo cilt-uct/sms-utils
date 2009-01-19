@@ -175,6 +175,9 @@
 			column="NOTIFICATION_EMAIL_SENT" not-null="false" length="100" />
 		<property name="pagingSize" type="integer" column="PAGING_SIZE"
 			not-null="false" />
+		<property name="creditCost" type="float" column="CREDIT_COST"
+			not-null="false" />
+
 	</class>
 
 </hibernate-mapping>
