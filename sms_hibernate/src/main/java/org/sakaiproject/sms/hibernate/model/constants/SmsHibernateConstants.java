@@ -151,5 +151,8 @@ public class SmsHibernateConstants {
 
 	/** The Constant for cost of credit. */
 	public static final Float COST_OF_CREDIT = 1.5f;
+	
+	/** The default max time to live */
+	public static final Integer DEFAULT_MAX_TIME_TO_LIVE = 1;
 
 }

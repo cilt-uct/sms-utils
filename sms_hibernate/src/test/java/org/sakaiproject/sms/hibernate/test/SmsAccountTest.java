@@ -27,14 +27,7 @@ public class SmsAccountTest extends AbstractBaseTestCase {
 
 		HibernateUtil.createSchema();
 
-		insertSmsAccount = new SmsAccount();
-		insertSmsAccount.setSakaiUserId("SakaiUSerId");
-		insertSmsAccount.setSakaiSiteId("SakaiSiteId");
-		insertSmsAccount.setMessageTypeCode("12345");
-		insertSmsAccount.setOverdraftLimit(10000.00f);
-		insertSmsAccount.setBalance(5000.00f);
-		insertSmsAccount.setAccountName("accountName");
-		insertSmsAccount.setAccountEnabled(true);
+		insertSmsAccount = createTestAccount();
 
 		insertSmsTransaction1 = new SmsTransaction();
 		insertSmsTransaction1.setBalance(100.00f);
@@ -55,6 +48,18 @@ public class SmsAccountTest extends AbstractBaseTestCase {
 				.currentTimeMillis()));
 		insertSmsTransaction2.setTransactionTypeCode("TTC");
 		insertSmsTransaction2.setSmsTaskId(1L);
+	}
+
+	public static SmsAccount createTestAccount() {
+		SmsAccount insertSmsAccount = new SmsAccount();
+		insertSmsAccount.setSakaiUserId("SakaiUSerId");
+		insertSmsAccount.setSakaiSiteId("SakaiSiteId");
+		insertSmsAccount.setMessageTypeCode("12345");
+		insertSmsAccount.setOverdraftLimit(10000.00f);
+		insertSmsAccount.setBalance(5000.00f);
+		insertSmsAccount.setAccountName("accountName");
+		insertSmsAccount.setAccountEnabled(true);
+		return insertSmsAccount;
 	}
 
 	/**

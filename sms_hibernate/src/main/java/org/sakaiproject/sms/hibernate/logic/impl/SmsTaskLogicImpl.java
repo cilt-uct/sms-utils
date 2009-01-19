@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.Query;
@@ -34,11 +35,13 @@ import org.sakaiproject.sms.hibernate.bean.SearchFilterBean;
 import org.sakaiproject.sms.hibernate.bean.SearchResultContainer;
 import org.sakaiproject.sms.hibernate.dao.SmsDao;
 import org.sakaiproject.sms.hibernate.logic.SmsTaskLogic;
+import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsAccountNotFoundException;
 import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsSearchException;
 import org.sakaiproject.sms.hibernate.model.SmsConfig;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
 import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
+import org.sakaiproject.sms.hibernate.model.factory.SmsTaskFactory;
 import org.sakaiproject.sms.hibernate.util.DateUtil;
 import org.sakaiproject.sms.hibernate.util.HibernateUtil;
 
@@ -171,6 +174,23 @@ public class SmsTaskLogicImpl extends SmsDao implements SmsTaskLogic {
 	}
 
 	/**
+	 * Persist a task to reserve credits for a sms sending
+	 * 
+	 * @param smsTask
+	 * @throws AccountNotFoundException
+	 */
+	public void reserveCredits(String senderUsername, Integer credits, String sakaiSiteId, Long smsAccountId) throws SmsAccountNotFoundException {
+		
+		if(HibernateLogicFactory.getAccountLogic().getSmsAccount(smsAccountId) == null){
+			throw new SmsAccountNotFoundException("Account id " + smsAccountId + " does not exsits");
+		}
+		
+		SmsTask smsTask = SmsTaskFactory.createReserveCreditsTask(senderUsername, credits, sakaiSiteId, smsAccountId);
+		
+		persistSmsTask(smsTask);
+	}
+	
+	/**
 	 * Gets a all search results for the specified search criteria
 	 * 
 	 * @param searchBean
@@ -276,4 +296,5 @@ public class SmsTaskLogicImpl extends SmsDao implements SmsTaskLogic {
 		else
 			return smsConfig.getPagingSize();
 	}
+
 }

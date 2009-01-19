@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.sakaiproject.sms.hibernate.bean.SearchFilterBean;
 import org.sakaiproject.sms.hibernate.bean.SearchResultContainer;
+import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsAccountNotFoundException;
 import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsSearchException;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 
@@ -35,6 +36,14 @@ import org.sakaiproject.sms.hibernate.model.SmsTask;
  */
 public interface SmsTaskLogic {
 
+	/**
+	 * Persist a task to reserve credits for a sms sending
+	 * 
+	 * @param smsTask
+	 * @throws SmsAccountNotFoundException
+	 */
+	public void reserveCredits(String senderUsername, Integer credits, String sakaiSiteId, Long smsAccountId) throws SmsAccountNotFoundException;
+	
 	/**
 	 * Delete sms task.
 	 * 
