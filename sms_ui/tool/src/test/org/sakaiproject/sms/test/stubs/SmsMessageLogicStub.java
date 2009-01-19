@@ -23,6 +23,12 @@ public class SmsMessageLogicStub implements SmsMessageLogic {
 		return null;
 	}
 
+	public List<SmsMessage> getAllSmsMessagesForCriteria(SearchFilterBean arg0)
+			throws SmsSearchException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	public Integer getBillableMessagesCount(String arg0, String arg1,
 			String arg2, Integer arg3) {
 		// TODO Auto-generated method stub
@@ -33,7 +39,7 @@ public class SmsMessageLogicStub implements SmsMessageLogic {
 			String messageBody) {
 		SmsTask smsTask = new SmsTask();
 		smsTask.setSakaiSiteId("sakaiSiteId");
-		smsTask.setSmsAccountId(1);
+		smsTask.setSmsAccountId(1l);
 		smsTask.setDateCreated(new Timestamp(System.currentTimeMillis()));
 		smsTask.setDateToSend(new Timestamp(System.currentTimeMillis()));
 		smsTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
@@ -52,12 +58,23 @@ public class SmsMessageLogicStub implements SmsMessageLogic {
 		return smsMessage;
 	}
 
+	public SearchResultContainer<SmsMessage> getPagedSmsMessagesForCriteria(
+			SearchFilterBean arg0) throws SmsSearchException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	public SmsMessage getSmsMessage(Long arg0) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public SmsMessage getSmsMessageBySmscMessageId(String arg0) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public SmsMessage getSmsMessageBySmscMessageId(String arg0, String arg1) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -76,22 +93,5 @@ public class SmsMessageLogicStub implements SmsMessageLogic {
 	public void persistSmsMessage(SmsMessage arg0) {
 		// TODO Auto-generated method stub
 
-	}
-
-	public List<SmsMessage> getAllSmsMessagesForCriteria(SearchFilterBean arg0)
-			throws SmsSearchException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public SearchResultContainer<SmsMessage> getPagedSmsMessagesForCriteria(
-			SearchFilterBean arg0) throws SmsSearchException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public SmsMessage getSmsMessageBySmscMessageId(String arg0, String arg1) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }

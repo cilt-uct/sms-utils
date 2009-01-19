@@ -83,7 +83,7 @@ public class SmsTaskValidationTest extends AbstractBaseTestCase {
 		msg = new SmsMessage();
 		smsTask = new SmsTask();
 		smsTask.setSakaiSiteId("sakaiSiteId");
-		smsTask.setSmsAccountId(account.getId().intValue());
+		smsTask.setSmsAccountId(account.getId());
 		smsTask.setDateCreated(new Timestamp(System.currentTimeMillis()));
 		smsTask.setDateToSend(new Timestamp(System.currentTimeMillis()));
 		smsTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
@@ -101,12 +101,111 @@ public class SmsTaskValidationTest extends AbstractBaseTestCase {
 	}
 
 	/**
-	 * Test valid message.
+	 * Test account id.
 	 */
-	public void testValidMessage() {
+	public void testAccountId() {
+
+		// account exists
+		smsTask.setSmsAccountId(account.getId());
 		validator.validate(smsTask, errors);
-		assertFalse(errors.hasErrors());
 		assertFalse(errors.hasGlobalErrors());
+
+		// account does not exist
+		smsTask.setSmsAccountId(0l);
+		validator.validate(smsTask, errors);
+		assertTrue(errors.hasGlobalErrors());
+		assertEquals(ValidationConstants.TASK_ACCOUNT_INVALID, errors
+				.getGlobalError().getCode());
+	}
+
+	/**
+	 * Test date created.
+	 */
+	public void testDateCreated() {
+
+		// null
+		smsTask.setDateCreated(null);
+		validator.validate(smsTask, errors);
+		assertTrue(errors.hasGlobalErrors());
+		assertEquals(ValidationConstants.TASK_DATE_CREATED_EMPTY, errors
+				.getGlobalError().getCode());
+	}
+
+	/**
+	 * Test date to send.
+	 */
+	public void testDateToSend() {
+
+		// null
+		smsTask.setDateToSend(null);
+		validator.validate(smsTask, errors);
+		assertTrue(errors.hasGlobalErrors());
+		assertEquals(ValidationConstants.TASK_DATE_TO_SEND_EMPTY, errors
+				.getGlobalError().getCode());
+	}
+
+	/**
+	 * Test delivery group id.
+	 */
+	public void testDeliveryGroupId() {
+		// null
+		smsTask.setDeliveryGroupId(null);
+		validator.validate(smsTask, errors);
+		assertTrue(errors.hasGlobalErrors());
+		assertEquals(ValidationConstants.TASK_DELIVERY_GROUP_ID_EMPTY, errors
+				.getGlobalError().getCode());
+
+		// empty String
+		smsTask.setDeliveryGroupId("");
+		validator.validate(smsTask, errors);
+		assertTrue(errors.hasGlobalErrors());
+		assertEquals(ValidationConstants.TASK_DELIVERY_GROUP_ID_EMPTY, errors
+				.getGlobalError().getCode());
+
+		// Blank space
+		smsTask.setDeliveryGroupId("   ");
+		validator.validate(smsTask, errors);
+		assertTrue(errors.hasGlobalErrors());
+		assertEquals(ValidationConstants.TASK_DELIVERY_GROUP_ID_EMPTY, errors
+				.getGlobalError().getCode());
+	}
+
+	/**
+	 * Test delivery report timeout duration.
+	 */
+	public void testDelReportTimeoutDuration() {
+		// null
+		smsTask.setDelReportTimeoutDuration(null);
+		validator.validate(smsTask, errors);
+		assertTrue(errors.hasGlobalErrors());
+		assertEquals(ValidationConstants.TASK_DELIVERY_REPORT_TIMEOUT_INVALID,
+				errors.getGlobalError().getCode());
+
+		// invalid
+		smsTask.setDelReportTimeoutDuration(0);
+		validator.validate(smsTask, errors);
+		assertTrue(errors.hasGlobalErrors());
+		assertEquals(ValidationConstants.TASK_DELIVERY_REPORT_TIMEOUT_INVALID,
+				errors.getGlobalError().getCode());
+	}
+
+	/**
+	 * Test max time to live.
+	 */
+	public void testMaxTimeToLive() {
+		// null
+		smsTask.setMaxTimeToLive(null);
+		validator.validate(smsTask, errors);
+		assertTrue(errors.hasGlobalErrors());
+		assertEquals(ValidationConstants.TASK_MAX_TIME_TO_LIVE_INVALID, errors
+				.getGlobalError().getCode());
+
+		// invalid
+		smsTask.setMaxTimeToLive(0);
+		validator.validate(smsTask, errors);
+		assertTrue(errors.hasGlobalErrors());
+		assertEquals(ValidationConstants.TASK_MAX_TIME_TO_LIVE_INVALID, errors
+				.getGlobalError().getCode());
 	}
 
 	/**
@@ -155,6 +254,18 @@ public class SmsTaskValidationTest extends AbstractBaseTestCase {
 	}
 
 	/**
+	 * Test message type id.
+	 */
+	public void testMessageTypeId() {
+		// null
+		smsTask.setMessageTypeId(null);
+		validator.validate(smsTask, errors);
+		assertTrue(errors.hasGlobalErrors());
+		assertEquals(ValidationConstants.TASK_MESSAGE_TYPE_EMPTY, errors
+				.getGlobalError().getCode());
+	}
+
+	/**
 	 * Test sakai site id.
 	 */
 	public void testSakaiSiteId() {
@@ -178,89 +289,6 @@ public class SmsTaskValidationTest extends AbstractBaseTestCase {
 		validator.validate(smsTask, errors);
 		assertTrue(errors.hasGlobalErrors());
 		assertEquals(ValidationConstants.TASK_SAKAI_SITE_ID_EMPTY, errors
-				.getGlobalError().getCode());
-	}
-
-	/**
-	 * Test account id.
-	 */
-	public void testAccountId() {
-
-		// account exists
-		smsTask.setSmsAccountId(account.getId().intValue());
-		validator.validate(smsTask, errors);
-		assertFalse(errors.hasGlobalErrors());
-
-		// account does not exist
-		smsTask.setSmsAccountId(0);
-		validator.validate(smsTask, errors);
-		assertTrue(errors.hasGlobalErrors());
-		assertEquals(ValidationConstants.TASK_ACCOUNT_INVALID, errors
-				.getGlobalError().getCode());
-	}
-
-	/**
-	 * Test date created.
-	 */
-	public void testDateCreated() {
-
-		// null
-		smsTask.setDateCreated(null);
-		validator.validate(smsTask, errors);
-		assertTrue(errors.hasGlobalErrors());
-		assertEquals(ValidationConstants.TASK_DATE_CREATED_EMPTY, errors
-				.getGlobalError().getCode());
-	}
-
-	/**
-	 * Test date to send.
-	 */
-	public void testDateToSend() {
-
-		// null
-		smsTask.setDateToSend(null);
-		validator.validate(smsTask, errors);
-		assertTrue(errors.hasGlobalErrors());
-		assertEquals(ValidationConstants.TASK_DATE_TO_SEND_EMPTY, errors
-				.getGlobalError().getCode());
-	}
-
-	/**
-	 * Test status code.
-	 */
-	public void testStatusCode() {
-
-		// null
-		smsTask.setStatusCode(null);
-		validator.validate(smsTask, errors);
-		assertTrue(errors.hasGlobalErrors());
-		assertEquals(ValidationConstants.TASK_STATUS_CODE_EMPTY, errors
-				.getGlobalError().getCode());
-
-		// empty String
-		smsTask.setStatusCode("");
-		validator.validate(smsTask, errors);
-		assertTrue(errors.hasGlobalErrors());
-		assertEquals(ValidationConstants.TASK_STATUS_CODE_EMPTY, errors
-				.getGlobalError().getCode());
-
-		// Blank space
-		smsTask.setStatusCode("   ");
-		validator.validate(smsTask, errors);
-		assertTrue(errors.hasGlobalErrors());
-		assertEquals(ValidationConstants.TASK_STATUS_CODE_EMPTY, errors
-				.getGlobalError().getCode());
-	}
-
-	/**
-	 * Test message type id.
-	 */
-	public void testMessageTypeId() {
-		// null
-		smsTask.setMessageTypeId(null);
-		validator.validate(smsTask, errors);
-		assertTrue(errors.hasGlobalErrors());
-		assertEquals(ValidationConstants.TASK_MESSAGE_TYPE_EMPTY, errors
 				.getGlobalError().getCode());
 	}
 
@@ -292,67 +320,39 @@ public class SmsTaskValidationTest extends AbstractBaseTestCase {
 	}
 
 	/**
-	 * Test max time to live.
+	 * Test status code.
 	 */
-	public void testMaxTimeToLive() {
+	public void testStatusCode() {
+
 		// null
-		smsTask.setMaxTimeToLive(null);
+		smsTask.setStatusCode(null);
 		validator.validate(smsTask, errors);
 		assertTrue(errors.hasGlobalErrors());
-		assertEquals(ValidationConstants.TASK_MAX_TIME_TO_LIVE_INVALID, errors
-				.getGlobalError().getCode());
-
-		// invalid
-		smsTask.setMaxTimeToLive(0);
-		validator.validate(smsTask, errors);
-		assertTrue(errors.hasGlobalErrors());
-		assertEquals(ValidationConstants.TASK_MAX_TIME_TO_LIVE_INVALID, errors
-				.getGlobalError().getCode());
-	}
-
-	/**
-	 * Test delivery report timeout duration.
-	 */
-	public void testDelReportTimeoutDuration() {
-		// null
-		smsTask.setDelReportTimeoutDuration(null);
-		validator.validate(smsTask, errors);
-		assertTrue(errors.hasGlobalErrors());
-		assertEquals(ValidationConstants.TASK_DELIVERY_REPORT_TIMEOUT_INVALID,
-				errors.getGlobalError().getCode());
-
-		// invalid
-		smsTask.setDelReportTimeoutDuration(0);
-		validator.validate(smsTask, errors);
-		assertTrue(errors.hasGlobalErrors());
-		assertEquals(ValidationConstants.TASK_DELIVERY_REPORT_TIMEOUT_INVALID,
-				errors.getGlobalError().getCode());
-	}
-
-	/**
-	 * Test delivery group id.
-	 */
-	public void testDeliveryGroupId() {
-		// null
-		smsTask.setDeliveryGroupId(null);
-		validator.validate(smsTask, errors);
-		assertTrue(errors.hasGlobalErrors());
-		assertEquals(ValidationConstants.TASK_DELIVERY_GROUP_ID_EMPTY, errors
+		assertEquals(ValidationConstants.TASK_STATUS_CODE_EMPTY, errors
 				.getGlobalError().getCode());
 
 		// empty String
-		smsTask.setDeliveryGroupId("");
+		smsTask.setStatusCode("");
 		validator.validate(smsTask, errors);
 		assertTrue(errors.hasGlobalErrors());
-		assertEquals(ValidationConstants.TASK_DELIVERY_GROUP_ID_EMPTY, errors
+		assertEquals(ValidationConstants.TASK_STATUS_CODE_EMPTY, errors
 				.getGlobalError().getCode());
 
 		// Blank space
-		smsTask.setDeliveryGroupId("   ");
+		smsTask.setStatusCode("   ");
 		validator.validate(smsTask, errors);
 		assertTrue(errors.hasGlobalErrors());
-		assertEquals(ValidationConstants.TASK_DELIVERY_GROUP_ID_EMPTY, errors
+		assertEquals(ValidationConstants.TASK_STATUS_CODE_EMPTY, errors
 				.getGlobalError().getCode());
+	}
+
+	/**
+	 * Test valid message.
+	 */
+	public void testValidMessage() {
+		validator.validate(smsTask, errors);
+		assertFalse(errors.hasErrors());
+		assertFalse(errors.hasGlobalErrors());
 	}
 
 }

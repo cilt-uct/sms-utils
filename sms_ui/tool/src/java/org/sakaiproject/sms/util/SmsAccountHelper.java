@@ -12,12 +12,11 @@ public class SmsAccountHelper {
 	/**
 	 * Retrieves the EL path (which must be the accountId of a SmsTask.
 	 * Retrieves the SmsAccount that corresponds to the id and returns the
-	 * balance. Will probably change after data model changes.
+	 * balance.
 	 */
 	public SmsAccount retrieveAccount(String path) {
-		Integer accountId = (Integer) ELEvaluator.getBean(path);
-		SmsAccount smsAccount = smsAccountLogic.getSmsAccount(accountId
-				.longValue());
+		Long accountId = (Long) ELEvaluator.getBean(path);
+		SmsAccount smsAccount = smsAccountLogic.getSmsAccount(accountId);
 		return smsAccount;
 	}
 
