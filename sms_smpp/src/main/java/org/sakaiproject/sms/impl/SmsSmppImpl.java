@@ -139,6 +139,84 @@ public class SmsSmppImpl implements SmsSmpp {
 		}
 	}
 
+	private class DeliveryReportThread implements Runnable {
+
+		boolean allDone = false;
+		DeliverSm deliverSm;
+
+		DeliveryReportThread(DeliverSm deliverSm) {
+			this.deliverSm = deliverSm;
+			Thread t = new Thread(this);
+			t.start();
+		}
+
+		public void run() {
+			Work();
+		}
+
+		public void Work() {
+			try {
+
+				DeliveryReceipt deliveryReceipt = deliverSm
+						.getShortMessageAsDeliveryReceipt();
+				LOG.info("Receiving delivery receipt for message '"
+						+ deliveryReceipt.getId() + " ' from "
+						+ deliverSm.getSourceAddr() + " to "
+						+ deliverSm.getDestAddress() + " : " + deliveryReceipt);
+				SmsMessage smsMessage = HibernateLogicFactory.getMessageLogic()
+						.getSmsMessageBySmscMessageId(deliveryReceipt.getId(),
+								SmsHibernateConstants.SMSC_ID);
+				if (smsMessage == null) {
+					for (int i = 0; i < 5; i++) {
+						System.out.println("SMSC_DEL_RECEIPT retry " + i
+								+ " out of 5 for messageSmscID"
+								+ deliveryReceipt.getId());
+						smsMessage = HibernateLogicFactory.getMessageLogic()
+								.getSmsMessageBySmscMessageId(
+										deliveryReceipt.getId(),
+										SmsHibernateConstants.SMSC_ID);
+						if (smsMessage != null) {
+							break;
+						}
+						try {
+							Thread.sleep(5000);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+					}
+
+				}
+				if (smsMessage != null) {
+					smsMessage.setSmscDeliveryStatusCode(SmsStatusBridge
+							.getSmsDeliveryStatus((deliveryReceipt
+									.getFinalStatus())));
+					smsMessage.setDateDelivered(new Date(System
+							.currentTimeMillis()));
+					if (SmsStatusBridge.getSmsDeliveryStatus((deliveryReceipt
+							.getFinalStatus())) != SmsConst_SmscDeliveryStatus.DELIVERED) {
+						smsMessage
+								.setStatusCode(SmsConst_DeliveryStatus.STATUS_FAIL);
+					} else {
+						smsMessage
+								.setStatusCode(SmsConst_DeliveryStatus.STATUS_DELIVERED);
+					}
+
+					HibernateLogicFactory.getMessageLogic().persistSmsMessage(
+							smsMessage);
+
+				} else {
+					LOG
+							.error("Delivery report received for message not in database. MessageSMSCID="
+									+ deliveryReceipt.getId());
+				}
+			} catch (InvalidDeliveryReceiptException e) {
+				LOG.error("Failed getting delivery receipt" + e);
+
+			}
+
+		}
+	}
+
 	/**
 	 * This listener will receive delivery reports as well as incoming messages
 	 * from the smpp gateway. When we are binded to the gateway, this listener
@@ -160,68 +238,8 @@ public class SmsSmppImpl implements SmsSmpp {
 
 			if (MessageType.SMSC_DEL_RECEIPT.containedIn(deliverSm
 					.getEsmClass())) {
-				// this message is delivery receipt
-				try {
-
-					DeliveryReceipt deliveryReceipt = deliverSm
-							.getShortMessageAsDeliveryReceipt();
-					LOG.info("Receiving delivery receipt for message '"
-							+ deliveryReceipt.getId() + " ' from "
-							+ deliverSm.getSourceAddr() + " to "
-							+ deliverSm.getDestAddress() + " : "
-							+ deliveryReceipt);
-					SmsMessage smsMessage = HibernateLogicFactory
-							.getMessageLogic().getSmsMessageBySmscMessageId(
-									deliveryReceipt.getId(),
-									SmsHibernateConstants.SMSC_ID);
-					if (smsMessage == null) {
-						for (int i = 0; i < 5; i++) {
-							System.out.println("SMSC_DEL_RECEIPT retry " + i
-									+ " out of 5 for messageSmscID"
-									+ deliveryReceipt.getId());
-							smsMessage = HibernateLogicFactory
-									.getMessageLogic()
-									.getSmsMessageBySmscMessageId(
-											deliveryReceipt.getId(),
-											SmsHibernateConstants.SMSC_ID);
-							if (smsMessage != null) {
-								break;
-							}
-							try {
-								Thread.sleep(5000);
-							} catch (InterruptedException e) {
-								e.printStackTrace();
-							}
-						}
-
-					}
-					if (smsMessage != null) {
-						smsMessage.setSmscDeliveryStatusCode(SmsStatusBridge
-								.getSmsDeliveryStatus((deliveryReceipt
-										.getFinalStatus())));
-						smsMessage.setDateDelivered(new Date(System
-								.currentTimeMillis()));
-						if (SmsStatusBridge
-								.getSmsDeliveryStatus((deliveryReceipt
-										.getFinalStatus())) != SmsConst_SmscDeliveryStatus.DELIVERED) {
-							smsMessage
-									.setStatusCode(SmsConst_DeliveryStatus.STATUS_FAIL);
-						} else {
-							smsMessage
-									.setStatusCode(SmsConst_DeliveryStatus.STATUS_DELIVERED);
-						}
-
-						HibernateLogicFactory.getMessageLogic()
-								.persistSmsMessage(smsMessage);
-					} else {
-						LOG
-								.error("Delivery report received for message not in database. MessageSMSCID="
-										+ deliveryReceipt.getId());
-					}
-				} catch (InvalidDeliveryReceiptException e) {
-					LOG.error("Failed getting delivery receipt" + e);
-
-				}
+				new DeliveryReportThread(deliverSm);
+				
 			} else {
 				// this message is regular short message
 				LOG.info("Receiving message : "
