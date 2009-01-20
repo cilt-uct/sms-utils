@@ -72,21 +72,6 @@ public class AccountProducer implements ViewComponentProducer,
 		comboBoolean.optionnames = comboBoolNames;
 	}
 
-	private void createSelectableSakaiSiteIds(String accountOTP, UIForm form) {
-		UISelect combo = UISelect.make(form, "sakai-site-id");
-		combo.selection = new UIInput();
-		combo.selection.valuebinding = new ELReference(accountOTP
-				+ ".sakaiSiteId");
-		UIBoundList comboValues = new UIBoundList();
-		comboValues.setValue(new String[] { "Sakai site 1", "Sakai site 2",
-				"Sakai site 3", "Sakai site 4", "Sakai site 5" });
-		combo.optionlist = comboValues;
-		UIBoundList comboNames = new UIBoundList();
-		comboNames.setValue(new String[] { "Sakai site 1", "Sakai site 2",
-				"Sakai site 3", "Sakai site 4", "Sakai site 5" });
-		combo.optionnames = comboNames;
-	}
-
 	public void fillComponents(UIContainer tofill, ViewParameters viewparams,
 			ComponentChecker checker) {
 
@@ -120,7 +105,7 @@ public class AccountProducer implements ViewComponentProducer,
 		UIMessage.make(form, "sakai-site-id-label",
 				"sms.sms-account.sakai-site-id");
 
-		createSelectableSakaiSiteIds(accountOTP, form);
+		UIInput.make(form, "sakai-site-id", accountOTP + ".sakaiSiteId");
 
 		UIMessage.make(form, "sakai-user-id-label",
 				"sms.sms-account.sakai-user-id");

@@ -18,11 +18,20 @@
 package org.sakaiproject.sms.validators;
 
 import org.sakaiproject.sms.hibernate.model.SmsAccount;
+import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
 public class SmsAccountValidator implements Validator {
+
+	private boolean isEmptyOrNull(String field) {
+		if (field == null) {
+			return true;
+		} else {
+			return (field.trim().length() == 0);
+		}
+	}
 
 	private boolean isTooLong(String field, int max) {
 		if (field != null) {
@@ -52,14 +61,12 @@ public class SmsAccountValidator implements Validator {
 
 		ValidationUtils.rejectIfEmptyOrWhitespace(err, "accountName",
 				"sms.errors.accountName.empty");
-		ValidationUtils.rejectIfEmptyOrWhitespace(err, "sakaiSiteId",
-				"sms.errors.sakaiSiteId.empty");
 
-		// Because SmsCustomNumberEditor sets all invalid number values as null
-		// we must give generic message for null values
+		if (isEmptyOrNull(smsAccount.getSakaiUserId())
+				&& isEmptyOrNull(smsAccount.getSakaiSiteId())) {
+			err.reject("sms.errors.site-user-id.empty");
+		}
 
-		// ValidationUtils.rejectIfEmpty(err, "overdraftLimit",
-		// "sms.errors.overdraftLimit.invalid");
 		ValidationUtils.rejectIfEmpty(err, "balance",
 				"sms.errors.balance.invalid");
 
@@ -73,6 +80,25 @@ public class SmsAccountValidator implements Validator {
 
 		if (isTooLong(smsAccount.getSakaiUserId(), 99)) {
 			err.rejectValue("sakaiUserId", "sms.errors.sakaiUserId.tooLong");
+		}
+
+		// TODO: Validate site id and user id against Sakai
+		if (!isEmptyOrNull(smsAccount.getSakaiSiteId())) {
+			if (!SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_SITE_ID
+					.equals(smsAccount.getSakaiSiteId())) {
+				err
+						.rejectValue("sakaiSiteId",
+								"sms.errors.sakaiSiteId.invalid");
+			}
+		}
+
+		if (!isEmptyOrNull(smsAccount.getSakaiUserId())) {
+			if (!SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID
+					.equals(smsAccount.getSakaiUserId())) {
+				err
+						.rejectValue("sakaiUserId",
+								"sms.errors.sakaiUserId.invalid");
+			}
 		}
 	}
 }

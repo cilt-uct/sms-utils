@@ -52,6 +52,8 @@ public class SmsAccountLocator implements BeanLocator {
 			if (name.startsWith(NEW_PREFIX)) {
 				togo = new SmsAccount();
 				togo.setBalance(SmsHibernateConstants.INITIAL_BALANCE);
+				togo
+						.setSakaiSiteId(SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_SITE_ID);
 			} else {
 				togo = smsAccountLogic.getSmsAccount(Long.parseLong(name));
 			}

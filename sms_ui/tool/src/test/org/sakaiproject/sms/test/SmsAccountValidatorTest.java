@@ -23,6 +23,7 @@ import junit.framework.TestCase;
 
 import org.sakaiproject.sms.constants.SmsUiConstants;
 import org.sakaiproject.sms.hibernate.model.SmsAccount;
+import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
 import org.sakaiproject.sms.validators.SmsAccountValidator;
 import org.springframework.validation.BindException;
 
@@ -64,8 +65,10 @@ public class SmsAccountValidatorTest extends TestCase {
 		account = new SmsAccount();
 		account.setAccountEnabled(true);
 		account.setAccountName("account name");
-		account.setSakaiSiteId("site 1");
-		account.setSakaiUserId("userid 1");
+		account
+				.setSakaiSiteId(SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_SITE_ID);
+		account
+				.setSakaiUserId(SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID);
 		account.setStartdate(new Date());
 		account.setEnddate(new Date());
 		account.setBalance(100f);
@@ -117,6 +120,14 @@ public class SmsAccountValidatorTest extends TestCase {
 	}
 
 	/**
+	 * Test default values of test is all valid
+	 */
+	public void testAllValid() {
+		validator.validate(account, errors);
+		assertFalse(errors.hasErrors());
+	}
+
+	/**
 	 * Test null balance
 	 */
 	public void testBalance_null() {
@@ -144,6 +155,28 @@ public class SmsAccountValidatorTest extends TestCase {
 	}
 
 	/**
+	 * Test SakaiSiteId with invalid
+	 */
+	public void testSakaiSiteId_invalid() {
+		account.setSakaiSiteId("not valid");
+		validator.validate(account, errors);
+		assertTrue(errors.hasFieldErrors(SAKAI_SITE_ID_FIELD));
+		assertEquals("sms.errors.sakaiSiteId.invalid", errors.getFieldError()
+				.getCode());
+	}
+
+	/**
+	 * Test SakaiSiteId with large size
+	 */
+	public void testSakaiSiteId_tooLong() {
+		account.setSakaiSiteId(generateString(VALID_MAX_FIELD_SIZE + 1));
+		validator.validate(account, errors);
+		assertTrue(errors.hasFieldErrors(SAKAI_SITE_ID_FIELD));
+		assertEquals("sms.errors.sakaiSiteId.tooLong", errors.getFieldError()
+				.getCode());
+	}
+
+	/**
 	 * Test null OverdraftLimit (not applicable at the moment)
 	 */
 	// public void testOverdraftLimit_null() {
@@ -155,48 +188,73 @@ public class SmsAccountValidatorTest extends TestCase {
 	//
 	// }
 	/**
-	 * Test empty SakaiSiteId
+	 * Test empty SakaiSiteId and SakaiUserId
 	 */
-	public void testSakaiSiteId_empty() {
+	public void testSakaiSiteUserId_empty() {
 		account.setSakaiSiteId("");
+		account.setSakaiUserId("");
 		validator.validate(account, errors);
-		assertTrue(errors.hasFieldErrors(SAKAI_SITE_ID_FIELD));
-		assertEquals("sms.errors.sakaiSiteId.empty", errors.getFieldError()
+		assertTrue(errors.hasGlobalErrors());
+		assertEquals("sms.errors.site-user-id.empty", errors.getGlobalError()
 				.getCode());
 	}
 
 	/**
-	 * Test SakaiSiteId with large size
+	 * Test null SakaiSiteId + SakaiUserId
 	 */
-	public void testSakaiSiteId_invalid() {
-		account.setSakaiSiteId(generateString(VALID_MAX_FIELD_SIZE + 1));
-		validator.validate(account, errors);
-		assertTrue(errors.hasFieldErrors(SAKAI_SITE_ID_FIELD));
-		assertEquals("sms.errors.sakaiSiteId.tooLong", errors.getFieldError()
-				.getCode());
-	}
-
-	/**
-	 * Test null SakaiSiteId
-	 */
-	public void testSakaiSiteId_null() {
+	public void testSakaiSiteUserId_null() {
 		account.setSakaiSiteId(null);
+		account.setSakaiUserId(null);
 		validator.validate(account, errors);
-		assertTrue(errors.hasFieldErrors(SAKAI_SITE_ID_FIELD));
-		assertEquals("sms.errors.sakaiSiteId.empty", errors.getFieldError()
+		assertTrue(errors.hasGlobalErrors());
+		assertEquals("sms.errors.site-user-id.empty", errors.getGlobalError()
 				.getCode());
 
+	}
+
+	/**
+	 * Sakai site id specified but user id null
+	 */
+	public void testSakaiSiteUserId_valid1() {
+		account
+				.setSakaiSiteId(SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_SITE_ID);
+		account.setSakaiUserId(null);
+		validator.validate(account, errors);
+		assertFalse(errors.hasGlobalErrors());
+	}
+
+	/**
+	 * Sakai user id specified but site id null
+	 */
+	public void testSakaiSiteUserId_valid2() {
+		account.setSakaiSiteId(null);
+		account
+				.setSakaiUserId(SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID);
+		validator.validate(account, errors);
+		assertFalse(errors.hasGlobalErrors());
+	}
+
+	/**
+	 * Sakai user id and site id specified
+	 */
+	public void testSakaiSiteUserId_valid3() {
+		account
+				.setSakaiSiteId(SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_SITE_ID);
+		account
+				.setSakaiUserId(SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID);
+		validator.validate(account, errors);
+		assertFalse(errors.hasGlobalErrors());
 	}
 
 	/**
 	 * Test SakaiSiteId with max size
 	 */
-	public void testSakaiSiteId_valid() {
-		account.setSakaiSiteId(generateString(VALID_MAX_FIELD_SIZE));
-		validator.validate(account, errors);
-		assertFalse(errors.hasFieldErrors(SAKAI_SITE_ID_FIELD));
-	}
-
+	// TODO: Uncomment when specific site no longer needed
+	// public void testSakaiSiteId_valid() {
+	// account.setSakaiSiteId(generateString(VALID_MAX_FIELD_SIZE));
+	// validator.validate(account, errors);
+	// assertFalse(errors.hasFieldErrors(SAKAI_SITE_ID_FIELD));
+	// }
 	/**
 	 * Test empty SakaiUserId
 	 */
@@ -207,13 +265,13 @@ public class SmsAccountValidatorTest extends TestCase {
 	}
 
 	/**
-	 * Test SakaiUserId with large size
+	 * Test SakaiUserId with invalid
 	 */
 	public void testSakaiUserId_invalid() {
-		account.setSakaiUserId(generateString(VALID_MAX_FIELD_SIZE + 1));
+		account.setSakaiUserId("not valid");
 		validator.validate(account, errors);
 		assertTrue(errors.hasFieldErrors(SAKAI_USER_ID_FIELD));
-		assertEquals("sms.errors.sakaiUserId.tooLong", errors.getFieldError()
+		assertEquals("sms.errors.sakaiUserId.invalid", errors.getFieldError()
 				.getCode());
 	}
 
@@ -227,11 +285,30 @@ public class SmsAccountValidatorTest extends TestCase {
 	}
 
 	/**
-	 * Test SakaiUserId with max size
+	 * Test SakaiUserId with large size
 	 */
+	public void testSakaiUserId_tooLong() {
+		account.setSakaiUserId(generateString(VALID_MAX_FIELD_SIZE + 1));
+		validator.validate(account, errors);
+		assertTrue(errors.hasFieldErrors(SAKAI_USER_ID_FIELD));
+		assertEquals("sms.errors.sakaiUserId.tooLong", errors.getFieldError()
+				.getCode());
+	}
+
 	public void testSakaiUserId_valid() {
-		account.setSakaiUserId(generateString(VALID_MAX_FIELD_SIZE));
+		account
+				.setSakaiUserId(SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID);
 		validator.validate(account, errors);
 		assertFalse(errors.hasFieldErrors(SAKAI_USER_ID_FIELD));
 	}
+
+	/**
+	 * Test SakaiUserId with max size
+	 */
+	// TODO: Uncomment when valid values not hardcoded
+	// public void testSakaiUserId_maxsize() {
+	// account.setSakaiUserId(generateString(VALID_MAX_FIELD_SIZE));
+	// validator.validate(account, errors);
+	// assertFalse(errors.hasFieldErrors(SAKAI_USER_ID_FIELD));
+	// }
 }
