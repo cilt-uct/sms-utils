@@ -154,6 +154,7 @@ public class NullableFieldDateTransit extends LocaleHolder implements
 			// To skip applying of fields if date field is empty or null
 			if (op.text == null || "".equals(op.text.trim())) {
 				date = null;
+				isvalid = false;
 				return;
 			}
 
