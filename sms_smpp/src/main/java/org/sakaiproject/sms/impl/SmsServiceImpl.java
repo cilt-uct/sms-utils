@@ -34,6 +34,7 @@ package org.sakaiproject.sms.impl;
  */
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import org.sakaiproject.sms.api.SmsCore;
@@ -79,6 +80,13 @@ public class SmsServiceImpl implements SmsService {
 		return smsCore.getPreliminaryTask(sakaiGroupId, dateToSend,
 				messageBody, sakaiSiteId, sakaiToolId, sakaiSenderID);
 
+	}
+	
+	public SmsTask getPreliminaryTask(Date dateToSend, String messageBody,
+			String sakaiSiteID, String sakaiToolId, String sakaiSenderID,
+			List<String> deliveryEntityList) {
+		return smsCore.getPreliminaryTask(dateToSend, messageBody,
+				sakaiSiteID, sakaiToolId, sakaiSenderID, deliveryEntityList);
 	}
 
 	/**
@@ -158,5 +166,4 @@ public class SmsServiceImpl implements SmsService {
 	public ArrayList<String> validateTask(SmsTask smsTask) {
 		return TaskValidator.validateInsertTask(smsTask);
 	}
-
 }

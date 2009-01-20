@@ -1,5 +1,6 @@
 package org.sakaiproject.sms.hibernate.test;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -84,6 +85,7 @@ public class SmsTaskTest extends AbstractBaseTestCase {
 		testTask.setSenderUserName("senderUserName");
 		testTask.setMaxTimeToLive(1);
 		testTask.setDelReportTimeoutDuration(1);
+		testTask.setDeliveryEntityList(Arrays.asList("1234", "1235","1236"));
 		return testTask;
 	}
 

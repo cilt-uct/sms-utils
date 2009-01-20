@@ -52,18 +52,18 @@
 			not-null="true" />
 		<property name="costEstimate" type="double" column="COST_ESTIMATE"
 			not-null="false" />
-		<property name="delReportTimeoutDuration" type="integer"
-			column="DEL_REPORT_TIMEOUT_DURATION" not-null="true" />
-		<property name="deliveryMobileNumbers" type="string"
-			column="DELIVERY_MOBILE_NUMBERS" not-null="false" length="1024"/>
+		<property name="delReportTimeoutDuration" type="integer"  column="DEL_REPORT_TIMEOUT_DURATION" 
+			not-null="true" />
+		<property name="deliveryMobileNumbers" type="string" column="DELIVERY_MOBILE_NUMBERS"
+			 not-null="false" length="1024"/>
+		<property name="deliveryEntities" type="string" column="DELIVERY_ENTITY_LIST"
+			 not-null="false" length="1024"/>
 		<set name="smsMessages" lazy="false" inverse="true" cascade="all-delete-orphan">
 			<key column="TASK_ID" not-null="true" />
 			<one-to-many class="org.sakaiproject.sms.hibernate.model.SmsMessage"
 				not-found="ignore" />
 		</set>
 	</class>
-
-
 
 	<!-- SMS Message mapping -->
 	<class name="org.sakaiproject.sms.hibernate.model.SmsMessage"

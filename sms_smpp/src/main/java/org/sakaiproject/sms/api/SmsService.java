@@ -19,6 +19,7 @@ package org.sakaiproject.sms.api;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import org.sakaiproject.sms.hibernate.model.SmsTask;
@@ -32,6 +33,20 @@ import org.sakaiproject.sms.hibernate.model.SmsTask;
  */
 public interface SmsService {
 
+	
+	/**
+	 * Add a new task to the sms task list, that contains a list of delivery entity id
+	 * 
+	 * @param dateToSend
+	 * @param messageBody
+	 * @param sakaiSiteID
+	 * @param sakaiToolId
+	 * @param sakaiSenderID
+	 * @param deliveryMobileNumbers
+	 * @return
+	 */
+	public SmsTask getPreliminaryTask(Date dateToSend, String messageBody, String sakaiSiteID,
+			String sakaiToolId, String sakaiSenderID, List<String> deliveryEntityList);
 	
 	/**
 	 * Add a new task to the sms task list, that will send sms messages to the specified list of mobile numbers

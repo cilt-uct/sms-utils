@@ -131,7 +131,7 @@ public class SmsCoreImpl implements SmsCore {
 			String sakaiToolId, String sakaiSenderID, Set<String> deliveryMobileNumbers){
 		
 		return getPreliminaryTask(null, deliveryMobileNumbers, null, dateToSend,
-				messageBody, sakaiSiteID, sakaiToolId, sakaiSenderID);
+				messageBody, sakaiSiteID, sakaiToolId, sakaiSenderID, null);
 	}
 
 	public SmsTask getPreliminaryTask(Set<String> sakaiUserIds,
@@ -139,20 +139,27 @@ public class SmsCoreImpl implements SmsCore {
 			String sakaiToolId, String sakaiSenderID) {
 
 		return getPreliminaryTask(null, null, sakaiUserIds, dateToSend,
-				messageBody, sakaiSiteID, sakaiToolId, sakaiSenderID);
+				messageBody, sakaiSiteID, sakaiToolId, sakaiSenderID, null);
 	}
 
 	public SmsTask getPreliminaryTask(String deliverGroupId, Date dateToSend,
 			String messageBody, String sakaiSiteID, String sakaiToolId,
 			String sakaiSenderID) {
 		return getPreliminaryTask(deliverGroupId, null, null, dateToSend,
-				messageBody, sakaiSiteID, sakaiToolId, sakaiSenderID);
+				messageBody, sakaiSiteID, sakaiToolId, sakaiSenderID, null);
 	}
 
+	public SmsTask getPreliminaryTask(Date dateToSend, String messageBody,
+			String sakaiSiteID, String sakaiToolId, String sakaiSenderID,
+			List<String> deliveryEntityList) {
+		return getPreliminaryTask(null, null, null, dateToSend,
+				messageBody, sakaiSiteID, sakaiToolId, sakaiSenderID, deliveryEntityList);
+	}
+	
 	private SmsTask getPreliminaryTask(String deliverGroupId,
 			Set<String> mobileNumbers, Set<String> sakaiUserIds,
 			Date dateToSend, String messageBody, String sakaiSiteID,
-			String sakaiToolId, String sakaiSenderID) {
+			String sakaiToolId, String sakaiSenderID, List<String> deliveryEntityList) {
 		
 		SmsConfig siteConfig = HibernateLogicFactory.getConfigLogic()
 				.getOrCreateSystemSmsConfig();
@@ -178,6 +185,7 @@ public class SmsCoreImpl implements SmsCore {
 		smsTask.setDelReportTimeoutDuration(systemConfig
 				.getDelReportTimeoutDuration());
 		smsTask.setDeliveryMobileNumbersSet(mobileNumbers);
+		smsTask.setDeliveryEntityList(deliveryEntityList);
 
 		return smsTask;
 	}

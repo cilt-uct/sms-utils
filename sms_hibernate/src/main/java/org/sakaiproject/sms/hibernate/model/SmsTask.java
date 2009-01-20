@@ -18,8 +18,10 @@
 
 package org.sakaiproject.sms.hibernate.model;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
 
@@ -136,10 +138,15 @@ public class SmsTask extends BaseModel {
 
 	
 	/**
-	 * A comma seperated list of mobile numbers the internal representation
+	 * A comma separated list of mobile numbers the internal representation
 	 */
 	private String deliveryMobileNumbers;
 	
+	/**
+	 * A comma separated list of delivery group ids
+	 */
+	private String deliveryEntities;
+
 
 	/**
 	 * Instantiates a new sms task.
@@ -808,5 +815,50 @@ public class SmsTask extends BaseModel {
 		}
 	}
 	
+	/**
+	 * Get the delivery group IDs internal method for hibernate
+	 */
+	String getDeliveryEntities() {
+		return deliveryEntities;
+	}
 	
+	/**
+	 * Set the delivery group IDs internal method for hibernate
+	 */
+	void setDeliveryEntities(String deliveryEntites) {
+		this.deliveryEntities = deliveryEntites;
+	}
+	
+	/**
+	 * Set the delivery group IDs
+	 */
+	public void setDeliveryEntityList(List<String> delieryEntityList){
+		if(delieryEntityList != null){
+			StringBuffer buffer = new StringBuffer();
+			int number = 1;
+			for (String deliveryIds : delieryEntityList) {
+
+				buffer.append(deliveryIds);
+				if(number < delieryEntityList.size())
+					buffer.append(",");
+
+				number++;
+			}
+			deliveryEntities =  buffer.toString();
+		}
+		
+	}
+	
+	/**
+	 * Get the delivery group IDs
+	 */
+	public List<String> getDeliveryEntityList(){
+		List<String> deliveryEntityList = new ArrayList<String>();
+		StringTokenizer stringTokenizer = new StringTokenizer(deliveryEntities, ",");
+		
+		while(stringTokenizer.hasMoreTokens()){
+			deliveryEntityList.add(stringTokenizer.nextToken());
+		}
+		return deliveryEntityList;
+	}
 }

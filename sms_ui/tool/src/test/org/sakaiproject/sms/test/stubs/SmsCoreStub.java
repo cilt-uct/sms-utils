@@ -18,6 +18,7 @@
 package org.sakaiproject.sms.test.stubs;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import org.sakaiproject.sms.api.SmsCore;
@@ -96,6 +97,18 @@ public class SmsCoreStub implements SmsCore {
 	public void tryProcessTaskRealTime(SmsTask arg0) {
 		// TODO Auto-generated method stub
 
+	}
+
+	public SmsTask getPreliminaryTask(Date arg0, String arg1, String arg2,
+			String arg3, String arg4, Set<String> arg5) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public SmsTask getPreliminaryTask(Date arg0, String arg1, String arg2,
+			String arg3, String arg4, List<String> arg5) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

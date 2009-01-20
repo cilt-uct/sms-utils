@@ -41,7 +41,7 @@ public interface SmsCore {
 	 * @param smsTask
 	 * @return
 	 */
-	public Set generateSmsMessages(SmsTask smsTask);
+	public Set<SmsMessage> generateSmsMessages(SmsTask smsTask);
 
 	/**
 	 * Find the next sms task to process from the task queue. Determine tasks
@@ -68,6 +68,21 @@ public interface SmsCore {
 	 */
 	public SmsTask insertTask(SmsTask smsTask);
 
+	
+	/**
+	 * Add a new task to the sms task list, that contains a list of delivery entity id
+	 * 
+	 * @param dateToSend
+	 * @param messageBody
+	 * @param sakaiSiteID
+	 * @param sakaiToolId
+	 * @param sakaiSenderID
+	 * @param deliveryMobileNumbers
+	 * @return
+	 */
+	public SmsTask getPreliminaryTask(Date dateToSend, String messageBody, String sakaiSiteID,
+			String sakaiToolId, String sakaiSenderID, List<String> deliveryEntityList);
+	
 	
 	/**
 	 * Add a new task to the sms task list, that will send sms messages to the specified list of mobile numbers
