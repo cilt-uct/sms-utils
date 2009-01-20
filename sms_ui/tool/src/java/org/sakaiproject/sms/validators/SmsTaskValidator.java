@@ -26,6 +26,7 @@ import org.springframework.validation.Validator;
 
 public class SmsTaskValidator implements Validator {
 
+	@SuppressWarnings("unchecked")
 	public boolean supports(Class clazz) {
 		if (SmsTask.class.equals(clazz.getClass())) {
 			return true;

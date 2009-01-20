@@ -19,6 +19,7 @@
 package org.sakaiproject.sms.api;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
@@ -32,8 +33,7 @@ import org.sakaiproject.sms.hibernate.model.SmsTask;
  * @version 1.0
  * @created 12-Nov-2008
  */
-public interface SmsCore {
-
+public interface SmsCore {	
 	/**
 	 * Get the group list from Sakai and remove users with invalid/empty mobile
 	 * numbers or opted out profiles.
@@ -68,6 +68,21 @@ public interface SmsCore {
 	 */
 	public SmsTask insertTask(SmsTask smsTask);
 
+	
+	/**
+	 * Add a new task to the sms task list, that will send sms messages to the specified list of mobile numbers
+	 * 
+	 * @param dateToSend
+	 * @param messageBody
+	 * @param sakaiSiteID
+	 * @param sakaiToolId
+	 * @param sakaiSenderID
+	 * @param deliveryMobileNumbers
+	 * @return
+	 */
+	public SmsTask getPreliminaryTask(Date dateToSend, String messageBody, String sakaiSiteID,
+			String sakaiToolId, String sakaiSenderID, Set<String> deliveryMobileNumbers);
+	
 	/**
 	 * Add a new task to the sms task list, for eg. send message to all
 	 * administrators at 10:00, or get latest announcements and send to mobile

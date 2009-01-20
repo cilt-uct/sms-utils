@@ -32,6 +32,21 @@ import org.sakaiproject.sms.hibernate.model.SmsTask;
  */
 public interface SmsService {
 
+	
+	/**
+	 * Add a new task to the sms task list, that will send sms messages to the specified list of mobile numbers
+	 * 
+	 * @param dateToSend
+	 * @param messageBody
+	 * @param sakaiSiteID
+	 * @param sakaiToolId
+	 * @param sakaiSenderID
+	 * @param deliveryMobileNumbers
+	 * @return
+	 */
+	public SmsTask getPreliminaryTask(Date dateToSend, String messageBody, String sakaiSiteID,
+			String sakaiToolId, String sakaiSenderID, Set<String> deliveryMobileNumbers);
+	
 	/**
 	 * Add a new task to the sms task list, for eg. send message y to Sakai
 	 * group X ant time Z. If the task is future dated, then it be picked up by

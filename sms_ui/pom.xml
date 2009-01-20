@@ -29,10 +29,10 @@
       <url>http://my.honestyworks.jp/maven2/</url>
     </repository>
     <repository>
-	  <id>Nexus</id>
-	  <name>Nexus Repository</name>
-	  <url>http://psybergate.dyndns.org/nexus/content/groups/public</url>
-	</repository>
+      <id>sakai-maven</id>
+      <name>Sakai Maven Repo</name>
+      <url>http://source.sakaiproject.org/maven2</url>
+    </repository>
   </repositories>
   
   <dependencies>

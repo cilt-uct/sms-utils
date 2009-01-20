@@ -21,7 +21,10 @@ package org.sakaiproject.sms.hibernate.model;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.StringTokenizer;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
 import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
 import org.sakaiproject.sms.hibernate.util.DateUtil;
@@ -131,6 +134,13 @@ public class SmsTask extends BaseModel {
 	 */
 	private Integer delReportTimeoutDuration;
 
+	
+	/**
+	 * A comma seperated list of mobile numbers the internal representation
+	 */
+	private String deliveryMobileNumbers;
+	
+
 	/**
 	 * Instantiates a new sms task.
 	 */
@@ -181,121 +191,7 @@ public class SmsTask extends BaseModel {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!(obj instanceof SmsTask))
-			return false;
-		SmsTask other = (SmsTask) obj;
-		if (attemptCount == null) {
-			if (other.attemptCount != null)
-				return false;
-		} else if (!attemptCount.equals(other.attemptCount))
-			return false;
-		if (creditEstimate == null) {
-			if (other.creditEstimate != null)
-				return false;
-		} else if (!creditEstimate.equals(other.creditEstimate))
-			return false;
-		if (dateCreated == null) {
-			if (other.dateCreated != null)
-				return false;
-		} else if (!dateCreated.equals(other.dateCreated))
-			return false;
-		if (dateProcessed == null) {
-			if (other.dateProcessed != null)
-				return false;
-		} else if (!dateProcessed.equals(other.dateProcessed))
-			return false;
-		if (dateToSend == null) {
-			if (other.dateToSend != null)
-				return false;
-		} else if (!dateToSend.equals(other.dateToSend))
-			return false;
-		if (deliveryGroupId == null) {
-			if (other.deliveryGroupId != null)
-				return false;
-		} else if (!deliveryGroupId.equals(other.deliveryGroupId))
-			return false;
-		if (deliveryGroupName == null) {
-			if (other.deliveryGroupName != null)
-				return false;
-		} else if (!deliveryGroupName.equals(other.deliveryGroupName))
-			return false;
-		if (deliveryUserId == null) {
-			if (other.deliveryUserId != null)
-				return false;
-		} else if (!deliveryUserId.equals(other.deliveryUserId))
-			return false;
-		if (groupSizeActual == null) {
-			if (other.groupSizeActual != null)
-				return false;
-		} else if (!groupSizeActual.equals(other.groupSizeActual))
-			return false;
-		if (groupSizeEstimate == null) {
-			if (other.groupSizeEstimate != null)
-				return false;
-		} else if (!groupSizeEstimate.equals(other.groupSizeEstimate))
-			return false;
-		if (messageBody == null) {
-			if (other.messageBody != null)
-				return false;
-		} else if (!messageBody.equals(other.messageBody))
-			return false;
-		if (messageTypeId == null) {
-			if (other.messageTypeId != null)
-				return false;
-		} else if (!messageTypeId.equals(other.messageTypeId))
-			return false;
-		if (sakaiSiteId == null) {
-			if (other.sakaiSiteId != null)
-				return false;
-		} else if (!sakaiSiteId.equals(other.sakaiSiteId))
-			return false;
-		if (sakaiToolId == null) {
-			if (other.sakaiToolId != null)
-				return false;
-		} else if (!sakaiToolId.equals(other.sakaiToolId))
-			return false;
-		if (sakaiToolName == null) {
-			if (other.sakaiToolName != null)
-				return false;
-		} else if (!sakaiToolName.equals(other.sakaiToolName))
-			return false;
-		if (senderUserName == null) {
-			if (other.senderUserName != null)
-				return false;
-		} else if (!senderUserName.equals(other.senderUserName))
-			return false;
-		if (smsAccountId == null) {
-			if (other.smsAccountId != null)
-				return false;
-		} else if (!smsAccountId.equals(other.smsAccountId))
-			return false;
-		if (smsMessages == null) {
-			if (other.smsMessages != null)
-				return false;
-		} else if (!smsMessages.equals(other.smsMessages))
-			return false;
-		if (statusCode == null) {
-			if (other.statusCode != null)
-				return false;
-		} else if (!statusCode.equals(other.statusCode))
-			return false;
-
-		if (maxTimeToLive == null) {
-			if (other.maxTimeToLive != null)
-				return false;
-		} else if (!maxTimeToLive.equals(other.maxTimeToLive))
-			return false;
-		if (delReportTimeoutDuration == null) {
-			if (other.delReportTimeoutDuration != null)
-				return false;
-		} else if (!delReportTimeoutDuration
-				.equals(other.delReportTimeoutDuration))
-			return false;
-
-		
-		return true;
+		 return EqualsBuilder.reflectionEquals(this, obj, false, SmsTask.class, new String[]{"smsMessages"});
 	}
 
 	/**
@@ -577,58 +473,7 @@ public class SmsTask extends BaseModel {
 	 */
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		// int result = super.hashCode();
-		int result = 43;
-		result = prime * result
-				+ ((attemptCount == null) ? 0 : attemptCount.hashCode());
-		result = prime * result
-				+ ((creditEstimate == null) ? 0 : creditEstimate.hashCode());
-		result = prime * result
-				+ ((dateCreated == null) ? 0 : dateCreated.hashCode());
-		result = prime * result
-				+ ((dateProcessed == null) ? 0 : dateProcessed.hashCode());
-		result = prime * result
-				+ ((dateToSend == null) ? 0 : dateToSend.hashCode());
-		result = prime * result
-				+ ((deliveryGroupId == null) ? 0 : deliveryGroupId.hashCode());
-		result = prime
-				* result
-				+ ((deliveryGroupName == null) ? 0 : deliveryGroupName
-						.hashCode());
-		result = prime * result
-				+ ((deliveryUserId == null) ? 0 : deliveryUserId.hashCode());
-		result = prime * result
-				+ ((groupSizeActual == null) ? 0 : groupSizeActual.hashCode());
-		result = prime
-				* result
-				+ ((groupSizeEstimate == null) ? 0 : groupSizeEstimate
-						.hashCode());
-		result = prime * result
-				+ ((messageBody == null) ? 0 : messageBody.hashCode());
-		result = prime * result
-				+ ((messageTypeId == null) ? 0 : messageTypeId.hashCode());
-		result = prime * result
-				+ ((sakaiSiteId == null) ? 0 : sakaiSiteId.hashCode());
-		result = prime * result
-				+ ((sakaiToolId == null) ? 0 : sakaiToolId.hashCode());
-		result = prime * result
-				+ ((sakaiToolName == null) ? 0 : sakaiToolName.hashCode());
-		result = prime * result
-				+ ((senderUserName == null) ? 0 : senderUserName.hashCode());
-		result = prime * result
-				+ ((smsAccountId == null) ? 0 : smsAccountId.hashCode());
-		result = prime * result
-				+ ((smsMessages == null) ? 0 : smsMessages.hashCode());
-		result = prime * result
-				+ ((statusCode == null) ? 0 : statusCode.hashCode());
-		result = prime * result
-				+ ((maxTimeToLive == null) ? 0 : maxTimeToLive.hashCode());
-		result = prime
-				* result
-				+ ((delReportTimeoutDuration == null) ? 0
-						: delReportTimeoutDuration.hashCode());
-		return result;
+		return HashCodeBuilder.reflectionHashCode(17,37, this, false, SmsTask.class, new String[]{"smsMessages"});		
 	}
 
 	/**
@@ -914,4 +759,54 @@ public class SmsTask extends BaseModel {
 
 	}
 
+	/**
+	 * Get the delivery mobile numbers internal method for hibernate
+	 * @return
+	 */
+	String getDeliveryMobileNumbers() {		
+		return deliveryMobileNumbers;
+	}
+	
+	/**
+	 * Sets the delivery mobile numbers internal method for hibernate
+	 * @param deliveryMobileNumbers
+	 */
+	void setDeliveryMobileNumbers(String deliveryMobileNumbers) {
+		this.deliveryMobileNumbers = deliveryMobileNumbers;
+	}
+	
+	/**
+	 * @return A set of delivery mobile numbers
+	 */
+	public Set<String> getDeliveryMobileNumbersSet(){
+		Set<String> deliveryMobileNumbersSet = new HashSet<String>();
+		StringTokenizer stringTokenizer = new StringTokenizer(deliveryMobileNumbers, ",");
+		
+		while(stringTokenizer.hasMoreTokens()){
+			deliveryMobileNumbersSet.add(stringTokenizer.nextToken());
+		}
+		
+		return deliveryMobileNumbersSet;	
+	}
+	
+	/**
+	 * set the mobile numbers set
+	 */
+	public void setDeliveryMobileNumbersSet(Set<String> mobileNumbers) {
+		if(mobileNumbers != null){
+			StringBuffer buffer = new StringBuffer();
+			int number = 1;
+			for (String mobileNumber : mobileNumbers) {
+
+				buffer.append(mobileNumber);
+				if(number < mobileNumbers.size())
+					buffer.append(",");
+
+				number++;
+			}
+			deliveryMobileNumbers =  buffer.toString();
+		}
+	}
+	
+	
 }

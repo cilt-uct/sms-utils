@@ -28,6 +28,11 @@ import com.sun.org.apache.bcel.internal.generic.GETSTATIC;
  */
 public class SmsTaskTest extends AbstractBaseTestCase {
 
+	private static final String MOBILE_NUMBER_1 = "082 345 6789";
+	private static final String MOBILE_NUMBER_2 = "083 345 6789";
+	private static final String MOBILE_NUMBER_3 = "084 345 6789";
+
+
 	/** The insert task. */
 	private static SmsTask insertTask;
 
@@ -67,6 +72,7 @@ public class SmsTaskTest extends AbstractBaseTestCase {
 	}
 
 	private static SmsTask createTestTask() {
+		
 		SmsTask testTask = new SmsTask();
 		testTask.setSakaiSiteId("sakaiSiteId");
 		testTask.setSmsAccountId(1l);
@@ -369,5 +375,27 @@ public class SmsTaskTest extends AbstractBaseTestCase {
 		smsTask = HibernateLogicFactory.getTaskLogic().getSmsTask(
 				smsTask.getId());
 		assertEquals("newSakaiSiteId", smsTask.getSakaiSiteId());
+	}
+	
+	public void testSaveDeliveryMobileNumbers() throws Exception {
+		
+		SmsTask taskToSave = createTestTask();
+		Set<String> mobileNumbers = new HashSet<String>();
+		//check null assignment
+		taskToSave.setDeliveryMobileNumbersSet(null);
+		
+		mobileNumbers.add(MOBILE_NUMBER_1);
+		mobileNumbers.add(MOBILE_NUMBER_2);
+		mobileNumbers.add(MOBILE_NUMBER_3);
+		taskToSave.setDeliveryMobileNumbersSet(mobileNumbers);
+		
+		HibernateLogicFactory.getTaskLogic().persistSmsTask(taskToSave);
+		
+		SmsTask taskReturned = HibernateLogicFactory.getTaskLogic().getSmsTask(taskToSave.getId());
+		
+		assertEquals("Three mobile numbers should have been obtained", 3, taskReturned.getDeliveryMobileNumbersSet().size());
+		assertTrue(taskReturned.getDeliveryMobileNumbersSet().contains(MOBILE_NUMBER_1));
+		assertTrue(taskReturned.getDeliveryMobileNumbersSet().contains(MOBILE_NUMBER_2));
+		assertTrue(taskReturned.getDeliveryMobileNumbersSet().contains(MOBILE_NUMBER_3));
 	}
 }

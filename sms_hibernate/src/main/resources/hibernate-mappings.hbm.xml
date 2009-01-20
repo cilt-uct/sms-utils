@@ -54,6 +54,8 @@
 			not-null="false" />
 		<property name="delReportTimeoutDuration" type="integer"
 			column="DEL_REPORT_TIMEOUT_DURATION" not-null="true" />
+		<property name="deliveryMobileNumbers" type="string"
+			column="DELIVERY_MOBILE_NUMBERS" not-null="false" length="1024"/>
 		<set name="smsMessages" lazy="false" inverse="true" cascade="all-delete-orphan">
 			<key column="TASK_ID" not-null="true" />
 			<one-to-many class="org.sakaiproject.sms.hibernate.model.SmsMessage"

@@ -126,6 +126,13 @@ public class SmsCoreImpl implements SmsCore {
 		return HibernateLogicFactory.getTaskLogic().getNextSmsTask();
 
 	}
+	
+	public SmsTask getPreliminaryTask(Date dateToSend, String messageBody, String sakaiSiteID,
+			String sakaiToolId, String sakaiSenderID, Set<String> deliveryMobileNumbers){
+		
+		return getPreliminaryTask(null, deliveryMobileNumbers, null, dateToSend,
+				messageBody, sakaiSiteID, sakaiToolId, sakaiSenderID);
+	}
 
 	public SmsTask getPreliminaryTask(Set<String> sakaiUserIds,
 			Date dateToSend, String messageBody, String sakaiSiteID,
@@ -146,8 +153,12 @@ public class SmsCoreImpl implements SmsCore {
 			Set<String> mobileNumbers, Set<String> sakaiUserIds,
 			Date dateToSend, String messageBody, String sakaiSiteID,
 			String sakaiToolId, String sakaiSenderID) {
-		SmsConfig config = HibernateLogicFactory.getConfigLogic()
+		
+		SmsConfig siteConfig = HibernateLogicFactory.getConfigLogic()
 				.getOrCreateSystemSmsConfig();
+		SmsConfig systemConfig = HibernateLogicFactory.getConfigLogic()
+				.getOrCreateSystemSmsConfig();
+		
 		SmsTask smsTask = new SmsTask();
 		smsTask.setSmsAccountId(smsBilling.getAccountID(sakaiSiteID,
 				sakaiSenderID, 1));
@@ -163,9 +174,11 @@ public class SmsCoreImpl implements SmsCore {
 		smsTask.setDateToSend(dateToSend);
 		smsTask.setAttemptCount(0);
 		smsTask.setMessageBody(messageBody);
-		smsTask.setMaxTimeToLive(config.getSmsTaskMaxLifeTime());
-		smsTask.setDelReportTimeoutDuration(config
+		smsTask.setMaxTimeToLive(siteConfig.getSmsTaskMaxLifeTime());
+		smsTask.setDelReportTimeoutDuration(systemConfig
 				.getDelReportTimeoutDuration());
+		smsTask.setDeliveryMobileNumbersSet(mobileNumbers);
+
 		return smsTask;
 	}
 

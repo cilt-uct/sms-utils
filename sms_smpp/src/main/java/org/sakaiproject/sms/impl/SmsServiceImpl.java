@@ -82,6 +82,25 @@ public class SmsServiceImpl implements SmsService {
 	}
 
 	/**
+	 * Add a new task to the sms task list, that will send sms messages to the specified list of mobile numbers
+	 * 
+	 * @param dateToSend
+	 * @param messageBody
+	 * @param sakaiSiteID
+	 * @param sakaiToolId
+	 * @param sakaiSenderID
+	 * @param deliveryMobileNumbers
+	 * @return
+	 */
+	public SmsTask getPreliminaryTask(Date dateToSend, String messageBody,
+			String sakaiSiteID, String sakaiToolId, String sakaiSenderID,
+			Set<String> deliveryMobileNumbers) {
+		return smsCore.getPreliminaryTask(dateToSend, messageBody, sakaiSiteID, 
+				sakaiToolId, sakaiSenderID, deliveryMobileNumbers);
+		
+	}
+	
+	/**
 	 * Add a new task to the sms task list. In this case you must supply a list
 	 * of Sakai user ID's.
 	 * 
@@ -139,4 +158,5 @@ public class SmsServiceImpl implements SmsService {
 	public ArrayList<String> validateTask(SmsTask smsTask) {
 		return TaskValidator.validateInsertTask(smsTask);
 	}
+
 }
