@@ -132,6 +132,12 @@ public class SmsHibernateConstants {
 	/** The Constant catelog message not found */
 	public static final String CATELOG_MESSAGE_NOT_FOUND = "<Property not found>";
 
+	/** The Constant catelog message not found */
+	public static final String PROPERTY_NOT_FOUND = "<Property not found>";
+
+	/** The Constant catelog message not found */
+	public static final String PROPERTY_FILE_NOT_FOUND = "<Property file not found>";
+
 	/**
 	 * The delivery report timeout duration.
 	 */
@@ -151,7 +157,7 @@ public class SmsHibernateConstants {
 
 	/** The Constant for cost of credit. */
 	public static final Float COST_OF_CREDIT = 1.5f;
-	
+
 	/** The default max time to live */
 	public static final Integer DEFAULT_MAX_TIME_TO_LIVE = 1;
 

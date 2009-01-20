@@ -96,6 +96,15 @@
 			<resource>
 				<directory>${basedir}/src/main/resources</directory>
 			</resource>
+			<resource>
+				<directory>${basedir}</directory>
+				<includes>
+					<include>sms.properties</include>
+				</includes>
+				<excludes>
+					<exclude>src/*</exclude>
+				</excludes>
+			</resource>
 		</resources>
 
 		<testResources>

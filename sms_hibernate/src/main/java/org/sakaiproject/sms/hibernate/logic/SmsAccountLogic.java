@@ -20,6 +20,7 @@ package org.sakaiproject.sms.hibernate.logic;
 
 import java.util.List;
 
+import org.sakaiproject.sms.hibernate.logic.impl.exception.MoreThanOneAccountFoundException;
 import org.sakaiproject.sms.hibernate.model.SmsAccount;
 
 /**
@@ -45,6 +46,31 @@ public interface SmsAccountLogic {
 	 * @return sms congiguration
 	 */
 	public SmsAccount getSmsAccount(Long smsAccountId);
+
+	/**
+	 * Gets a SmsAccount entity for the given sakai site id or sakai user id.
+	 * <p>
+	 * If the property account.checkSiteIdBeforeUserId == true in sms.properties
+	 * then the method will first attempt to find the sms account by sakai site
+	 * id. If the returned account is null then it will attempt to finf it by
+	 * the sakai user id. If no account is found null will be returned.
+	 * <p>
+	 * If the property account.checkSiteIdBeforeUserId == false then it will
+	 * behave as described above but will first try find the account by sakai
+	 * user id before the sakai site id.
+	 * 
+	 * @param sakaiSiteId
+	 *            the sakai site id. Can be null.
+	 * @param SakaiUserId
+	 *            the sakai user id. Can be null.
+	 * 
+	 * @return sms congiguration
+	 * 
+	 * @throws MoreThanOneAccountFoundException
+	 *             the more than one account found exception
+	 */
+	public SmsAccount getSmsAccount(String sakaiSiteId, String SakaiUserId)
+			throws MoreThanOneAccountFoundException;
 
 	/**
 	 * Gets all the sms account records

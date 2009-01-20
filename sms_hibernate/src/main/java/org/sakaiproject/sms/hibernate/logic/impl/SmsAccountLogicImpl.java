@@ -18,14 +18,19 @@
 
 package org.sakaiproject.sms.hibernate.logic.impl;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.sakaiproject.sms.hibernate.dao.SmsDao;
 import org.sakaiproject.sms.hibernate.logic.SmsAccountLogic;
+import org.sakaiproject.sms.hibernate.logic.impl.exception.MoreThanOneAccountFoundException;
 import org.sakaiproject.sms.hibernate.model.SmsAccount;
+import org.sakaiproject.sms.hibernate.model.constants.SmsPropertyConstants;
 import org.sakaiproject.sms.hibernate.util.HibernateUtil;
+import org.sakaiproject.sms.hibernate.util.SmsPropertyReader;
 
 /**
  * The data service will handle all sms Account database transactions for the
@@ -71,9 +76,12 @@ public class SmsAccountLogicImpl extends SmsDao implements SmsAccountLogic {
 	 * @return List of SmsAccount objects
 	 */
 	public List<SmsAccount> getAllSmsAccounts() {
+		List<SmsAccount> accounts = new ArrayList<SmsAccount>();
 		Session s = HibernateUtil.getSession();
 		Query query = s.createQuery("from SmsAccount");
-		return query.list();
+		accounts = query.list();
+		HibernateUtil.closeSession();
+		return accounts;
 	}
 
 	/**
@@ -89,4 +97,129 @@ public class SmsAccountLogicImpl extends SmsDao implements SmsAccountLogic {
 		persist(smsAccount);
 	}
 
+	/**
+	 * Gets a SmsAccount entity for the given sakai site id or sakai user id.
+	 * <p>
+	 * If the property account.checkSiteIdBeforeUserId == true in sms.properties
+	 * then the method will first attempt to find the sms account by sakai site
+	 * id. If the returned account is null then it will attempt to finf it by
+	 * the sakai user id. If no account is found null will be returned.
+	 * <p>
+	 * If the property account.checkSiteIdBeforeUserId == false then it will
+	 * behave as described above but will first try find the account by sakai
+	 * user id before the sakai site id.
+	 * 
+	 * @param sakaiSiteId
+	 *            the sakai site id. Can be null.
+	 * @param SakaiUserId
+	 *            the sakai user id. Can be null.
+	 * 
+	 * @return sms congiguration
+	 * 
+	 * @throws MoreThanOneAccountFoundException
+	 *             the more than one account found exception
+	 */
+	public SmsAccount getSmsAccount(String sakaiSiteId, String SakaiUserId)
+			throws MoreThanOneAccountFoundException {
+		boolean checkSiteBeforeUser = Boolean
+				.parseBoolean(SmsPropertyReader
+						.getProperty(SmsPropertyConstants.ACCOUNT_CHECK_SITE_ID_BEFORE_USER_ID));
+		SmsAccount account = null;
+
+		if (checkSiteBeforeUser) {
+			account = getAccountBySakaiSiteId(sakaiSiteId);
+			if (account == null) {
+				return getAccountBySakaiUserId(SakaiUserId);
+			} else {
+				return account;
+			}
+		} else {
+			account = getAccountBySakaiUserId(SakaiUserId);
+			if (account == null) {
+				return getAccountBySakaiSiteId(sakaiSiteId);
+			} else {
+				return account;
+			}
+		}
+	}
+
+	/**
+	 * Gets the account by sakai site id.
+	 * 
+	 * @param sakaiSiteId
+	 *            the sakai site id
+	 * 
+	 * @return the account by sakai site id
+	 * 
+	 * @throws MoreThanOneAccountFoundException
+	 *             the more than one account found exception
+	 */
+	private SmsAccount getAccountBySakaiSiteId(String sakaiSiteId)
+			throws MoreThanOneAccountFoundException {
+		if (sakaiSiteId == null || sakaiSiteId.trim().equals("")) {
+			return null;
+		}
+		SmsAccount account = null;
+		StringBuilder hql = new StringBuilder();
+		hql
+				.append(" from SmsAccount account where account.enddate is null or account.enddate > :today ");
+		hql.append(" and account.sakaiSiteId = :sakaiSiteId");
+		List<SmsAccount> accounts = new ArrayList<SmsAccount>();
+		Session s = HibernateUtil.getSession();
+		Query query = s.createQuery(hql.toString());
+		query.setDate("today", new Date());
+		query.setParameter("sakaiSiteId", sakaiSiteId);
+		accounts = query.list();
+		if (accounts != null && accounts.size() > 0) {
+			if (accounts.size() > 1) {
+				throw new MoreThanOneAccountFoundException(
+						"More than one account found active account found for sakai site id: "
+								+ sakaiSiteId);
+			} else {
+				account = accounts.get(0);
+			}
+		}
+		HibernateUtil.closeSession();
+		return account;
+	}
+
+	/**
+	 * Gets the account by sakai site id.
+	 * 
+	 * @param sakaiUserId
+	 *            the sakai user id
+	 * 
+	 * @return the account by sakai site id
+	 * 
+	 * @throws MoreThanOneAccountFoundException
+	 *             the more than one account found exception
+	 */
+	private SmsAccount getAccountBySakaiUserId(String sakaiUserId)
+			throws MoreThanOneAccountFoundException {
+		if (sakaiUserId == null || sakaiUserId.trim().equals("")) {
+			return null;
+		}
+		SmsAccount account = null;
+		StringBuilder hql = new StringBuilder();
+		hql
+				.append(" from SmsAccount account where account.enddate is null or account.enddate > :today ");
+		hql.append(" and account.sakaiUserId = :sakaiUserId");
+		List<SmsAccount> accounts = new ArrayList<SmsAccount>();
+		Session s = HibernateUtil.getSession();
+		Query query = s.createQuery(hql.toString());
+		query.setDate("today", new Date());
+		query.setParameter("sakaiUserId", sakaiUserId);
+		accounts = query.list();
+		if (accounts != null && accounts.size() > 0) {
+			if (accounts.size() > 1) {
+				throw new MoreThanOneAccountFoundException(
+						"More than one account found active account found for sakai user id: "
+								+ sakaiUserId);
+			} else {
+				account = accounts.get(0);
+			}
+		}
+		HibernateUtil.closeSession();
+		return account;
+	}
 }

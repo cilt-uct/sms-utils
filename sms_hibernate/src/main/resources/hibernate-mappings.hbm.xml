@@ -95,9 +95,9 @@
 			<generator class="native" />
 		</id>
 		<property name="sakaiUserId" type="string" column="SAKAI_USER_ID"
-			not-null="false" length="99" />
+			not-null="false" length="99" unique="true"/>
 		<property name="sakaiSiteId" type="string" column="SAKAI_SITE_ID"
-			not-null="true" length="99" />
+			not-null="false" length="99" unique="true"/>
 		<property name="messageTypeCode" type="string" column="MESSAGE_TYPE_CODE"
 			not-null="true" length="5" />
 		<property name="overdraftLimit" type="float" column="OVERDRAFT_LIMIT"

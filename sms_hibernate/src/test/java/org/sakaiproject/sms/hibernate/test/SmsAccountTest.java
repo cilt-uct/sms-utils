@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.sakaiproject.sms.hibernate.logic.impl.HibernateLogicFactory;
+import org.sakaiproject.sms.hibernate.logic.impl.exception.MoreThanOneAccountFoundException;
 import org.sakaiproject.sms.hibernate.model.SmsAccount;
 import org.sakaiproject.sms.hibernate.model.SmsTransaction;
 import org.sakaiproject.sms.hibernate.util.AbstractBaseTestCase;
@@ -156,5 +157,49 @@ public class SmsAccountTest extends AbstractBaseTestCase {
 		assertNull(getSmsAccount);
 		assertNull("Object not removed", getSmsAccount);
 
+	}
+
+	/**
+	 * Test get sms account by sakai site id.
+	 */
+	public void testGetSmsAccount_sakaiSiteId() {
+		SmsAccount account = new SmsAccount();
+		account.setSakaiSiteId("sakSitId");
+		account.setMessageTypeCode("12345");
+		account.setOverdraftLimit(10000.00f);
+		account.setBalance(5000.00f);
+		account.setAccountName("accountName");
+		account.setAccountEnabled(true);
+		HibernateLogicFactory.getAccountLogic().persistSmsAccount(account);
+		try {
+			SmsAccount retAccount = HibernateLogicFactory.getAccountLogic()
+					.getSmsAccount(account.getSakaiSiteId(), "");
+			assertNotNull(retAccount);
+			assertEquals(retAccount, account);
+		} catch (MoreThanOneAccountFoundException e) {
+			fail(e.getMessage());
+		}
+	}
+
+	/**
+	 * Test get sms account byt sakai user id.
+	 */
+	public void testGetSmsAccount_sakaiUserId() {
+		SmsAccount account = new SmsAccount();
+		account.setSakaiUserId("sakUsrId");
+		account.setMessageTypeCode("12345");
+		account.setOverdraftLimit(10000.00f);
+		account.setBalance(5000.00f);
+		account.setAccountName("accountName");
+		account.setAccountEnabled(true);
+		HibernateLogicFactory.getAccountLogic().persistSmsAccount(account);
+		try {
+			SmsAccount retAccount = HibernateLogicFactory.getAccountLogic()
+					.getSmsAccount("", account.getSakaiUserId());
+			assertNotNull(retAccount);
+			assertEquals(retAccount, account);
+		} catch (MoreThanOneAccountFoundException e) {
+			fail(e.getMessage());
+		}
 	}
 }
