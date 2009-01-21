@@ -320,7 +320,7 @@ public class SmsTaskTest extends AbstractBaseTestCase {
 	 */
 	public void testMessagesProcessedAndSetCompleteTasks() {
 		SmsTask testTask = createTestTask();
-		testTask.setGroupSizeEstimate(10);
+		testTask.setGroupSizeActual(10);
 		HibernateLogicFactory.getTaskLogic().persistSmsTask(testTask);
 
 		for (int i = 0; i < 10; i++) {
