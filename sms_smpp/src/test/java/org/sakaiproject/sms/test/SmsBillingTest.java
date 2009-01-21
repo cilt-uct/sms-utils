@@ -19,11 +19,15 @@ package org.sakaiproject.sms.test;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.sakaiproject.sms.hibernate.logic.impl.HibernateLogicFactory;
 import org.sakaiproject.sms.hibernate.model.SmsAccount;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
+import org.sakaiproject.sms.hibernate.model.SmsTransaction;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
 import org.sakaiproject.sms.hibernate.util.AbstractBaseTestCase;
 import org.sakaiproject.sms.hibernate.util.HibernateUtil;
@@ -200,6 +204,86 @@ public class SmsBillingTest extends AbstractBaseTestCase {
 	public void testConvertCreditsToAmount() {
 		int credits = smsBillingImpl.convertAmountToCredits(testAmount);
 		// Not sure how to test this properly.
+	}
+
+	/**
+	 * Test recalculate account balance.
+	 */
+	public void testRecalculateAccountBalance() {
+		SmsAccount smsAccount = new SmsAccount();
+		smsAccount.setSakaiUserId("1");
+		smsAccount.setSakaiSiteId("1");
+		smsAccount.setMessageTypeCode("1");
+		smsAccount.setOverdraftLimit(10000.00f);
+		smsAccount.setBalance(10f);
+		smsAccount.setAccountName("accountname");
+		smsAccount.setAccountEnabled(true);
+		smsAccount.setSmsTransactions(getSmsTransactions(smsAccount));
+		HibernateLogicFactory.getAccountLogic().persistSmsAccount(smsAccount);
+
+		assertTrue(smsAccount.exists());
+		assertNotNull(smsAccount.getSmsTransactions());
+		assertTrue(smsAccount.getSmsTransactions().size() > 0);
+
+		smsBillingImpl.recalculateAccountBalance(smsAccount.getId());
+
+		SmsAccount recalculatedAccount = HibernateLogicFactory
+				.getAccountLogic().getSmsAccount(smsAccount.getId());
+		assertNotNull(recalculatedAccount);
+		assertTrue(recalculatedAccount.getBalance() == 0);
+	}
+
+	public void testRecalculateAccountBalances() {
+		// Recalculate all the account balances
+		smsBillingImpl.recalculateAccountBalances();
+		List<SmsAccount> smsAccounts = HibernateLogicFactory.getAccountLogic()
+				.getAllSmsAccounts();
+		assertNotNull(smsAccounts);
+		assertTrue(smsAccounts.size() > 0);
+		for (SmsAccount account : smsAccounts) {
+			// We know that the only accounts exist are the ones created in this
+			// test case
+			// and they should all have a balance of 0 after recalculation.
+			assertTrue(account.getBalance() == 0);
+		}
+	}
+
+	// /////////////////////////////////////////////////////////////////////////////////////////////
+	// HELPER METHODS
+	// /////////////////////////////////////////////////////////////////////////////////////////////
+
+	/**
+	 * Gets the sms transactions.
+	 * 
+	 * @param smsAccount
+	 *            the sms account
+	 * 
+	 * @return the sms transactions
+	 */
+	private Set<SmsTransaction> getSmsTransactions(SmsAccount smsAccount) {
+		Set<SmsTransaction> transactions = new HashSet<SmsTransaction>();
+		int g = 10000;
+		for (int i = 0; i < 10; i++) {
+			SmsTransaction smsTransaction = new SmsTransaction();
+			smsTransaction.setBalance(1.32f);
+			smsTransaction.setSakaiUserId("sakaiUserId" + i);
+			smsTransaction.setTransactionDate(new Date(System
+					.currentTimeMillis()
+					+ g));
+			smsTransaction.setTransactionTypeCode("TC");
+			smsTransaction.setTransactionCredits(666);
+
+			if (i % 2 == 0) {
+				smsTransaction.setTransactionAmount(1000.00f);
+			} else {
+				smsTransaction.setTransactionAmount(-1000.00f);
+			}
+			smsTransaction.setSmsAccount(smsAccount);
+			smsTransaction.setSmsTaskId(1L);
+			transactions.add(smsTransaction);
+			g += 1000;
+		}
+		return transactions;
 	}
 
 }

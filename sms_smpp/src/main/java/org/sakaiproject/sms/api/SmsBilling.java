@@ -177,4 +177,19 @@ public interface SmsBilling {
 	 */
 	public boolean reserveCredits(Long accountID, int credits);
 
+	/**
+	 * Recalculate balance for a specific account.
+	 * 
+	 * @param accountId
+	 *            the account id
+	 */
+	public void recalculateAccountBalance(Long accountId);
+
+	/**
+	 * Recalculate balances for all existing accounts.
+	 * 
+	 * @param accountId
+	 *            the account id
+	 */
+	public void recalculateAccountBalances();
 }

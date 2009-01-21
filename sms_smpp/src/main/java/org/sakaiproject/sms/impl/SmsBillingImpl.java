@@ -17,12 +17,17 @@
  **********************************************************************************/
 package org.sakaiproject.sms.impl;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import org.sakaiproject.sms.api.SmsBilling;
 import org.sakaiproject.sms.hibernate.logic.impl.HibernateLogicFactory;
 import org.sakaiproject.sms.hibernate.model.SmsAccount;
+import org.sakaiproject.sms.hibernate.model.SmsTransaction;
 import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
 
 // TODO: Auto-generated Javadoc
@@ -223,5 +228,79 @@ public class SmsBillingImpl implements SmsBilling {
 	 */
 	public boolean reserveCredits(Long accountID, int credits) {
 		return true;
+	}
+
+	/**
+	 * Recalculate balance for a specific account.
+	 * 
+	 * @param accountId
+	 *            the account id
+	 * @param account
+	 *            the account
+	 */
+	private void recalculateAccountBalance(Long accountId, SmsAccount account) {
+
+		// Use account instead of id?
+		if (account == null) {
+			account = HibernateLogicFactory.getAccountLogic().getSmsAccount(
+					accountId);
+		}
+
+		ArrayList<SmsTransaction> transactions = new ArrayList<SmsTransaction>();
+
+		// Add to list so we can sort
+		for (SmsTransaction transaction : account.getSmsTransactions()) {
+			transactions.add(transaction);
+		}
+
+		// Sort by transaction date
+		Collections.sort(transactions, new Comparator<SmsTransaction>() {
+
+			public int compare(SmsTransaction arg0, SmsTransaction arg1) {
+				// TODO Auto-generated method stub
+				return arg0.getTransactionDate().compareTo(
+						arg1.getTransactionDate());
+			}
+
+		});
+
+		// Calculate balance
+		Float balance = 0.0F;
+		for (SmsTransaction transaction : transactions) {
+			balance += transaction.getTransactionAmount();
+		}
+		account.setBalance(balance);
+		HibernateLogicFactory.getAccountLogic().persistSmsAccount(account);
+	}
+
+	/**
+	 * Recalculate balance for a specific account.
+	 * 
+	 * @param account
+	 *            the account
+	 */
+	private void recalculateAccountBalance(SmsAccount account) {
+		recalculateAccountBalance(null, account);
+	}
+
+	/**
+	 * Recalculate balance for a specific account.
+	 * 
+	 * @param accountId
+	 *            the account id
+	 */
+	public void recalculateAccountBalance(Long accountId) {
+		recalculateAccountBalance(accountId, null);
+	}
+
+	/**
+	 * Recalculate balances for all existing accounts.
+	 */
+	public void recalculateAccountBalances() {
+		List<SmsAccount> accounts = HibernateLogicFactory.getAccountLogic()
+				.getAllSmsAccounts();
+		for (SmsAccount account : accounts) {
+			recalculateAccountBalance(account);
+		}
 	}
 }
