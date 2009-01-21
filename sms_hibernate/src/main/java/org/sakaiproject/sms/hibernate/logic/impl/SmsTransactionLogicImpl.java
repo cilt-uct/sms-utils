@@ -122,9 +122,11 @@ public class SmsTransactionLogicImpl extends SmsDao implements
 
 	/**
 	 * This method will persists the given object.
-	 * 
+	 * <p>
 	 * If the object is a new entity then it will be created on the DB. If it is
 	 * an existing entity then the record will be updates on the DB.
+	 * <p>
+	 * The account related to the transaction will be updated with the new balance.
 	 * 
 	 * @param sms
 	 *            confuguration to be persisted
