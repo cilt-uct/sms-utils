@@ -241,7 +241,7 @@ public class SmsCoreImpl implements SmsCore {
 		try {
 			smsBilling.reserveCredits(smsBilling.getAccountID(smsTask
 					.getSakaiSiteId(), smsTask.getSenderUserName(), 1), smsTask
-					.getCreditEstimateInt());
+					.getId(), smsTask.getCreditEstimateInt());
 		} catch (MoreThanOneAccountFoundException e) {
 			// TODO HANDLE THIS EXCEPTION
 			e.printStackTrace();
