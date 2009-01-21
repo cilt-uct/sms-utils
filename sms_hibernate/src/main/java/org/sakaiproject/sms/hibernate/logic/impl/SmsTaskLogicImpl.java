@@ -325,6 +325,7 @@ public class SmsTaskLogicImpl extends SmsDao implements SmsTaskLogic {
 						Hibernate.STRING);
 		log.debug("setCompleteTasks() HQL: " + updateQuery.getQueryString());
 		updateQuery.executeUpdate();
+		HibernateUtil.closeSession();
 		return smsTasks;
 	}
 }
