@@ -170,7 +170,6 @@ public class SmsTaskLogicImpl extends SmsDao implements SmsTaskLogic {
 		return tasks;
 	}
 
-	
 	/**
 	 * Gets a all search results for the specified search criteria
 	 * 
@@ -178,10 +177,11 @@ public class SmsTaskLogicImpl extends SmsDao implements SmsTaskLogic {
 	 * @return Search result container
 	 * @throws SmsSearchException
 	 */
-	public List<SmsTask> getAllSmsTasksForCriteria(SearchFilterBean searchBean) throws SmsSearchException{
+	public List<SmsTask> getAllSmsTasksForCriteria(SearchFilterBean searchBean)
+			throws SmsSearchException {
 		return getSmsTasksForCriteria(searchBean);
 	}
-	
+
 	/**
 	 * Gets a search results container housing the result set for a particular
 	 * displayed page
@@ -278,4 +278,42 @@ public class SmsTaskLogicImpl extends SmsDao implements SmsTaskLogic {
 			return smsConfig.getPagingSize();
 	}
 
+	/**
+	 * Increments the total messages processed on a task by one.
+	 * 
+	 * @param smsTask
+	 */
+	public void incrementMessagesProcessed(SmsTask smsTask) {
+
+		String hql = "update SmsTask set MESSAGES_PROCESSED =MESSAGES_PROCESSED+1  where TASK_ID = :smsTaskID";
+		Query query = HibernateUtil.getSession().createQuery(hql.toString());
+		query.setParameter("smsTaskID", smsTask.getId(), Hibernate.LONG);
+		log
+				.debug("incrementMessagesProcecced() HQL: "
+						+ query.getQueryString());
+		query.executeUpdate();
+
+	}
+
+	/**
+	 * Checks for tasks that can be marked as complete. If the total messages
+	 * processed equals the actual group size the task is marked as complete.
+	 */
+	public void checkAndSetTasksCompleted() {
+
+		String hql = "update SmsTask  set STATUS_CODE =:doneStatus where MESSAGES_PROCESSED =GROUP_SIZE_ACTUAL and STATUS_CODE<> :smsTaskStatus";
+		Query query = HibernateUtil.getSession().createQuery(hql.toString());
+		query
+				.setParameter("doneStatus",
+						SmsConst_DeliveryStatus.STATUS_TASK_COMPLETED,
+						Hibernate.STRING);
+
+		query
+				.setParameter("smsTaskStatus",
+						SmsConst_DeliveryStatus.STATUS_TASK_COMPLETED,
+						Hibernate.STRING);
+		log.debug("setCompleteTasks() HQL: " + query.getQueryString());
+		query.executeUpdate();
+
+	}
 }

@@ -10,6 +10,12 @@ public class SmsConst_DeliveryStatus {
 	public final static String STATUS_DELIVERED = "D";
 
 	/**
+	 * This indicates that there is no outstanding messages to be send on the
+	 * task.
+	 */
+	public final static String STATUS_TASK_COMPLETED = "C";
+
+	/**
 	 * The message has successfully sent to the gateway. We know nothing more
 	 * about the message status at this stage.
 	 */

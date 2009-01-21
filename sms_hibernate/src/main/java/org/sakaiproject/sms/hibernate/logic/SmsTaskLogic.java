@@ -1,17 +1,17 @@
 /***********************************************************************************
  * SmsTaskLogic.java
  * Copyright (c) 2008 Sakai Project/Sakai Foundation
- * 
- * Licensed under the Educational Community License, Version 2.0 (the "License"); 
- * you may not use this file except in compliance with the License. 
+ *
+ * Licensed under the Educational Community License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.osedu.org/licenses/ECL-2.0
- * 
- * Unless required by applicable law or agreed to in writing, software 
- * distributed under the License is distributed on an "AS IS" BASIS, 
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
- * See the License for the specific language governing permissions and 
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
  * limitations under the License.
  *
  **********************************************************************************/
@@ -22,7 +22,6 @@ import java.util.List;
 
 import org.sakaiproject.sms.hibernate.bean.SearchFilterBean;
 import org.sakaiproject.sms.hibernate.bean.SearchResultContainer;
-import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsAccountNotFoundException;
 import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsSearchException;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 
@@ -35,7 +34,7 @@ import org.sakaiproject.sms.hibernate.model.SmsTask;
  * @created 25-Nov-2008
  */
 public interface SmsTaskLogic {
-	
+
 	/**
 	 * Delete sms task.
 	 * 
@@ -76,7 +75,6 @@ public interface SmsTaskLogic {
 	 */
 	public void persistSmsTask(SmsTask smsTask);
 
-	
 	/**
 	 * Gets a all search results for the specified search criteria
 	 * 
@@ -84,8 +82,9 @@ public interface SmsTaskLogic {
 	 * @return Search result container
 	 * @throws SmsSearchException
 	 */
-	public List<SmsTask> getAllSmsTasksForCriteria(SearchFilterBean searchBean) throws SmsSearchException;
-	
+	public List<SmsTask> getAllSmsTasksForCriteria(SearchFilterBean searchBean)
+			throws SmsSearchException;
+
 	/**
 	 * Gets a search results container housing the result set for a particular
 	 * displayed page
@@ -108,4 +107,16 @@ public interface SmsTaskLogic {
 	public List<SmsTask> getSmsTasksFilteredByMessageStatus(
 			String... messageStatusCode);
 
+	/**
+	 * Increments the total messages processed on a task by one.
+	 * 
+	 * @param smsTask
+	 */
+	public void incrementMessagesProcessed(SmsTask smsTask);
+
+	/**
+	 * Checks for tasks that can be marked as complete. If the total messages
+	 * processed equals the actual group size the task is marked as complete.
+	 */
+	public void checkAndSetTasksCompleted();
 }
