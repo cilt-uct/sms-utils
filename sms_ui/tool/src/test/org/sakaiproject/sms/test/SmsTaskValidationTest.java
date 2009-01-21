@@ -100,6 +100,11 @@ public class SmsTaskValidationTest extends AbstractBaseTestCase {
 
 	}
 
+	@Override
+	public void tearDown() {
+		HibernateLogicFactory.getAccountLogic().deleteSmsAccount(account);
+	}
+
 	/**
 	 * Test account id.
 	 */
