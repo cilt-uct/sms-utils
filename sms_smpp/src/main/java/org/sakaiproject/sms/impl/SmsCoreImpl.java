@@ -28,6 +28,7 @@ import org.sakaiproject.sms.api.SmsBilling;
 import org.sakaiproject.sms.api.SmsCore;
 import org.sakaiproject.sms.api.SmsSmpp;
 import org.sakaiproject.sms.hibernate.logic.impl.HibernateLogicFactory;
+import org.sakaiproject.sms.hibernate.logic.impl.exception.MoreThanOneAccountFoundException;
 import org.sakaiproject.sms.hibernate.model.SmsAccount;
 import org.sakaiproject.sms.hibernate.model.SmsConfig;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
@@ -170,8 +171,13 @@ public class SmsCoreImpl implements SmsCore {
 				.getOrCreateSystemSmsConfig();
 
 		SmsTask smsTask = new SmsTask();
-		smsTask.setSmsAccountId(smsBilling.getAccountID(sakaiSiteID,
-				sakaiSenderID, 1));
+		try {
+			smsTask.setSmsAccountId(smsBilling.getAccountID(sakaiSiteID,
+					sakaiSenderID, 1));
+		} catch (MoreThanOneAccountFoundException e) {
+			// TODO HANDLE THIS EXCPTION
+			e.printStackTrace();
+		}
 		smsTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
 		smsTask.setSakaiSiteId(sakaiSiteID);
 		smsTask
@@ -232,9 +238,14 @@ public class SmsCoreImpl implements SmsCore {
 	public synchronized SmsTask insertTask(SmsTask smsTask) {
 		smsTask.setDateCreated(DateUtil.getCurrentDate());
 		HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask);
-		smsBilling.reserveCredits(smsBilling.getAccountID(smsTask
-				.getSakaiSiteId(), smsTask.getSenderUserName(), 1), smsTask
-				.getCreditEstimateInt());
+		try {
+			smsBilling.reserveCredits(smsBilling.getAccountID(smsTask
+					.getSakaiSiteId(), smsTask.getSenderUserName(), 1), smsTask
+					.getCreditEstimateInt());
+		} catch (MoreThanOneAccountFoundException e) {
+			// TODO HANDLE THIS EXCEPTION
+			e.printStackTrace();
+		}
 
 		tryProcessTaskRealTime(smsTask);
 		return smsTask;

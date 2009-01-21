@@ -21,6 +21,8 @@ package org.sakaiproject.sms.api;
 import java.util.Date;
 import java.util.Set;
 
+import org.sakaiproject.sms.hibernate.logic.impl.exception.MoreThanOneAccountFoundException;
+
 // TODO: Auto-generated Javadoc
 /**
  * The billing service will handle all financial functions for the sms tool in
@@ -109,9 +111,10 @@ public interface SmsBilling {
 	 *            the account type
 	 * 
 	 * @return the account id
+	 * @throws MoreThanOneAccountFoundException
 	 */
 	public Long getAccountID(String sakaiSiteID, String sakaiUserID,
-			Integer accountType);
+			Integer accountType) throws MoreThanOneAccountFoundException;
 
 	/**
 	 * Return a list of all transactions between startDate and endDate for the

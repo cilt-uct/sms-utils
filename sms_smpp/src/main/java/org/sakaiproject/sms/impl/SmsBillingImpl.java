@@ -23,6 +23,7 @@ import java.util.Set;
 
 import org.sakaiproject.sms.api.SmsBilling;
 import org.sakaiproject.sms.hibernate.logic.impl.HibernateLogicFactory;
+import org.sakaiproject.sms.hibernate.logic.impl.exception.MoreThanOneAccountFoundException;
 import org.sakaiproject.sms.hibernate.model.SmsAccount;
 import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
 
@@ -135,16 +136,28 @@ public class SmsBillingImpl implements SmsBilling {
 		return 0;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * Use Sakai siteID, Sakai userID and account type to get a valid account
+	 * id. AccountType is only outgoing masses for now.
 	 * 
-	 * @see org.sakaiproject.sms.api.SmsBilling#getAccountID(java.lang.String,
-	 * java.lang.String, java.lang.Integer)
+	 * @param sakaiSiteID
+	 *            (e.g. !admin)
+	 * @param sakaiUserID
+	 *            the sakai user id
+	 * @param accountType
+	 *            the account type
+	 * 
+	 * @return the account id
+	 * @throws MoreThanOneAccountFoundException
 	 */
 	public Long getAccountID(String sakaiSiteID, String sakaiUserID,
-			Integer accountType) {
-		// TODO Auto-generated method stub
-		return 1l;
+			Integer accountType) throws MoreThanOneAccountFoundException {
+		SmsAccount account = HibernateLogicFactory.getAccountLogic()
+				.getSmsAccount(sakaiSiteID, sakaiUserID);
+		if (account != null) {
+			return account.getId();
+		}
+		return null;
 	}
 
 	/**
