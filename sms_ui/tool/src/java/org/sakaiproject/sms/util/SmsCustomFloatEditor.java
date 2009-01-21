@@ -21,7 +21,7 @@ import org.springframework.beans.propertyeditors.CustomNumberEditor;
 
 /**
  * Modifies Spring's {@link CustomNumberEditor} to set value as null if
- * exception is thrown when parsing
+ * whitespace and throw specific message with exception
  * 
  * @see {@link CustomNumberEditor}
  * 

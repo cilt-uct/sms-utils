@@ -99,6 +99,13 @@
 		</bean>
 	</property>
  </bean>
+ 
+ <bean class="uk.org.ponder.mapping.DataConverter">
+	<property name="targetPath" value="SmsTaskLocator.*.messageBody" />
+	<property name="converter">
+		<bean class="org.sakaiproject.sms.util.MsgBodyEditorFactory" />
+	</property>
+ </bean>
 
   <!--
 	Override this definition from RSF-evolvers, to reflect the fact we are
