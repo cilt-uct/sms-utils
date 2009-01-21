@@ -118,5 +118,5 @@ public interface SmsTaskLogic {
 	 * Checks for tasks that can be marked as complete. If the total messages
 	 * processed equals the actual group size the task is marked as complete.
 	 */
-	public void checkAndSetTasksCompleted();
+	public List<SmsTask> checkAndSetTasksCompleted();
 }

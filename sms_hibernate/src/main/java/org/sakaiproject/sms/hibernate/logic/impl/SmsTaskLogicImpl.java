@@ -299,21 +299,32 @@ public class SmsTaskLogicImpl extends SmsDao implements SmsTaskLogic {
 	 * Checks for tasks that can be marked as complete. If the total messages
 	 * processed equals the actual group size the task is marked as complete.
 	 */
-	public void checkAndSetTasksCompleted() {
+	public List<SmsTask> checkAndSetTasksCompleted() {
+
+		Query selectQuery = HibernateUtil
+				.getSession()
+				.createQuery(
+						"from SmsTask mes where MESSAGES_PROCESSED =GROUP_SIZE_ACTUAL and STATUS_CODE<> :smsTaskStatus");
+		selectQuery
+				.setParameter("smsTaskStatus",
+						SmsConst_DeliveryStatus.STATUS_TASK_COMPLETED,
+						Hibernate.STRING);
+		List<SmsTask> smsTasks = selectQuery.list();
 
 		String hql = "update SmsTask  set STATUS_CODE =:doneStatus where MESSAGES_PROCESSED =GROUP_SIZE_ACTUAL and STATUS_CODE<> :smsTaskStatus";
-		Query query = HibernateUtil.getSession().createQuery(hql.toString());
-		query
+		Query updateQuery = HibernateUtil.getSession().createQuery(
+				hql.toString());
+		updateQuery
 				.setParameter("doneStatus",
 						SmsConst_DeliveryStatus.STATUS_TASK_COMPLETED,
 						Hibernate.STRING);
 
-		query
+		updateQuery
 				.setParameter("smsTaskStatus",
 						SmsConst_DeliveryStatus.STATUS_TASK_COMPLETED,
 						Hibernate.STRING);
-		log.debug("setCompleteTasks() HQL: " + query.getQueryString());
-		query.executeUpdate();
-
+		log.debug("setCompleteTasks() HQL: " + updateQuery.getQueryString());
+		updateQuery.executeUpdate();
+		return smsTasks;
 	}
 }
