@@ -266,7 +266,14 @@ public class SmsTransactionTest extends AbstractBaseTestCase {
 
 	public void testCreateReserveCreditsTask() {
 
-		SmsAccount testAccount = SmsAccountTest.createTestAccount();
+		SmsAccount testAccount = new SmsAccount();
+		testAccount.setSakaiUserId("1");
+		testAccount.setSakaiSiteId("1");
+		testAccount.setMessageTypeCode("12345");
+		testAccount.setOverdraftLimit(10000.00f);
+		testAccount.setBalance(5000.00f);
+		testAccount.setAccountName("accountName");
+		testAccount.setAccountEnabled(true);
 		testAccount.setBalance(1000f);
 		HibernateLogicFactory.getAccountLogic().persistSmsAccount(testAccount);
 

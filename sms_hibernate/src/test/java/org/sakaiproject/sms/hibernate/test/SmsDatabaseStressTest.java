@@ -59,46 +59,6 @@ public class SmsDatabaseStressTest extends AbstractBaseTestCase {
 	}
 
 	/**
-	 * Test delete tasks.
-	 */
-	public void testDeleteTasks() {
-
-		HibernateLogicFactory.getTaskLogic().deleteSmsTask(smsTask);
-		SmsTask getSmsTask = HibernateLogicFactory.getTaskLogic().getSmsTask(
-				smsTaskID);
-		assertNull("Task not removed", getSmsTask);
-		SmsMessage theMessage = HibernateLogicFactory.getMessageLogic()
-				.getSmsMessage(firstMessageID);
-		assertNull("Messages not removed", theMessage);
-	}
-
-	// TODO: Careful, the attached task read all the messages attached to it, we
-	// don't want this here!
-	/**
-	 * Test get task message.
-	 */
-	public void testGetTaskMessage() {
-
-		SmsMessage theMessage = HibernateLogicFactory.getMessageLogic()
-				.getSmsMessage(firstMessageID);
-		assertNotNull(theMessage);
-	}
-
-	/**
-	 * Test get task messages.
-	 */
-	public void testGetTaskMessages() {
-		SmsTask theSmsTask = HibernateLogicFactory.getTaskLogic().getSmsTask(
-				smsTaskID);
-		firstMessageID = ((SmsMessage) theSmsTask.getSmsMessages().toArray()[0])
-				.getId();
-		assertNotNull(theSmsTask);
-		assertTrue("Message size not correct", theSmsTask.getSmsMessages()
-				.size() == messageCount);
-
-	}
-
-	/**
 	 * Test many messages insert.
 	 */
 	public void testInsertManyMessages() {
@@ -116,6 +76,36 @@ public class SmsDatabaseStressTest extends AbstractBaseTestCase {
 		smsTaskID = smsTask.getId();
 		assertTrue("Not all messages returned",
 				smsTask.getSmsMessages().size() == messageCount);
+	}
 
+	// TODO: Careful, the attached task read all the messages attached to it, we
+	// don't want this here!
+
+	/**
+	 * Test get task messages.
+	 */
+	public void testGetTaskMessages() {
+		SmsTask theSmsTask = HibernateLogicFactory.getTaskLogic().getSmsTask(
+				smsTaskID);
+		firstMessageID = ((SmsMessage) theSmsTask.getSmsMessages().toArray()[0])
+				.getId();
+		assertNotNull(theSmsTask);
+		assertTrue("Message size not correct", theSmsTask.getSmsMessages()
+				.size() == messageCount);
+
+	}
+
+	/**
+	 * Test delete tasks.
+	 */
+	public void testDeleteTasks() {
+
+		HibernateLogicFactory.getTaskLogic().deleteSmsTask(smsTask);
+		SmsTask getSmsTask = HibernateLogicFactory.getTaskLogic().getSmsTask(
+				smsTaskID);
+		assertNull("Task not removed", getSmsTask);
+		SmsMessage theMessage = HibernateLogicFactory.getMessageLogic()
+				.getSmsMessage(firstMessageID);
+		assertNull("Messages not removed", theMessage);
 	}
 }

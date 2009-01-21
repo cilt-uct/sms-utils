@@ -78,14 +78,52 @@ public class SmsMessageTest extends AbstractBaseTestCase {
 	}
 
 	/**
-	 * Test delete sms message.
+	 * Test insert sms message.
 	 */
-	public void testDeleteSmsMessage() {
-		// Delete the associated task too
-		HibernateLogicFactory.getTaskLogic().deleteSmsTask(insertTask);
-		SmsTask getSmsTask = HibernateLogicFactory.getTaskLogic().getSmsTask(
-				insertTask.getId());
-		assertNull("Object not removed", getSmsTask);
+	public void testInsertSmsMessage() {
+		HibernateLogicFactory.getTaskLogic().persistSmsTask(insertTask);
+		assertTrue("Task for message not created", insertTask.exists());
+		insertMessage1.setSmsTask(insertTask);
+		insertMessage2.setSmsTask(insertTask);
+		HibernateLogicFactory.getMessageLogic().persistSmsMessage(
+				insertMessage1);
+		HibernateLogicFactory.getMessageLogic().persistSmsMessage(
+				insertMessage2);
+		assertTrue("Object not persisted", insertMessage1.exists());
+		assertTrue("Object not persisted", insertMessage2.exists());
+		Set<SmsMessage> smsMessages = new HashSet<SmsMessage>();
+		smsMessages.add(insertMessage2);
+		smsMessages.add(insertMessage1);
+		insertTask.setSmsMessagesOnTask(smsMessages);
+		assertTrue("", insertTask.getSmsMessages().contains(insertMessage1));
+		assertTrue("", insertTask.getSmsMessages().contains(insertMessage2));
+		HibernateLogicFactory.getTaskLogic().persistSmsTask(insertTask);
+
+	}
+
+	/**
+	 * Test get sms message by id.
+	 */
+	public void testGetSmsMessageById() {
+		SmsMessage getSmsMessage = HibernateLogicFactory.getMessageLogic()
+				.getSmsMessage(insertMessage1.getId());
+		assertTrue("Object not persisted", insertMessage1.exists());
+		assertNotNull(getSmsMessage);
+		assertEquals(insertMessage1, getSmsMessage);
+
+	}
+
+	/**
+	 * Test update sms message.
+	 */
+	public void testUpdateSmsMessage() {
+		SmsMessage smsMessage = HibernateLogicFactory.getMessageLogic()
+				.getSmsMessage(insertMessage1.getId());
+		smsMessage.setSakaiUserId("newSakaiUserId");
+		HibernateLogicFactory.getMessageLogic().persistSmsMessage(smsMessage);
+		smsMessage = HibernateLogicFactory.getMessageLogic().getSmsMessage(
+				insertMessage1.getId());
+		assertEquals("newSakaiUserId", smsMessage.getSakaiUserId());
 	}
 
 	/**
@@ -245,18 +283,6 @@ public class SmsMessageTest extends AbstractBaseTestCase {
 	}
 
 	/**
-	 * Test get sms message by id.
-	 */
-	public void testGetSmsMessageById() {
-		SmsMessage getSmsMessage = HibernateLogicFactory.getMessageLogic()
-				.getSmsMessage(insertMessage1.getId());
-		assertTrue("Object not persisted", insertMessage1.exists());
-		assertNotNull(getSmsMessage);
-		assertEquals(insertMessage1, getSmsMessage);
-
-	}
-
-	/**
 	 * Test get sms message by smsc message id.
 	 */
 	public void testGetSmsMessageBySmscMessageId() {
@@ -321,39 +347,14 @@ public class SmsMessageTest extends AbstractBaseTestCase {
 	}
 
 	/**
-	 * Test insert sms message.
+	 * Test delete sms message.
 	 */
-	public void testInsertSmsMessage() {
-		HibernateLogicFactory.getTaskLogic().persistSmsTask(insertTask);
-		assertTrue("Task for message not created", insertTask.exists());
-		insertMessage1.setSmsTask(insertTask);
-		insertMessage2.setSmsTask(insertTask);
-		HibernateLogicFactory.getMessageLogic().persistSmsMessage(
-				insertMessage1);
-		HibernateLogicFactory.getMessageLogic().persistSmsMessage(
-				insertMessage2);
-		assertTrue("Object not persisted", insertMessage1.exists());
-		assertTrue("Object not persisted", insertMessage2.exists());
-		Set<SmsMessage> smsMessages = new HashSet<SmsMessage>();
-		smsMessages.add(insertMessage2);
-		smsMessages.add(insertMessage1);
-		insertTask.setSmsMessagesOnTask(smsMessages);
-		assertTrue("", insertTask.getSmsMessages().contains(insertMessage1));
-		assertTrue("", insertTask.getSmsMessages().contains(insertMessage2));
-		HibernateLogicFactory.getTaskLogic().persistSmsTask(insertTask);
-
+	public void testDeleteSmsMessage() {
+		// Delete the associated task too
+		HibernateLogicFactory.getTaskLogic().deleteSmsTask(insertTask);
+		SmsTask getSmsTask = HibernateLogicFactory.getTaskLogic().getSmsTask(
+				insertTask.getId());
+		assertNull("Object not removed", getSmsTask);
 	}
 
-	/**
-	 * Test update sms message.
-	 */
-	public void testUpdateSmsMessage() {
-		SmsMessage smsMessage = HibernateLogicFactory.getMessageLogic()
-				.getSmsMessage(insertMessage1.getId());
-		smsMessage.setSakaiUserId("newSakaiUserId");
-		HibernateLogicFactory.getMessageLogic().persistSmsMessage(smsMessage);
-		smsMessage = HibernateLogicFactory.getMessageLogic().getSmsMessage(
-				insertMessage1.getId());
-		assertEquals("newSakaiUserId", smsMessage.getSakaiUserId());
-	}
 }
