@@ -226,6 +226,14 @@ public class SmsAccountLogicImpl extends SmsDao implements SmsAccountLogic {
 		return account;
 	}
 
+	/**
+	 * Recalculate balance for a specific account.
+	 * 
+	 * @param accountId
+	 *            the account id
+	 * @param account
+	 *            the account
+	 */
 	public void recalculateAccountBalance(Long accountId, SmsAccount account) {
 		// Use account instead of id?
 		if (account == null) {
@@ -233,12 +241,9 @@ public class SmsAccountLogicImpl extends SmsDao implements SmsAccountLogic {
 					accountId);
 		}
 
-		ArrayList<SmsTransaction> transactions = new ArrayList<SmsTransaction>();
-
-		// Add to list so we can sort
-		for (SmsTransaction transaction : account.getSmsTransactions()) {
-			transactions.add(transaction);
-		}
+		List<SmsTransaction> transactions = HibernateLogicFactory
+				.getTransactionLogic().getSmsTransactionsForAccountId(
+						account.getId());
 
 		// Sort by transaction date
 		Collections.sort(transactions, new Comparator<SmsTransaction>() {

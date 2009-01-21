@@ -2,7 +2,6 @@ package org.sakaiproject.sms.hibernate.test;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Properties;
 
 import org.sakaiproject.sms.hibernate.logic.impl.HibernateLogicFactory;
 import org.sakaiproject.sms.hibernate.logic.impl.exception.MoreThanOneAccountFoundException;
@@ -79,7 +78,7 @@ public class SmsAccountTest extends AbstractBaseTestCase {
 	 * Test insert sms account.
 	 */
 	public void testInsertSmsAccount() {
-		
+
 		HibernateLogicFactory.getAccountLogic().persistSmsAccount(
 				insertSmsAccount);
 		// Check the record was created on the DB... an id will be assigned.
@@ -108,28 +107,6 @@ public class SmsAccountTest extends AbstractBaseTestCase {
 		smsAccount = HibernateLogicFactory.getAccountLogic().getSmsAccount(
 				insertSmsAccount.getId());
 		assertEquals("newSakaiSiteId", smsAccount.getSakaiSiteId());
-	}
-
-	/**
-	 * Test add transactions to account.
-	 */
-	public void testAddTransactionsToAccount() {
-		insertSmsTransaction1.setSmsAccount(insertSmsAccount);
-		insertSmsTransaction2.setSmsAccount(insertSmsAccount);
-		insertSmsAccount.getSmsTransactions().add(insertSmsTransaction1);
-		insertSmsAccount.getSmsTransactions().add(insertSmsTransaction2);
-
-		HibernateLogicFactory.getAccountLogic().persistSmsAccount(
-				insertSmsAccount);
-
-		assertTrue("Object not persisted", insertSmsTransaction1.exists());
-		assertTrue("Object not persisted", insertSmsTransaction2.exists());
-		SmsAccount account = HibernateLogicFactory.getAccountLogic()
-				.getSmsAccount(insertSmsAccount.getId());
-		assertNotNull("No object returned", account);
-		assertEquals("Incorrect object returned", insertSmsAccount, account);
-		assertTrue("Returnend collection is incorreclt size", account
-				.getSmsTransactions().size() == 2);
 	}
 
 	/**

@@ -18,35 +18,8 @@ import org.sakaiproject.sms.hibernate.util.HibernateUtil;
  */
 public class SmsTransactionTest extends AbstractBaseTestCase {
 
-	/** The insert sms transaction. */
-	private static SmsTransaction insertSmsTransaction;
-
-	/** The insert sms account. */
-	private static SmsAccount insertSmsAccount;
-
 	static {
 		HibernateUtil.createSchema();
-
-		insertSmsAccount = new SmsAccount();
-		insertSmsAccount.setSakaiUserId("SakaiUSerId");
-		insertSmsAccount.setSakaiSiteId("SakaiSiteId");
-		insertSmsAccount.setMessageTypeCode("12345");
-		insertSmsAccount.setOverdraftLimit(10000.00f);
-		insertSmsAccount.setBalance(5000.00f);
-		insertSmsAccount.setAccountName("accountname");
-		insertSmsAccount.setAccountEnabled(true);
-
-		insertSmsTransaction = new SmsTransaction();
-		insertSmsTransaction.setBalance(1.32f);
-		insertSmsTransaction.setSakaiUserId("sakaiUserId");
-		insertSmsTransaction.setTransactionDate(new Date(System
-				.currentTimeMillis()));
-		insertSmsTransaction.setTransactionTypeCode("TC");
-		insertSmsTransaction.setTransactionCredits(666);
-		insertSmsTransaction.setTransactionAmount(1000.00f);
-
-		insertSmsTransaction.setSmsAccount(insertSmsAccount);
-		insertSmsTransaction.setSmsTaskId(1L);
 	}
 
 	/**
@@ -66,42 +39,116 @@ public class SmsTransactionTest extends AbstractBaseTestCase {
 	}
 
 	/**
-	 * Test insert sms transaction.
-	 */
-	public void testInsertSmsTransaction() {
-		HibernateLogicFactory.getAccountLogic().persistSmsAccount(
-				insertSmsAccount);
-		HibernateLogicFactory.getTransactionLogic().persistSmsTransaction(
-				insertSmsTransaction);
-		// Check the record was created on the DB... an id will be assigned.
-		assertTrue("Object not persisted", insertSmsTransaction.exists());
-	}
-
-	/**
 	 * Test get sms transaction by id.
 	 */
 	public void testGetSmsTransactionById() {
+
+		SmsAccount smsAccount = new SmsAccount();
+		smsAccount.setSakaiUserId("0");
+		smsAccount.setSakaiSiteId("0");
+		smsAccount.setMessageTypeCode("12345");
+		smsAccount.setOverdraftLimit(10000.00f);
+		smsAccount.setBalance(0f);
+		smsAccount.setAccountName("accountname");
+		smsAccount.setAccountEnabled(true);
+		HibernateLogicFactory.getAccountLogic().persistSmsAccount(smsAccount);
+
+		SmsTransaction smsTransaction = new SmsTransaction();
+		smsTransaction.setBalance(1.32f);
+		smsTransaction.setSakaiUserId("sakaiUserId");
+		smsTransaction.setTransactionDate(new Date(System.currentTimeMillis()));
+		smsTransaction.setTransactionTypeCode("TC");
+		smsTransaction.setTransactionCredits(666);
+		smsTransaction.setTransactionAmount(1000.00f);
+
+		smsTransaction.setSmsAccount(smsAccount);
+		smsTransaction.setSmsTaskId(1L);
+
+		HibernateLogicFactory.getTransactionLogic().insertCreditTransaction(
+				smsTransaction);
+
 		SmsTransaction getSmsTransaction = HibernateLogicFactory
-				.getTransactionLogic().getSmsTransaction(
-						insertSmsTransaction.getId());
-		assertTrue("Object not persisted", insertSmsTransaction.exists());
+				.getTransactionLogic()
+				.getSmsTransaction(smsTransaction.getId());
+		assertTrue("Object not persisted", smsTransaction.exists());
 		assertNotNull(getSmsTransaction);
-		assertEquals(insertSmsTransaction, getSmsTransaction);
+		assertEquals(smsTransaction, getSmsTransaction);
 	}
 
 	/**
-	 * Test update sms transaction.
+	 * Test insert debit transaction.
 	 */
-	public void testUpdateSmsTransaction() {
-		SmsTransaction smsTransaction = HibernateLogicFactory
-				.getTransactionLogic().getSmsTransaction(
-						insertSmsTransaction.getId());
-		smsTransaction.setSakaiUserId("newSakaiUserId");
-		HibernateLogicFactory.getTransactionLogic().persistSmsTransaction(
+	public void testInsertDebitTransaction() {
+
+		SmsAccount smsAccount = new SmsAccount();
+		smsAccount.setSakaiUserId("1");
+		smsAccount.setSakaiSiteId("1");
+		smsAccount.setMessageTypeCode("12345");
+		smsAccount.setOverdraftLimit(10000.00f);
+		smsAccount.setBalance(0f);
+		smsAccount.setAccountName("accountname");
+		smsAccount.setAccountEnabled(true);
+
+		SmsTransaction smsTransaction = new SmsTransaction();
+		smsTransaction.setBalance(1.32f);
+		smsTransaction.setSakaiUserId("sakaiUserId");
+		smsTransaction.setTransactionDate(new Date(System.currentTimeMillis()));
+		smsTransaction.setTransactionTypeCode("TC");
+		smsTransaction.setTransactionCredits(666);
+		smsTransaction.setTransactionAmount(1000.00f);
+
+		smsTransaction.setSmsAccount(smsAccount);
+		smsTransaction.setSmsTaskId(1L);
+
+		HibernateLogicFactory.getAccountLogic().persistSmsAccount(smsAccount);
+		HibernateLogicFactory.getTransactionLogic().insertDebitTransaction(
 				smsTransaction);
-		smsTransaction = HibernateLogicFactory.getTransactionLogic()
-				.getSmsTransaction(insertSmsTransaction.getId());
-		assertEquals("newSakaiUserId", smsTransaction.getSakaiUserId());
+		assertTrue("Object not persisted", smsTransaction.exists());
+
+		// Check the record was created on the DB... an id will be assigned.
+		SmsAccount theNewAccount = HibernateLogicFactory.getAccountLogic()
+				.getSmsAccount(smsAccount.getId());
+		assertNotNull(theNewAccount);
+		// Check updated account balance with positive value
+		assertTrue(theNewAccount.getBalance() == 1000f);
+	}
+
+	/**
+	 * Test insert credit transaction.
+	 */
+	public void testInsertCreditTransaction() {
+
+		SmsAccount smsAccount = new SmsAccount();
+		smsAccount.setSakaiUserId("2");
+		smsAccount.setSakaiSiteId("2");
+		smsAccount.setMessageTypeCode("12345");
+		smsAccount.setOverdraftLimit(10000.00f);
+		smsAccount.setBalance(0f);
+		smsAccount.setAccountName("accountname");
+		smsAccount.setAccountEnabled(true);
+
+		SmsTransaction smsTransaction = new SmsTransaction();
+		smsTransaction.setBalance(1.32f);
+		smsTransaction.setSakaiUserId("sakaiUserId");
+		smsTransaction.setTransactionDate(new Date(System.currentTimeMillis()));
+		smsTransaction.setTransactionTypeCode("TC");
+		smsTransaction.setTransactionCredits(666);
+		smsTransaction.setTransactionAmount(1000.00f);
+
+		smsTransaction.setSmsAccount(smsAccount);
+		smsTransaction.setSmsTaskId(1L);
+
+		HibernateLogicFactory.getAccountLogic().persistSmsAccount(smsAccount);
+		HibernateLogicFactory.getTransactionLogic().insertCreditTransaction(
+				smsTransaction);
+		assertTrue("Object not persisted", smsTransaction.exists());
+
+		// Check the record was created on the DB... an id will be assigned.
+		SmsAccount theNewAccount = HibernateLogicFactory.getAccountLogic()
+				.getSmsAccount(smsAccount.getId());
+		assertNotNull(theNewAccount);
+		// Check updated account balance with negative value
+		assertTrue(theNewAccount.getBalance() == -1000f);
 	}
 
 	/**
@@ -119,42 +166,41 @@ public class SmsTransactionTest extends AbstractBaseTestCase {
 	 */
 	public void testGetTransactionsForCriteria() {
 
-		SmsAccount insertSmsAccount = new SmsAccount();
-		insertSmsAccount.setSakaiUserId("1");
-		insertSmsAccount.setSakaiSiteId("1");
-		insertSmsAccount.setMessageTypeCode("12345");
-		insertSmsAccount.setOverdraftLimit(10000.00f);
-		insertSmsAccount.setBalance(5000.00f);
-		insertSmsAccount.setAccountName("accountName");
-		insertSmsAccount.setAccountEnabled(true);
+		SmsAccount smsAccount = new SmsAccount();
+		smsAccount.setSakaiUserId("3");
+		smsAccount.setSakaiSiteId("3");
+		smsAccount.setMessageTypeCode("12345");
+		smsAccount.setOverdraftLimit(10000.00f);
+		smsAccount.setBalance(5000.00f);
+		smsAccount.setAccountName("accountName");
+		smsAccount.setAccountEnabled(true);
+		HibernateLogicFactory.getAccountLogic().persistSmsAccount(smsAccount);
 
-		SmsTransaction insertSmsTransaction = new SmsTransaction();
-		insertSmsTransaction.setBalance(1.32f);
-		insertSmsTransaction.setSakaiUserId("sakaiUserId");
-		insertSmsTransaction.setTransactionDate(new Date(System
-				.currentTimeMillis()));
-		insertSmsTransaction.setTransactionTypeCode("TTC");
-		insertSmsTransaction.setTransactionCredits(666);
-		insertSmsTransaction.setTransactionAmount(1000.00f);
-		insertSmsTransaction.setSmsTaskId(1L);
+		SmsTransaction smsTransaction = new SmsTransaction();
+		smsTransaction.setBalance(1.32f);
+		smsTransaction.setSakaiUserId("sakaiUserId");
+		smsTransaction.setTransactionDate(new Date(System.currentTimeMillis()));
+		smsTransaction.setTransactionTypeCode("TTC");
+		smsTransaction.setTransactionCredits(666);
+		smsTransaction.setTransactionAmount(1000.00f);
+		smsTransaction.setSmsTaskId(1L);
 
-		insertSmsTransaction.setSmsAccount(insertSmsAccount);
-		insertSmsAccount.getSmsTransactions().add(insertSmsTransaction);
+		smsTransaction.setSmsAccount(smsAccount);
+
+		HibernateLogicFactory.getTransactionLogic().insertCreditTransaction(
+				smsTransaction);
 
 		try {
-			HibernateLogicFactory.getAccountLogic().persistSmsAccount(
-					insertSmsAccount);
-			assertTrue("Object not created successfully", insertSmsTransaction
+
+			assertTrue("Object not created successfully", smsTransaction
 					.exists());
 
 			SearchFilterBean bean = new SearchFilterBean();
-			bean.setTransactionType(insertSmsTransaction
-					.getTransactionTypeCode());
-			bean.setNumber(insertSmsTransaction.getSmsAccount().getId()
-					.toString());
+			bean.setTransactionType(smsTransaction.getTransactionTypeCode());
+			bean.setNumber(smsTransaction.getSmsAccount().getId().toString());
 			bean.setDateFrom(new Date());
 			bean.setDateTo(new Date());
-			bean.setSender(insertSmsTransaction.getSakaiUserId());
+			bean.setSender(smsTransaction.getSakaiUserId());
 
 			List<SmsTransaction> transactions = HibernateLogicFactory
 					.getTransactionLogic().getPagedSmsTransactionsForCriteria(
@@ -164,15 +210,14 @@ public class SmsTransactionTest extends AbstractBaseTestCase {
 
 			for (SmsTransaction transaction : transactions) {
 				// We know that only one transaction should be returned
-				assertEquals(transaction, insertSmsTransaction);
+				assertEquals(transaction, smsTransaction);
 			}
 		} catch (Exception se) {
 			fail(se.getMessage());
 		}
 		SmsAccount account = HibernateLogicFactory.getAccountLogic()
-				.getSmsAccount(insertSmsAccount.getId());
+				.getSmsAccount(smsAccount.getId());
 		HibernateLogicFactory.getAccountLogic().deleteSmsAccount(account);
-		// accountLogic.deleteSmsAccount(insertSmsAccount);
 	}
 
 	/**
@@ -183,8 +228,8 @@ public class SmsTransactionTest extends AbstractBaseTestCase {
 		int recordsToInsert = 93;
 
 		SmsAccount smsAccount = new SmsAccount();
-		smsAccount.setSakaiUserId("2");
-		smsAccount.setSakaiSiteId("2");
+		smsAccount.setSakaiUserId("4");
+		smsAccount.setSakaiSiteId("4");
 		smsAccount.setMessageTypeCode("12345");
 		smsAccount.setOverdraftLimit(10000.00f);
 		smsAccount.setBalance(5000.00f);
@@ -205,8 +250,8 @@ public class SmsTransactionTest extends AbstractBaseTestCase {
 			smsTransaction.setSmsAccount(smsAccount);
 			smsTransaction.setSmsTaskId(1L);
 
-			HibernateLogicFactory.getTransactionLogic().persistSmsTransaction(
-					smsTransaction);
+			HibernateLogicFactory.getTransactionLogic()
+					.insertCreditTransaction(smsTransaction);
 		}
 		try {
 
@@ -267,8 +312,8 @@ public class SmsTransactionTest extends AbstractBaseTestCase {
 	public void testCreateReserveCreditsTask() {
 
 		SmsAccount testAccount = new SmsAccount();
-		testAccount.setSakaiUserId("1");
-		testAccount.setSakaiSiteId("1");
+		testAccount.setSakaiUserId("5");
+		testAccount.setSakaiSiteId("5");
 		testAccount.setMessageTypeCode("12345");
 		testAccount.setOverdraftLimit(10000.00f);
 		testAccount.setBalance(5000.00f);
@@ -310,13 +355,81 @@ public class SmsTransactionTest extends AbstractBaseTestCase {
 	 * Test delete sms transaction.
 	 */
 	public void testDeleteSmsTransaction() {
+
+		SmsAccount smsAccount = new SmsAccount();
+		smsAccount.setSakaiUserId("6");
+		smsAccount.setSakaiSiteId("6");
+		smsAccount.setMessageTypeCode("12345");
+		smsAccount.setOverdraftLimit(10000.00f);
+		smsAccount.setBalance(5000.00f);
+		smsAccount.setAccountName("accountName");
+		smsAccount.setAccountEnabled(true);
+		HibernateLogicFactory.getAccountLogic().persistSmsAccount(smsAccount);
+
+		SmsTransaction smsTransaction = new SmsTransaction();
+		smsTransaction.setBalance(1.32f);
+		smsTransaction.setSakaiUserId("sakaiUserId");
+		smsTransaction.setTransactionDate(new Date(System.currentTimeMillis()));
+		smsTransaction.setTransactionTypeCode("TTC");
+		smsTransaction.setTransactionCredits(666);
+		smsTransaction.setTransactionAmount(1000.00f);
+		smsTransaction.setSmsTaskId(1L);
+
+		smsTransaction.setSmsAccount(smsAccount);
+
+		HibernateLogicFactory.getTransactionLogic().insertCreditTransaction(
+				smsTransaction);
+
 		HibernateLogicFactory.getTransactionLogic().deleteSmsTransaction(
-				insertSmsTransaction);
+				smsTransaction);
 		SmsTransaction getSmsTransaction = HibernateLogicFactory
-				.getTransactionLogic().getSmsTransaction(
-						insertSmsTransaction.getId());
+				.getTransactionLogic()
+				.getSmsTransaction(smsTransaction.getId());
 		assertNull(getSmsTransaction);
 		assertNull("Object not removed", getSmsTransaction);
+	}
+
+	public void testGetSmsTransactionsForAccountId() {
+
+		SmsAccount smsAccount = new SmsAccount();
+		smsAccount.setSakaiUserId("7");
+		smsAccount.setSakaiSiteId("7");
+		smsAccount.setMessageTypeCode("12345");
+		smsAccount.setOverdraftLimit(10000.00f);
+		smsAccount.setBalance(5000.00f);
+		smsAccount.setAccountName("accountName");
+		smsAccount.setAccountEnabled(true);
+		HibernateLogicFactory.getAccountLogic().persistSmsAccount(smsAccount);
+
+		int noOfTrans = 4;
+		for (int i = 0; i < noOfTrans; i++) {
+			SmsTransaction smsTransaction = new SmsTransaction();
+			smsTransaction.setBalance(1.32f);
+			smsTransaction.setSakaiUserId("1" + i);
+			smsTransaction.setTransactionDate(new Date(System
+					.currentTimeMillis()));
+			smsTransaction.setTransactionTypeCode("TC");
+			smsTransaction.setTransactionCredits(i);
+			smsTransaction.setTransactionAmount(1000.00f);
+			smsTransaction.setSmsAccount(smsAccount);
+			smsTransaction.setSmsTaskId(1L);
+			HibernateLogicFactory.getTransactionLogic()
+					.insertCreditTransaction(smsTransaction);
+		}
+
+		// Check it was crested
+		assertTrue(smsAccount.exists());
+		List<SmsTransaction> transactions = HibernateLogicFactory
+				.getTransactionLogic().getSmsTransactionsForAccountId(
+						smsAccount.getId());
+		assertNotNull(transactions);
+		assertTrue(transactions.size() == noOfTrans);
+		for (SmsTransaction smsTransaction : transactions) {
+			assertNotNull(smsTransaction.getSmsAccount());
+			assertTrue(smsTransaction.getSmsAccount().getId().equals(
+					smsAccount.getId()));
+		}
+
 	}
 
 }

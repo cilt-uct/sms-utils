@@ -40,7 +40,8 @@ public class SmsSampleDataLoad {
 
 	public static final int NUMBER_OF_REPETITIONS = 20;
 
-	private SmsTransactionLogic smsTransactionLogic = HibernateLogicFactory.getTransactionLogic();
+	private SmsTransactionLogic smsTransactionLogic = HibernateLogicFactory
+			.getTransactionLogic();
 
 	private SampleSmsTaskFactory taskFactory;
 	private SampleSmsMessageFactory messageFactory;
@@ -83,7 +84,7 @@ public class SmsSampleDataLoad {
 
 				smsTransaction.setSmsAccount(persistedSmsAccounts.get(0));
 				smsTransaction.setSmsTaskId(new Long(index + 1));
-				smsTransactionLogic.persistSmsTransaction(smsTransaction);
+				smsTransactionLogic.insertDebitTransaction(smsTransaction);
 				index++;
 			}
 			testSMSTransactionFactory.refreshList();
@@ -94,8 +95,8 @@ public class SmsSampleDataLoad {
 		taskFactory = new SampleSmsTaskFactory();
 		messageFactory = new SampleSmsMessageFactory();
 
-		 deleteSmsTasks(HibernateLogicFactory.getTaskLogic());
-		 deleteSmsMessages(HibernateLogicFactory.getMessageLogic());
+		deleteSmsTasks(HibernateLogicFactory.getTaskLogic());
+		deleteSmsMessages(HibernateLogicFactory.getMessageLogic());
 
 		System.out.println("Inserting SmsMessages and Tasks:");
 

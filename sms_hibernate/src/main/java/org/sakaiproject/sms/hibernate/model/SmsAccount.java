@@ -232,7 +232,7 @@ public class SmsAccount extends BaseModel {
 	 * 
 	 * @return the sms transactions
 	 */
-	public Set<SmsTransaction> getSmsTransactions() {
+	private Set<SmsTransaction> getSmsTransactions() {
 		return smsTransactions;
 	}
 
@@ -242,7 +242,7 @@ public class SmsAccount extends BaseModel {
 	 * @param smsTransactions
 	 *            the new sms transactions
 	 */
-	public void setSmsTransactions(Set<SmsTransaction> smsTransactions) {
+	private void setSmsTransactions(Set<SmsTransaction> smsTransactions) {
 		this.smsTransactions = smsTransactions;
 	}
 
