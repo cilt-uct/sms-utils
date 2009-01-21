@@ -23,8 +23,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.security.auth.login.AccountNotFoundException;
-
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -61,11 +59,13 @@ public class SmsTransactionLogicImpl extends SmsDao implements
 	 * @param smsTask
 	 * @throws SmsAccountNotFoundException
 	 */
-	public void cancelTransaction(Long smsTaskId, Long smsAccountId) throws SmsAccountNotFoundException {
-		SmsTransaction smsTransaction = SmsTransactionFactory.createCancelTask(smsTaskId, smsAccountId);
+	public void cancelTransaction(Long smsTaskId, Long smsAccountId)
+			throws SmsAccountNotFoundException {
+		SmsTransaction smsTransaction = SmsTransactionFactory.createCancelTask(
+				smsTaskId, smsAccountId);
 		persistSmsTransaction(smsTransaction);
 	}
-	
+
 	/**
 	 * Persist a transaction to reserve credits for a sms sending
 	 * 
@@ -74,12 +74,13 @@ public class SmsTransactionLogicImpl extends SmsDao implements
 	 * @param credits
 	 * @throws SmsAccountNotFoundException
 	 */
-	public void reserveCredits(Long smsTaskId, Long smsAccountId, Integer credits) throws SmsAccountNotFoundException {
-		SmsTransaction smsTransaction = SmsTransactionFactory.createReserveCreditsTask(smsTaskId, smsAccountId, credits);
+	public void reserveCredits(Long smsTaskId, Long smsAccountId,
+			Integer credits) throws SmsAccountNotFoundException {
+		SmsTransaction smsTransaction = SmsTransactionFactory
+				.createReserveCreditsTask(smsTaskId, smsAccountId, credits);
 		persistSmsTransaction(smsTransaction);
 	}
-	
-	
+
 	/**
 	 * Leave this as protected to try and prevent the random instantiation of
 	 * this class.
@@ -130,10 +131,13 @@ public class SmsTransactionLogicImpl extends SmsDao implements
 	 */
 	public void persistSmsTransaction(SmsTransaction smsTransaction) {
 		persist(smsTransaction);
+		HibernateLogicFactory.getAccountLogic().recalculateAccountBalance(
+				smsTransaction.getSmsAccount().getId(), null);
 	}
 
 	/**
-	 * Gets a list of all SmsTransaction objects for the specified search criteria
+	 * Gets a list of all SmsTransaction objects for the specified search
+	 * criteria
 	 * 
 	 * @param search
 	 *            Bean containing the search criteria
@@ -145,8 +149,7 @@ public class SmsTransactionLogicImpl extends SmsDao implements
 			SearchFilterBean searchBean) throws SmsSearchException {
 		return getSmsTransactionsForCriteria(searchBean);
 	}
-	
-	
+
 	/**
 	 * Gets a search results container housing the result set for a particular
 	 * displayed page

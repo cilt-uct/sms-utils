@@ -89,4 +89,14 @@ public interface SmsAccountLogic {
 	 *            account to be persisted
 	 */
 	public void persistSmsAccount(SmsAccount smsAccount);
+
+	/**
+	 * Recalculate balance for a specific account.
+	 * 
+	 * @param accountId
+	 *            the account id
+	 * @param account
+	 *            the account
+	 */
+	public void recalculateAccountBalance(Long accountId, SmsAccount account);
 }

@@ -19,6 +19,8 @@
 package org.sakaiproject.sms.hibernate.logic.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -28,6 +30,7 @@ import org.sakaiproject.sms.hibernate.dao.SmsDao;
 import org.sakaiproject.sms.hibernate.logic.SmsAccountLogic;
 import org.sakaiproject.sms.hibernate.logic.impl.exception.MoreThanOneAccountFoundException;
 import org.sakaiproject.sms.hibernate.model.SmsAccount;
+import org.sakaiproject.sms.hibernate.model.SmsTransaction;
 import org.sakaiproject.sms.hibernate.model.constants.SmsPropertyConstants;
 import org.sakaiproject.sms.hibernate.util.HibernateUtil;
 import org.sakaiproject.sms.hibernate.util.SmsPropertyReader;
@@ -221,5 +224,39 @@ public class SmsAccountLogicImpl extends SmsDao implements SmsAccountLogic {
 		}
 		HibernateUtil.closeSession();
 		return account;
+	}
+
+	public void recalculateAccountBalance(Long accountId, SmsAccount account) {
+		// Use account instead of id?
+		if (account == null) {
+			account = HibernateLogicFactory.getAccountLogic().getSmsAccount(
+					accountId);
+		}
+
+		ArrayList<SmsTransaction> transactions = new ArrayList<SmsTransaction>();
+
+		// Add to list so we can sort
+		for (SmsTransaction transaction : account.getSmsTransactions()) {
+			transactions.add(transaction);
+		}
+
+		// Sort by transaction date
+		Collections.sort(transactions, new Comparator<SmsTransaction>() {
+
+			public int compare(SmsTransaction arg0, SmsTransaction arg1) {
+				// TODO Auto-generated method stub
+				return arg0.getTransactionDate().compareTo(
+						arg1.getTransactionDate());
+			}
+
+		});
+
+		// Calculate balance
+		Float balance = 0.0F;
+		for (SmsTransaction transaction : transactions) {
+			balance += transaction.getTransactionAmount();
+		}
+		account.setBalance(balance);
+		persistSmsAccount(account);
 	}
 }
