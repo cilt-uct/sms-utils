@@ -35,7 +35,6 @@ import org.sakaiproject.sms.hibernate.model.SmsTransaction;
  * @created 25-Nov-2008 08:12:41 AM
  */
 public interface SmsTransactionLogic {
-	
 
 	/**
 	 * Persist a transaction to when a task fails
@@ -43,9 +42,9 @@ public interface SmsTransactionLogic {
 	 * @param smsTask
 	 * @throws SmsAccountNotFoundException
 	 */
-	public void cancelTransaction(Long smsTaskId, Long smsAccountId) throws SmsAccountNotFoundException;
+	public void cancelTransaction(Long smsTaskId, Long smsAccountId)
+			throws SmsAccountNotFoundException;
 
-	
 	/**
 	 * Persist a transaction to reserve credits for a sms sending
 	 * 
@@ -54,8 +53,9 @@ public interface SmsTransactionLogic {
 	 * @param credits
 	 * @throws SmsAccountNotFoundException
 	 */
-	public void reserveCredits(Long smsTaskId, Long smsAccountId, Integer credits) throws SmsAccountNotFoundException;
-	
+	public void reserveCredits(Long smsTaskId, Long smsAccountId,
+			Integer credits) throws SmsAccountNotFoundException;
+
 	/**
 	 * Deletes and the given entity from the DB
 	 */
@@ -78,17 +78,6 @@ public interface SmsTransactionLogic {
 	public List<SmsTransaction> getAllSmsTransactions();
 
 	/**
-	 * This method will persists the given object.
-	 * 
-	 * If the object is a new entity then it will be created on the DB. If it is
-	 * an existing entity then the record will be updates on the DB.
-	 * 
-	 * @param sms
-	 *            confuguration to be persisted
-	 */
-	public void persistSmsTransaction(SmsTransaction smsTransaction);
-
-	/**
 	 * Gets a search results container housing the result set for a particular
 	 * displayed page
 	 * 
@@ -98,9 +87,10 @@ public interface SmsTransactionLogic {
 	 */
 	public SearchResultContainer<SmsTransaction> getPagedSmsTransactionsForCriteria(
 			SearchFilterBean searchBean) throws SmsSearchException;
-	
+
 	/**
-	 * Gets a list of all SmsTransaction objects for the specified search criteria
+	 * Gets a list of all SmsTransaction objects for the specified search
+	 * criteria
 	 * 
 	 * @param search
 	 *            Bean containing the search criteria
@@ -110,4 +100,34 @@ public interface SmsTransactionLogic {
 	 */
 	public List<SmsTransaction> getAllSmsTransactionsForCriteria(
 			SearchFilterBean searchBean) throws SmsSearchException;
+
+	/**
+	 * Insert debit transaction.
+	 * <p>
+	 * This will also update the related account balance.
+	 * 
+	 * @param smsTransaction
+	 *            the sms transaction
+	 */
+	public void insertDebitTransaction(SmsTransaction smsTransaction);
+
+	/**
+	 * Insert credit transaction.
+	 * <p>
+	 * This will also update the related account balance.
+	 * 
+	 * @param smsTransaction
+	 *            the sms transaction
+	 */
+	public void insertCreditTransaction(SmsTransaction smsTransaction);
+
+	/**
+	 * Gets all the related transaction for the specified account id.
+	 * 
+	 * @param accountId
+	 *            the account id
+	 * 
+	 * @return the sms transactions for account id
+	 */
+	public List<SmsTransaction> getSmsTransactionsForAccountId(Long accountId);
 }

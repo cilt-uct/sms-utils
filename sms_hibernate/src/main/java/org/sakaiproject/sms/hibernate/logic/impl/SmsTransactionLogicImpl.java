@@ -35,6 +35,7 @@ import org.sakaiproject.sms.hibernate.dao.SmsDao;
 import org.sakaiproject.sms.hibernate.logic.SmsTransactionLogic;
 import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsAccountNotFoundException;
 import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsSearchException;
+import org.sakaiproject.sms.hibernate.model.SmsAccount;
 import org.sakaiproject.sms.hibernate.model.SmsConfig;
 import org.sakaiproject.sms.hibernate.model.SmsTransaction;
 import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
@@ -63,7 +64,7 @@ public class SmsTransactionLogicImpl extends SmsDao implements
 			throws SmsAccountNotFoundException {
 		SmsTransaction smsTransaction = SmsTransactionFactory.createCancelTask(
 				smsTaskId, smsAccountId);
-		persistSmsTransaction(smsTransaction);
+		persist(smsTransaction);
 	}
 
 	/**
@@ -78,7 +79,7 @@ public class SmsTransactionLogicImpl extends SmsDao implements
 			Integer credits) throws SmsAccountNotFoundException {
 		SmsTransaction smsTransaction = SmsTransactionFactory
 				.createReserveCreditsTask(smsTaskId, smsAccountId, credits);
-		persistSmsTransaction(smsTransaction);
+		persist(smsTransaction);
 	}
 
 	/**
@@ -118,23 +119,6 @@ public class SmsTransactionLogicImpl extends SmsDao implements
 		Session s = HibernateUtil.getSession();
 		Query query = s.createQuery("from SmsTransaction");
 		return query.list();
-	}
-
-	/**
-	 * This method will persists the given object.
-	 * <p>
-	 * If the object is a new entity then it will be created on the DB. If it is
-	 * an existing entity then the record will be updates on the DB.
-	 * <p>
-	 * The account related to the transaction will be updated with the new balance.
-	 * 
-	 * @param sms
-	 *            confuguration to be persisted
-	 */
-	public void persistSmsTransaction(SmsTransaction smsTransaction) {
-		persist(smsTransaction);
-		HibernateLogicFactory.getAccountLogic().recalculateAccountBalance(
-				smsTransaction.getSmsAccount().getId(), null);
 	}
 
 	/**
@@ -243,5 +227,69 @@ public class SmsTransactionLogicImpl extends SmsDao implements
 			return SmsHibernateConstants.DEFAULT_PAGE_SIZE;
 		else
 			return smsConfig.getPagingSize();
+	}
+
+	/**
+	 * Insert credit transaction.
+	 * <p>
+	 * This will also update the related account balance.
+	 * 
+	 * @param smsTransaction
+	 *            the sms transaction
+	 */
+	public void insertCreditTransaction(SmsTransaction smsTransaction) {
+		SmsAccount account = HibernateLogicFactory.getAccountLogic()
+				.getSmsAccount(smsTransaction.getSmsAccount().getId());
+
+		// Update the account balance
+		account.setBalance(account.getBalance()
+				- smsTransaction.getTransactionAmount());
+		HibernateLogicFactory.getAccountLogic().persistSmsAccount(account);
+
+		// Change to negative value
+		smsTransaction.setTransactionAmount(smsTransaction
+				.getTransactionAmount()
+				* -1);
+		persist(smsTransaction);
+	}
+
+	/**
+	 * Insert debit transaction.
+	 * <p>
+	 * This will also update the related account balance.
+	 * 
+	 * @param smsTransaction
+	 *            the sms transaction
+	 */
+	public void insertDebitTransaction(SmsTransaction smsTransaction) {
+		SmsAccount account = HibernateLogicFactory.getAccountLogic()
+				.getSmsAccount(smsTransaction.getSmsAccount().getId());
+
+		// Update the account balance
+		account.setBalance(account.getBalance()
+				+ smsTransaction.getTransactionAmount());
+		HibernateLogicFactory.getAccountLogic().persistSmsAccount(account);
+
+		persist(smsTransaction);
+
+	}
+
+	/**
+	 * Gets all the related transaction for the specified account id.
+	 * 
+	 * @param accountId
+	 *            the account id
+	 * 
+	 * @return the sms transactions for account id
+	 */
+	public List<SmsTransaction> getSmsTransactionsForAccountId(Long accountId) {
+		Session s = HibernateUtil.getSession();
+		List<SmsTransaction> transactions = new ArrayList<SmsTransaction>();
+		Query query = s
+				.createQuery("from SmsTransaction transaction where transaction.smsAccount.id = :accountId");
+		query.setParameter("accountId", accountId);
+		transactions = query.list();
+		HibernateUtil.closeSession();
+		return transactions;
 	}
 }
