@@ -33,7 +33,7 @@ import org.sakaiproject.sms.hibernate.model.SmsTask;
  * @version 1.0
  * @created 12-Nov-2008
  */
-public interface SmsCore {	
+public interface SmsCore {
 	/**
 	 * Get the group list from Sakai and remove users with invalid/empty mobile
 	 * numbers or opted out profiles.
@@ -41,7 +41,7 @@ public interface SmsCore {
 	 * @param smsTask
 	 * @return
 	 */
-	public Set<SmsMessage> generateSmsMessages(SmsTask smsTask);
+	public Set generateSmsMessages(SmsTask smsTask);
 
 	/**
 	 * Find the next sms task to process from the task queue. Determine tasks
@@ -68,9 +68,9 @@ public interface SmsCore {
 	 */
 	public SmsTask insertTask(SmsTask smsTask);
 
-	
 	/**
-	 * Add a new task to the sms task list, that contains a list of delivery entity id
+	 * Add a new task to the sms task list, that contains a list of delivery
+	 * entity id
 	 * 
 	 * @param dateToSend
 	 * @param messageBody
@@ -80,12 +80,13 @@ public interface SmsCore {
 	 * @param deliveryMobileNumbers
 	 * @return
 	 */
-	public SmsTask getPreliminaryTask(Date dateToSend, String messageBody, String sakaiSiteID,
-			String sakaiToolId, String sakaiSenderID, List<String> deliveryEntityList);
-	
-	
+	public SmsTask getPreliminaryTask(Date dateToSend, String messageBody,
+			String sakaiSiteID, String sakaiToolId, String sakaiSenderID,
+			List<String> deliveryEntityList);
+
 	/**
-	 * Add a new task to the sms task list, that will send sms messages to the specified list of mobile numbers
+	 * Add a new task to the sms task list, that will send sms messages to the
+	 * specified list of mobile numbers
 	 * 
 	 * @param dateToSend
 	 * @param messageBody
@@ -95,9 +96,10 @@ public interface SmsCore {
 	 * @param deliveryMobileNumbers
 	 * @return
 	 */
-	public SmsTask getPreliminaryTask(Date dateToSend, String messageBody, String sakaiSiteID,
-			String sakaiToolId, String sakaiSenderID, Set<String> deliveryMobileNumbers);
-	
+	public SmsTask getPreliminaryTask(Date dateToSend, String messageBody,
+			String sakaiSiteID, String sakaiToolId, String sakaiSenderID,
+			Set<String> deliveryMobileNumbers);
+
 	/**
 	 * Add a new task to the sms task list, for eg. send message to all
 	 * administrators at 10:00, or get latest announcements and send to mobile
@@ -195,4 +197,11 @@ public interface SmsCore {
 	 */
 	public boolean sendNotificationEmail(String toAddress, String subject,
 			String body);
+
+	/**
+	 * Checks for tasks that can be marked as complete. If the total messages
+	 * processed equals the actual group size the task is marked as complete.
+	 */
+	public void checkAndSetTasksCompleted();
+
 }

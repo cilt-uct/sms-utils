@@ -168,7 +168,7 @@ public class SmsSmppImpl implements SmsSmpp {
 								SmsHibernateConstants.SMSC_ID);
 				if (smsMessage == null) {
 					for (int i = 0; i < 5; i++) {
-						System.out.println("SMSC_DEL_RECEIPT retry " + i
+						LOG.info("SMSC_DEL_RECEIPT retry " + i
 								+ " out of 5 for messageSmscID"
 								+ deliveryReceipt.getId());
 						smsMessage = HibernateLogicFactory.getMessageLogic()
@@ -200,7 +200,9 @@ public class SmsSmppImpl implements SmsSmpp {
 						smsMessage
 								.setStatusCode(SmsConst_DeliveryStatus.STATUS_DELIVERED);
 					}
-
+					HibernateLogicFactory
+							.getTaskLogic()
+							.incrementMessagesProcessed(smsMessage.getSmsTask());
 					HibernateLogicFactory.getMessageLogic().persistSmsMessage(
 							smsMessage);
 
@@ -239,7 +241,7 @@ public class SmsSmppImpl implements SmsSmpp {
 			if (MessageType.SMSC_DEL_RECEIPT.containedIn(deliverSm
 					.getEsmClass())) {
 				new DeliveryReportThread(deliverSm);
-				
+
 			} else {
 				// this message is regular short message
 				LOG.info("Receiving message : "
@@ -591,10 +593,6 @@ public class SmsSmppImpl implements SmsSmpp {
 			message.setStatusCode(SmsConst_DeliveryStatus.STATUS_SENT);
 			message
 					.setSmscDeliveryStatusCode(SmsConst_SmscDeliveryStatus.ENROUTE);
-			if ((message.getSmsTask()).getMessageTypeId() == SmsHibernateConstants.SMS_TASK_TYPE_PROCESS_NOW) {
-				HibernateLogicFactory.getTaskLogic().persistSmsTask(
-						message.getSmsTask());
-			}
 			HibernateLogicFactory.getMessageLogic().persistSmsMessage(message);
 
 			LOG.info("Message submitted, message_id is " + messageId);

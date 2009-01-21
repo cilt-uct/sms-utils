@@ -126,7 +126,7 @@ public class SmsCoreImpl implements SmsCore {
 		return HibernateLogicFactory.getTaskLogic().getNextSmsTask();
 
 	}
-	
+
 	public SmsTask getPreliminaryTask(Date dateToSend, String messageBody, String sakaiSiteID,
 			String sakaiToolId, String sakaiSenderID, Set<String> deliveryMobileNumbers){
 		
@@ -160,12 +160,12 @@ public class SmsCoreImpl implements SmsCore {
 			Set<String> mobileNumbers, Set<String> sakaiUserIds,
 			Date dateToSend, String messageBody, String sakaiSiteID,
 			String sakaiToolId, String sakaiSenderID, List<String> deliveryEntityList) {
-		
+
 		SmsConfig siteConfig = HibernateLogicFactory.getConfigLogic()
 				.getOrCreateSystemSmsConfig();
 		SmsConfig systemConfig = HibernateLogicFactory.getConfigLogic()
 				.getOrCreateSystemSmsConfig();
-		
+
 		SmsTask smsTask = new SmsTask();
 		smsTask.setSmsAccountId(smsBilling.getAccountID(sakaiSiteID,
 				sakaiSenderID, 1));
@@ -432,5 +432,14 @@ public class SmsCoreImpl implements SmsCore {
 		if (smsTask.getDateToSend().getTime() <= System.currentTimeMillis()) {
 			this.processTask(smsTask);
 		}
+	}
+
+	/**
+	 * Checks for tasks that can be marked as complete. If the total messages
+	 * processed equals the actual group size the task is marked as complete.
+	 */
+	public void checkAndSetTasksCompleted() {
+		HibernateLogicFactory.getTaskLogic().checkAndSetTasksCompleted();
+
 	}
 }
