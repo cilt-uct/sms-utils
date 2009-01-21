@@ -20,12 +20,13 @@ public class SmsTestSuite {
 		TestSuite suite = new TestSuite(
 				"Test for org.sakaiproject.sms.hibernate.test");
 
+		suite.addTestSuite(SmsAccountTest.class);
 		suite.addTestSuite(SmsTransactionTest.class);
 		suite.addTestSuite(SmsTaskTest.class);
 		suite.addTestSuite(SmsConfigTest.class);
 		suite.addTestSuite(SmsMessageTest.class);
-		suite.addTestSuite(SmsAccountTest.class);
 		suite.addTestSuite(SmsDatabaseStressTest.class);
+		suite.addTestSuite(SmsPropertyReaderTest.class);
 
 		return suite;
 	}
