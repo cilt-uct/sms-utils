@@ -2,6 +2,7 @@ package org.sakaiproject.sms.hibernate.test;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 
 import org.sakaiproject.sms.hibernate.logic.impl.HibernateLogicFactory;
 import org.sakaiproject.sms.hibernate.logic.impl.exception.MoreThanOneAccountFoundException;
@@ -78,6 +79,7 @@ public class SmsAccountTest extends AbstractBaseTestCase {
 	 * Test insert sms account.
 	 */
 	public void testInsertSmsAccount() {
+		
 		HibernateLogicFactory.getAccountLogic().persistSmsAccount(
 				insertSmsAccount);
 		// Check the record was created on the DB... an id will be assigned.

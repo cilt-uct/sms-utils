@@ -26,6 +26,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import org.sakaiproject.sms.util.SakaiDateFormat;
+
 import uk.org.ponder.dateutil.DateUtil;
 import uk.org.ponder.dateutil.FieldDateTransit;
 import uk.org.ponder.dateutil.LocalSDF;
@@ -51,6 +53,10 @@ public class NullableFieldDateTransit extends LocaleHolder implements
 			this.format = format;
 			this.fields = fields;
 		}
+	}
+	
+	public void setShortformat(SakaiDateFormat dateFormat) {
+		this.shortformat = dateFormat.getSakaiDateFormat();
 	}
 
 	private Date date;
@@ -124,8 +130,10 @@ public class NullableFieldDateTransit extends LocaleHolder implements
 
 		Locale locale = getLocale();
 		// TODO: Think about sharing these, see LocalSDF for construction costs
-		shortformat = (SimpleDateFormat) DateFormat.getDateInstance(
-				DateFormat.SHORT, locale);
+		if(shortformat == null){
+			shortformat = (SimpleDateFormat) DateFormat.getDateInstance(
+					DateFormat.SHORT, locale);
+		}
 		shortformat.setLenient(false);
 		medformat = (SimpleDateFormat) DateFormat.getDateInstance(
 				DateFormat.MEDIUM, locale);

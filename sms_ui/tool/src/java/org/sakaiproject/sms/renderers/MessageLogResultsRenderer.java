@@ -69,13 +69,8 @@ public class MessageLogResultsRenderer implements SearchResultsRenderer {
 
 		boolean fail = false;
 		try {
-			if(NullHandling.safeDateCheck(searchFilterBean.getDateFrom(), searchFilterBean.getDateTo())){
 				smsMessageList = smsMessageLogic.getPagedSmsMessagesForCriteria(searchFilterBean);
 				sortViewParams.current_count = smsMessageList.getNumberOfPages();
-			}
-			else{
-				sortViewParams.current_count = 1;
-			}
 		} catch (SmsSearchException e) {
 			LOG.error(e);
 			fail = true;

@@ -26,6 +26,7 @@ import org.sakaiproject.sms.params.SortPagerViewParams;
 import org.sakaiproject.sms.renderers.SearchCriteriaRenderer;
 import org.sakaiproject.sms.renderers.SearchResultsRenderer;
 import org.sakaiproject.sms.renderers.TablePagerRenderer;
+import org.sakaiproject.sms.util.SakaiDateFormat;
 import org.springframework.util.Assert;
 
 import uk.org.ponder.rsf.components.UIBranchContainer;
@@ -42,9 +43,13 @@ public abstract class AbstractSearchListProducer implements
 		ViewComponentProducer, ViewParamsReporter {
 
 	private SearchCriteriaRenderer searchCriteriaRenderer;
+	
 	private SearchResultsRenderer searchResultsRenderer;
+	
 	private TablePagerRenderer tablePagerRenderer;
 	
+	private SakaiDateFormat sakaiDateFormat;
+
 	private SearchFilterBean searchFilterBean;
 
 	public abstract String getViewID();
@@ -57,6 +62,10 @@ public abstract class AbstractSearchListProducer implements
 		this.searchFilterBean = searchFilterBean;
 	}
 	
+	public void setSakaiDateFormat(SakaiDateFormat sakaiDateFormat) {
+		this.sakaiDateFormat = sakaiDateFormat;
+	}
+
 	public void setSearchResultsRenderer(
 			SearchResultsRenderer searchResultsRenderer) {
 		this.searchResultsRenderer = searchResultsRenderer;
@@ -114,11 +123,9 @@ public abstract class AbstractSearchListProducer implements
 		UIBranchContainer branchContainer = UIJointContainer.make(tofill,
 				"export:", "search-results:");
 		
-		SimpleDateFormat sdf = new SimpleDateFormat();
-		
 		//Search criteria set as parameter since beans are not available when the handler hook intercepts
 		DownloadReportViewParams downloadReportViewParams = new DownloadReportViewParams("downloadCsv", getViewID(),
-				sdf.format(searchFilterBean.getDateFrom()), sdf.format(searchFilterBean.getDateTo()),
+				sakaiDateFormat.formatDate(searchFilterBean.getDateFrom()), sakaiDateFormat.formatDate(searchFilterBean.getDateTo()),
 				searchFilterBean.getNumber(),  searchFilterBean.getOrderBy(), searchFilterBean.getSender(),
 				searchFilterBean.getSortDirection(), searchFilterBean.getStatus(),
 				searchFilterBean.getToolName(), searchFilterBean.getTransactionType());

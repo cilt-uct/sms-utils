@@ -62,34 +62,28 @@
   	<property name="guardedPath" value="SmsSystemConfigLocator.*"/>
 	<property name="guard"><bean class="org.sakaiproject.sms.validators.SmsSystemConfigValidator" /></property>
   </bean>
-  
-  <!--  
-  <bean id="smsTaskListGaurd" parent="writeGuardParent">
-  	<property name="guardedPath" value="searchTaskList"/>
-	<property name="guard"><bean class="org.sakaiproject.sms.validators.SmsTaskListValidator" /></property>
-  </bean>
-  -->
  
- <bean id="smsAccountGuard" parent="writeGuardParent">
+  <bean id="smsAccountGuard" parent="writeGuardParent">
  	<property name="guardedPath" value="SmsAccountLocator.*" />
  	<property name="guard"><bean class="org.sakaiproject.sms.validators.SmsAccountValidator" /></property>
- </bean>
+  </bean>
  
- <bean id="smsTaskGuard" parent="writeGuardParent">
+  <bean id="smsTaskGuard" parent="writeGuardParent">
  	<property name="guardedPath" value="SmsTaskLocator.*" />
  	<property name="guard"><bean class="org.sakaiproject.sms.validators.SmsTaskValidator" /></property>
- </bean> 
+  </bean> 
+   
   
   
- <!-- Data Converters for Float values -->  
- <bean class="uk.org.ponder.mapping.DataConverter">
+  <!-- Data Converters for Float values -->  
+  <bean class="uk.org.ponder.mapping.DataConverter">
 	<property name="targetPath" value="SmsAccountLocator.*.balance" />
 	<property name="converter">
 		<bean class="org.sakaiproject.sms.util.FloatEditorFactory">
 			<property name="field" value="balance" />
 		</bean>
 	</property>
- </bean>
+  </bean>
  
   <bean class="uk.org.ponder.mapping.DataConverter">
 	<property name="targetPath" value="SmsAccountLocator.*.overdraftLimit" />
@@ -106,6 +100,8 @@
 		<bean class="org.sakaiproject.sms.util.MsgBodyEditorFactory" />
 	</property>
  </bean>
+
+ <bean id="sakaiDateFormat" class="org.sakaiproject.sms.util.SakaiDateFormat"/>
 
   <!--
 	Override this definition from RSF-evolvers, to reflect the fact we are
@@ -130,6 +126,5 @@
       </bean>
     </property>
   </bean>  
-  
   
 </beans>
