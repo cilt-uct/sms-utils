@@ -165,6 +165,12 @@ public class SmsSmppImpl implements SmsSmpp {
 
 					DeliveryReceipt deliveryReceipt = deliverSm
 							.getShortMessageAsDeliveryReceipt();
+
+					// for future use.
+					if (ALLOW_PROCESS_REMOTELY) {
+						notifyDeliveryReportRemotely(deliveryReceipt);
+						return;
+					}
 					LOG.info("Receiving delivery receipt for message '"
 							+ deliveryReceipt.getId() + " ' from "
 							+ deliverSm.getSourceAddr() + " to "
@@ -541,6 +547,12 @@ public class SmsSmppImpl implements SmsSmpp {
 		} else {
 			return status;
 		}
+	}
+
+	public SmsMessage notifyDeliveryReportRemotely(
+			DeliveryReceipt deliveryReceipt) {
+
+		return null;
 	}
 
 	/**
