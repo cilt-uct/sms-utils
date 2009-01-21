@@ -19,9 +19,7 @@ package org.sakaiproject.sms.test;
 
 import java.sql.Timestamp;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.sakaiproject.sms.hibernate.logic.impl.HibernateLogicFactory;
 import org.sakaiproject.sms.hibernate.model.SmsAccount;
@@ -88,11 +86,6 @@ public class SmsBillingTest extends AbstractBaseTestCase {
 		super(name);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see junit.framework.TestCase#tearDown()
-	 */
 	@Override
 	protected void tearDown() throws Exception {
 	}
@@ -218,12 +211,17 @@ public class SmsBillingTest extends AbstractBaseTestCase {
 		smsAccount.setBalance(10f);
 		smsAccount.setAccountName("accountname");
 		smsAccount.setAccountEnabled(true);
-		smsAccount.setSmsTransactions(getSmsTransactions(smsAccount));
 		HibernateLogicFactory.getAccountLogic().persistSmsAccount(smsAccount);
+		insertTestTransactionsForAccount(smsAccount);
 
 		assertTrue(smsAccount.exists());
-		assertNotNull(smsAccount.getSmsTransactions());
-		assertTrue(smsAccount.getSmsTransactions().size() > 0);
+
+		List<SmsTransaction> transactions = HibernateLogicFactory
+				.getTransactionLogic().getSmsTransactionsForAccountId(
+						smsAccount.getId());
+
+		assertNotNull(transactions);
+		assertTrue(transactions.size() > 0);
 
 		smsBillingImpl.recalculateAccountBalance(smsAccount.getId());
 
@@ -233,6 +231,9 @@ public class SmsBillingTest extends AbstractBaseTestCase {
 		assertTrue(recalculatedAccount.getBalance() == 0);
 	}
 
+	/**
+	 * Test recalculate account balances.
+	 */
 	public void testRecalculateAccountBalances() {
 		// Recalculate all the account balances
 		smsBillingImpl.recalculateAccountBalances();
@@ -260,8 +261,8 @@ public class SmsBillingTest extends AbstractBaseTestCase {
 	 * 
 	 * @return the sms transactions
 	 */
-	private Set<SmsTransaction> getSmsTransactions(SmsAccount smsAccount) {
-		Set<SmsTransaction> transactions = new HashSet<SmsTransaction>();
+	private void insertTestTransactionsForAccount(SmsAccount smsAccount) {
+
 		int g = 10000;
 		for (int i = 0; i < 10; i++) {
 			SmsTransaction smsTransaction = new SmsTransaction();
@@ -280,10 +281,18 @@ public class SmsBillingTest extends AbstractBaseTestCase {
 			}
 			smsTransaction.setSmsAccount(smsAccount);
 			smsTransaction.setSmsTaskId(1L);
-			transactions.add(smsTransaction);
 			g += 1000;
+			HibernateLogicFactory.getTransactionLogic()
+					.insertCreditTransaction(smsTransaction);
 		}
-		return transactions;
+	}
+
+	public void testReserveCredits() {
+		fail();
+	}
+
+	public void testSettleCreditDifference() {
+		fail();
 	}
 
 }

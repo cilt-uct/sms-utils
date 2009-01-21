@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.Set;
 
 import org.sakaiproject.sms.hibernate.logic.impl.exception.MoreThanOneAccountFoundException;
+import org.sakaiproject.sms.hibernate.model.SmsTask;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -175,10 +176,12 @@ public interface SmsBilling {
 	 *            the account id
 	 * @param credits
 	 *            the credits
+	 * @param taskId
+	 *            the task id
 	 * 
 	 * @return true, if reserve credits
 	 */
-	public boolean reserveCredits(Long accountID, int credits);
+	public boolean reserveCredits(Long accountID, Long taskId, int credits);
 
 	/**
 	 * Recalculate balance for a specific account.
@@ -195,4 +198,14 @@ public interface SmsBilling {
 	 *            the account id
 	 */
 	public void recalculateAccountBalances();
+
+	/**
+	 * Settle credit difference.
+	 * 
+	 * @param smsTask
+	 *            the sms task
+	 * 
+	 * @return true, if successful
+	 */
+	public boolean settleCreditDifference(SmsTask smsTask);
 }
