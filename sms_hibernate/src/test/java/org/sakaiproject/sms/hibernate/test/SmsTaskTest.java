@@ -17,8 +17,6 @@ import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
 import org.sakaiproject.sms.hibernate.util.AbstractBaseTestCase;
 import org.sakaiproject.sms.hibernate.util.HibernateUtil;
 
-import com.sun.org.apache.bcel.internal.generic.GETSTATIC;
-
 // TODO: Auto-generated Javadoc
 /**
  * A task consists of a series of rules and must be executed on the scheduled
@@ -32,7 +30,6 @@ public class SmsTaskTest extends AbstractBaseTestCase {
 	private static final String MOBILE_NUMBER_1 = "082 345 6789";
 	private static final String MOBILE_NUMBER_2 = "083 345 6789";
 	private static final String MOBILE_NUMBER_3 = "084 345 6789";
-
 
 	/** The insert task. */
 	private static SmsTask insertTask;
@@ -53,7 +50,7 @@ public class SmsTaskTest extends AbstractBaseTestCase {
 
 		insertMessage2 = createTestMessage2();
 	}
-	
+
 	private static SmsMessage createTestMessage1() {
 		SmsMessage message = new SmsMessage();
 		message.setMobileNumber("0721998919");
@@ -62,7 +59,7 @@ public class SmsTaskTest extends AbstractBaseTestCase {
 		message.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
 		return message;
 	}
-	
+
 	private static SmsMessage createTestMessage2() {
 		SmsMessage message = new SmsMessage();
 		message.setMobileNumber("0823450983");
@@ -73,7 +70,7 @@ public class SmsTaskTest extends AbstractBaseTestCase {
 	}
 
 	private static SmsTask createTestTask() {
-		
+
 		SmsTask testTask = new SmsTask();
 		testTask.setSakaiSiteId("sakaiSiteId");
 		testTask.setSmsAccountId(1l);
@@ -85,7 +82,8 @@ public class SmsTaskTest extends AbstractBaseTestCase {
 		testTask.setSenderUserName("senderUserName");
 		testTask.setMaxTimeToLive(1);
 		testTask.setDelReportTimeoutDuration(1);
-		testTask.setDeliveryEntityList(Arrays.asList("1234", "1235","1236"));
+
+		testTask.setDeliveryEntityList(Arrays.asList("1234", "1235", "1236"));
 		return testTask;
 	}
 
@@ -114,7 +112,6 @@ public class SmsTaskTest extends AbstractBaseTestCase {
 		insertMessage2.setSmsTask(insertTask);
 		insertTask.getSmsMessages().add(insertMessage1);
 		insertTask.getSmsMessages().add(insertMessage2);
-
 		HibernateLogicFactory.getTaskLogic().persistSmsTask(insertTask);
 		SmsTask getSmsTask = HibernateLogicFactory.getTaskLogic().getSmsTask(
 				insertTask.getId());
@@ -194,8 +191,8 @@ public class SmsTaskTest extends AbstractBaseTestCase {
 		SmsTask taskToPersist = createTestTask();
 		taskToPersist.setDeliveryGroupName("Maths department");
 		HibernateLogicFactory.getTaskLogic().persistSmsTask(taskToPersist);
-		SmsTask returnedSmsTask = HibernateLogicFactory.getTaskLogic().getSmsTask(
-				taskToPersist.getId());
+		SmsTask returnedSmsTask = HibernateLogicFactory.getTaskLogic()
+				.getSmsTask(taskToPersist.getId());
 		assertNotNull(returnedSmsTask);
 		assertEquals(taskToPersist, returnedSmsTask);
 	}
@@ -318,6 +315,32 @@ public class SmsTaskTest extends AbstractBaseTestCase {
 	}
 
 	/**
+	 * Tests the incrementing of messages processed and the updating of the
+	 * tasks status to complete.
+	 */
+	public void testMessagesProcessedAndSetCompleteTasks() {
+		SmsTask testTask = createTestTask();
+		testTask.setGroupSizeEstimate(10);
+		HibernateLogicFactory.getTaskLogic().persistSmsTask(testTask);
+
+		for (int i = 0; i < 10; i++) {
+			HibernateLogicFactory.getTaskLogic().incrementMessagesProcessed(
+					testTask);
+		}
+
+		assertTrue(HibernateLogicFactory.getTaskLogic().getSmsTask(
+				testTask.getId()).getMessagesProcessed() == 10);
+
+		HibernateLogicFactory.getTaskLogic().checkAndSetTasksCompleted();
+		assertTrue(HibernateLogicFactory.getTaskLogic().getSmsTask(
+				testTask.getId()).getStatusCode().equals(
+				SmsConst_DeliveryStatus.STATUS_TASK_COMPLETED));
+
+		HibernateLogicFactory.getTaskLogic().deleteSmsTask(testTask);
+
+	}
+
+	/**
 	 * Test insert sms task.
 	 */
 	public void testInsertSmsTask() {
@@ -330,29 +353,31 @@ public class SmsTaskTest extends AbstractBaseTestCase {
 	 * Test remove sms messages from task.
 	 */
 	public void testRemoveSmsMessagesFromTask() {
-		
+
 		SmsTask taskWithCollections = createTestTask();
 		taskWithCollections.setSakaiSiteId("oldSakaiSiteId");
-		
+
 		SmsMessage testMessage1 = createTestMessage1();
 		testMessage1.setSmsTask(taskWithCollections);
 		SmsMessage testMessage2 = createTestMessage2();
 		testMessage2.setSmsTask(taskWithCollections);
-		
+
 		taskWithCollections.getSmsMessages().add(testMessage1);
 		taskWithCollections.getSmsMessages().add(testMessage2);
-		
-		HibernateLogicFactory.getTaskLogic().persistSmsTask(taskWithCollections);
+
+		HibernateLogicFactory.getTaskLogic()
+				.persistSmsTask(taskWithCollections);
 		SmsTask getSmsTask = HibernateLogicFactory.getTaskLogic().getSmsTask(
 				taskWithCollections.getId());
-		
-		assertEquals("Collection size not correct", 2, getSmsTask.getSmsMessages().size());
-		
+
+		assertEquals("Collection size not correct", 2, getSmsTask
+				.getSmsMessages().size());
+
 		getSmsTask.getSmsMessages().remove(testMessage1);
 		HibernateLogicFactory.getTaskLogic().persistSmsTask(getSmsTask);
 		getSmsTask = HibernateLogicFactory.getTaskLogic().getSmsTask(
 				getSmsTask.getId());
-		
+
 		assertTrue("Object not removed from collection", getSmsTask
 				.getSmsMessages().size() == 1);
 		// Check the right object was removed
@@ -366,7 +391,7 @@ public class SmsTaskTest extends AbstractBaseTestCase {
 	 * Test update sms task.
 	 */
 	public void testUpdateSmsTask() {
-		
+
 		SmsTask testTask = createTestTask();
 		HibernateLogicFactory.getTaskLogic().persistSmsTask(testTask);
 		SmsTask smsTask = HibernateLogicFactory.getTaskLogic().getSmsTask(
@@ -378,26 +403,31 @@ public class SmsTaskTest extends AbstractBaseTestCase {
 				smsTask.getId());
 		assertEquals("newSakaiSiteId", smsTask.getSakaiSiteId());
 	}
-	
+
 	public void testSaveDeliveryMobileNumbers() throws Exception {
-		
+
 		SmsTask taskToSave = createTestTask();
 		Set<String> mobileNumbers = new HashSet<String>();
-		//check null assignment
+		// check null assignment
 		taskToSave.setDeliveryMobileNumbersSet(null);
-		
+
 		mobileNumbers.add(MOBILE_NUMBER_1);
 		mobileNumbers.add(MOBILE_NUMBER_2);
 		mobileNumbers.add(MOBILE_NUMBER_3);
 		taskToSave.setDeliveryMobileNumbersSet(mobileNumbers);
-		
+
 		HibernateLogicFactory.getTaskLogic().persistSmsTask(taskToSave);
-		
-		SmsTask taskReturned = HibernateLogicFactory.getTaskLogic().getSmsTask(taskToSave.getId());
-		
-		assertEquals("Three mobile numbers should have been obtained", 3, taskReturned.getDeliveryMobileNumbersSet().size());
-		assertTrue(taskReturned.getDeliveryMobileNumbersSet().contains(MOBILE_NUMBER_1));
-		assertTrue(taskReturned.getDeliveryMobileNumbersSet().contains(MOBILE_NUMBER_2));
-		assertTrue(taskReturned.getDeliveryMobileNumbersSet().contains(MOBILE_NUMBER_3));
+
+		SmsTask taskReturned = HibernateLogicFactory.getTaskLogic().getSmsTask(
+				taskToSave.getId());
+
+		assertEquals("Three mobile numbers should have been obtained", 3,
+				taskReturned.getDeliveryMobileNumbersSet().size());
+		assertTrue(taskReturned.getDeliveryMobileNumbersSet().contains(
+				MOBILE_NUMBER_1));
+		assertTrue(taskReturned.getDeliveryMobileNumbersSet().contains(
+				MOBILE_NUMBER_2));
+		assertTrue(taskReturned.getDeliveryMobileNumbersSet().contains(
+				MOBILE_NUMBER_3));
 	}
 }
