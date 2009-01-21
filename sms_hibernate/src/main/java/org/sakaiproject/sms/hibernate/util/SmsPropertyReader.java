@@ -71,8 +71,11 @@ public abstract class SmsPropertyReader {
 	 */
 	private static void loadProperties() throws FileNotFoundException,
 			IOException {
-		InputStream is = SmsPropertyReader.class.getClass()
-				.getResourceAsStream("/sms.properties");
+		InputStream is = Thread.currentThread().getContextClassLoader()
+				.getResourceAsStream("sms.properties");
+
+		// InputStream is = SmsPropertyReader.class.getClass()
+		// .getResourceAsStream("/sms.properties");
 
 		if (is != null) {
 			properties.load(is);
