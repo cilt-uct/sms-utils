@@ -127,11 +127,13 @@ public class SmsCoreImpl implements SmsCore {
 
 	}
 
-	public SmsTask getPreliminaryTask(Date dateToSend, String messageBody, String sakaiSiteID,
-			String sakaiToolId, String sakaiSenderID, Set<String> deliveryMobileNumbers){
-		
-		return getPreliminaryTask(null, deliveryMobileNumbers, null, dateToSend,
-				messageBody, sakaiSiteID, sakaiToolId, sakaiSenderID, null);
+	public SmsTask getPreliminaryTask(Date dateToSend, String messageBody,
+			String sakaiSiteID, String sakaiToolId, String sakaiSenderID,
+			Set<String> deliveryMobileNumbers) {
+
+		return getPreliminaryTask(null, deliveryMobileNumbers, null,
+				dateToSend, messageBody, sakaiSiteID, sakaiToolId,
+				sakaiSenderID, null);
 	}
 
 	public SmsTask getPreliminaryTask(Set<String> sakaiUserIds,
@@ -152,14 +154,15 @@ public class SmsCoreImpl implements SmsCore {
 	public SmsTask getPreliminaryTask(Date dateToSend, String messageBody,
 			String sakaiSiteID, String sakaiToolId, String sakaiSenderID,
 			List<String> deliveryEntityList) {
-		return getPreliminaryTask(null, null, null, dateToSend,
-				messageBody, sakaiSiteID, sakaiToolId, sakaiSenderID, deliveryEntityList);
+		return getPreliminaryTask(null, null, null, dateToSend, messageBody,
+				sakaiSiteID, sakaiToolId, sakaiSenderID, deliveryEntityList);
 	}
-	
+
 	private SmsTask getPreliminaryTask(String deliverGroupId,
 			Set<String> mobileNumbers, Set<String> sakaiUserIds,
 			Date dateToSend, String messageBody, String sakaiSiteID,
-			String sakaiToolId, String sakaiSenderID, List<String> deliveryEntityList) {
+			String sakaiToolId, String sakaiSenderID,
+			List<String> deliveryEntityList) {
 
 		SmsConfig siteConfig = HibernateLogicFactory.getConfigLogic()
 				.getOrCreateSystemSmsConfig();
@@ -412,8 +415,16 @@ public class SmsCoreImpl implements SmsCore {
 			body = MessageCatelog.getMessage("messages.notificationBodyFailed",
 					creditsRequired, creditsAvailable);
 			toAddress = config.getNotificationEmail();
+		} else if (taskMessageType
+				.equals(SmsHibernateConstants.TASK_NOTIFICATION_COMPLETED)) {
+			subject = MessageCatelog.getMessage(
+					"messages.notificationSubjectCompleted", smsTask.getId()
+							.toString());
+			body = MessageCatelog.getMessage(
+					"messages.notificationBodyCompleted", creditsRequired,
+					creditsAvailable);
+			toAddress = config.getNotificationEmail();
 		}
-
 		return sendNotificationEmail(toAddress, subject, body);
 
 	}
@@ -439,7 +450,14 @@ public class SmsCoreImpl implements SmsCore {
 	 * processed equals the actual group size the task is marked as complete.
 	 */
 	public void checkAndSetTasksCompleted() {
-		HibernateLogicFactory.getTaskLogic().checkAndSetTasksCompleted();
+
+		List<SmsTask> smsTasks = HibernateLogicFactory.getTaskLogic()
+				.checkAndSetTasksCompleted();
+
+		for (SmsTask smsTask : smsTasks) {
+			sendTaskNotification(smsTask,
+					SmsHibernateConstants.TASK_NOTIFICATION_COMPLETED);
+		}
 
 	}
 }
