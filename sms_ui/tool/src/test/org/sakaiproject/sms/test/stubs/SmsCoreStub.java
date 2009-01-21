@@ -111,4 +111,9 @@ public class SmsCoreStub implements SmsCore {
 		return null;
 	}
 
+	public void checkAndSetTasksCompleted() {
+		// TODO Auto-generated method stub
+
+	}
+
 }
