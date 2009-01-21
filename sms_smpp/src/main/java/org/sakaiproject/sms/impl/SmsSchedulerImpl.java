@@ -79,6 +79,7 @@ public class SmsSchedulerImpl implements SmsScheduler {
 				smsCore.processNextTask();
 				smsCore.processTimedOutDeliveryReports();
 				smsCore.checkAndSetTasksCompleted();
+				smsCore.processVeryLateDeliveryReports();
 				try {
 					Thread.sleep(smsConfig.getSchedulerInterval() * 1000);
 				} catch (InterruptedException e) {

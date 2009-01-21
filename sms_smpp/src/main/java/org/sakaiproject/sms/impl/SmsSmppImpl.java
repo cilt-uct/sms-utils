@@ -64,6 +64,7 @@ import org.jsmpp.util.TimeFormatter;
 import org.sakaiproject.sms.api.SmsSmpp;
 import org.sakaiproject.sms.hibernate.logic.impl.HibernateLogicFactory;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
+import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_SmscDeliveryStatus;
 import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
@@ -139,86 +140,6 @@ public class SmsSmppImpl implements SmsSmpp {
 		}
 	}
 
-	private class DeliveryReportThread implements Runnable {
-
-		boolean allDone = false;
-		DeliverSm deliverSm;
-
-		DeliveryReportThread(DeliverSm deliverSm) {
-			this.deliverSm = deliverSm;
-			Thread t = new Thread(this);
-			t.start();
-		}
-
-		public void run() {
-			Work();
-		}
-
-		public void Work() {
-			try {
-
-				DeliveryReceipt deliveryReceipt = deliverSm
-						.getShortMessageAsDeliveryReceipt();
-				LOG.info("Receiving delivery receipt for message '"
-						+ deliveryReceipt.getId() + " ' from "
-						+ deliverSm.getSourceAddr() + " to "
-						+ deliverSm.getDestAddress() + " : " + deliveryReceipt);
-				SmsMessage smsMessage = HibernateLogicFactory.getMessageLogic()
-						.getSmsMessageBySmscMessageId(deliveryReceipt.getId(),
-								SmsHibernateConstants.SMSC_ID);
-				if (smsMessage == null) {
-					for (int i = 0; i < 5; i++) {
-						LOG.info("SMSC_DEL_RECEIPT retry " + i
-								+ " out of 5 for messageSmscID"
-								+ deliveryReceipt.getId());
-						smsMessage = HibernateLogicFactory.getMessageLogic()
-								.getSmsMessageBySmscMessageId(
-										deliveryReceipt.getId(),
-										SmsHibernateConstants.SMSC_ID);
-						if (smsMessage != null) {
-							break;
-						}
-						try {
-							Thread.sleep(5000);
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
-					}
-
-				}
-				if (smsMessage != null) {
-					smsMessage.setSmscDeliveryStatusCode(SmsStatusBridge
-							.getSmsDeliveryStatus((deliveryReceipt
-									.getFinalStatus())));
-					smsMessage.setDateDelivered(new Date(System
-							.currentTimeMillis()));
-					if (SmsStatusBridge.getSmsDeliveryStatus((deliveryReceipt
-							.getFinalStatus())) != SmsConst_SmscDeliveryStatus.DELIVERED) {
-						smsMessage
-								.setStatusCode(SmsConst_DeliveryStatus.STATUS_FAIL);
-					} else {
-						smsMessage
-								.setStatusCode(SmsConst_DeliveryStatus.STATUS_DELIVERED);
-					}
-					HibernateLogicFactory
-							.getTaskLogic()
-							.incrementMessagesProcessed(smsMessage.getSmsTask());
-					HibernateLogicFactory.getMessageLogic().persistSmsMessage(
-							smsMessage);
-
-				} else {
-					LOG
-							.error("Delivery report received for message not in database. MessageSMSCID="
-									+ deliveryReceipt.getId());
-				}
-			} catch (InvalidDeliveryReceiptException e) {
-				LOG.error("Failed getting delivery receipt" + e);
-
-			}
-
-		}
-	}
-
 	/**
 	 * This listener will receive delivery reports as well as incoming messages
 	 * from the smpp gateway. When we are binded to the gateway, this listener
@@ -240,7 +161,79 @@ public class SmsSmppImpl implements SmsSmpp {
 
 			if (MessageType.SMSC_DEL_RECEIPT.containedIn(deliverSm
 					.getEsmClass())) {
-				new DeliveryReportThread(deliverSm);
+				try {
+
+					DeliveryReceipt deliveryReceipt = deliverSm
+							.getShortMessageAsDeliveryReceipt();
+					LOG.info("Receiving delivery receipt for message '"
+							+ deliveryReceipt.getId() + " ' from "
+							+ deliverSm.getSourceAddr() + " to "
+							+ deliverSm.getDestAddress() + " : "
+							+ deliveryReceipt);
+					SmsMessage smsMessage = HibernateLogicFactory
+							.getMessageLogic().getSmsMessageBySmscMessageId(
+									deliveryReceipt.getId(),
+									SmsHibernateConstants.SMSC_ID);
+					if (smsMessage == null) {
+						for (int i = 0; i < 5; i++) {
+							LOG.info("SMSC_DEL_RECEIPT retry " + i
+									+ " out of 5 for messageSmscID"
+									+ deliveryReceipt.getId());
+							smsMessage = HibernateLogicFactory
+									.getMessageLogic()
+									.getSmsMessageBySmscMessageId(
+											deliveryReceipt.getId(),
+											SmsHibernateConstants.SMSC_ID);
+							if (smsMessage != null) {
+								break;
+							}
+							try {
+								Thread.sleep(5000);
+							} catch (InterruptedException e) {
+								e.printStackTrace();
+							}
+						}
+
+					}
+					if (smsMessage != null) {
+						smsMessage.setSmscDeliveryStatusCode(SmsStatusBridge
+								.getSmsDeliveryStatus((deliveryReceipt
+										.getFinalStatus())));
+						smsMessage.setDateDelivered(new Date(System
+								.currentTimeMillis()));
+
+						if (smsMessage.getStatusCode().equals(
+								SmsConst_DeliveryStatus.STATUS_TIMEOUT)) {
+							smsMessage
+									.setStatusCode(SmsConst_DeliveryStatus.STATUS_LATE);
+
+						} else {
+
+							if (SmsStatusBridge
+									.getSmsDeliveryStatus((deliveryReceipt
+											.getFinalStatus())) != SmsConst_SmscDeliveryStatus.DELIVERED) {
+								smsMessage
+										.setStatusCode(SmsConst_DeliveryStatus.STATUS_FAIL);
+							} else {
+								smsMessage
+										.setStatusCode(SmsConst_DeliveryStatus.STATUS_DELIVERED);
+							}
+						}
+						HibernateLogicFactory.getTaskLogic()
+								.incrementMessagesProcessed(
+										smsMessage.getSmsTask());
+						HibernateLogicFactory.getMessageLogic()
+								.persistSmsMessage(smsMessage);
+
+					} else {
+						LOG
+								.error("Delivery report received for message not in database. MessageSMSCID="
+										+ deliveryReceipt.getId());
+					}
+				} catch (InvalidDeliveryReceiptException e) {
+					LOG.error("Failed getting delivery receipt" + e);
+
+				}
 
 			} else {
 				// this message is regular short message
@@ -683,6 +676,11 @@ public class SmsSmppImpl implements SmsSmpp {
 	public boolean notifyDeliveryReportRemotely(SmsMessage smsMessage) {
 		// TODO To be discussed with UCT
 		return false;
+	}
+
+	public void processVeryLateDeliveryReports(SmsTask smsTask) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

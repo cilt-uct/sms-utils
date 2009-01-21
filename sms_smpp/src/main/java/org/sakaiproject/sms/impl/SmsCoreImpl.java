@@ -350,11 +350,6 @@ public class SmsCoreImpl implements SmsCore {
 
 	}
 
-	public void processVeryLateDeliveryReports() {
-		// TODO Auto-generated method stub
-
-	}
-
 	public boolean sendNotificationEmail(String toAddress, String subject,
 			String body) {
 		// TODO Call sakai service to send the email
@@ -469,6 +464,23 @@ public class SmsCoreImpl implements SmsCore {
 			sendTaskNotification(smsTask,
 					SmsHibernateConstants.TASK_NOTIFICATION_COMPLETED);
 		}
+
+	}
+
+	/**
+	 * If we did not receive gateway delivery reports for messages that was sent
+	 * out, then we mark those messages as time out after a predefined period as
+	 * determined by DEL_REPORT_TIMEOUT_DURATION on the task. These messages are
+	 * not billable.
+	 */
+	public void processVeryLateDeliveryReports() {
+		List<SmsMessage> messages = HibernateLogicFactory.getMessageLogic()
+				.getSmsMessagesWithStatus(null,
+						SmsConst_DeliveryStatus.STATUS_LATE);
+
+		// TODO: Add billing code
+
+		// TODO: Change the messages status to either D or F and persist
 
 	}
 }
