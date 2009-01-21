@@ -38,7 +38,7 @@
 
   <!-- The beans which will be preserved across a flow via simple instance copying -->
   <bean parent="copyPreservingParent">
-    <property name="value" value="SmsMessageLocator, SmsConfigLocator, SmsTaskLocatorm, SmsSystemConfigLocator"/>
+    <property name="value" value="SmsMessageLocator, SmsConfigLocator, SmsTaskLocator, SmsSystemConfigLocator"/>
   </bean>
   
   <bean id="searchScope" parent="beanScopeParent">
