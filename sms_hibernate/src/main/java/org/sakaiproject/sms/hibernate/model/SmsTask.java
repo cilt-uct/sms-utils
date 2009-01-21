@@ -115,6 +115,19 @@ public class SmsTask extends BaseModel {
 	private Long smsAccountId;
 
 	/**
+	 * The total number of smsMessages processed.
+	 */
+	private int messagesProcessed;
+
+	public int getMessagesProcessed() {
+		return messagesProcessed;
+	}
+
+	public void setMessagesProcessed(int messagesProcessed) {
+		this.messagesProcessed = messagesProcessed;
+	}
+
+	/**
 	 * The sms messages for this task. This will be generated when the task is
 	 * processed.
 	 */
