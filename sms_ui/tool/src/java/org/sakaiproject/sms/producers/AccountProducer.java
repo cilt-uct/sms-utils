@@ -138,9 +138,11 @@ public class AccountProducer implements ViewComponentProducer,
 		cmd.parameters.add(new UIELBinding(accountOTP + ".messageTypeCode",
 				SmsUiConstants.MESSAGE_TYPE_CODE));
 
-		UICommand
-				.make(form, "cancel-btn", UIMessage.make("sms.general.cancel"))
-				.setReturn(ActionResults.CANCEL);
+		UICommand cancel = UICommand.make(form, "cancel-btn",
+				UIMessage.make("sms.general.cancel")).setReturn(
+				ActionResults.CANCEL);
+		cancel.parameters.add(new UIELBinding(accountOTP + ".messageTypeCode",
+				null));
 
 	}
 

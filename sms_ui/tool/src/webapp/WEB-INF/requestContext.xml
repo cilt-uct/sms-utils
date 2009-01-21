@@ -147,7 +147,7 @@
 
   <bean id="nullableFieldDateTransit" parent="beanExploder">
     <property name="factory">
-      <bean class="org.sakaiproject.sms.util.NullableFieldDateTransit"
+      <bean class="org.sakaiproject.sms.rsf.NullableFieldDateTransit"
         init-method="init">
         <property name="locale" ref="requestLocale" />
         <property name="timeZone" ref="requestTimeZone"/>

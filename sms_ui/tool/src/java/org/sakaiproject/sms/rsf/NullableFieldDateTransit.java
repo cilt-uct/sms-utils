@@ -15,7 +15,7 @@
  * limitations under the License.
  *
  **********************************************************************************/
-package org.sakaiproject.sms.util;
+package org.sakaiproject.sms.rsf;
 
 import java.text.DateFormat;
 import java.text.ParseException;
