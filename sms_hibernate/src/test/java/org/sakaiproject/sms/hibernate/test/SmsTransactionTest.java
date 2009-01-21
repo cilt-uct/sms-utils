@@ -120,8 +120,8 @@ public class SmsTransactionTest extends AbstractBaseTestCase {
 	public void testGetTransactionsForCriteria() {
 
 		SmsAccount insertSmsAccount = new SmsAccount();
-		insertSmsAccount.setSakaiUserId("SakaiUSerId");
-		insertSmsAccount.setSakaiSiteId("SakaiSiteId");
+		insertSmsAccount.setSakaiUserId("1");
+		insertSmsAccount.setSakaiSiteId("1");
 		insertSmsAccount.setMessageTypeCode("12345");
 		insertSmsAccount.setOverdraftLimit(10000.00f);
 		insertSmsAccount.setBalance(5000.00f);
@@ -157,8 +157,8 @@ public class SmsTransactionTest extends AbstractBaseTestCase {
 			bean.setSender(insertSmsTransaction.getSakaiUserId());
 
 			List<SmsTransaction> transactions = HibernateLogicFactory
-					.getTransactionLogic().getPagedSmsTransactionsForCriteria(bean)
-					.getPageResults();
+					.getTransactionLogic().getPagedSmsTransactionsForCriteria(
+							bean).getPageResults();
 			assertTrue("Collection returned has no objects", transactions
 					.size() > 0);
 
@@ -183,8 +183,8 @@ public class SmsTransactionTest extends AbstractBaseTestCase {
 		int recordsToInsert = 93;
 
 		SmsAccount smsAccount = new SmsAccount();
-		smsAccount.setSakaiUserId("SakaiUSerId");
-		smsAccount.setSakaiSiteId("SakaiSiteId");
+		smsAccount.setSakaiUserId("2");
+		smsAccount.setSakaiSiteId("2");
 		smsAccount.setMessageTypeCode("12345");
 		smsAccount.setOverdraftLimit(10000.00f);
 		smsAccount.setBalance(5000.00f);
@@ -220,7 +220,8 @@ public class SmsTransactionTest extends AbstractBaseTestCase {
 			bean.setCurrentPage(2);
 
 			SearchResultContainer<SmsTransaction> con = HibernateLogicFactory
-					.getTransactionLogic().getPagedSmsTransactionsForCriteria(bean);
+					.getTransactionLogic().getPagedSmsTransactionsForCriteria(
+							bean);
 			List<SmsTransaction> tasks = con.getPageResults();
 			assertTrue("Incorrect collection size returned",
 					tasks.size() == SmsHibernateConstants.DEFAULT_PAGE_SIZE);
@@ -249,50 +250,56 @@ public class SmsTransactionTest extends AbstractBaseTestCase {
 			fail(se.getMessage());
 		}
 	}
-	
-	public void testCreateReserveCreditsTransactionNoAccountFound() throws Exception {
-		
-		try{			
-			HibernateLogicFactory.getTransactionLogic().reserveCredits(123L, 123L, 110);
+
+	public void testCreateReserveCreditsTransactionNoAccountFound()
+			throws Exception {
+
+		try {
+			HibernateLogicFactory.getTransactionLogic().reserveCredits(123L,
+					123L, 110);
 			fail("Insert should fail since there is no account with id 123");
-		}
-		catch (SmsAccountNotFoundException expected) {
-		}
-		catch (Exception notExpected) {
+		} catch (SmsAccountNotFoundException expected) {
+		} catch (Exception notExpected) {
 			fail("An account not found exception should be thrown");
 		}
-	}	
-		
-	public void testCreateReserveCreditsTask(){
-	
+	}
+
+	public void testCreateReserveCreditsTask() {
+
 		SmsAccount testAccount = SmsAccountTest.createTestAccount();
 		testAccount.setBalance(1000f);
 		HibernateLogicFactory.getAccountLogic().persistSmsAccount(testAccount);
-		
-		try{			
-			HibernateLogicFactory.getTransactionLogic().reserveCredits(100L,  testAccount.getId(), 110);
-		}
-		catch (Exception notExpected) {
+
+		try {
+			HibernateLogicFactory.getTransactionLogic().reserveCredits(100L,
+					testAccount.getId(), 110);
+		} catch (Exception notExpected) {
 			fail("Transaction should save successfully" + notExpected);
 		}
 	}
 
 	public void testCreateCancelTransaction() throws Exception {
-	
-		SmsAccount testAccount = SmsAccountTest.createTestAccount();	
+
+		SmsAccount testAccount = new SmsAccount();
+		testAccount.setSakaiUserId("3");
+		testAccount.setSakaiSiteId("3");
+		testAccount.setMessageTypeCode("12345");
+		testAccount.setOverdraftLimit(10000.00f);
+		testAccount.setBalance(5000.00f);
+		testAccount.setAccountName("accountName");
+		testAccount.setAccountEnabled(true);
 		HibernateLogicFactory.getAccountLogic().persistSmsAccount(testAccount);
-	
-		try{			
-			HibernateLogicFactory.getTransactionLogic().cancelTransaction(101L,  testAccount.getId());
-		}
-		catch (Exception notExpected) {
+
+		try {
+			HibernateLogicFactory.getTransactionLogic().cancelTransaction(101L,
+					testAccount.getId());
+		} catch (Exception notExpected) {
 			fail("Transaction should save successfully" + notExpected);
 		}
-		
-	
+
 	}
 
-		/**
+	/**
 	 * Test delete sms transaction.
 	 */
 	public void testDeleteSmsTransaction() {
