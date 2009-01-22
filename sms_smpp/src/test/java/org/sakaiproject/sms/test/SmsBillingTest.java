@@ -256,6 +256,56 @@ public class SmsBillingTest extends AbstractBaseTestCase {
 		}
 	}
 
+	/**
+	 * Test reserve credits.
+	 */
+	public void testReserveCredits() {
+
+		int creditEstimate = 50;
+		float origionalAccBalance = 100;
+
+		SmsAccount smsAccount = new SmsAccount();
+		smsAccount.setSakaiUserId("2");
+		smsAccount.setSakaiSiteId("2");
+		smsAccount.setMessageTypeCode("2");
+		smsAccount.setOverdraftLimit(10000.00f);
+		smsAccount.setBalance(100f);
+		smsAccount.setAccountName("accountname");
+		smsAccount.setAccountEnabled(true);
+		HibernateLogicFactory.getAccountLogic().persistSmsAccount(smsAccount);
+
+		SmsTask smsTask = new SmsTask();
+		smsTask.setSakaiSiteId("sakaiSiteId");
+		smsTask.setSenderUserName("sakaiUserId");
+		smsTask.setSmsAccountId(smsAccount.getId());
+		smsTask.setDateCreated(new Timestamp(System.currentTimeMillis()));
+		smsTask.setDateToSend(new Timestamp(System.currentTimeMillis()));
+		smsTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
+		smsTask.setAttemptCount(2);
+		smsTask.setMessageBody("messageBody");
+		smsTask.setSenderUserName("senderUserName");
+		smsTask.setMaxTimeToLive(1);
+		smsTask.setDelReportTimeoutDuration(1);
+		smsTask.setCreditEstimate(creditEstimate);
+		HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask);
+
+		smsBillingImpl.reserveCredits(smsTask);
+
+		smsAccount = HibernateLogicFactory.getAccountLogic().getSmsAccount(
+				smsAccount.getId());
+		assertNotNull(smsAccount);
+
+		// Transaction did reduce the account balance
+		assertTrue(smsAccount.getBalance() < origionalAccBalance);
+	}
+
+	/**
+	 * Test settle credit difference.
+	 */
+	public void testSettleCreditDifference() {
+		fail();
+	}
+
 	// /////////////////////////////////////////////////////////////////////////////////////////////
 	// HELPER METHODS
 	// /////////////////////////////////////////////////////////////////////////////////////////////
@@ -292,14 +342,6 @@ public class SmsBillingTest extends AbstractBaseTestCase {
 			HibernateLogicFactory.getTransactionLogic()
 					.insertCreditTransaction(smsTransaction);
 		}
-	}
-
-	public void testReserveCredits() {
-		fail();
-	}
-
-	public void testSettleCreditDifference() {
-		fail();
 	}
 
 }

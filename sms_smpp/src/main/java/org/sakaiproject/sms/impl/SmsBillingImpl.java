@@ -17,8 +17,6 @@
  **********************************************************************************/
 package org.sakaiproject.sms.impl;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -233,19 +231,15 @@ public class SmsBillingImpl implements SmsBilling {
 	 * the request is pending and the administrator delete the request, the
 	 * reservation must be rolled back with another transaction.
 	 * 
-	 * @param credits
-	 *            the credits
-	 * @param accountId
-	 *            the account id
-	 * @param taskId
-	 *            the task id
+	 * @param smsTask
+	 *            the sms task
 	 * 
 	 * @return true, if reserve credits
 	 */
-	public boolean reserveCredits(Long accountId, Long taskId, int credits) {
+	public boolean reserveCredits(SmsTask smsTask) {
 
 		SmsAccount account = HibernateLogicFactory.getAccountLogic()
-				.getSmsAccount(accountId);
+				.getSmsAccount(smsTask.getSmsAccountId());
 		if (account == null) {
 			// Account does not exist
 			return false;
@@ -254,15 +248,16 @@ public class SmsBillingImpl implements SmsBilling {
 		SmsTransaction smsTransaction = new SmsTransaction();
 		smsTransaction.setBalance(account.getBalance());// Set this to accounts
 		// current balance
-		smsTransaction.setSakaiUserId("sakaiUserId");// TODO Where does this
+		smsTransaction.setSakaiUserId(smsTask.getSenderUserName());
 		// come from ???
 		smsTransaction.setTransactionDate(new Date(System.currentTimeMillis()));
 		smsTransaction
 				.setTransactionTypeCode(SmsConst_Billing.TRANS_RESERVE_CREDITS);
-		smsTransaction.setTransactionCredits(credits);
-		smsTransaction.setTransactionAmount(convertCreditsToAmount(credits));
+		smsTransaction.setTransactionCredits(smsTask.getCreditEstimate());
+		smsTransaction.setTransactionAmount(convertCreditsToAmount(smsTask
+				.getCreditEstimate()));
 		smsTransaction.setSmsAccount(account);
-		smsTransaction.setSmsTaskId(taskId);
+		smsTransaction.setSmsTaskId(smsTask.getId());
 
 		// Insert credit transaction
 		HibernateLogicFactory.getTransactionLogic().insertCreditTransaction(
@@ -333,57 +328,36 @@ public class SmsBillingImpl implements SmsBilling {
 		}
 
 		int creditEstimate = smsTask.getCreditEstimateInt();
+		int actualCreditsUsed = smsTask.getGroupSizeActual();
+		int creditDifference = creditEstimate - actualCreditsUsed;
 
-		List<SmsTransaction> transactions = null;// REMOVE
-		// List<SmsTransaction> transactions = HibernateLogicFactory
-		// .getTransactionLogic().getSmsTransactionsForTaskId(//WRITE THIS
-		// METHOD
-		// smsTask.getId());
+		SmsTransaction smsTransaction = new SmsTransaction();
+		smsTransaction.setBalance(account.getBalance());// Set this to
+		// accounts
+		// current balance
+		smsTransaction.setSakaiUserId(smsTask.getSenderUserName());// TODO GET
+																	// FROM TASK
+		smsTransaction.setTransactionDate(new Date(System.currentTimeMillis()));
+		smsTransaction
+				.setTransactionTypeCode(SmsConst_Billing.TRANS_SETTLE_DIFFERENCE);
+		smsTransaction.setTransactionCredits(creditDifference);
 
-		// Sort by transaction date
-		Collections.sort(transactions, new Comparator<SmsTransaction>() {
-
-			public int compare(SmsTransaction arg0, SmsTransaction arg1) {
-				// TODO Auto-generated method stub
-				return arg0.getTransactionDate().compareTo(
-						arg1.getTransactionDate());
-			}
-		});
-
-		// Calculate balance
-		Float total = 0.0F;
-		for (SmsTransaction transaction : transactions) {
-			total += transaction.getTransactionAmount();
-		}
-		account.setBalance(total);
-
-		// getTransactionsForTask()
-		// iterate through transactions and total credits
-		int actualCreditsUsed = convertAmountToCredits(total);
-
-		int difference = creditEstimate - actualCreditsUsed;
-		if (difference > 0) {
-			SmsTransaction smsTransaction = new SmsTransaction();
-			smsTransaction.setBalance(account.getBalance());// Set this to
-			// accounts
-			// current balance
-			smsTransaction.setSakaiUserId("sakaiUserId");// TODO Where does this
-			// come from ???
-			smsTransaction.setTransactionDate(new Date(System
-					.currentTimeMillis()));
-			smsTransaction
-					.setTransactionTypeCode(SmsConst_Billing.TRANS_SETTLE_DIFFERENCE);
-			smsTransaction.setTransactionCredits(difference);
-			smsTransaction
-					.setTransactionAmount(convertCreditsToAmount(difference));
-			smsTransaction.setSmsAccount(account);
-			smsTransaction.setSmsTaskId(smsTask.getId());
-
-			// Insert credit transaction
+		smsTransaction.setSmsAccount(account);
+		smsTransaction.setSmsTaskId(smsTask.getId());
+		float transactionAmount = convertCreditsToAmount(creditDifference);
+		if (transactionAmount >= 0) {
+			// Insert debit transaction
+			smsTransaction.setTransactionAmount(transactionAmount);
+			HibernateLogicFactory.getTransactionLogic().insertDebitTransaction(
+					smsTransaction);
+		} else {
+			// Insert credit transaction and make sure the transaction amount
+			// gets passed as a positive value. The insert credit transaction
+			// will handle that
+			smsTransaction.setTransactionAmount((transactionAmount * -1));
 			HibernateLogicFactory.getTransactionLogic()
 					.insertCreditTransaction(smsTransaction);
 		}
-
 		return true;
 	}
 }

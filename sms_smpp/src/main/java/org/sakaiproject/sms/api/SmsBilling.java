@@ -172,16 +172,12 @@ public interface SmsBilling {
 	 * the request is pending and the administrator delete the request, the
 	 * reservation must be rolled back with another transaction.
 	 * 
-	 * @param accountID
-	 *            the account id
-	 * @param credits
-	 *            the credits
-	 * @param taskId
-	 *            the task id
+	 * @param smsTask
+	 *            the sms task
 	 * 
 	 * @return true, if reserve credits
 	 */
-	public boolean reserveCredits(Long accountID, Long taskId, int credits);
+	public boolean reserveCredits(SmsTask smsTask);
 
 	/**
 	 * Recalculate balance for a specific account.
