@@ -288,10 +288,8 @@ public class SmsTaskLogicImpl extends SmsDao implements SmsTaskLogic {
 		String hql = "update SmsTask set MESSAGES_PROCESSED =MESSAGES_PROCESSED+1  where TASK_ID = :smsTaskID";
 		Query query = HibernateUtil.getSession().createQuery(hql.toString());
 		query.setParameter("smsTaskID", smsTask.getId(), Hibernate.LONG);
-		log
-				.debug("incrementMessagesProcecced() HQL: "
-						+ query.getQueryString());
 		query.executeUpdate();
+		HibernateUtil.closeSession();
 
 	}
 
@@ -323,7 +321,7 @@ public class SmsTaskLogicImpl extends SmsDao implements SmsTaskLogic {
 				.setParameter("smsTaskStatus",
 						SmsConst_DeliveryStatus.STATUS_TASK_COMPLETED,
 						Hibernate.STRING);
-		log.debug("setCompleteTasks() HQL: " + updateQuery.getQueryString());
+
 		updateQuery.executeUpdate();
 		HibernateUtil.closeSession();
 		return smsTasks;

@@ -102,7 +102,8 @@ public class SmsConfigLogicImpl extends SmsDao implements SmsConfigLogic {
 	 * 
 	 * @return the sms config by sakai site id
 	 */
-	public SmsConfig getOrCreateSmsConfigBySakaiSiteId(String sakaiSiteId) {
+	public synchronized SmsConfig getOrCreateSmsConfigBySakaiSiteId(
+			String sakaiSiteId) {
 		List<SmsConfig> configs = new ArrayList<SmsConfig>();
 		SmsConfig config = null;
 		Session s = HibernateUtil.getSession();
