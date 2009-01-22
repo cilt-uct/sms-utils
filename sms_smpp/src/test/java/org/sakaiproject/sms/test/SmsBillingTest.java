@@ -269,7 +269,7 @@ public class SmsBillingTest extends AbstractBaseTestCase {
 		smsAccount.setSakaiSiteId("2");
 		smsAccount.setMessageTypeCode("2");
 		smsAccount.setOverdraftLimit(10000.00f);
-		smsAccount.setBalance(100f);
+		smsAccount.setBalance(origionalAccBalance);
 		smsAccount.setAccountName("accountname");
 		smsAccount.setAccountEnabled(true);
 		HibernateLogicFactory.getAccountLogic().persistSmsAccount(smsAccount);
@@ -303,12 +303,59 @@ public class SmsBillingTest extends AbstractBaseTestCase {
 	 * Test settle credit difference.
 	 */
 	public void testSettleCreditDifference() {
-		fail();
+		int creditEstimate = 50;
+		float origionalAccBalance = 100;
+		int actualGroupSize = 10;
+
+		SmsAccount smsAccount = new SmsAccount();
+		smsAccount.setSakaiUserId("3");
+		smsAccount.setSakaiSiteId("3");
+		smsAccount.setMessageTypeCode("3");
+		smsAccount.setOverdraftLimit(10000.00f);
+		smsAccount.setBalance(origionalAccBalance);
+		smsAccount.setAccountName("accountname");
+		smsAccount.setAccountEnabled(true);
+		HibernateLogicFactory.getAccountLogic().persistSmsAccount(smsAccount);
+
+		SmsTask smsTask = new SmsTask();
+		smsTask.setSakaiSiteId("sakaiSiteId");
+		smsTask.setSenderUserName("sakaiUserId");
+		smsTask.setSmsAccountId(smsAccount.getId());
+		smsTask.setDateCreated(new Timestamp(System.currentTimeMillis()));
+		smsTask.setDateToSend(new Timestamp(System.currentTimeMillis()));
+		smsTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
+		smsTask.setAttemptCount(2);
+		smsTask.setMessageBody("messageBody");
+		smsTask.setSenderUserName("senderUserName");
+		smsTask.setMaxTimeToLive(1);
+		smsTask.setDelReportTimeoutDuration(1);
+		smsTask.setCreditEstimate(creditEstimate);
+		smsTask.setGroupSizeActual(0);
+		HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask);
+
+		smsBillingImpl.reserveCredits(smsTask);
+
+		smsAccount = HibernateLogicFactory.getAccountLogic().getSmsAccount(
+				smsAccount.getId());
+		assertNotNull(smsAccount);
+
+		// Account was credited
+		assertTrue(smsAccount.getBalance() < origionalAccBalance);
+
+		smsBillingImpl.settleCreditDifference(smsTask);
+
+		smsAccount = HibernateLogicFactory.getAccountLogic().getSmsAccount(
+				smsAccount.getId());
+
+		// Account balance was returnd to origional state since the actual
+		// groups size on the task was zero
+		assertTrue(smsAccount.getBalance().equals(origionalAccBalance));
+
 	}
 
-	// /////////////////////////////////////////////////////////////////////////////////////////////
+	// ///////////////////////////////////////
 	// HELPER METHODS
-	// /////////////////////////////////////////////////////////////////////////////////////////////
+	// ///////////////////////////////////////
 
 	/**
 	 * Gets the sms transactions.
