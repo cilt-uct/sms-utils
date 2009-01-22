@@ -19,7 +19,6 @@ package org.sakaiproject.sms.util;
 
 import uk.org.ponder.messageutil.TargettedMessage;
 import uk.org.ponder.messageutil.TargettedMessageList;
-import uk.org.ponder.util.UniversalRuntimeException;
 
 public class MessageFixupHelper {
 
@@ -56,8 +55,7 @@ public class MessageFixupHelper {
 				TargettedMessage message = messages.messageAt(i);
 				// If the message is a UniversalRuntimeException for one of the
 				// numeric fields
-				if (message.exception instanceof UniversalRuntimeException
-						&& mustFix(message.targetid, idsToFix)) {
+				if (message.args != null && mustFix(message.targetid, idsToFix)) {
 					messages.removeMessageAt(i);
 					i--;
 				}

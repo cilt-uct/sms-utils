@@ -25,15 +25,34 @@ import uk.org.ponder.mapping.PropertyEditorFactory;
  * Factory class to return PropertyEditor for Float values
  * 
  */
-public class FloatEditorFactory implements PropertyEditorFactory {
+public class NumberEditorFactory implements PropertyEditorFactory {
 
 	private String field;
+	private Class<? extends Number> numberClass;
 
 	public PropertyEditor getPropertyEditor() {
-		return new SmsCustomFloatEditor(true, field);
+		if (numberClass == null) {
+			numberClass = Float.class;
+		}
+		return new SmsCustomNumberEditor(numberClass, true, field);
 	}
 
 	public void setField(String field) {
 		this.field = field;
+	}
+
+	/**
+	 * NumberClass to set. Defaults to Float
+	 * 
+	 * @param numberClass
+	 */
+	public void setNumberClass(String numberClass) {
+		try {
+			this.numberClass = (Class<? extends Number>) Class
+					.forName(numberClass);
+		} catch (ClassNotFoundException e) {
+			this.numberClass = Float.class;
+		}
+
 	}
 }

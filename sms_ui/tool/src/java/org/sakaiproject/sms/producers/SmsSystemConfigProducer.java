@@ -43,7 +43,7 @@ public class SmsSystemConfigProducer implements ViewComponentProducer {
 
 	public void init() {
 		messageFixupHelper.fixupMessages("sms-config-sms-credit-cost",
-				"sms-config-scheduler-interval", "sms-config-sms-credit-cost");
+				"sms-config-scheduler-interval", "sms-config-report-timeout");
 	}
 
 	public String getViewID() {

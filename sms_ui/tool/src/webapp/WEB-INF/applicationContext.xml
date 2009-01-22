@@ -58,11 +58,6 @@
 	<property name="guard"><bean class="org.sakaiproject.sms.validators.SmsConfigValidator" /></property>
   </bean>
   
-  <bean id="smsSystemConfigGaurd" parent="writeGuardParent">
-  	<property name="guardedPath" value="SmsSystemConfigLocator.*"/>
-	<property name="guard"><bean class="org.sakaiproject.sms.validators.SmsSystemConfigValidator" /></property>
-  </bean>
- 
   <bean id="smsAccountGuard" parent="writeGuardParent">
  	<property name="guardedPath" value="SmsAccountLocator.*" />
  	<property name="guard"><bean class="org.sakaiproject.sms.validators.SmsAccountValidator" /></property>
@@ -72,15 +67,14 @@
  	<property name="guardedPath" value="SmsTaskLocator.*" />
  	<property name="guard"><bean class="org.sakaiproject.sms.validators.SmsTaskValidator" /></property>
   </bean> 
-   
-  
   
   <!-- Data Converters for Float values -->  
   <bean class="uk.org.ponder.mapping.DataConverter">
 	<property name="targetPath" value="SmsAccountLocator.*.balance" />
 	<property name="converter">
-		<bean class="org.sakaiproject.sms.util.FloatEditorFactory">
+		<bean class="org.sakaiproject.sms.util.NumberEditorFactory">
 			<property name="field" value="balance" />
+			<property name="numberClass" value="java.lang.Float" />
 		</bean>
 	</property>
   </bean>
@@ -88,21 +82,42 @@
   <bean class="uk.org.ponder.mapping.DataConverter">
 	<property name="targetPath" value="SmsAccountLocator.*.overdraftLimit" />
 	<property name="converter">
-		<bean class="org.sakaiproject.sms.util.FloatEditorFactory">
+		<bean class="org.sakaiproject.sms.util.NumberEditorFactory">
 			<property name="field" value="overdraftLimit" />
+			<property name="numberClass" value="java.lang.Float" />
 		</bean>
 	</property>
  </bean>
    
-  <bean class="uk.org.ponder.mapping.DataConverter">
+ <bean class="uk.org.ponder.mapping.DataConverter">
 	<property name="targetPath" value="SmsSystemConfigLocator.*.creditCost" />
 	<property name="converter">
-		<bean class="org.sakaiproject.sms.util.FloatEditorFactory">
+		<bean class="org.sakaiproject.sms.util.NumberEditorFactory">
 			<property name="field" value="creditCost" />
+			<property name="numberClass" value="java.lang.Float" />
 		</bean>
 	</property>
  </bean>
- 
+
+ <bean class="uk.org.ponder.mapping.DataConverter">
+	<property name="targetPath" value="SmsSystemConfigLocator.*.schedulerInterval" />
+	<property name="converter">
+		<bean class="org.sakaiproject.sms.util.NumberEditorFactory">
+			<property name="field" value="schedulerInterval" />
+			<property name="numberClass" value="java.lang.Integer" />
+		</bean>
+	</property>
+ </bean>
+
+ <bean class="uk.org.ponder.mapping.DataConverter">
+	<property name="targetPath" value="SmsSystemConfigLocator.*.delReportTimeoutDuration" />
+	<property name="converter">
+		<bean class="org.sakaiproject.sms.util.NumberEditorFactory">
+			<property name="field" value="delReportTimeoutDuration" />
+			<property name="numberClass" value="java.lang.Integer" />
+		</bean>
+	</property>
+ </bean>
  
  <bean class="uk.org.ponder.mapping.DataConverter">
 	<property name="targetPath" value="SmsTaskLocator.*.messageBody" />
