@@ -659,7 +659,7 @@ public class SmsSmppImpl implements SmsSmpp {
 	 * @param smsMessage
 	 * @return
 	 */
-	private boolean processOutgoingMessageRemotely(SmsMessage smsMessage) {
+	public boolean processOutgoingMessageRemotely(SmsMessage smsMessage) {
 		try {
 			// Construct data
 			String data = URLEncoder.encode("messageBody", "UTF-8") + "="
