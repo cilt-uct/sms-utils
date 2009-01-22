@@ -86,6 +86,10 @@ public class TransactionLogResultsRenderer implements SearchResultsRenderer {
 			UIMessage.make(searchResultsTable, "warning", "GeneralActionError");
 		else {
 			sortHeaderRenderer.makeSortingLink(searchResultsTable,
+					"tableheader-id:", sortViewParams,
+					"id",
+					"sms.transaction-log-search-results.id");
+			sortHeaderRenderer.makeSortingLink(searchResultsTable,
 					"tableheader-account-number:", sortViewParams,
 					"smsAccount",
 					"sms.transaction-log-search-results.account.no");
@@ -114,6 +118,8 @@ public class TransactionLogResultsRenderer implements SearchResultsRenderer {
 				UIBranchContainer row = UIBranchContainer.make(
 						searchResultsTable, "dataset:");
 
+				UIOutput.make(row, "row-data-id", NullHandling
+						.safeToString(smsTransaction.getId()));
 				UIOutput.make(row, "row-data-account-number", NullHandling
 						.safeToString(smsTransaction.getSmsAccount().getId()));
 				UIOutput.make(row, "row-data-transaction-type", NullHandling

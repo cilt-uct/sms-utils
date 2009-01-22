@@ -99,13 +99,14 @@ public class SearchCriteriaRenderer{
 		//No sender Transaction log
 		if((labelDropDown.indexOf("Task") != -1)||(labelDropDown.indexOf("Message") != -1))
 			createSender(searchForm);
+
+		UICommand.make(searchForm, "search", createSearchELString("fireAction"));
 	}
 
 	private void createSender(UIForm searchForm) {
 		
 		UIOutput.make(searchForm, "sender-label", "Sender:");
 		UIInput.make(searchForm, "sender", createSearchELString("sender"));
-		UICommand.make(searchForm, "search", createSearchELString("fireAction"));
 	}
 
 	private void createTaskDropDown(UIForm searchForm) {
