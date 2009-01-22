@@ -177,6 +177,8 @@ public class SmsCoreImpl implements SmsCore {
 		} catch (MoreThanOneAccountFoundException e) {
 			// TODO HANDLE THIS EXCPTION
 			e.printStackTrace();
+			smsTask.setSmsAccountId(1l); // Just setting this so helper window
+											// can work
 		}
 		smsTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
 		smsTask.setSakaiSiteId(sakaiSiteID);
