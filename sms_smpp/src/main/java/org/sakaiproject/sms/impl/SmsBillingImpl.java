@@ -29,7 +29,6 @@ import org.sakaiproject.sms.hibernate.model.SmsConfig;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.hibernate.model.SmsTransaction;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_Billing;
-import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -99,11 +98,6 @@ public class SmsBillingImpl implements SmsBilling {
 	public Integer convertAmountToCredits(Float amount) {
 		SmsConfig config = HibernateLogicFactory.getConfigLogic()
 				.getOrCreateSystemSmsConfig();
-		if (config.getCreditCost() == null) {
-			// Insert the default system config
-			HibernateLogicFactory.getConfigLogic().createDefaultSmsConfig(
-					SmsHibernateConstants.SMS_SYSTEM_SAKAI_SITE_ID);
-		}
 		Float result = (amount / config.getCreditCost());
 		return result.intValue();
 	}
@@ -120,11 +114,6 @@ public class SmsBillingImpl implements SmsBilling {
 	public Float convertCreditsToAmount(int creditCount) {
 		SmsConfig config = HibernateLogicFactory.getConfigLogic()
 				.getOrCreateSystemSmsConfig();
-		if (config.getCreditCost() == null) {
-			// Insert the default system config
-			HibernateLogicFactory.getConfigLogic().createDefaultSmsConfig(
-					SmsHibernateConstants.SMS_SYSTEM_SAKAI_SITE_ID);
-		}
 		return config.getCreditCost() * creditCount;
 	}
 
