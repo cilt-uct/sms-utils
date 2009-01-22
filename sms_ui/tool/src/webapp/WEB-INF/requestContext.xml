@@ -113,6 +113,7 @@
   	<property name="smsService" ref="org.sakaiproject.sms.api.SmsService" />
   	<property name="smsCore" ref="org.sakaiproject.sms.api.SmsCore" />
   	<property name="messages" ref="targettedMessageList"/>
+  	<property name="smsBilling" ref="org.sakaiproject.sms.api.SmsBilling"/>
   </bean>
   
   <!-- Helpers -->

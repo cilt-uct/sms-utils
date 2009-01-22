@@ -17,6 +17,7 @@
  **********************************************************************************/
 package org.sakaiproject.sms.beans;
 
+import org.sakaiproject.sms.api.SmsBilling;
 import org.sakaiproject.sms.api.SmsCore;
 import org.sakaiproject.sms.api.SmsService;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
@@ -31,6 +32,8 @@ public class HelperActionBean {
 	private SmsService smsService;
 	private SmsCore smsCore;
 	private TargettedMessageList messages;
+	private SmsBilling smsBilling;
+
 
 	/**
 	 * Cancel Action
@@ -76,8 +79,8 @@ public class HelperActionBean {
 					.locateBean(SmsTaskLocator.NEW_1);
 
 			// Check if credits available
-			if (smsService.checkSufficientCredits(smsTask.getSakaiSiteId(),
-					smsTask.getSenderUserName(), smsTask.getCreditEstimate())) {
+			boolean sufficientCredits = smsBilling.checkSufficientCredits(smsTask.getSmsAccountId(), smsTask.getCreditEstimate());
+			if (sufficientCredits) {
 				// do sending
 				smsCore.insertTask(smsTask);
 				messages.addMessage(new TargettedMessage(
@@ -116,5 +119,8 @@ public class HelperActionBean {
 
 	public void setSmsTaskLocator(SmsTaskLocator smsTaskLocator) {
 		this.smsTaskLocator = smsTaskLocator;
+	}
+	public void setSmsBilling(SmsBilling smsBilling) {
+		this.smsBilling = smsBilling;
 	}
 }
