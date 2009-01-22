@@ -145,6 +145,8 @@ public class SmsConfigLogicImpl extends SmsDao implements SmsConfigLogic {
 					.setSmsTaskMaxLifeTime(SmsHibernateConstants.MAXIMUM_TASK_LIFETIME);
 			config
 					.setSchedulerInterval(SmsHibernateConstants.SCHEDULER_INTERVAL);
+
+			config.setCreditCost(SmsHibernateConstants.COST_OF_CREDIT);
 		} else {
 			config.setSakaiToolId("DummyToolId");
 			config

@@ -25,6 +25,7 @@ import org.sakaiproject.sms.api.SmsBilling;
 import org.sakaiproject.sms.hibernate.logic.impl.HibernateLogicFactory;
 import org.sakaiproject.sms.hibernate.logic.impl.exception.MoreThanOneAccountFoundException;
 import org.sakaiproject.sms.hibernate.model.SmsAccount;
+import org.sakaiproject.sms.hibernate.model.SmsConfig;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.hibernate.model.SmsTransaction;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_Billing;
@@ -96,7 +97,14 @@ public class SmsBillingImpl implements SmsBilling {
 	 * @return the double
 	 */
 	public Integer convertAmountToCredits(Float amount) {
-		Float result = (amount / SmsHibernateConstants.COST_OF_CREDIT);
+		SmsConfig config = HibernateLogicFactory.getConfigLogic()
+				.getOrCreateSystemSmsConfig();
+		if (config.getCreditCost() == null) {
+			// Insert the default system config
+			HibernateLogicFactory.getConfigLogic().createDefaultSmsConfig(
+					SmsHibernateConstants.SMS_SYSTEM_SAKAI_SITE_ID);
+		}
+		Float result = (amount / config.getCreditCost());
 		return result.intValue();
 	}
 
@@ -110,7 +118,14 @@ public class SmsBillingImpl implements SmsBilling {
 	 * @return the credit amount
 	 */
 	public Float convertCreditsToAmount(int creditCount) {
-		return SmsHibernateConstants.COST_OF_CREDIT * creditCount;
+		SmsConfig config = HibernateLogicFactory.getConfigLogic()
+				.getOrCreateSystemSmsConfig();
+		if (config.getCreditCost() == null) {
+			// Insert the default system config
+			HibernateLogicFactory.getConfigLogic().createDefaultSmsConfig(
+					SmsHibernateConstants.SMS_SYSTEM_SAKAI_SITE_ID);
+		}
+		return config.getCreditCost() * creditCount;
 	}
 
 	/**
@@ -336,7 +351,7 @@ public class SmsBillingImpl implements SmsBilling {
 		// accounts
 		// current balance
 		smsTransaction.setSakaiUserId(smsTask.getSenderUserName());// TODO GET
-																	// FROM TASK
+		// FROM TASK
 		smsTransaction.setTransactionDate(new Date(System.currentTimeMillis()));
 		smsTransaction
 				.setTransactionTypeCode(SmsConst_Billing.TRANS_SETTLE_DIFFERENCE);
