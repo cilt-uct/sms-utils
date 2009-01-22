@@ -241,9 +241,9 @@ public class SmsCoreImpl implements SmsCore {
 		smsTask.setDateCreated(DateUtil.getCurrentDate());
 		HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask);
 		try {
-			smsBilling.reserveCredits(smsBilling.getAccountID(smsTask
-					.getSakaiSiteId(), smsTask.getSenderUserName(), 1), smsTask
-					.getId(), smsTask.getCreditEstimateInt());
+			smsTask.setSmsAccountId(smsBilling.getAccountID(smsTask
+					.getSakaiSiteId(), smsTask.getSenderUserName(), 1));
+			smsBilling.reserveCredits(smsTask);
 		} catch (MoreThanOneAccountFoundException e) {
 			// TODO HANDLE THIS EXCEPTION
 			e.printStackTrace();
