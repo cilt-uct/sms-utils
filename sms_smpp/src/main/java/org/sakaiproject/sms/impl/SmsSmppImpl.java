@@ -549,7 +549,15 @@ public class SmsSmppImpl implements SmsSmpp {
 		}
 	}
 
-	public SmsMessage notifyDeliveryReportRemotely(
+	/**
+	 * This is a future function that could allow an external system to receive
+	 * the delivery report and handle it accordingly. See a code example in
+	 * processOutgoingMessageRemotely.
+	 * 
+	 * @param deliveryReceipt
+	 * @return
+	 */
+	private SmsMessage notifyDeliveryReportRemotely(
 			DeliveryReceipt deliveryReceipt) {
 
 		return null;
@@ -651,7 +659,7 @@ public class SmsSmppImpl implements SmsSmpp {
 	 * @param smsMessage
 	 * @return
 	 */
-	public boolean processOutgoingMessageRemotely(SmsMessage smsMessage) {
+	private boolean processOutgoingMessageRemotely(SmsMessage smsMessage) {
 		try {
 			// Construct data
 			String data = URLEncoder.encode("messageBody", "UTF-8") + "="

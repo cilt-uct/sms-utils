@@ -46,16 +46,6 @@ public interface SmsSmpp {
 	public String getGatewayInfo();
 
 	/**
-	 * Outgoing sms messages may be processed (delivered) by and external
-	 * service. We simply pass the messages on to that service via http. By
-	 * default disabled.
-	 * 
-	 * @param smsMessage
-	 * @return
-	 */
-	public boolean processOutgoingMessageRemotely(SmsMessage smsMessage);
-
-	/**
 	 * Send a list of messages to the gateway. Abort if the gateway connection
 	 * is down or gateway returns an error and mark relevant messages as failed.
 	 * Return message statuses back to caller.
@@ -67,13 +57,4 @@ public interface SmsSmpp {
 	 */
 	public SmsMessage sendMessageToGateway(SmsMessage message);
 
-	/**
-	 * The Sakai Sms service process the incoming delivery report, but it also
-	 * notifies an external service of the delivery report via http. By default
-	 * disabled.
-	 * 
-	 * @param smsMessage
-	 * @return
-	 */
-	public boolean notifyDeliveryReportRemotely(SmsMessage smsMessage);
 }
