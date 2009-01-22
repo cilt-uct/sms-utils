@@ -40,10 +40,11 @@
 		<td><input id="mobileNumber" style="width: 80px;" onkeyup="checkNumbers()" type="text" rsf:id="id"></input></td>
 		<td><div rsf:id="tool-name-label">Tool Name:</div></td>
 		<td><input style="width: 80px;" id="toolName" type="text" rsf:id="tool-name"/></td>
-		<td>Sender:</td>
+		<td rsf:id="sender-label">Sender:</td>
 		<td><input style="width: 80px;" id="sender" type="text" rsf:id="sender"/></td>
 	</tr>
 </table>
+	<input type="button" value="Search"/>
 	<input rsf:id="search" type="submit" value="Search"/>
 	<input type="button" value="Reset" onclick="clearSearchCriteria()"/>
 </form>	

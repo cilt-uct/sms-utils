@@ -70,7 +70,7 @@ public class SearchCriteriaRenderer{
 		UIForm searchForm =  UIForm.make(searchCriteria, "search-criteria");
 		
 		//No drop down for Transaction log
-		//TODO: refactor by splitting into 3 different classes
+		//TODO: refactor by splitting into 3 different classes when design is known
 		if(labelDropDown.indexOf("Task") != -1)
 			createTaskDropDown(searchForm);
 		if(labelDropDown.indexOf("Message") != -1)
@@ -96,8 +96,14 @@ public class SearchCriteriaRenderer{
 			UIInput.make(searchForm, "tool-name", createSearchELString("toolName"));
 		}
 		
+		//No sender Transaction log
+		if((labelDropDown.indexOf("Task") != -1)||(labelDropDown.indexOf("Message") != -1))
+			createSender(searchForm);
+	}
+
+	private void createSender(UIForm searchForm) {
 		
-		
+		UIOutput.make(searchForm, "sender-label", "Sender:");
 		UIInput.make(searchForm, "sender", createSearchELString("sender"));
 		UICommand.make(searchForm, "search", createSearchELString("fireAction"));
 	}
@@ -116,10 +122,11 @@ public class SearchCriteriaRenderer{
 										   SmsConst_DeliveryStatus.STATUS_PENDING,
 										   SmsConst_DeliveryStatus.STATUS_INCOMPLETE,
 										   SmsConst_DeliveryStatus.STATUS_FAIL,
+										   SmsConst_DeliveryStatus.STATUS_TASK_COMPLETED
 										});
 		combo.optionlist = comboValues;
 		UIBoundList comboNames = new UIBoundList();
-		comboNames.setValue(new String[] {"All", "Retry", "Sent", "Busy", "Pending", "Incomplete", "Failed"});
+		comboNames.setValue(new String[] {"All", "Retry", "Sent", "Busy", "Pending", "Incomplete", "Failed", "Complete"});
 		combo.optionnames = comboNames;
 	}
 	
