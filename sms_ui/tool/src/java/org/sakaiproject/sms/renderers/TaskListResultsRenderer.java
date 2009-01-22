@@ -103,6 +103,10 @@ public class TaskListResultsRenderer implements SearchResultsRenderer {
 					"groupSizeActual",
 					"sms.task-list-search-results.size.actual");
 			sortHeaderRenderer.makeSortingLink(searchResultsTable,
+					"tableheader-messages-processed:", sortViewParams,
+					"messagesProcessed",
+					"sms.task-list-search-results.messages-processed");
+			sortHeaderRenderer.makeSortingLink(searchResultsTable,
 					"tableheader-tool-name:", sortViewParams, "sakaiToolName",
 					"sms.task-list-search-results.tool.name");
 			sortHeaderRenderer.makeSortingLink(searchResultsTable,
@@ -137,6 +141,8 @@ public class TaskListResultsRenderer implements SearchResultsRenderer {
 						.safeToString(smsTask.getGroupSizeEstimate()));
 				UIOutput.make(row, "row-data-size-actual", NullHandling
 						.safeToString(smsTask.getGroupSizeActual()));
+				UIOutput.make(row, "row-data-messages-processed", NullHandling
+						.safeToString(smsTask.getMessagesProcessed()));
 				UIOutput.make(row, "row-data-tool-name", NullHandling.safeToString(smsTask
 						.getSakaiToolName()));
 				UIOutput.make(row, "row-data-sender", NullHandling
