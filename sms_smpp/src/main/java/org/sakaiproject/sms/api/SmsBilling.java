@@ -36,6 +36,16 @@ import org.sakaiproject.sms.hibernate.model.SmsTask;
  */
 public interface SmsBilling {
 
+	
+	/**
+	 * Debit an acccont by the supplied amount
+	 * 
+	 * @param accountId
+	 * @param amountToDebit
+	 */
+	public void debitAccount(Long accountId, Float amountToDebit);
+	
+	
 	/**
 	 * Add extra credits to the specific account by making an entry into
 	 * SMS_TRANSACTION Also update the available credits on the account.

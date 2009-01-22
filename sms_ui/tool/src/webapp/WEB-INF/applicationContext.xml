@@ -33,7 +33,8 @@
   <bean parent="requestAddressibleParent">
     <property name="value" value="searchTaskList, searchTransactionLog, searchMessageLog, smsConfig, 
     smsSiteConfigActionBean, HelperActionBean, SmsTestActionBean, SmsMessageLocator, SmsConfigLocator,  
-    SmsSystemConfigLocator, csvExportBean, SmsAccountLocator, SmsTaskLocator, nullableFieldDateTransit"/>
+    SmsSystemConfigLocator, csvExportBean, SmsAccountLocator, SmsTaskLocator, nullableFieldDateTransit, 
+    debitAccountBean, debitAccountActionBean"/>
   </bean>
 
   <!-- The beans which will be preserved across a flow via simple instance copying -->
@@ -66,6 +67,10 @@
   <bean id="smsTaskGuard" parent="writeGuardParent">
  	<property name="guardedPath" value="SmsTaskLocator.*" />
  	<property name="guard"><bean class="org.sakaiproject.sms.validators.SmsTaskValidator" /></property>
+  </bean> 
+  <bean id="debitAccoutGaurd" parent="writeGuardParent">
+ 	<property name="guardedPath" value="DebitAccountActionBean.*" />
+ 	<property name="guard"><bean class="org.sakaiproject.sms.validators.DebitAccountValidator" /></property>
   </bean> 
   
   <!-- Data Converters for Float values -->  

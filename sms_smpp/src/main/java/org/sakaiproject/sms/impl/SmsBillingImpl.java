@@ -43,6 +43,32 @@ import org.sakaiproject.sms.hibernate.model.constants.SmsConst_Billing;
 public class SmsBillingImpl implements SmsBilling {
 
 	/**
+	 * Debit an account by the supplied amount
+	 * 
+	 * @param accountId
+	 * @param amountToDebit
+	 */
+	public void debitAccount(Long accountId, Float amountToDebit) {
+		
+		if(amountToDebit < 0){
+			throw new RuntimeException("The amount supplied to debit an account be my be positive");
+		}
+		
+		SmsAccount account = HibernateLogicFactory.getAccountLogic()
+		.getSmsAccount(accountId);
+		
+		SmsTransaction smsTransaction = new SmsTransaction();
+		smsTransaction.setTransactionAmount(amountToDebit);
+		smsTransaction.setSakaiUserId(account.getSakaiUserId());
+		smsTransaction.setSmsAccount(account);
+		smsTransaction.setTransactionCredits(0);
+		//TODO : Find out how task id is going to handled 
+		smsTransaction.setSmsTaskId(1L);
+		HibernateLogicFactory.getTransactionLogic()
+			.insertDebitTransaction(smsTransaction);
+	}		
+	
+	/**
 	 * Add extra credits to the specific account by making an entry into
 	 * SMS_TRANSACTION Also update the available credits on the account.
 	 * 
@@ -221,9 +247,9 @@ public class SmsBillingImpl implements SmsBilling {
 	 * @param transCodeID
 	 *            the trans code id
 	 * @param creditAmount
+	 * @return true, if insert transaction
 	 *            the credit amount
 	 * 
-	 * @return true, if insert transaction
 	 */
 	public Boolean insertTransaction(Long accountID, int transCodeID,
 			int creditAmount) {
@@ -396,4 +422,5 @@ public class SmsBillingImpl implements SmsBilling {
 		}
 		return true;
 	}
+
 }

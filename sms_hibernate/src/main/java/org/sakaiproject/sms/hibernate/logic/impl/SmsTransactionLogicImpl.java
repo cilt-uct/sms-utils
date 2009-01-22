@@ -270,6 +270,7 @@ public class SmsTransactionLogicImpl extends SmsDao implements
 		// Update the account balance
 		account.setBalance(account.getBalance()
 				+ smsTransaction.getTransactionAmount());
+		smsTransaction.setBalance(account.getBalance());
 		HibernateLogicFactory.getAccountLogic().persistSmsAccount(account);
 
 		persist(smsTransaction);

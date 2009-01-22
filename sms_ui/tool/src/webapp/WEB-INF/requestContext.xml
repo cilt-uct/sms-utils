@@ -8,7 +8,8 @@
   <bean id="searchTaskList" class="org.sakaiproject.sms.hibernate.bean.SearchFilterBean"/>	
   <bean id="searchTransactionLog" class="org.sakaiproject.sms.hibernate.bean.SearchFilterBean"/>	
   <bean id="searchMessageLog" class="org.sakaiproject.sms.hibernate.bean.SearchFilterBean"/>	
-
+  <bean id="debitAccountBean" class="org.sakaiproject.sms.beans.DebitAccountBean"/>	
+  
   <!--  Renderers -->
   <bean id="taskListCriteriaRenderer" class="org.sakaiproject.sms.renderers.SearchCriteriaRenderer">
 	<property name="labelID" value="Mobile Number:"/>
@@ -44,6 +45,8 @@
   </bean>
 
   <!--  Producers -->
+  <bean class="org.sakaiproject.sms.producers.DebitAccountProducer"/>
+
   <bean class="org.sakaiproject.sms.producers.SmsTestProducer" >
 	<property name="accountHelper" ref="accountHelper" />
   </bean>
@@ -94,7 +97,14 @@
   	<property name="sakaiDateFormat" ref="sakaiDateFormat" />
   </bean>
   
+  
   <!--  Action Beans -->  
+  <bean id="debitAccountActionBean" class="org.sakaiproject.sms.beans.DebitAccountActionBean">
+  	<property name="debitAccountBean" ref="debitAccountBean"/>
+  	<property name="smsBilling" ref="org.sakaiproject.sms.api.SmsBilling"/>
+  </bean>
+  
+  
   <bean id="csvExportBean" class="org.sakaiproject.sms.reporting.CsvExportBean"/>
 
   <bean id="SmsTestActionBean" class="org.sakaiproject.sms.beans.SmsTestActionBean">
