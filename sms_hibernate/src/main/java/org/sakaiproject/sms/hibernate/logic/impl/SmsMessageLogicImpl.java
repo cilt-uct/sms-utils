@@ -96,7 +96,8 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 	}
 
 	/**
-	 * A new sms message factory method. Only used for testing.
+	 * ======================== ONLY FOR TESTING ==================== A new sms
+	 * message factory method. Only used for testing.
 	 * 
 	 * This method will instantiate a SmsTask and return a SmsMessage with the
 	 * associated SmsTask object set on it.
