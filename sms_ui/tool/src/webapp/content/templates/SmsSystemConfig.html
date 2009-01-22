@@ -3,32 +3,33 @@
 <head>
 <link href="../css/tool_base.css" type="text/css" rel="stylesheet" media="all" />
 <link href="../css/default/tool.css" type="text/css" rel="stylesheet" media="all" />
-<script type="text/javascript" language="JavaScript" src="../js/gen_validatorv31.js"></script>
+<!--<script type="text/javascript" language="JavaScript" src="../js/gen_validatorv31.js"></script>-->
 <title rsf:id="page-title">Sms System Config</title>
 </head>
 <body style="padding: 5px; margin: 4px;">
-	<div rsf:id="message-for:*">
-		<span>Message for user here</span>
-  	</div>
-  	<div id='config_errorloc' style="color: red; font-weight: bold; display:inline"></div>  
+<!--  	<div id='config_errorloc' style="color: red; font-weight: bold; display:inline"></div>  -->
 	<div align="left">
     <div class="navIntraTool"><a href="#" rsf:id="site-settings">Site Config</a></div>	
 
 	<form name="config" id="config" action="#" rsf:id="sms-system-config-form">
     	<h2 rsf:id="page-heading">SMS Config</h2>
+   	
+   	<div rsf:id="message-for:*">
+		<span>Message for user here</span>
+  	</div>
     	
     <table class="shorttext required" align="left">
       <tr>
       	<td><label rsf:id="scheduler-interval-label">Scheduler Interval</label></td>
-      	<td><input  style="width: 72px" maxLength="10" type="text" rsf:id="sms-config-scheduler-interval"></input></td>
+      	<td><input  style="width: 72px" maxlength="10" type="text" rsf:id="sms-config-scheduler-interval"></input></td>
       </tr>
       <tr>
       	<td><label rsf:id="gateway-report-timeout">Gateway report timeout:</label></td>
-      	<td><input style="width: 72px" maxLength="10" type="text" rsf:id="sms-config-report-timeout"></input></td>
+      	<td><input style="width: 72px" maxlength="10" type="text" rsf:id="sms-config-report-timeout"></input></td>
       </tr>
       <tr>
       	<td><label rsf:id="sms-credit-cost">Gateway report timeout:</label></td>
-      	<td><input style="width: 72px" maxLength="10" type="text" rsf:id="sms-config-sms-credit-cost"></input></td>
+      	<td><input style="width: 72px" maxlength="10" type="text" rsf:id="sms-config-sms-credit-cost"></input></td>
       </tr>
       <tr>
       <td colspan="1" align="left">
@@ -39,17 +40,17 @@
     </table>
     </form>
     
-    <script language="JavaScript" type="text/javascript">
- 		var frmvalidator = new Validator("config");
- 		frmvalidator.EnableOnPageErrorDisplaySingleBox();
- 		frmvalidator.EnableMsgsTogether();
-		frmvalidator.addValidation("sms-config-scheduler-interval","minlen=1", "Please enter a number for Scheduler Interval");
-		frmvalidator.addValidation("sms-config-scheduler-interval","num", "Please enter a valid number for Scheduler Interval");
-		frmvalidator.addValidation("sms-config-report-timeout","minlen=1", "Please enter a number for Gateway report timeout");
-		frmvalidator.addValidation("sms-config-report-timeout","num", "Please enter a number for Gateway report timeout");
-		frmvalidator.addValidation("sms-config-sms-credit-cost","minlen=1", "Please enter a number for Credit Cost");
-		frmvalidator.addValidation("sms-config-sms-credit-cost","dec", "Please enter a valid number for Credit Cost");
-	</script>
+<!--    <script language="JavaScript" type="text/javascript">-->
+<!-- 		var frmvalidator = new Validator("config");-->
+<!-- 		frmvalidator.EnableOnPageErrorDisplaySingleBox();-->
+<!-- 		frmvalidator.EnableMsgsTogether();-->
+<!--		frmvalidator.addValidation("sms-config-scheduler-interval","minlen=1", "Please enter a number for Scheduler Interval");-->
+<!--		frmvalidator.addValidation("sms-config-scheduler-interval","num", "Please enter a valid number for Scheduler Interval");-->
+<!--		frmvalidator.addValidation("sms-config-report-timeout","minlen=1", "Please enter a number for Gateway report timeout");-->
+<!--		frmvalidator.addValidation("sms-config-report-timeout","num", "Please enter a number for Gateway report timeout");-->
+<!--		frmvalidator.addValidation("sms-config-sms-credit-cost","minlen=1", "Please enter a number for Credit Cost");-->
+<!--		frmvalidator.addValidation("sms-config-sms-credit-cost","dec", "Please enter a valid number for Credit Cost");-->
+<!--	</script>-->
     
 </div>
 </body>

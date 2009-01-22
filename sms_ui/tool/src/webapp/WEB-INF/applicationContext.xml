@@ -93,6 +93,16 @@
 		</bean>
 	</property>
  </bean>
+   
+  <bean class="uk.org.ponder.mapping.DataConverter">
+	<property name="targetPath" value="SmsSystemConfigLocator.*.creditCost" />
+	<property name="converter">
+		<bean class="org.sakaiproject.sms.util.FloatEditorFactory">
+			<property name="field" value="creditCost" />
+		</bean>
+	</property>
+ </bean>
+ 
  
  <bean class="uk.org.ponder.mapping.DataConverter">
 	<property name="targetPath" value="SmsTaskLocator.*.messageBody" />

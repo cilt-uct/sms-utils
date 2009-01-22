@@ -22,7 +22,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
-public class SmsSystemConfigValidator implements Validator{
+public class SmsSystemConfigValidator implements Validator {
 
 	@SuppressWarnings("unchecked")
 	public boolean supports(Class clazz) {
@@ -33,10 +33,11 @@ public class SmsSystemConfigValidator implements Validator{
 	}
 
 	public void validate(Object target, Errors errors) {
-				
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "delReportTimeoutDuration", "sms.errors.gateway.empty");
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors,"schedulerInterval", "sms.errors.scheduler.interval");
-		ValidationUtils.rejectIfEmptyOrWhitespace(errors,"creditCost", "sms.errors.credit.cost");
+
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors,
+				"delReportTimeoutDuration", "sms.errors.gateway.empty");
+		ValidationUtils.rejectIfEmptyOrWhitespace(errors, "schedulerInterval",
+				"sms.errors.scheduler.interval");
 	}
 
 }

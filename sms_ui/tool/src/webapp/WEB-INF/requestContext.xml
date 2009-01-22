@@ -55,7 +55,9 @@
   
   <bean class="org.sakaiproject.sms.producers.SmsSiteConfigProducer"/>
   
-  <bean class="org.sakaiproject.sms.producers.SmsSystemConfigProducer"/>
+  <bean class="org.sakaiproject.sms.producers.SmsSystemConfigProducer">
+	<property name="messageFixupHelper" ref="messageFixupHelper" />
+  </bean>
   											  
   <bean class="org.sakaiproject.sms.producers.TaskListPopupProducer" >
   	<property name="smsTaskLogic" ref="smsTaskLogic"/>
@@ -63,8 +65,8 @@
   
   <bean class="org.sakaiproject.sms.producers.AccountProducer" >
   	<property name="dateEvolver" ref="myFieldDateInputEvolver" />
-  	<property name="messages" ref="targettedMessageList" />
   	<property name="ELEvaluator" ref="ELEvaluator" />
+  	<property name="messageFixupHelper" ref="messageFixupHelper" />
   </bean>
   
   <bean class="org.sakaiproject.sms.producers.BillingAdminProducer" >
@@ -119,6 +121,10 @@
 	<property name="smsAccountLogic" ref="SmsAccountLogic" />
   </bean>
   
+  <bean id="messageFixupHelper" class="org.sakaiproject.sms.util.MessageFixupHelper">
+  	<property name="messages" ref="targettedMessageList" />
+  </bean>
+   	
   <!-- Locators -->
   <bean id="SmsMessageLocator" class="org.sakaiproject.sms.otp.SmsMessageLocator" >
   	<property name="smsMessageLogic" ref="smsMessageLogic" />

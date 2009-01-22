@@ -25,7 +25,7 @@ import org.sakaiproject.sms.hibernate.model.SmsConfig;
 
 import uk.org.ponder.beanutil.BeanLocator;
 
-public class SmsSystemConfigLocator implements BeanLocator{
+public class SmsSystemConfigLocator implements BeanLocator {
 
 	private SmsConfigLogic smsConfigLogic;
 
@@ -34,14 +34,13 @@ public class SmsSystemConfigLocator implements BeanLocator{
 	}
 
 	public static final String LOCATOR_NAME = "SmsSystemConfigLocator";
-	
+
 	public static final String NEW_PREFIX = "new ";
 
 	public static final String NEW_1 = NEW_PREFIX + "1";
 
 	private final Map<String, SmsConfig> delivered = new HashMap<String, SmsConfig>();
 
-	
 	public Object locateBean(String name) {
 		SmsConfig togo = delivered.get(name);
 		if (togo == null) {
@@ -54,12 +53,17 @@ public class SmsSystemConfigLocator implements BeanLocator{
 		}
 		return togo;
 	}
-	
-	public void save(){		
+
+	public void save() {
 		for (SmsConfig systemConfig : delivered.values()) {
-			//round by 2 decimal places, if logic is placed in SMSConfig a InvocationTargetException occurs
-			systemConfig.setCreditCost(Math.round(systemConfig.getCreditCost() * 100) * 0.01f);
+			// round by 2 decimal places, if logic is placed in SMSConfig a
+			// InvocationTargetException occurs
+			if (systemConfig.getCreditCost() != null) {
+				systemConfig.setCreditCost(Math.round(systemConfig
+						.getCreditCost() * 100) * 0.01f);
+			}
 			smsConfigLogic.persistSmsConfig(systemConfig);
 		}
 	}
+
 }
