@@ -39,9 +39,9 @@ import org.sakaiproject.sms.impl.SmsSmppImpl;
  * This test also send messages to the smpp simulator but it check the specific
  * statuses of sent messages. It also test the retrieval of the next sms task
  * from the SMS_TASK table.
- *
+ * 
  * @author etienne@psybergate.co.za
- *
+ * 
  */
 
 public class SmsCoreTest extends AbstractBaseTestCase {
@@ -58,10 +58,10 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 		smsSmppImpl = new SmsSmppImpl();
 		smsCoreImpl.setSmsBilling(new SmsBillingImpl());
 		smsSmppImpl.init();
-		smsSmppImpl.setLogLevel(Level.ALL);
+		smsSmppImpl.setLogLevel(Level.WARN);
 		smsCoreImpl.setSmsSmpp(smsSmppImpl);
-		smsCoreImpl.enableDebugInformation(true);
-		LOG.setLevel(Level.ALL);
+		smsCoreImpl.setLoggingLevel(Level.WARN);
+		LOG.setLevel(Level.WARN);
 	}
 
 	public SmsCoreTest() {
@@ -86,13 +86,13 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 	 * must pick up the oldest SmsTask with an (pending/incomplete/reply)
 	 * status. The test succeeds if the Smstasks are returned in the proper
 	 * order and the correct amount of delivery reports were received.
-	 *
+	 * 
 	 * NOTE: Make sure that the SMS_TASK table is empty before running this
 	 * test, else it will fail.
 	 */
 	public void testProcessNextTask() {
 		smsSmppImpl.connectToGateway();
-		smsSmppImpl.setLogLevel(Level.ALL);
+
 		if (smsCoreImpl.getSmsSmpp().getConnectionStatus()) {
 
 			Calendar now = Calendar.getInstance();
@@ -134,12 +134,16 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 			smsTask4.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
 
 			smsTask1.setDateCreated(DateUtil.getCurrentDate());
+			smsTask1.setSmsAccountId(1l);
 			HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask1);
 			smsTask2.setDateCreated(DateUtil.getCurrentDate());
+			smsTask2.setSmsAccountId(1l);
 			HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask2);
 			smsTask3.setDateCreated(DateUtil.getCurrentDate());
+			smsTask3.setSmsAccountId(1l);
 			HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask3);
 			smsTask4.setDateCreated(DateUtil.getCurrentDate());
+			smsTask4.setSmsAccountId(1l);
 			HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask4);
 
 			assertEquals(true, smsTask1.getId().equals(
@@ -191,7 +195,7 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 	 */
 	public void testTaskStatuses() {
 		smsSmppImpl.connectToGateway();
-		smsSmppImpl.setLogLevel(Level.ALL);
+
 		if (smsCoreImpl.getSmsSmpp().getConnectionStatus()) {
 
 			Calendar now = Calendar.getInstance();
@@ -212,10 +216,11 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 					SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_SITE_ID, null,
 					SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID);
 			smsTask1.setMaxTimeToLive(60);
-
+			smsTask1.setSmsAccountId(1l);
 			smsTask1.setDateCreated(DateUtil.getCurrentDate());
 			HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask1);
 			smsTask2.setDateCreated(DateUtil.getCurrentDate());
+			smsTask2.setSmsAccountId(1l);
 			HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask2);
 
 			assertEquals(true, smsTask1.getId().equals(
@@ -267,6 +272,7 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 				SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID);
 
 		smsTask.setDateCreated(DateUtil.getCurrentDate());
+		smsTask.setSmsAccountId(1l);
 		HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask);
 
 		smsTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
@@ -315,74 +321,59 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 	public void testTimeoutAndMessageStatusUpdate() {
 		smsSmppImpl.connectToGateway();
 		smsSmppImpl.setLogLevel(Level.ALL);
-		if (smsCoreImpl.getSmsSmpp().getConnectionStatus()) {
-			SmsTask statusUpdateTask = smsCoreImpl.getPreliminaryTask(
-					"TestTimeoutAndMessageStatusUpdate-StatusUpdateTask",
-					new Date(System.currentTimeMillis()),
-					"TestTimeoutAndMessageStatusUpdate-StatusUpdateTask",
-					SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_SITE_ID, null,
-					SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID);
-			statusUpdateTask
-					.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
-			statusUpdateTask.setAttemptCount(0);
-			statusUpdateTask.setDateProcessed(new Date());
-			statusUpdateTask.setSmsMessagesOnTask(smsCoreImpl
-					.generateSmsMessages(statusUpdateTask));
+		smsSmppImpl.getSession().setMessageReceiverListener(null);
+		SmsTask statusUpdateTask = smsCoreImpl.getPreliminaryTask(
+				"TestTimeoutAndMessageStatusUpdate-StatusUpdateTask", new Date(
+						System.currentTimeMillis()),
+				"TestTimeoutAndMessageStatusUpdate-StatusUpdateTask",
+				SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_SITE_ID, null,
+				SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID);
+		statusUpdateTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
+		statusUpdateTask.setAttemptCount(0);
+		statusUpdateTask.setDateProcessed(new Date());
+		statusUpdateTask.setSmsMessagesOnTask(smsCoreImpl
+				.generateSmsMessages(statusUpdateTask));
+		statusUpdateTask.setSmsAccountId(1l);
+		statusUpdateTask
+				.setMessageTypeId(SmsHibernateConstants.SMS_TASK_TYPE_PROCESS_NOW);
+		smsCoreImpl.insertTask(statusUpdateTask);
+		smsSmppImpl.sendMessagesToGateway(statusUpdateTask.getSmsMessages());
 
-			LOG.info("SMS-messages on task: "
-					+ statusUpdateTask.getSmsMessages().size());
-			LOG.info("SMS-messages Pending: "
-					+ statusUpdateTask.getMessagesWithStatus(
-							SmsConst_DeliveryStatus.STATUS_PENDING).size());
-			LOG.info("Sending Messages To Gateway");
-			statusUpdateTask
-					.setMessageTypeId(SmsHibernateConstants.SMS_TASK_TYPE_PROCESS_NOW);
-			smsCoreImpl.insertTask(statusUpdateTask);
-			smsSmppImpl
-					.sendMessagesToGateway(statusUpdateTask.getSmsMessages());
-			LOG.info("SMS-messages Pending: "
-					+ statusUpdateTask.getMessagesWithStatus(
-							SmsConst_DeliveryStatus.STATUS_PENDING).size());
-			LOG.info("SMS-messages STATUS_SENT: "
-					+ statusUpdateTask.getMessagesWithStatus(
-							SmsConst_DeliveryStatus.STATUS_SENT).size());
-			assertEquals(true, statusUpdateTask.getMessagesWithStatus(
-					SmsConst_DeliveryStatus.STATUS_PENDING).size() == 0);
+		assertEquals(true, statusUpdateTask.getMessagesWithStatus(
+				SmsConst_DeliveryStatus.STATUS_PENDING).size() == 0);
 
-			SmsTask timeOutTask = smsCoreImpl.getPreliminaryTask(
-					"testTimeoutAndMessageStatusUpdate-TIMEOUT", new Date(),
-					"testTimeoutAndMessageStatusUpdate-TIMEOUT",
-					SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_SITE_ID, null,
-					SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID);
-			timeOutTask.setDelReportTimeoutDuration(60);
-			timeOutTask.setSmsMessagesOnTask(smsCoreImpl
-					.generateSmsMessages(timeOutTask));
-			smsCoreImpl.insertTask(timeOutTask);
-			smsSmppImpl.getSession().setMessageReceiverListener(null);
-			smsCoreImpl.processNextTask();
+		SmsTask timeOutTask = smsCoreImpl.getPreliminaryTask(
+				"testTimeoutAndMessageStatusUpdate-TIMEOUT", new Date(),
+				"testTimeoutAndMessageStatusUpdate-TIMEOUT",
+				SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_SITE_ID, null,
+				SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID);
+		timeOutTask.setDelReportTimeoutDuration(60);
+		timeOutTask.setSmsMessagesOnTask(smsCoreImpl
+				.generateSmsMessages(timeOutTask));
+		timeOutTask.setSmsAccountId(1l);
+		smsCoreImpl.insertTask(timeOutTask);
+		smsCoreImpl.processNextTask();
 
-			try {
-				Thread.sleep(60000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+		try {
+			Thread.sleep(60000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		smsCoreImpl.processTimedOutDeliveryReports();
+		SmsTask smsTask3Update = HibernateLogicFactory.getTaskLogic()
+				.getSmsTask(timeOutTask.getId());
+
+		Set<SmsMessage> smsMessages = smsTask3Update.getSmsMessages();
+		boolean timedOutMessagesFound = false;
+		for (SmsMessage message : smsMessages) {
+			if (message.getStatusCode().equals(
+					SmsConst_DeliveryStatus.STATUS_TIMEOUT)) {
+				timedOutMessagesFound = true;
+				break;
 			}
-			smsCoreImpl.processTimedOutDeliveryReports();
-			SmsTask smsTask3Update = HibernateLogicFactory.getTaskLogic()
-					.getSmsTask(timeOutTask.getId());
-
-			Set<SmsMessage> smsMessages = smsTask3Update.getSmsMessages();
-			boolean timedOutMessagesFound = false;
-			for (SmsMessage message : smsMessages) {
-				if (message.getStatusCode().equals(
-						SmsConst_DeliveryStatus.STATUS_TIMEOUT)) {
-					timedOutMessagesFound = true;
-					break;
-				}
-
-			}
-			assertEquals(timedOutMessagesFound, true);
 
 		}
-	}
+		assertEquals(timedOutMessagesFound, true);
 
+	}
 }

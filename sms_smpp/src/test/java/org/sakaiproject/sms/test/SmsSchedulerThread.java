@@ -23,6 +23,7 @@ import java.util.Date;
 import net.sourceforge.groboutils.junit.v1.TestRunnable;
 
 import org.apache.log4j.Level;
+import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
 import org.sakaiproject.sms.impl.SmsBillingImpl;
 import org.sakaiproject.sms.impl.SmsCoreImpl;
@@ -63,10 +64,10 @@ public class SmsSchedulerThread extends TestRunnable {
 		smsCoreImpl.setSmsBilling(new SmsBillingImpl());
 		smsSmppImpl.init();
 		smsCoreImpl.setSmsSmpp(smsSmppImpl);
-		smsCoreImpl.enableDebugInformation(true);
+		smsCoreImpl.setLoggingLevel(Level.WARN);
 		smsSchedulerImpl.setSmsCore(smsCoreImpl);
 		LOG.setLevel(Level.ALL);
-		smsSmppImpl.setLogLevel(Level.ALL);
+		smsSmppImpl.setLogLevel(Level.WARN);
 		smsSchedulerImpl.init();
 	}
 
@@ -78,26 +79,34 @@ public class SmsSchedulerThread extends TestRunnable {
 		LOG.info(sessionName + ": Inserting tasks ");
 		smsSmppImpl.setLogLevel(Level.ALL);
 		Calendar now = Calendar.getInstance();
-		smsCoreImpl.insertTask(smsCoreImpl.getPreliminaryTask("SmsTask3"
+
+		SmsTask smsTask3 = smsCoreImpl.getPreliminaryTask("SmsTask3"
 				+ sessionName, new Date(now.getTimeInMillis()),
 				"-ThreadingTest-SmsTask3MessageBody",
 				SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_SITE_ID, null,
-				SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID));
+				SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID);
+		smsTask3.setSmsAccountId(1l);
+		smsCoreImpl.insertTask(smsTask3);
 
 		now.add(Calendar.MINUTE, -1);
-		smsCoreImpl.insertTask(smsCoreImpl.getPreliminaryTask("SmsTask2"
+		SmsTask smsTask2 = smsCoreImpl.getPreliminaryTask("SmsTask2"
 				+ sessionName, new Date(now.getTimeInMillis()),
 				"ThreadingTest-SmsTask2MessageBody",
 				SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_SITE_ID, null,
-				SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID));
+				SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID);
+		smsTask2.setSmsAccountId(1l);
+		smsCoreImpl.insertTask(smsTask2);
 
 		now.add(Calendar.MINUTE, -3);
-		smsCoreImpl.insertTask(smsCoreImpl.getPreliminaryTask("SmsTask1"
+
+		SmsTask smsTask1 = smsCoreImpl.getPreliminaryTask("SmsTask1"
 				+ sessionName, new Date(now.getTimeInMillis()),
 				"ThreadingTest-SmsTask1MessageBody",
 				SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_SITE_ID, null,
-				SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID));
-		LOG.info(sessionName + ": Starting Sms Scheduler ");
+				SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID);
+
+		smsTask1.setSmsAccountId(1l);
+		smsCoreImpl.insertTask(smsTask1);
 
 		try {
 			Thread.sleep(60000);

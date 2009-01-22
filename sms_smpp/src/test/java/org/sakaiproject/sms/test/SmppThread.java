@@ -18,6 +18,8 @@
 package org.sakaiproject.sms.test;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 import net.sourceforge.groboutils.junit.v1.TestRunnable;
 
@@ -28,6 +30,9 @@ import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_SmscDeliveryStatus;
 import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
+import org.sakaiproject.sms.hibernate.util.HibernateUtil;
+import org.sakaiproject.sms.impl.SmsBillingImpl;
+import org.sakaiproject.sms.impl.SmsCoreImpl;
 import org.sakaiproject.sms.impl.SmsSmppImpl;
 
 /**
@@ -47,6 +52,12 @@ public class SmppThread extends TestRunnable {
 	/** The sms smpp impl. */
 	private final SmsSmppImpl smsSmppImpl;
 
+	private final SmsCoreImpl smsCoreImpl;
+
+	static {
+		HibernateUtil.createSchema();
+	}
+
 	/**
 	 * Instantiates a new smpp session.
 	 * 
@@ -57,10 +68,14 @@ public class SmppThread extends TestRunnable {
 	 */
 	public SmppThread(String sessionName, int messageCount, int messageDelay) {
 		this.sessionName = sessionName;
-		this.smsSmppImpl = new SmsSmppImpl();
-		this.smsSmppImpl.init();
-		this.smsSmppImpl.setLogLevel(Level.WARN);
-		this.LOG.setLevel(Level.ALL);
+		smsCoreImpl = new SmsCoreImpl();
+		smsSmppImpl = new SmsSmppImpl();
+		smsCoreImpl.setSmsBilling(new SmsBillingImpl());
+		smsSmppImpl.init();
+		smsSmppImpl.setLogLevel(Level.INFO);
+		smsCoreImpl.setSmsSmpp(smsSmppImpl);
+		smsCoreImpl.setLoggingLevel(Level.INFO);
+		LOG.setLevel(Level.INFO);
 		this.message_count = messageCount;
 		this.delay_between_messages = messageDelay;
 	}
@@ -99,21 +114,23 @@ public class SmppThread extends TestRunnable {
 		SmsTask insertTask = insertNewTask(this.sessionName,
 				SmsConst_DeliveryStatus.STATUS_PENDING, new Date(System
 						.currentTimeMillis()), 0);
+		insertTask
+				.setMessagesProcessed(SmsHibernateConstants.SMS_TASK_TYPE_PROCESS_NOW);
+		insertTask.setAttemptCount(2);
+		Set<SmsMessage> messages = new HashSet<SmsMessage>();
 		for (int i = 0; i < message_count; i++) {
 			SmsMessage message = new SmsMessage();
-			message.setMobileNumber("0721998919");
+			message.setMobileNumber("072199891" + i);
 			message.setSakaiUserId(this.sessionName);
 			message.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
 			message.setSmsTask(insertTask);
-			HibernateLogicFactory.getMessageLogic().persistSmsMessage(message);
-			smsSmppImpl.sendMessageToGateway(message);
-
-			if (message.isSubmitResult()) {
-				sent_count++;
-			}
-			Thread.sleep(delay_between_messages);
+			messages.add(message);
 		}
-		LOG.info(sessionName + ": sent " + sent_count + " to gateway");
+		insertTask.setSmsMessagesOnTask(messages);
+		HibernateLogicFactory.getTaskLogic().persistSmsTask(insertTask);
+		smsCoreImpl.processTask(insertTask);
+		LOG.info(sessionName + ": sent " + insertTask.getMessagesProcessed()
+				+ " to gateway");
 
 		// waiting for a-synchronise delivery reports to arrive. Every
 		// second we check to see if new messages came in.If the

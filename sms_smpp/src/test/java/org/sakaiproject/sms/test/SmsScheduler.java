@@ -33,14 +33,14 @@ public class SmsScheduler extends AbstractBaseTestCase {
 		smsSchedulerImpl = new SmsSchedulerImpl();
 		smsCoreImpl = new SmsCoreImpl();
 		smsSmppImpl = new SmsSmppImpl();
+		smsSmppImpl.setLogLevel(Level.WARN);
 		smsCoreImpl.setSmsBilling(new SmsBillingImpl());
 		smsSmppImpl.init();
 		smsCoreImpl.setSmsSmpp(smsSmppImpl);
-		smsCoreImpl.enableDebugInformation(true);
+		smsCoreImpl.setLoggingLevel(Level.WARN);
 		smsSchedulerImpl.setSmsCore(smsCoreImpl);
 		smsSchedulerImpl.init();
-
-		LOG.setLevel(Level.ALL);
+		LOG.setLevel(Level.WARN);
 	}
 
 	/**
@@ -53,6 +53,8 @@ public class SmsScheduler extends AbstractBaseTestCase {
 				now.getTimeInMillis()), "smsTask3",
 				SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_SITE_ID, null,
 				SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID);
+
+		smsTask3.setSmsAccountId(1l);
 		smsCoreImpl.insertTask(smsTask3);
 
 		now.add(Calendar.MINUTE, -1);
@@ -60,6 +62,7 @@ public class SmsScheduler extends AbstractBaseTestCase {
 				now.getTimeInMillis()), "smsTask2MessageBody",
 				SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_SITE_ID, null,
 				SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID);
+		smsTask2.setSmsAccountId(1l);
 		smsCoreImpl.insertTask(smsTask2);
 
 		now.add(Calendar.MINUTE, -3);
@@ -67,7 +70,7 @@ public class SmsScheduler extends AbstractBaseTestCase {
 				now.getTimeInMillis()), "smsTask1MessageBody",
 				SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_SITE_ID, null,
 				SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID);
-
+		smsTask1.setSmsAccountId(1l);
 		smsCoreImpl.insertTask(smsTask1);
 
 		try {

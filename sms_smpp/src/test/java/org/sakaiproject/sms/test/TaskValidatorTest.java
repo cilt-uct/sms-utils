@@ -50,7 +50,7 @@ public class TaskValidatorTest extends AbstractBaseTestCase {
 	public void setUp() {
 
 		account = new SmsAccount();
-		account.setSakaiSiteId("sakaiSiteId");
+		account.setSakaiSiteId("sakaiSiteId" + Math.random());
 		account.setMessageTypeCode("");
 		account.setBalance(10f);
 		account.setAccountName("account name");
