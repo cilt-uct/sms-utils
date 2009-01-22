@@ -23,6 +23,7 @@ import java.util.Set;
 
 import org.apache.log4j.Level;
 import org.sakaiproject.sms.hibernate.logic.impl.HibernateLogicFactory;
+import org.sakaiproject.sms.hibernate.model.SmsAccount;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
@@ -48,7 +49,7 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 
 	static SmsSmppImpl smsSmppImpl = null;
 	static SmsCoreImpl smsCoreImpl = null;
-
+	static SmsAccount smsAccount = null;
 	private static final org.apache.log4j.Logger LOG = org.apache.log4j.Logger
 			.getLogger(SmsCoreTest.class);
 
@@ -62,6 +63,17 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 		smsCoreImpl.setSmsSmpp(smsSmppImpl);
 		smsCoreImpl.setLoggingLevel(Level.WARN);
 		LOG.setLevel(Level.WARN);
+		smsAccount = new SmsAccount();
+		smsAccount
+				.setSakaiUserId(SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID);
+		smsAccount
+				.setSakaiSiteId(SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_SITE_ID);
+		smsAccount.setMessageTypeCode("3");
+		smsAccount.setOverdraftLimit(10000.00f);
+		smsAccount.setBalance(1000f);
+		smsAccount.setAccountName("accountname");
+		smsAccount.setAccountEnabled(true);
+		HibernateLogicFactory.getAccountLogic().persistSmsAccount(smsAccount);
 	}
 
 	public SmsCoreTest() {
@@ -134,16 +146,16 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 			smsTask4.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
 
 			smsTask1.setDateCreated(DateUtil.getCurrentDate());
-			smsTask1.setSmsAccountId(1l);
+			smsTask1.setSmsAccountId(smsAccount.getId());
 			HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask1);
 			smsTask2.setDateCreated(DateUtil.getCurrentDate());
-			smsTask2.setSmsAccountId(1l);
+			smsTask2.setSmsAccountId(smsAccount.getId());
 			HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask2);
 			smsTask3.setDateCreated(DateUtil.getCurrentDate());
-			smsTask3.setSmsAccountId(1l);
+			smsTask3.setSmsAccountId(smsAccount.getId());
 			HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask3);
 			smsTask4.setDateCreated(DateUtil.getCurrentDate());
-			smsTask4.setSmsAccountId(1l);
+			smsTask4.setSmsAccountId(smsAccount.getId());
 			HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask4);
 
 			assertEquals(true, smsTask1.getId().equals(
@@ -216,11 +228,11 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 					SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_SITE_ID, null,
 					SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID);
 			smsTask1.setMaxTimeToLive(60);
-			smsTask1.setSmsAccountId(1l);
+			smsTask1.setSmsAccountId(smsAccount.getId());
 			smsTask1.setDateCreated(DateUtil.getCurrentDate());
 			HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask1);
 			smsTask2.setDateCreated(DateUtil.getCurrentDate());
-			smsTask2.setSmsAccountId(1l);
+			smsTask2.setSmsAccountId(smsAccount.getId());
 			HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask2);
 
 			assertEquals(true, smsTask1.getId().equals(
@@ -272,7 +284,8 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 				SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID);
 
 		smsTask.setDateCreated(DateUtil.getCurrentDate());
-		smsTask.setSmsAccountId(1l);
+		smsTask.setSmsAccountId(smsAccount.getId());
+
 		HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask);
 
 		smsTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
@@ -333,9 +346,10 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 		statusUpdateTask.setDateProcessed(new Date());
 		statusUpdateTask.setSmsMessagesOnTask(smsCoreImpl
 				.generateSmsMessages(statusUpdateTask));
-		statusUpdateTask.setSmsAccountId(1l);
+		statusUpdateTask.setSmsAccountId(smsAccount.getId());
 		statusUpdateTask
 				.setMessageTypeId(SmsHibernateConstants.SMS_TASK_TYPE_PROCESS_NOW);
+		smsCoreImpl.calculateEstimatedGroupSize(statusUpdateTask);
 		smsCoreImpl.insertTask(statusUpdateTask);
 		smsSmppImpl.sendMessagesToGateway(statusUpdateTask.getSmsMessages());
 
@@ -350,7 +364,8 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 		timeOutTask.setDelReportTimeoutDuration(60);
 		timeOutTask.setSmsMessagesOnTask(smsCoreImpl
 				.generateSmsMessages(timeOutTask));
-		timeOutTask.setSmsAccountId(1l);
+		timeOutTask.setSmsAccountId(smsAccount.getId());
+		smsCoreImpl.calculateEstimatedGroupSize(timeOutTask);
 		smsCoreImpl.insertTask(timeOutTask);
 		smsCoreImpl.processNextTask();
 

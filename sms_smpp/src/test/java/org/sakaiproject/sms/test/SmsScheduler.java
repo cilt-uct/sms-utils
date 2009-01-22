@@ -4,6 +4,8 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.log4j.Level;
+import org.sakaiproject.sms.hibernate.logic.impl.HibernateLogicFactory;
+import org.sakaiproject.sms.hibernate.model.SmsAccount;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
 import org.sakaiproject.sms.hibernate.util.AbstractBaseTestCase;
@@ -48,13 +50,26 @@ public class SmsScheduler extends AbstractBaseTestCase {
 	 * tasks remain after 1 min.
 	 */
 	public void testTaskProcessing() {
+		SmsAccount smsAccount = new SmsAccount();
+		smsAccount
+				.setSakaiUserId(SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID);
+		smsAccount
+				.setSakaiSiteId(SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_SITE_ID);
+		smsAccount.setMessageTypeCode("3");
+		smsAccount.setOverdraftLimit(10000.00f);
+		smsAccount.setBalance(1000f);
+		smsAccount.setAccountName("accountname");
+		smsAccount.setAccountEnabled(true);
+		HibernateLogicFactory.getAccountLogic().persistSmsAccount(smsAccount);
+
 		Calendar now = Calendar.getInstance();
 		SmsTask smsTask3 = smsCoreImpl.getPreliminaryTask("smsTask3", new Date(
 				now.getTimeInMillis()), "smsTask3",
 				SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_SITE_ID, null,
 				SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID);
 
-		smsTask3.setSmsAccountId(1l);
+		smsTask3.setSmsAccountId(smsAccount.getId());
+		smsCoreImpl.calculateEstimatedGroupSize(smsTask3);
 		smsCoreImpl.insertTask(smsTask3);
 
 		now.add(Calendar.MINUTE, -1);
@@ -62,7 +77,8 @@ public class SmsScheduler extends AbstractBaseTestCase {
 				now.getTimeInMillis()), "smsTask2MessageBody",
 				SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_SITE_ID, null,
 				SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID);
-		smsTask2.setSmsAccountId(1l);
+		smsTask2.setSmsAccountId(smsAccount.getId());
+		smsCoreImpl.calculateEstimatedGroupSize(smsTask2);
 		smsCoreImpl.insertTask(smsTask2);
 
 		now.add(Calendar.MINUTE, -3);
@@ -70,7 +86,8 @@ public class SmsScheduler extends AbstractBaseTestCase {
 				now.getTimeInMillis()), "smsTask1MessageBody",
 				SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_SITE_ID, null,
 				SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID);
-		smsTask1.setSmsAccountId(1l);
+		smsTask1.setSmsAccountId(smsAccount.getId());
+		smsCoreImpl.calculateEstimatedGroupSize(smsTask1);
 		smsCoreImpl.insertTask(smsTask1);
 
 		try {

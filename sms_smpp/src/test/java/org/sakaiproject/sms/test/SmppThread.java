@@ -25,6 +25,7 @@ import net.sourceforge.groboutils.junit.v1.TestRunnable;
 
 import org.apache.log4j.Level;
 import org.sakaiproject.sms.hibernate.logic.impl.HibernateLogicFactory;
+import org.sakaiproject.sms.hibernate.model.SmsAccount;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
@@ -54,8 +55,21 @@ public class SmppThread extends TestRunnable {
 
 	private final SmsCoreImpl smsCoreImpl;
 
+	private static SmsAccount smsAccount = null;
+
 	static {
 		HibernateUtil.createSchema();
+		smsAccount = new SmsAccount();
+		smsAccount
+				.setSakaiUserId(SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID);
+		smsAccount
+				.setSakaiSiteId(SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_SITE_ID);
+		smsAccount.setMessageTypeCode("3");
+		smsAccount.setOverdraftLimit(10000.00f);
+		smsAccount.setBalance(1000f);
+		smsAccount.setAccountName("accountname");
+		smsAccount.setAccountEnabled(true);
+		HibernateLogicFactory.getAccountLogic().persistSmsAccount(smsAccount);
 	}
 
 	/**
@@ -88,7 +102,7 @@ public class SmppThread extends TestRunnable {
 			Date dateToSend, int attemptCount) {
 		SmsTask insertTask = new SmsTask();
 		insertTask.setSakaiSiteId(sakaiID);
-		insertTask.setSmsAccountId(0l);
+
 		insertTask.setDateCreated(new Date(System.currentTimeMillis()));
 		insertTask.setDateToSend(dateToSend);
 		insertTask.setStatusCode(status);
@@ -101,6 +115,7 @@ public class SmppThread extends TestRunnable {
 		insertTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_SENT);
 		insertTask
 				.setMessageTypeId(SmsHibernateConstants.SMS_TASK_TYPE_PROCESS_NOW);
+		insertTask.setSmsAccountId(smsAccount.getId());
 		HibernateLogicFactory.getTaskLogic().persistSmsTask(insertTask);
 		return insertTask;
 	}
