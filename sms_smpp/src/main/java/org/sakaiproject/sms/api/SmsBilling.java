@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.Set;
 
 import org.sakaiproject.sms.hibernate.logic.impl.exception.MoreThanOneAccountFoundException;
+import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 
 // TODO: Auto-generated Javadoc
@@ -204,4 +205,13 @@ public interface SmsBilling {
 	 * @return true, if successful
 	 */
 	public boolean settleCreditDifference(SmsTask smsTask);
+
+	/**
+	 * Credits account for a message that came in late.
+	 * 
+	 * @param smsTask
+	 * @return true, if successful
+	 */
+	public boolean creditLateMessage(SmsMessage smsMessage);
+
 }

@@ -391,4 +391,68 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 		assertEquals(timedOutMessagesFound, true);
 
 	}
+
+	public void testVeryLateDeliveryReports() {
+		SmsTask insertTask = new SmsTask();
+		insertTask
+				.setSakaiSiteId(SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_SITE_ID);
+		insertTask
+				.setSenderUserName(SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID);
+		insertTask
+				.setSakaiToolId(SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_TOOL_ID);
+		insertTask.setSmsAccountId(smsAccount.getId());
+		insertTask.setDateCreated(new Date(System.currentTimeMillis()));
+		insertTask.setDateToSend(new Date(System.currentTimeMillis()));
+		insertTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
+		insertTask.setAttemptCount(2);
+		insertTask.setMessageBody("messageBody");
+		insertTask.setSenderUserName("senderUserName");
+		insertTask.setMaxTimeToLive(60);
+		insertTask.setDelReportTimeoutDuration(60);
+		smsCoreImpl.calculateEstimatedGroupSize(insertTask);
+
+		HibernateLogicFactory.getTaskLogic().persistSmsTask(insertTask);
+
+		SmsMessage insertMessage1 = new SmsMessage();
+		insertMessage1.setMobileNumber("0721998919");
+		insertMessage1.setSmscMessageId("smscMessageId1");
+		insertMessage1.setSmscId(SmsHibernateConstants.SMSC_ID);
+		insertMessage1.setSakaiUserId("sakaiUserId");
+		insertMessage1.setStatusCode(SmsConst_DeliveryStatus.STATUS_LATE);
+		insertMessage1
+				.setSmscDeliveryStatusCode(SmsConst_SmscDeliveryStatus.DELIVERED);
+		insertMessage1.setSmsTask(insertTask);
+
+		HibernateLogicFactory.getMessageLogic().persistSmsMessage(
+				insertMessage1);
+
+		SmsMessage insertMessage2 = new SmsMessage();
+		insertMessage2.setMobileNumber("0823450983");
+		insertMessage2.setSmscMessageId("smscMessageId2");
+		insertMessage2.setSmscId(SmsHibernateConstants.SMSC_ID);
+		insertMessage2.setSakaiUserId("sakaiUserId");
+		insertMessage2.setStatusCode(SmsConst_DeliveryStatus.STATUS_LATE);
+		insertMessage2
+				.setSmscDeliveryStatusCode(SmsConst_SmscDeliveryStatus.REJECTED);
+		insertMessage2.setSmsTask(insertTask);
+
+		HibernateLogicFactory.getMessageLogic().persistSmsMessage(
+				insertMessage2);
+
+		smsCoreImpl.processVeryLateDeliveryReports();
+
+		SmsMessage insertMessage2Update = HibernateLogicFactory
+				.getMessageLogic().getSmsMessage(insertMessage2.getId());
+
+		assertEquals(insertMessage2Update.getStatusCode().equals(
+				SmsConst_DeliveryStatus.STATUS_FAIL), true);
+
+		SmsMessage insertMessage1Update = HibernateLogicFactory
+				.getMessageLogic().getSmsMessage(insertMessage1.getId());
+
+		assertEquals(insertMessage1Update.getStatusCode().equals(
+				SmsConst_DeliveryStatus.STATUS_DELIVERED), true);
+
+	}
+
 }

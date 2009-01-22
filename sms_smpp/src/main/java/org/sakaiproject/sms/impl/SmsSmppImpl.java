@@ -64,7 +64,6 @@ import org.jsmpp.util.TimeFormatter;
 import org.sakaiproject.sms.api.SmsSmpp;
 import org.sakaiproject.sms.hibernate.logic.impl.HibernateLogicFactory;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
-import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_SmscDeliveryStatus;
 import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
@@ -697,10 +696,4 @@ public class SmsSmppImpl implements SmsSmpp {
 		// TODO To be discussed with UCT
 		return false;
 	}
-
-	public void processVeryLateDeliveryReports(SmsTask smsTask) {
-		// TODO Auto-generated method stub
-
-	}
-
 }

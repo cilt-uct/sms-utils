@@ -26,6 +26,7 @@ import org.sakaiproject.sms.hibernate.logic.impl.HibernateLogicFactory;
 import org.sakaiproject.sms.hibernate.logic.impl.exception.MoreThanOneAccountFoundException;
 import org.sakaiproject.sms.hibernate.model.SmsAccount;
 import org.sakaiproject.sms.hibernate.model.SmsConfig;
+import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.hibernate.model.SmsTransaction;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_Billing;
@@ -257,6 +258,40 @@ public class SmsBillingImpl implements SmsBilling {
 		smsTransaction
 				.setTransactionTypeCode(SmsConst_Billing.TRANS_RESERVE_CREDITS);
 		smsTransaction.setTransactionCredits(smsTask.getCreditEstimate());
+		smsTransaction.setTransactionAmount(convertCreditsToAmount(smsTask
+				.getCreditEstimate()));
+		smsTransaction.setSmsAccount(account);
+		smsTransaction.setSmsTaskId(smsTask.getId());
+
+		// Insert credit transaction
+		HibernateLogicFactory.getTransactionLogic().insertCreditTransaction(
+				smsTransaction);
+		return true;
+
+	}
+
+	/**
+	 * Credits account for a message that came in late.
+	 * 
+	 * @param smsTask
+	 * @return true, if successful
+	 */
+	public boolean creditLateMessage(SmsMessage smsMessage) {
+		SmsTask smsTask = smsMessage.getSmsTask();
+		SmsAccount account = HibernateLogicFactory.getAccountLogic()
+				.getSmsAccount(smsTask.getSmsAccountId());
+		if (account == null) {
+			// Account does not exist
+			return false;
+		}
+		SmsTransaction smsTransaction = new SmsTransaction();
+		smsTransaction.setBalance(account.getBalance()
+				+ convertCreditsToAmount(1));
+		smsTransaction.setSakaiUserId(smsTask.getSenderUserName());
+		smsTransaction.setTransactionDate(new Date(System.currentTimeMillis()));
+		smsTransaction
+				.setTransactionTypeCode(SmsConst_Billing.TRANS_CREDIT_LATE_MESSAGE);
+		smsTransaction.setTransactionCredits(1);
 		smsTransaction.setTransactionAmount(convertCreditsToAmount(smsTask
 				.getCreditEstimate()));
 		smsTransaction.setSmsAccount(account);

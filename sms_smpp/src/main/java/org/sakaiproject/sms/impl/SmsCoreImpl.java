@@ -34,6 +34,7 @@ import org.sakaiproject.sms.hibernate.model.SmsConfig;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
+import org.sakaiproject.sms.hibernate.model.constants.SmsConst_SmscDeliveryStatus;
 import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
 import org.sakaiproject.sms.hibernate.util.DateUtil;
 import org.sakaiproject.sms.smpp.util.MessageCatelog;
@@ -175,7 +176,7 @@ public class SmsCoreImpl implements SmsCore {
 			// TODO HANDLE THIS EXCPTION
 			e.printStackTrace();
 			smsTask.setSmsAccountId(1l); // Just setting this so helper window
-											// can work
+			// can work
 		}
 		smsTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
 		smsTask.setSakaiSiteId(sakaiSiteID);
@@ -477,9 +478,22 @@ public class SmsCoreImpl implements SmsCore {
 				.getSmsMessagesWithStatus(null,
 						SmsConst_DeliveryStatus.STATUS_LATE);
 
-		// TODO: Add billing code
+		for (SmsMessage smsMessage : messages) {
 
-		// TODO: Change the messages status to either D or F and persist
+			smsBilling.creditLateMessage(smsMessage);
+
+			if ((smsMessage.getSmscDeliveryStatusCode()) != SmsConst_SmscDeliveryStatus.DELIVERED) {
+				smsMessage.setStatusCode(SmsConst_DeliveryStatus.STATUS_FAIL);
+			} else {
+				smsMessage
+						.setStatusCode(SmsConst_DeliveryStatus.STATUS_DELIVERED);
+			}
+
+			HibernateLogicFactory.getTaskLogic().incrementMessagesProcessed(
+					smsMessage.getSmsTask());
+			HibernateLogicFactory.getMessageLogic().persistSmsMessage(
+					smsMessage);
+		}
 
 	}
 }
