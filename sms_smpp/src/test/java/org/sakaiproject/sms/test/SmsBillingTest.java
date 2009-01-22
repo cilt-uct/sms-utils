@@ -180,6 +180,13 @@ public class SmsBillingTest extends AbstractBaseTestCase {
 		boolean sufficientCredits = smsBillingImpl.checkSufficientCredits(
 				account.getId(), creditsRequired);
 		assertTrue("Expected sufficient credit", sufficientCredits);
+
+		account.setBalance(-10f);
+		HibernateLogicFactory.getAccountLogic().persistSmsAccount(account);
+		boolean insufficientCredits = !smsBillingImpl.checkSufficientCredits(
+				account.getId(), creditsRequired);
+		assertTrue("Expected insufficient credit", insufficientCredits);
+
 	}
 
 	/**
