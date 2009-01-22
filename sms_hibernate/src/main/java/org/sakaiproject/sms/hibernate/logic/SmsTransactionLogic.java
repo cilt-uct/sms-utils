@@ -45,16 +45,16 @@ public interface SmsTransactionLogic {
 	public void cancelTransaction(Long smsTaskId, Long smsAccountId)
 			throws SmsAccountNotFoundException;
 
-	/**
-	 * Persist a transaction to reserve credits for a sms sending
-	 * 
-	 * @param smsTaskId
-	 * @param smsAccountId
-	 * @param credits
-	 * @throws SmsAccountNotFoundException
-	 */
-	public void reserveCredits(Long smsTaskId, Long smsAccountId,
-			Integer credits) throws SmsAccountNotFoundException;
+	// /**
+	// * Persist a transaction to reserve credits for a sms sending
+	// *
+	// * @param smsTaskId
+	// * @param smsAccountId
+	// * @param credits
+	// * @throws SmsAccountNotFoundException
+	// */
+	// public void reserveCredits(Long smsTaskId, Long smsAccountId,
+	// Integer credits) throws SmsAccountNotFoundException;
 
 	/**
 	 * Deletes and the given entity from the DB
@@ -130,4 +130,14 @@ public interface SmsTransactionLogic {
 	 * @return the sms transactions for account id
 	 */
 	public List<SmsTransaction> getSmsTransactionsForAccountId(Long accountId);
+
+	/**
+	 * Gets all the related transaction for the specified task id.
+	 * 
+	 * @param taskId
+	 *            the task id
+	 * 
+	 * @return the sms transactions for account id
+	 */
+	public List<SmsTransaction> getSmsTransactionsForTaskId(Long taskId);
 }

@@ -38,6 +38,7 @@ import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsSearchException;
 import org.sakaiproject.sms.hibernate.model.SmsAccount;
 import org.sakaiproject.sms.hibernate.model.SmsConfig;
 import org.sakaiproject.sms.hibernate.model.SmsTransaction;
+import org.sakaiproject.sms.hibernate.model.constants.SmsConst_Billing;
 import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
 import org.sakaiproject.sms.hibernate.model.factory.SmsTransactionFactory;
 import org.sakaiproject.sms.hibernate.util.DateUtil;
@@ -67,20 +68,20 @@ public class SmsTransactionLogicImpl extends SmsDao implements
 		persist(smsTransaction);
 	}
 
-	/**
-	 * Persist a transaction to reserve credits for a sms sending
-	 * 
-	 * @param smsTaskId
-	 * @param smsAccountId
-	 * @param credits
-	 * @throws SmsAccountNotFoundException
-	 */
-	public void reserveCredits(Long smsTaskId, Long smsAccountId,
-			Integer credits) throws SmsAccountNotFoundException {
-		SmsTransaction smsTransaction = SmsTransactionFactory
-				.createReserveCreditsTask(smsTaskId, smsAccountId, credits);
-		persist(smsTransaction);
-	}
+	// /**
+	// * Persist a transaction to reserve credits for a sms sending
+	// *
+	// * @param smsTaskId
+	// * @param smsAccountId
+	// * @param credits
+	// * @throws SmsAccountNotFoundException
+	// */
+	// public void reserveCredits(Long smsTaskId, Long smsAccountId,
+	// Integer credits) throws SmsAccountNotFoundException {
+	// SmsTransaction smsTransaction = SmsTransactionFactory
+	// .createReserveCreditsTask(smsTaskId, smsAccountId, credits);
+	// persist(smsTransaction);
+	// }
 
 	/**
 	 * Leave this as protected to try and prevent the random instantiation of
@@ -264,7 +265,8 @@ public class SmsTransactionLogicImpl extends SmsDao implements
 	public void insertDebitTransaction(SmsTransaction smsTransaction) {
 		SmsAccount account = HibernateLogicFactory.getAccountLogic()
 				.getSmsAccount(smsTransaction.getSmsAccount().getId());
-
+		smsTransaction
+				.setTransactionTypeCode(SmsConst_Billing.TRANS_DEBIT_ACCOUNT);
 		// Update the account balance
 		account.setBalance(account.getBalance()
 				+ smsTransaction.getTransactionAmount());
@@ -288,6 +290,25 @@ public class SmsTransactionLogicImpl extends SmsDao implements
 		Query query = s
 				.createQuery("from SmsTransaction transaction where transaction.smsAccount.id = :accountId");
 		query.setParameter("accountId", accountId);
+		transactions = query.list();
+		HibernateUtil.closeSession();
+		return transactions;
+	}
+
+	/**
+	 * Gets all the related transaction for the specified task id.
+	 * 
+	 * @param accountId
+	 *            the account id
+	 * 
+	 * @return the sms transactions for account id
+	 */
+	public List<SmsTransaction> getSmsTransactionsForTaskId(Long taskId) {
+		Session s = HibernateUtil.getSession();
+		List<SmsTransaction> transactions = new ArrayList<SmsTransaction>();
+		Query query = s
+				.createQuery("from SmsTransaction transaction where transaction.smsTaskId = :taskId");
+		query.setParameter("smsTaskId", taskId);
 		transactions = query.list();
 		HibernateUtil.closeSession();
 		return transactions;

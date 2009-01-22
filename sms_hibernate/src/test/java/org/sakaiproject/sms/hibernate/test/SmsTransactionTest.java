@@ -6,7 +6,6 @@ import java.util.List;
 import org.sakaiproject.sms.hibernate.bean.SearchFilterBean;
 import org.sakaiproject.sms.hibernate.bean.SearchResultContainer;
 import org.sakaiproject.sms.hibernate.logic.impl.HibernateLogicFactory;
-import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsAccountNotFoundException;
 import org.sakaiproject.sms.hibernate.model.SmsAccount;
 import org.sakaiproject.sms.hibernate.model.SmsTransaction;
 import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
@@ -296,39 +295,39 @@ public class SmsTransactionTest extends AbstractBaseTestCase {
 		}
 	}
 
-	public void testCreateReserveCreditsTransactionNoAccountFound()
-			throws Exception {
+	// public void testCreateReserveCreditsTransactionNoAccountFound()
+	// throws Exception {
+	//
+	// try {
+	// HibernateLogicFactory.getTransactionLogic().reserveCredits(123L,
+	// 123L, 110);
+	// fail("Insert should fail since there is no account with id 123");
+	// } catch (SmsAccountNotFoundException expected) {
+	// } catch (Exception notExpected) {
+	// fail("An account not found exception should be thrown");
+	// }
+	// }
 
-		try {
-			HibernateLogicFactory.getTransactionLogic().reserveCredits(123L,
-					123L, 110);
-			fail("Insert should fail since there is no account with id 123");
-		} catch (SmsAccountNotFoundException expected) {
-		} catch (Exception notExpected) {
-			fail("An account not found exception should be thrown");
-		}
-	}
-
-	public void testCreateReserveCreditsTask() {
-
-		SmsAccount testAccount = new SmsAccount();
-		testAccount.setSakaiUserId("5");
-		testAccount.setSakaiSiteId("5");
-		testAccount.setMessageTypeCode("12345");
-		testAccount.setOverdraftLimit(10000.00f);
-		testAccount.setBalance(5000.00f);
-		testAccount.setAccountName("accountName");
-		testAccount.setAccountEnabled(true);
-		testAccount.setBalance(1000f);
-		HibernateLogicFactory.getAccountLogic().persistSmsAccount(testAccount);
-
-		try {
-			HibernateLogicFactory.getTransactionLogic().reserveCredits(100L,
-					testAccount.getId(), 110);
-		} catch (Exception notExpected) {
-			fail("Transaction should save successfully" + notExpected);
-		}
-	}
+	// public void testCreateReserveCreditsTask() {
+	//
+	// SmsAccount testAccount = new SmsAccount();
+	// testAccount.setSakaiUserId("5");
+	// testAccount.setSakaiSiteId("5");
+	// testAccount.setMessageTypeCode("12345");
+	// testAccount.setOverdraftLimit(10000.00f);
+	// testAccount.setBalance(5000.00f);
+	// testAccount.setAccountName("accountName");
+	// testAccount.setAccountEnabled(true);
+	// testAccount.setBalance(1000f);
+	// HibernateLogicFactory.getAccountLogic().persistSmsAccount(testAccount);
+	//
+	// try {
+	// HibernateLogicFactory.getTransactionLogic().reserveCredits(100L,
+	// testAccount.getId(), 110);
+	// } catch (Exception notExpected) {
+	// fail("Transaction should save successfully" + notExpected);
+	// }
+	// }
 
 	public void testCreateCancelTransaction() throws Exception {
 
@@ -389,6 +388,9 @@ public class SmsTransactionTest extends AbstractBaseTestCase {
 		assertNull("Object not removed", getSmsTransaction);
 	}
 
+	/**
+	 * Test get sms transactions for account id.
+	 */
 	public void testGetSmsTransactionsForAccountId() {
 
 		SmsAccount smsAccount = new SmsAccount();
@@ -432,4 +434,47 @@ public class SmsTransactionTest extends AbstractBaseTestCase {
 
 	}
 
+	/**
+	 * Test get sms transactions for task id.
+	 */
+	public void testGetSmsTransactionsForTaskId() {
+
+		SmsAccount smsAccount = new SmsAccount();
+		smsAccount.setSakaiUserId("8");
+		smsAccount.setSakaiSiteId("8");
+		smsAccount.setMessageTypeCode("12345");
+		smsAccount.setOverdraftLimit(10000.00f);
+		smsAccount.setBalance(5000.00f);
+		smsAccount.setAccountName("accountName");
+		smsAccount.setAccountEnabled(true);
+		HibernateLogicFactory.getAccountLogic().persistSmsAccount(smsAccount);
+		Long smsTaskId = 112345L;
+		int noOfTrans = 4;
+		for (int i = 0; i < noOfTrans; i++) {
+			SmsTransaction smsTransaction = new SmsTransaction();
+			smsTransaction.setBalance(1.32f);
+			smsTransaction.setSakaiUserId("1" + i);
+			smsTransaction.setTransactionDate(new Date(System
+					.currentTimeMillis()));
+			smsTransaction.setTransactionTypeCode("TC");
+			smsTransaction.setTransactionCredits(i);
+			smsTransaction.setTransactionAmount(1000.00f);
+			smsTransaction.setSmsAccount(smsAccount);
+			smsTransaction.setSmsTaskId(smsTaskId);
+			HibernateLogicFactory.getTransactionLogic()
+					.insertCreditTransaction(smsTransaction);
+		}
+
+		// Check it was created
+		assertTrue(smsAccount.exists());
+		List<SmsTransaction> transactions = HibernateLogicFactory
+				.getTransactionLogic().getSmsTransactionsForAccountId(
+						smsAccount.getId());
+		assertNotNull(transactions);
+		assertTrue(transactions.size() == noOfTrans);
+		for (SmsTransaction smsTransaction : transactions) {
+			assertNotNull(smsTransaction.getSmsAccount());
+			assertTrue(smsTransaction.getSmsTaskId().equals(smsTaskId));
+		}
+	}
 }
