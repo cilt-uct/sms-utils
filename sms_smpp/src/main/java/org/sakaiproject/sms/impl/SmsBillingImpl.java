@@ -250,10 +250,9 @@ public class SmsBillingImpl implements SmsBilling {
 		}
 
 		SmsTransaction smsTransaction = new SmsTransaction();
-		smsTransaction.setBalance(account.getBalance());// Set this to accounts
-		// current balance
+		smsTransaction.setBalance(account.getBalance()
+				+ convertCreditsToAmount(smsTask.getCreditEstimate()));
 		smsTransaction.setSakaiUserId(smsTask.getSenderUserName());
-		// come from ???
 		smsTransaction.setTransactionDate(new Date(System.currentTimeMillis()));
 		smsTransaction
 				.setTransactionTypeCode(SmsConst_Billing.TRANS_RESERVE_CREDITS);
@@ -336,11 +335,9 @@ public class SmsBillingImpl implements SmsBilling {
 		int creditDifference = creditEstimate - actualCreditsUsed;
 
 		SmsTransaction smsTransaction = new SmsTransaction();
-		smsTransaction.setBalance(account.getBalance());// Set this to
-		// accounts
-		// current balance
-		smsTransaction.setSakaiUserId(smsTask.getSenderUserName());// TODO GET
-		// FROM TASK
+		smsTransaction.setBalance(account.getBalance()
+				+ convertCreditsToAmount(smsTask.getCreditEstimate()));
+		smsTransaction.setSakaiUserId(smsTask.getSenderUserName());
 		smsTransaction.setTransactionDate(new Date(System.currentTimeMillis()));
 		smsTransaction
 				.setTransactionTypeCode(SmsConst_Billing.TRANS_SETTLE_DIFFERENCE);
