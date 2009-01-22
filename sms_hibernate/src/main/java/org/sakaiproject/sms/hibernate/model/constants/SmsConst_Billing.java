@@ -18,4 +18,6 @@ public class SmsConst_Billing {
 
 	public static final String TRANS_DEBIT_ACCOUNT = "DEB";
 
+	public static final String TRANS_CREDIT_LATE_MESSAGE = "LATE";
+
 }
