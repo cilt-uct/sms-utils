@@ -121,8 +121,6 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 		smsTask.setDateProcessed(new Date(System.currentTimeMillis()));
 		smsTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_SENT);
 		smsTask.setAttemptCount(2);
-		smsTask
-				.setMessageTypeId(SmsHibernateConstants.SMS_TASK_TYPE_PROCESS_NOW);
 		smsTask.setMessageBody("messageBody");
 		smsTask.setSenderUserName("senderUserName");
 		smsTask.setMaxTimeToLive(1);
@@ -133,6 +131,9 @@ public class SmsMessageLogicImpl extends SmsDao implements SmsMessageLogic {
 		smsTask.setDeliveryGroupId("SakaiGroupID");
 		smsTask.setDeliveryGroupName("SakaiGroupName");
 		smsTask.setCreditEstimate(1);
+
+		HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask);
+
 		SmsMessage smsMessage = new SmsMessage();
 		smsMessage.setSmsTask(smsTask);
 		smsMessage.setMobileNumber(mobileNumber);
