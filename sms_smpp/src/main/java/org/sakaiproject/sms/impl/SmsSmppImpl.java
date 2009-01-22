@@ -182,7 +182,7 @@ public class SmsSmppImpl implements SmsSmpp {
 									SmsHibernateConstants.SMSC_ID);
 					if (smsMessage == null) {
 						for (int i = 0; i < 5; i++) {
-							LOG.info("SMSC_DEL_RECEIPT retry " + i
+							LOG.warn("SMSC_DEL_RECEIPT retry " + i
 									+ " out of 5 for messageSmscID"
 									+ deliveryReceipt.getId());
 							smsMessage = HibernateLogicFactory

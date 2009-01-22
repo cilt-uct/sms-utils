@@ -68,12 +68,9 @@ public class SmsCoreImpl implements SmsCore {
 	 * 
 	 * @param debug
 	 */
-	public void enableDebugInformation(boolean debug) {
-		if (debug) {
-			LOG.setLevel(Level.ALL);
-		} else {
-			LOG.setLevel(Level.OFF);
-		}
+	public void setLoggingLevel(Level level) {
+		LOG.setLevel(level);
+
 	}
 
 	/**
