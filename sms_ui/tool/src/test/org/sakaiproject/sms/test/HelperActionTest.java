@@ -19,10 +19,12 @@ package org.sakaiproject.sms.test;
 
 import junit.framework.TestCase;
 
+import org.sakaiproject.sms.api.SmsBilling;
 import org.sakaiproject.sms.beans.ActionResults;
 import org.sakaiproject.sms.beans.HelperActionBean;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.otp.SmsTaskLocator;
+import org.sakaiproject.sms.test.stubs.SmsBillingStub;
 import org.sakaiproject.sms.test.stubs.SmsCoreStub;
 import org.sakaiproject.sms.test.stubs.SmsServiceStub;
 
@@ -35,6 +37,7 @@ public class HelperActionTest extends TestCase {
 	private SmsTaskLocator smsTaskLocator;
 	private SmsCoreStub smsCore;
 	private SmsServiceStub smsService;
+	private SmsBillingStub smsBilling;
 
 	/**
 	 * setUp to run at start of every test
@@ -48,6 +51,7 @@ public class HelperActionTest extends TestCase {
 		smsTaskLocator = new SmsTaskLocator();
 		smsCore = new SmsCoreStub();
 		smsService = new SmsServiceStub();
+		
 
 		smsTaskLocator.setSmsCore(smsCore);
 
@@ -55,6 +59,9 @@ public class HelperActionTest extends TestCase {
 		helperAction.setSmsCore(smsCore);
 		helperAction.setSmsService(smsService);
 		helperAction.setSmsTaskLocator(smsTaskLocator);
+
+		smsBilling = new SmsBillingStub();
+		helperAction.setSmsBilling(smsBilling);
 	}
 
 	/**
@@ -100,7 +107,7 @@ public class HelperActionTest extends TestCase {
 		SmsTask task = (SmsTask) smsTaskLocator
 				.locateBean(SmsTaskLocator.NEW_1);
 		task.setCreditEstimate(2);
-		smsService.sufficientCredits = false;
+		smsBilling.sufficientCredits = false;
 		String result = helperAction.save();
 		assertEquals(ActionResults.ERROR, result);
 		assertFalse(smsCore.insertTaskCalled);
@@ -128,7 +135,7 @@ public class HelperActionTest extends TestCase {
 		SmsTask task = (SmsTask) smsTaskLocator
 				.locateBean(SmsTaskLocator.NEW_1);
 		task.setCreditEstimate(2);
-		smsService.sufficientCredits = true;
+		smsBilling.sufficientCredits = true;
 		String result = helperAction.save();
 		assertEquals(ActionResults.SUCCESS, result);
 		assertTrue(smsCore.insertTaskCalled);
