@@ -51,9 +51,10 @@ public class SmsBillingImpl implements SmsBilling {
 	 * @param amountToDebit
 	 */
 	public void debitAccount(Long accountId, Float amountToDebit) {
-		
-		if(amountToDebit < 0){
-			throw new RuntimeException("The amount supplied to debit an account must be positive");
+
+		if (amountToDebit < 0) {
+			throw new RuntimeException(
+					"The amount supplied to debit an account must be positive");
 		}
 
 		SmsAccount account = HibernateLogicFactory.getAccountLogic()
@@ -235,7 +236,12 @@ public class SmsBillingImpl implements SmsBilling {
 		smsAccount.setBalance(1000f);
 		smsAccount.setAccountName("TestAccountName");
 		smsAccount.setAccountEnabled(true);
-		HibernateLogicFactory.getAccountLogic().persistSmsAccount(smsAccount);
+		try {
+			HibernateLogicFactory.getAccountLogic().persistSmsAccount(
+					smsAccount);
+		} catch (Exception e) {
+
+		}
 		return smsAccount;
 	}
 
@@ -418,14 +424,6 @@ public class SmsBillingImpl implements SmsBilling {
 		}
 	}
 
-	/**
-	 * Cancel pending request.
-	 * 
-	 * @param smsTaskId
-	 *            the sms task id
-	 * 
-	 * @return true, if successful
-	 */
 	public boolean cancelPendingRequest(Long smsTaskId) {
 
 		SmsTask smsTask = HibernateLogicFactory.getTaskLogic().getSmsTask(
@@ -458,7 +456,9 @@ public class SmsBillingImpl implements SmsBilling {
 	}
 
 	/**
-	 * Settle credit difference.
+	 * Settle credit difference. The group size might have change since the time
+	 * that the task was requested. So we need to calculate the difference and
+	 * settle the account.
 	 * 
 	 * @param smsTask
 	 *            the sms task
