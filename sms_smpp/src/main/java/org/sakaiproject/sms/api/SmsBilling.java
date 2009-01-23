@@ -21,7 +21,6 @@ package org.sakaiproject.sms.api;
 import java.util.Date;
 import java.util.Set;
 
-import org.sakaiproject.sms.hibernate.logic.impl.exception.MoreThanOneAccountFoundException;
 import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsAccountNotFoundException;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
@@ -67,7 +66,8 @@ public interface SmsBilling {
 	 * 
 	 * @return true, if check sufficient credits
 	 */
-	public boolean checkSufficientCredits(Long accountID, int creditsRequired);
+	public boolean checkSufficientCredits(Long accountID,
+			Integer creditsRequired);
 
 	/**
 	 * 
@@ -128,16 +128,14 @@ public interface SmsBilling {
 	 *            (e.g. !admin)
 	 * @param sakaiUserID
 	 *            the sakai user id
-	 * @param accountType
-	 *            the account type
 	 * 
 	 * @return the account id
-	 * @throws MoreThanOneAccountFoundException
+	 * 
 	 * @throws SmsAccountNotFoundException
+	 *             the sms account not found exception
 	 */
 	public Long getAccountID(String sakaiSiteID, String sakaiUserID)
-			throws MoreThanOneAccountFoundException,
-			SmsAccountNotFoundException;
+			throws SmsAccountNotFoundException;
 
 	/**
 	 * Return a list of all transactions between startDate and endDate for the
