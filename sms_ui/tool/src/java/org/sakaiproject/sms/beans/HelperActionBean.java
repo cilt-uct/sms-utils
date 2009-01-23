@@ -21,6 +21,7 @@ import org.sakaiproject.sms.api.SmsBilling;
 import org.sakaiproject.sms.api.SmsCore;
 import org.sakaiproject.sms.api.SmsService;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
+import org.sakaiproject.sms.impl.SmsTaskValidationException;
 import org.sakaiproject.sms.otp.SmsTaskLocator;
 
 import uk.org.ponder.messageutil.TargettedMessage;
@@ -33,7 +34,6 @@ public class HelperActionBean {
 	private SmsCore smsCore;
 	private TargettedMessageList messages;
 	private SmsBilling smsBilling;
-
 
 	/**
 	 * Cancel Action
@@ -79,10 +79,16 @@ public class HelperActionBean {
 					.locateBean(SmsTaskLocator.NEW_1);
 
 			// Check if credits available
-			boolean sufficientCredits = smsBilling.checkSufficientCredits(smsTask.getSmsAccountId(), smsTask.getCreditEstimate());
+			boolean sufficientCredits = smsBilling.checkSufficientCredits(
+					smsTask.getSmsAccountId(), smsTask.getCreditEstimate());
 			if (sufficientCredits) {
 				// do sending
-				smsCore.insertTask(smsTask);
+				try {
+					smsCore.insertTask(smsTask);
+				} catch (SmsTaskValidationException e) {
+					// TODO Handle exception here
+					e.printStackTrace();
+				}
 				messages.addMessage(new TargettedMessage(
 						"sms.helper.task-success", null,
 						TargettedMessage.SEVERITY_INFO));
@@ -120,6 +126,7 @@ public class HelperActionBean {
 	public void setSmsTaskLocator(SmsTaskLocator smsTaskLocator) {
 		this.smsTaskLocator = smsTaskLocator;
 	}
+
 	public void setSmsBilling(SmsBilling smsBilling) {
 		this.smsBilling = smsBilling;
 	}
