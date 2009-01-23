@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.Set;
 
 import org.sakaiproject.sms.api.SmsBilling;
-import org.sakaiproject.sms.hibernate.logic.impl.exception.MoreThanOneAccountFoundException;
 import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsAccountNotFoundException;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
@@ -54,8 +53,7 @@ public class SmsBillingStub implements SmsBilling {
 	}
 
 	public Long getAccountID(String arg0, String arg1)
-			throws MoreThanOneAccountFoundException,
-			SmsAccountNotFoundException {
+			throws SmsAccountNotFoundException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -95,6 +93,16 @@ public class SmsBillingStub implements SmsBilling {
 		return false;
 	}
 
+	public boolean checkSufficientCredits(SmsTask arg0) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public boolean checkSufficientCredits(Long arg0, Integer arg1) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 	public boolean creditLateMessage(SmsMessage smsMessage) {
 		// TODO Auto-generated method stub
 		return false;
@@ -105,5 +113,4 @@ public class SmsBillingStub implements SmsBilling {
 		return false;
 	}
 
-	
 }
