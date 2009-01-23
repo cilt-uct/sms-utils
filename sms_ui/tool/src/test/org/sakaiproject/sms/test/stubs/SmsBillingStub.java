@@ -98,4 +98,9 @@ public class SmsBillingStub implements SmsBilling {
 		return false;
 	}
 
+	public boolean cancelPendingRequest(Long arg0) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }
