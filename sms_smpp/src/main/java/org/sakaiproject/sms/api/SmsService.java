@@ -25,17 +25,28 @@ import java.util.Set;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 
 /**
- * This API allows for easy implementation of SMS services in an existing or new
- * Sakai tool.
+ * This API allows for implementation of SMS services in an existing or new
+ * Sakai tool. To sms-enabled a existing Sakai tool, the following guidelines
+ * must be followed:
+ * 
+ * (1)Call sms.getPreliminaryTask to get a new sms task. (2)Display the sms
+ * window. (3)User press the "continue" button. (4)Post UI values to smsTask
+ * (liek the sms body). (5)call sms.validateTask(smsTask) and show any errors in
+ * UI. (6)call sms.calculateGroupSize to calculate estimated group size on
+ * smsTask. (7)Display estimated group size and cost in UI. (8)Change button
+ * face to "Save". (9)User press the "Save" button. (10)call
+ * sms.checkSufficientCredits. (11)Report insufficient credits in UI. (12)call
+ * sms.insertTask(smsTask) for scheduler to handle.
+ * 
  * 
  * @author etienne@psybergate.co.za
  * 
  */
 public interface SmsService {
 
-	
 	/**
-	 * Add a new task to the sms task list, that contains a list of delivery entity id
+	 * Get a new sms task object with default values. The caller must supply a
+	 * list of sakai delivery entities like /site/group1/
 	 * 
 	 * @param dateToSend
 	 * @param messageBody
@@ -45,11 +56,13 @@ public interface SmsService {
 	 * @param deliveryMobileNumbers
 	 * @return
 	 */
-	public SmsTask getPreliminaryTask(Date dateToSend, String messageBody, String sakaiSiteID,
-			String sakaiToolId, String sakaiSenderID, List<String> deliveryEntityList);
-	
+	public SmsTask getPreliminaryTask(Date dateToSend, String messageBody,
+			String sakaiSiteID, String sakaiToolId, String sakaiSenderID,
+			List<String> deliveryEntityList);
+
 	/**
-	 * Add a new task to the sms task list, that will send sms messages to the specified list of mobile numbers
+	 * Get a new sms task object with default values. The caller must supply a
+	 * list of mobile numbers.
 	 * 
 	 * @param dateToSend
 	 * @param messageBody
@@ -59,13 +72,13 @@ public interface SmsService {
 	 * @param deliveryMobileNumbers
 	 * @return
 	 */
-	public SmsTask getPreliminaryTask(Date dateToSend, String messageBody, String sakaiSiteID,
-			String sakaiToolId, String sakaiSenderID, Set<String> deliveryMobileNumbers);
-	
+	public SmsTask getPreliminaryTask(Date dateToSend, String messageBody,
+			String sakaiSiteID, String sakaiToolId, String sakaiSenderID,
+			Set<String> deliveryMobileNumbers);
+
 	/**
-	 * Add a new task to the sms task list, for eg. send message y to Sakai
-	 * group X ant time Z. If the task is future dated, then it be picked up by
-	 * the sms task (job) scheduler for processing.
+	 * Get a new sms task object with default values. The caller must supply a
+	 * single sakai group id.
 	 * 
 	 * @param sakaiGroupId
 	 * @param dateToSend
@@ -78,8 +91,8 @@ public interface SmsService {
 			String sakaiSenderID);
 
 	/**
-	 * Add a new task to the sms task list. In this case you must supply a list
-	 * of Sakai user ID's.
+	 * Get a new sms task object with default values. The caller must supply a
+	 * list of Sakai user ID's.
 	 * 
 	 * @param sakaiUserIds
 	 * @param dateToSend
@@ -95,8 +108,7 @@ public interface SmsService {
 	 * Return true of the account has the required credits available to send the
 	 * messages. The account number is calculated using either the Sakai site or
 	 * the Sakai user. If this returns false, then the UI must not allow the
-	 * user to proceed. If not handled by the UI, then the sms service will fail
-	 * the the sending of the message anyway.
+	 * user to proceed.
 	 * 
 	 * @param sakaiSiteID
 	 *            , (e.g. "!admin")
@@ -106,7 +118,10 @@ public interface SmsService {
 			String sakaiUserID, int creditsRequired);
 
 	/**
-	 * Will calculate the all the group estimates.
+	 * Calculate the estimated group size. If this is not set on the task, the
+	 * Persistence of the task will fail. Make sure to set ONLY ONE of
+	 * deliveryEntityList, deliveryMobileNumbers, sakaiGroupId or sakaiUserIds
+	 * before calling this.
 	 * 
 	 * @param smsTask
 	 * @return
@@ -114,7 +129,9 @@ public interface SmsService {
 	public SmsTask calculateEstimatedGroupSize(SmsTask smsTask);
 
 	/**
-	 * Validate task.
+	 * Validate task. Validation must be done in any UI implementing the sms
+	 * service. It is also done before a task is persisted (See
+	 * SmsCore.insertTask).
 	 * 
 	 * @param smsTask
 	 *            the sms task

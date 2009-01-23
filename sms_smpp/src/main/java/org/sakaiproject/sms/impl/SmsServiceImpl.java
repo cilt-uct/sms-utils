@@ -17,21 +17,6 @@
  **********************************************************************************/
 package org.sakaiproject.sms.impl;
 
-/** To sms-enabled a existing Sakai tool, the following guidelines must be followed:
- *
- * call sms.getPreliminaryTask to get a new sms task
- * Display the sms window
- * User press the �continue� button
- * Post UI values to smsTask (body)
- * call sms.validateTask(smsTask) and show any errors in UI
- * call sms.calculateGroupSize to calculate estimated group size on smsTask
- * Display estimated values in UI
- * Change button to �Save�
- * User press the �Save� button
- * call sms.checkSufficientCredits
- * Report insufficient credits in UI
- * call sms.insertTask(smsTask) for scheduler to handle
- */
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -81,16 +66,17 @@ public class SmsServiceImpl implements SmsService {
 				messageBody, sakaiSiteId, sakaiToolId, sakaiSenderID);
 
 	}
-	
+
 	public SmsTask getPreliminaryTask(Date dateToSend, String messageBody,
 			String sakaiSiteID, String sakaiToolId, String sakaiSenderID,
 			List<String> deliveryEntityList) {
-		return smsCore.getPreliminaryTask(dateToSend, messageBody,
-				sakaiSiteID, sakaiToolId, sakaiSenderID, deliveryEntityList);
+		return smsCore.getPreliminaryTask(dateToSend, messageBody, sakaiSiteID,
+				sakaiToolId, sakaiSenderID, deliveryEntityList);
 	}
 
 	/**
-	 * Add a new task to the sms task list, that will send sms messages to the specified list of mobile numbers
+	 * Add a new task to the sms task list, that will send sms messages to the
+	 * specified list of mobile numbers
 	 * 
 	 * @param dateToSend
 	 * @param messageBody
@@ -103,11 +89,11 @@ public class SmsServiceImpl implements SmsService {
 	public SmsTask getPreliminaryTask(Date dateToSend, String messageBody,
 			String sakaiSiteID, String sakaiToolId, String sakaiSenderID,
 			Set<String> deliveryMobileNumbers) {
-		return smsCore.getPreliminaryTask(dateToSend, messageBody, sakaiSiteID, 
+		return smsCore.getPreliminaryTask(dateToSend, messageBody, sakaiSiteID,
 				sakaiToolId, sakaiSenderID, deliveryMobileNumbers);
-		
+
 	}
-	
+
 	/**
 	 * Add a new task to the sms task list. In this case you must supply a list
 	 * of Sakai user ID's.

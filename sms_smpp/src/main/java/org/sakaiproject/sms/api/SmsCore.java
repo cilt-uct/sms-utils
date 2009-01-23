@@ -101,9 +101,7 @@ public interface SmsCore {
 			Set<String> deliveryMobileNumbers);
 
 	/**
-	 * Add a new task to the sms task list, for eg. send message to all
-	 * administrators at 10:00, or get latest announcements and send to mobile
-	 * numbers of Sakai group x (phase II).
+	 * Get a new sms task object with default values. This step is required.
 	 * 
 	 * @param sakaiUserIds
 	 * @param dateToSend
@@ -116,9 +114,17 @@ public interface SmsCore {
 			String sakaiToolId, String sakaiSenderID);
 
 	/**
-	 * Some delivery report might arive after the predefined timeout period. Wee
-	 * still need to handle them because these messages are now billable. We
-	 * need to receive them, update SMS_MESSAGE and make a account entry.
+	 * Get a new sms task object with default values. This step is required.
+	 */
+	public SmsTask getPreliminaryTask(String deliverGroupId, Date dateToSend,
+			String messageBody, String sakaiSiteID, String sakaiToolId,
+			String sakaiSenderID);
+
+	/**
+	 * Some delivery report might arrive after the predefined timeout period of
+	 * the task. Wee still need to handle these reports because the messages are
+	 * now billable. We need to receive them, update SMS_MESSAGE and make a
+	 * account entry of type TRANS_CREDIT_LATE_MESSAGE.
 	 */
 	public void processVeryLateDeliveryReports();
 
@@ -136,21 +142,21 @@ public interface SmsCore {
 	 * If we did not receive gateway delivery reports for messages that was sent
 	 * out, then we mark those messages as time out after a predefined period as
 	 * determined by DEL_REPORT_TIMEOUT_DURATION on the task. These messages are
-	 * not billable.
+	 * not billable. But they will be billable if the report comes in ver late.
 	 */
 	public void processTimedOutDeliveryReports();
 
 	/**
-	 * Gets the next task to process. Based on specific criteria like status en
-	 * date to sent.
+	 * Gets the next task to process. Based on specific criteria like status and
+	 * date to sent. This is typically called by the sms scheduler.
 	 */
 	public void processNextTask();
 
 	/**
-	 * Process is specific task. A task can be retried if a previous send
-	 * attempt was unsuccessful due to gateway connection problems. A retry will
-	 * be re-scheduled some time in the future. When the max retry attempts are
-	 * reached or if credits are insufficient, the task is marked as failed.
+	 * Process is specific persisted task. A task can be retried if a previous
+	 * send attempt was unsuccessful due to gateway connection problems. A retry
+	 * will be re-scheduled some time in the future. When the max retry attempts
+	 * are reached or if credits are insufficient, the task is marked as failed.
 	 * 
 	 * The task will also expire if it cannot be processed in a specified time.
 	 * See http://jira.sakaiproject.org/jira/browse/SMS-9
@@ -159,24 +165,14 @@ public interface SmsCore {
 
 	/**
 	 * If a new task is scheduled for immediate processing, then we try to
-	 * process it in real-time. If it is not possible (too many threads) then
-	 * the task will be handled by the scheduler. If the scheduler is too busy
-	 * and the task is picked up too late, then the task is marked as
-	 * SmsConst_DeliveryStatus.STATUS_EXPIRE
+	 * process it in real-time. If it is not possible (for e.g. too many
+	 * threads) then the task will be handled by the scheduler. If the scheduler
+	 * is too busy and the task is picked up too late, then the task is marked
+	 * as STATUS_EXPIRE
 	 * 
 	 * @param smsTask
 	 */
 	public void tryProcessTaskRealTime(SmsTask smsTask);
-
-	/**
-	 * We calculate the group size and cost of the task without persisting any
-	 * data to the database. The returned task can then be passed on to
-	 * insertNewTask.
-	 * 
-	 */
-	public SmsTask getPreliminaryTask(String deliverGroupId, Date dateToSend,
-			String messageBody, String sakaiSiteID, String sakaiToolId,
-			String sakaiSenderID);
 
 	/**
 	 * Calculate the number of messages to be sent when the new sms task is
@@ -188,7 +184,7 @@ public interface SmsCore {
 	public SmsTask calculateEstimatedGroupSize(SmsTask smsTask);
 
 	/**
-	 * Send a email
+	 * Send an email
 	 * 
 	 * @param toAddress
 	 * @param subject

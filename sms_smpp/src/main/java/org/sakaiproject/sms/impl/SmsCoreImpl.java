@@ -40,7 +40,7 @@ import org.sakaiproject.sms.hibernate.util.DateUtil;
 import org.sakaiproject.sms.smpp.util.MessageCatelog;
 
 /**
- * Handle all logic regarding SMPP gateway communication.
+ * Handle all core logic regarding SMPP gateway communication.
  * 
  * @author etienne@psybergate.co.za
  * 
@@ -53,6 +53,10 @@ public class SmsCoreImpl implements SmsCore {
 	public SmsSmpp smsSmpp = null;
 
 	public SmsBilling smsBilling = null;
+
+	// TODO, we must calculate size for only one of deliveryEntityList,
+	// deliveryMobileNumbers, sakaiGroupId or sakaiUserIds. For now we only
+	// return a dummy list of users until the code is integrated into Sakai
 
 	public SmsTask calculateEstimatedGroupSize(SmsTask smsTask) {
 		Set<SmsMessage> deliverGroupMessages = generateSmsMessages(smsTask);
@@ -251,7 +255,6 @@ public class SmsCoreImpl implements SmsCore {
 		return smsTask;
 	}
 
-	// TODO Why does this not process all the messages for a group
 	public void processIncomingMessage(SmsMessage smsMessage) {
 		// TODO For phase 2
 	}
