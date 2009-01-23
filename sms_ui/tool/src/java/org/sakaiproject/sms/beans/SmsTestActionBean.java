@@ -62,6 +62,7 @@ public class SmsTestActionBean {
 			// send error
 			messages.addMessage(new TargettedMessage("sms.errors.send-error",
 					null, TargettedMessage.SEVERITY_ERROR));
+			e.printStackTrace();
 			log.error(e);
 		}
 
