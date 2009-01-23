@@ -21,12 +21,14 @@ import org.sakaiproject.sms.beans.ActionResults;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
 import org.springframework.util.Assert;
 
+import uk.org.ponder.beanutil.BeanGetter;
 import uk.org.ponder.rsf.components.ELReference;
 import uk.org.ponder.rsf.components.UIBoundList;
 import uk.org.ponder.rsf.components.UICommand;
 import uk.org.ponder.rsf.components.UIContainer;
 import uk.org.ponder.rsf.components.UIDeletionBinding;
 import uk.org.ponder.rsf.components.UIForm;
+import uk.org.ponder.rsf.components.UIInitBlock;
 import uk.org.ponder.rsf.components.UIInput;
 import uk.org.ponder.rsf.components.UIJointContainer;
 import uk.org.ponder.rsf.components.UIOutput;
@@ -39,9 +41,14 @@ public class SearchCriteriaRenderer {
 	private String labelDropDown;
 	private String searchBeanName;
 	private FormatAwareDateInputEvolver dateEvolver;
+	private BeanGetter ELEvaluator;
 
 	public void setDateEvolver(FormatAwareDateInputEvolver dateEvolver) {
 		this.dateEvolver = dateEvolver;
+	}
+
+	public void setELEvaluator(BeanGetter ELEvaluator) {
+		this.ELEvaluator = ELEvaluator;
 	}
 
 	public void setSearchBeanName(String searchBeanName) {
@@ -114,6 +121,35 @@ public class SearchCriteriaRenderer {
 				"sms.general.reset").setReturn(ActionResults.RESET);
 		command.addParameter(new UIDeletionBinding(
 				"#{destroyScope.searchScope}"));
+
+		clearDates(tofill);
+
+	}
+
+	/**
+	 * Fixup to clear date input for null dates
+	 */
+	private void clearDates(UIContainer tofill) {
+		if (!(ELEvaluator.getBean(searchBeanName) == null)) {
+
+			if (ELEvaluator.getBean(searchBeanName + ".dateFrom") == null) {
+				UIInitBlock
+						.make(
+								tofill,
+								"init-clear-from-date-input",
+								"initClearDateInput",
+								new Object[] { "searchCriteria::date-from:1:date-field" });
+			}
+			if (ELEvaluator.getBean(searchBeanName + ".dateTo") == null) {
+				UIInitBlock
+						.make(
+								tofill,
+								"init-clear-end-date-input",
+								"initClearDateInput",
+								new Object[] { "searchCriteria::date-to:1:date-field" });
+			}
+		}
+
 	}
 
 	private void createSender(UIForm searchForm) {

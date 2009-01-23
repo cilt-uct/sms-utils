@@ -126,7 +126,8 @@ public class AccountProducer implements ViewComponentProducer,
 		dateEvolver.evolveDateInput(endDate);
 
 		// to clear date input field
-		if (isNew || ELEvaluator.getBean(accountOTP + ".enddate") == null) {
+		if ((ELEvaluator.getBean(accountOTP) == null)
+				|| ELEvaluator.getBean(accountOTP + ".enddate") == null) {
 			UIInitBlock.make(tofill, "init-clear-date-input",
 					"initClearDateInput",
 					new Object[] { "endDate:1:date-field" });

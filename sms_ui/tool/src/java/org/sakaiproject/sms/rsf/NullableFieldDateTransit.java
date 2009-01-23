@@ -54,7 +54,7 @@ public class NullableFieldDateTransit extends LocaleHolder implements
 			this.fields = fields;
 		}
 	}
-	
+
 	public void setShortformat(SakaiDateFormat dateFormat) {
 		this.shortformat = dateFormat.getSakaiDateFormat();
 	}
@@ -130,7 +130,7 @@ public class NullableFieldDateTransit extends LocaleHolder implements
 
 		Locale locale = getLocale();
 		// TODO: Think about sharing these, see LocalSDF for construction costs
-		if(shortformat == null){
+		if (shortformat == null) {
 			shortformat = (SimpleDateFormat) DateFormat.getDateInstance(
 					DateFormat.SHORT, locale);
 		}
@@ -149,7 +149,8 @@ public class NullableFieldDateTransit extends LocaleHolder implements
 		iso8601notz.setTimeZone(timezone);
 		// breakformat = new SimpleDateFormat(LocalSDF.BREAKER_DATE, locale);
 		// do not use new Date(0) because of TZ insanity!!!
-		date = LocalSDF.breakformat.parse("01012000000000");
+		// date = LocalSDF.breakformat.parse("01012000000000");
+		date = new Date();
 	}
 
 	private void parse(SimpleDateFormat format, String datestring,

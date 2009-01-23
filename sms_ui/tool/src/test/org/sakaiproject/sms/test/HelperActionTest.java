@@ -19,7 +19,6 @@ package org.sakaiproject.sms.test;
 
 import junit.framework.TestCase;
 
-import org.sakaiproject.sms.api.SmsBilling;
 import org.sakaiproject.sms.beans.ActionResults;
 import org.sakaiproject.sms.beans.HelperActionBean;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
@@ -51,7 +50,6 @@ public class HelperActionTest extends TestCase {
 		smsTaskLocator = new SmsTaskLocator();
 		smsCore = new SmsCoreStub();
 		smsService = new SmsServiceStub();
-		
 
 		smsTaskLocator.setSmsCore(smsCore);
 

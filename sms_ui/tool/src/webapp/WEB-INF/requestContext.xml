@@ -16,6 +16,7 @@
   	<property name="labelDropDown" value="Task Status:"/>
   	<property name="searchBeanName" value="searchTaskList"/>
   	<property name="dateEvolver" ref="myFieldDateInputEvolver" />
+  	<property name="ELEvaluator" ref="ELEvaluator" />
   </bean>
 	
   <bean id="transactionLogCriteriaRenderer" class="org.sakaiproject.sms.renderers.SearchCriteriaRenderer">
@@ -23,6 +24,7 @@
   	<property name="labelDropDown" value="Type:"/>  
   	<property name="searchBeanName" value="searchTransactionLog"/>
   	<property name="dateEvolver" ref="myFieldDateInputEvolver" />
+  	<property name="ELEvaluator" ref="ELEvaluator" />
   </bean>
   
   <bean id="messageLogCriteriaRenderer" class="org.sakaiproject.sms.renderers.SearchCriteriaRenderer">
@@ -30,6 +32,7 @@
   	<property name="labelDropDown" value="Message Status:"/>
   	<property name="searchBeanName" value="searchMessageLog"/>
   	<property name="dateEvolver" ref="myFieldDateInputEvolver" />
+  	<property name="ELEvaluator" ref="ELEvaluator" />
   </bean>	
   
   <bean id="taskListSearchResultsRenderer" class="org.sakaiproject.sms.renderers.TaskListResultsRenderer">  

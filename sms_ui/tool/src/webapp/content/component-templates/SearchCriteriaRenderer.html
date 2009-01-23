@@ -12,6 +12,12 @@
 <body>
 <!-- everything outside this div is thrown away -->
 <div rsf:id="search-component:">
+<script type="text/javascript">
+		function initClearDateInput(dateInputId) {
+			var dateInput = document.getElementById(dateInputId);
+			dateInput.value = '';
+		}
+</script>
 <fieldset><legend>Search / Filter</legend>
 <form action="#" method="get" rsf:id="search-criteria">
 <table class="shorttext" border="0">
@@ -48,6 +54,13 @@
 	<input rsf:id="reset" type="submit" value="Reset"/>
 </form>	
 </fieldset>
+	<script rsf:id="init-clear-from-date-input" type="text/javascript">
+		initClearDateInput("dateInputId");
+	</script>
+		<script rsf:id="init-clear-end-date-input" type="text/javascript">
+		initClearDateInput("dateInputId");
+	</script>
+
 </div>
 </body>
 </html>
