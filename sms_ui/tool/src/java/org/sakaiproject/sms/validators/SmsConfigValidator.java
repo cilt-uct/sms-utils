@@ -20,6 +20,7 @@ package org.sakaiproject.sms.validators;
 
 import java.util.StringTokenizer;
 
+import org.apache.commons.validator.EmailValidator;
 import org.sakaiproject.sms.hibernate.model.SmsConfig;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
@@ -41,7 +42,6 @@ public class SmsConfigValidator implements Validator {
 		if (smsConfig.getSakaiSiteId() == null
 				|| smsConfig.getSakaiSiteId().equals("")) {
 
-			
 			if (smsConfig.getSmsRetryMaxCount() == null)
 				err
 						.rejectValue("smsRetryMaxCount",
@@ -64,14 +64,15 @@ public class SmsConfigValidator implements Validator {
 					"sms.errors.email.empty");
 
 			if (smsConfig.getNotificationEmail() != null) {
+				EmailValidator emailValidator = EmailValidator.getInstance();
+
 				StringTokenizer stringTokenizer = new StringTokenizer(smsConfig
 						.getNotificationEmail(), ",");
 
 				while (stringTokenizer.hasMoreElements()) {
 					String address = stringTokenizer.nextToken();
 
-					if (address.indexOf('@') == -1
-							|| address.indexOf('.') == -1) {
+					if (!emailValidator.isValid(address)) {
 						err.rejectValue("notificationEmail",
 								"sms.errors.email.invalid");
 					}

@@ -23,7 +23,7 @@ import org.sakaiproject.sms.hibernate.model.SmsConfig;
 import org.sakaiproject.sms.validators.SmsConfigValidator;
 import org.springframework.validation.BindException;
 
-public class SMSConfigValidatorTest extends TestCase {
+public class SmsConfigValidatorTest extends TestCase {
 
 	private static final String INVALID_EMAILS = "jo@gmail.com,mark@gmailcom";
 	private static final String VALID_EMAILS = "jo@gmail.com,mark@gmail.com";
@@ -67,7 +67,7 @@ public class SMSConfigValidatorTest extends TestCase {
 		assertTrue(bindException.hasErrors());
 	}
 
-	public void testNotifiationDisabled() throws Exception {
+	public void testNotificationDisabled() throws Exception {
 		smsConfig.setSendSmsEnabled(false);
 		validator.validate(smsConfig, bindException);
 		assertFalse(bindException.hasErrors());
