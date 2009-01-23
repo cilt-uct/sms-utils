@@ -449,8 +449,8 @@ public class SmsBillingImpl implements SmsBilling {
 		smsTransaction.setSmsTaskId(smsTask.getId());
 
 		// Insert debit transaction
-		HibernateLogicFactory.getTransactionLogic().insertDebitTransaction(
-				smsTransaction);
+		HibernateLogicFactory.getTransactionLogic()
+				.insertSettleDebitTransaction(smsTransaction);
 
 		return false;
 	}
