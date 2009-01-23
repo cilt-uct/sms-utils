@@ -28,7 +28,6 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.sakaiproject.sms.hibernate.dao.SmsDao;
 import org.sakaiproject.sms.hibernate.logic.SmsAccountLogic;
-import org.sakaiproject.sms.hibernate.logic.impl.exception.MoreThanOneAccountFoundException;
 import org.sakaiproject.sms.hibernate.model.SmsAccount;
 import org.sakaiproject.sms.hibernate.model.SmsTransaction;
 import org.sakaiproject.sms.hibernate.model.constants.SmsPropertyConstants;
@@ -119,11 +118,8 @@ public class SmsAccountLogicImpl extends SmsDao implements SmsAccountLogic {
 	 * 
 	 * @return sms congiguration
 	 * 
-	 * @throws MoreThanOneAccountFoundException
-	 *             the more than one account found exception
 	 */
-	public SmsAccount getSmsAccount(String sakaiSiteId, String SakaiUserId)
-			throws MoreThanOneAccountFoundException {
+	public SmsAccount getSmsAccount(String sakaiSiteId, String SakaiUserId) {
 		boolean checkSiteBeforeUser = Boolean
 				.parseBoolean(SmsPropertyReader
 						.getProperty(SmsPropertyConstants.ACCOUNT_CHECK_SITE_ID_BEFORE_USER_ID));
@@ -157,8 +153,7 @@ public class SmsAccountLogicImpl extends SmsDao implements SmsAccountLogic {
 	 * @throws MoreThanOneAccountFoundException
 	 *             the more than one account found exception
 	 */
-	private SmsAccount getAccountBySakaiSiteId(String sakaiSiteId)
-			throws MoreThanOneAccountFoundException {
+	private SmsAccount getAccountBySakaiSiteId(String sakaiSiteId) {
 		if (sakaiSiteId == null || sakaiSiteId.trim().equals("")) {
 			return null;
 		}
@@ -174,13 +169,7 @@ public class SmsAccountLogicImpl extends SmsDao implements SmsAccountLogic {
 		query.setParameter("sakaiSiteId", sakaiSiteId);
 		accounts = query.list();
 		if (accounts != null && accounts.size() > 0) {
-			if (accounts.size() > 1) {
-				throw new MoreThanOneAccountFoundException(
-						"More than one account found active account found for sakai site id: "
-								+ sakaiSiteId);
-			} else {
-				account = accounts.get(0);
-			}
+			account = accounts.get(0);
 		}
 		HibernateUtil.closeSession();
 		return account;
@@ -194,11 +183,8 @@ public class SmsAccountLogicImpl extends SmsDao implements SmsAccountLogic {
 	 * 
 	 * @return the account by sakai site id
 	 * 
-	 * @throws MoreThanOneAccountFoundException
-	 *             the more than one account found exception
 	 */
-	private SmsAccount getAccountBySakaiUserId(String sakaiUserId)
-			throws MoreThanOneAccountFoundException {
+	private SmsAccount getAccountBySakaiUserId(String sakaiUserId) {
 		if (sakaiUserId == null || sakaiUserId.trim().equals("")) {
 			return null;
 		}
@@ -214,13 +200,7 @@ public class SmsAccountLogicImpl extends SmsDao implements SmsAccountLogic {
 		query.setParameter("sakaiUserId", sakaiUserId);
 		accounts = query.list();
 		if (accounts != null && accounts.size() > 0) {
-			if (accounts.size() > 1) {
-				throw new MoreThanOneAccountFoundException(
-						"More than one account found active account found for sakai user id: "
-								+ sakaiUserId);
-			} else {
-				account = accounts.get(0);
-			}
+			account = accounts.get(0);
 		}
 		HibernateUtil.closeSession();
 		return account;

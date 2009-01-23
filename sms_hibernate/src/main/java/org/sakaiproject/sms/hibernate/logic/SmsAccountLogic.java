@@ -20,7 +20,6 @@ package org.sakaiproject.sms.hibernate.logic;
 
 import java.util.List;
 
-import org.sakaiproject.sms.hibernate.logic.impl.exception.MoreThanOneAccountFoundException;
 import org.sakaiproject.sms.hibernate.model.SmsAccount;
 
 /**
@@ -65,12 +64,8 @@ public interface SmsAccountLogic {
 	 *            the sakai user id. Can be null.
 	 * 
 	 * @return sms congiguration
-	 * 
-	 * @throws MoreThanOneAccountFoundException
-	 *             the more than one account found exception
 	 */
-	public SmsAccount getSmsAccount(String sakaiSiteId, String SakaiUserId)
-			throws MoreThanOneAccountFoundException;
+	public SmsAccount getSmsAccount(String sakaiSiteId, String SakaiUserId);
 
 	/**
 	 * Gets all the sms account records

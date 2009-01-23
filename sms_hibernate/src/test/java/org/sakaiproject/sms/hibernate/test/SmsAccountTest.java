@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.sakaiproject.sms.hibernate.logic.impl.HibernateLogicFactory;
-import org.sakaiproject.sms.hibernate.logic.impl.exception.MoreThanOneAccountFoundException;
 import org.sakaiproject.sms.hibernate.model.SmsAccount;
 import org.sakaiproject.sms.hibernate.model.SmsTransaction;
 import org.sakaiproject.sms.hibernate.util.AbstractBaseTestCase;
@@ -145,14 +144,10 @@ public class SmsAccountTest extends AbstractBaseTestCase {
 		account.setAccountName("accountName");
 		account.setAccountEnabled(true);
 		HibernateLogicFactory.getAccountLogic().persistSmsAccount(account);
-		try {
-			SmsAccount retAccount = HibernateLogicFactory.getAccountLogic()
-					.getSmsAccount(account.getSakaiSiteId(), "");
-			assertNotNull(retAccount);
-			assertEquals(retAccount, account);
-		} catch (MoreThanOneAccountFoundException e) {
-			fail(e.getMessage());
-		}
+		SmsAccount retAccount = HibernateLogicFactory.getAccountLogic()
+				.getSmsAccount(account.getSakaiSiteId(), "");
+		assertNotNull(retAccount);
+		assertEquals(retAccount, account);
 	}
 
 	/**
@@ -167,13 +162,9 @@ public class SmsAccountTest extends AbstractBaseTestCase {
 		account.setAccountName("accountName");
 		account.setAccountEnabled(true);
 		HibernateLogicFactory.getAccountLogic().persistSmsAccount(account);
-		try {
-			SmsAccount retAccount = HibernateLogicFactory.getAccountLogic()
-					.getSmsAccount("", account.getSakaiUserId());
-			assertNotNull(retAccount);
-			assertEquals(retAccount, account);
-		} catch (MoreThanOneAccountFoundException e) {
-			fail(e.getMessage());
-		}
+		SmsAccount retAccount = HibernateLogicFactory.getAccountLogic()
+				.getSmsAccount("", account.getSakaiUserId());
+		assertNotNull(retAccount);
+		assertEquals(retAccount, account);
 	}
 }
