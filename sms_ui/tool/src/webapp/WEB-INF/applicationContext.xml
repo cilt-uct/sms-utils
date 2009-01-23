@@ -124,6 +124,75 @@
 	</property>
  </bean>
  
+ 
+  <bean class="uk.org.ponder.mapping.DataConverter">
+	<property name="targetPath" value="SmsSystemConfigLocator.*.delReportTimeoutDuration" />
+	<property name="converter">
+		<bean class="org.sakaiproject.sms.util.NumberEditorFactory">
+			<property name="field" value="delReportTimeoutDuration" />
+			<property name="numberClass" value="java.lang.Integer" />
+		</bean>
+	</property>
+ </bean>
+  <bean class="uk.org.ponder.mapping.DataConverter">
+	<property name="targetPath" value="SmsSystemConfigLocator.*.delReportTimeoutDuration" />
+	<property name="converter">
+		<bean class="org.sakaiproject.sms.util.NumberEditorFactory">
+			<property name="field" value="delReportTimeoutDuration" />
+			<property name="numberClass" value="java.lang.Integer" />
+		</bean>
+	</property>
+ </bean>
+ <bean class="uk.org.ponder.mapping.DataConverter">
+	<property name="targetPath" value="SmsSystemConfigLocator.*.delReportTimeoutDuration" />
+	<property name="converter">
+		<bean class="org.sakaiproject.sms.util.NumberEditorFactory">
+			<property name="field" value="delReportTimeoutDuration" />
+			<property name="numberClass" value="java.lang.Integer" />
+		</bean>
+	</property>
+ </bean>
+
+ <bean class="uk.org.ponder.mapping.DataConverter">
+	<property name="targetPath" value="SmsConfigLocator.*.smsRetryMaxCount" />
+	<property name="converter">
+		<bean class="org.sakaiproject.sms.util.NumberEditorFactory">
+			<property name="field" value="smsRetryMaxCount" />
+			<property name="numberClass" value="java.lang.Integer" />
+		</bean>
+	</property>
+ </bean>
+
+ <bean class="uk.org.ponder.mapping.DataConverter">
+	<property name="targetPath" value="SmsConfigLocator.*.smsRetryScheduleInterval" />
+	<property name="converter">
+		<bean class="org.sakaiproject.sms.util.NumberEditorFactory">
+			<property name="field" value="smsRetryScheduleInterval" />
+			<property name="numberClass" value="java.lang.Integer" />
+		</bean>
+	</property>
+ </bean>
+
+ <bean class="uk.org.ponder.mapping.DataConverter">
+	<property name="targetPath" value="SmsConfigLocator.*.pagingSize" />
+	<property name="converter">
+		<bean class="org.sakaiproject.sms.util.NumberEditorFactory">
+			<property name="field" value="pagingSize" />
+			<property name="numberClass" value="java.lang.Integer" />
+		</bean>
+	</property>
+ </bean>
+
+ <bean class="uk.org.ponder.mapping.DataConverter">
+	<property name="targetPath" value="SmsConfigLocator.*.smsTaskMaxLifeTime" />
+	<property name="converter">
+		<bean class="org.sakaiproject.sms.util.NumberEditorFactory">
+			<property name="field" value="smsTaskMaxLifeTime" />
+			<property name="numberClass" value="java.lang.Integer" />
+		</bean>
+	</property>
+ </bean>
+  
  <bean class="uk.org.ponder.mapping.DataConverter">
 	<property name="targetPath" value="SmsTaskLocator.*.messageBody" />
 	<property name="converter">

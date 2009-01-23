@@ -3,19 +3,20 @@
 <head>
 <link href="../css/tool_base.css" type="text/css" rel="stylesheet" media="all" />
 <link href="../css/default/tool.css" type="text/css" rel="stylesheet" media="all" />
-<!--<script type="text/javascript" language="JavaScript" src="../js/gen_validatorv31.js"></script>-->
 <title rsf:id="page-title">Search Window</title>
 </head>
 <body style="padding: 5px; margin: 4px;">
-	<div rsf:id="message-for:*">
-		<span>Message for user here</span>
-  	</div>
+
   	<div id='config_errorloc' style="color: red; font-weight: bold; display:inline"></div>  
 	<div align="left">
     <div class="navIntraTool"><a href="#" rsf:id="system-settings">System Config</a></div>	
+
 	
 	<form name="config" id="config" action="#" rsf:id="sms-site-config-form">
     	<h2 rsf:id="page-heading">SMS Config</h2>	
+	<div rsf:id="message-for:*">
+		<span>Message for user here</span>
+  	</div>
         
     <table class="shorttext required" align="left">
       <tr>
@@ -55,21 +56,6 @@
       </tr>
     </table>
     </form>
-    
-<!--    <script language="JavaScript" type="text/javascript">-->
-<!-- 		var frmvalidator = new Validator("config");-->
-<!-- 		frmvalidator.EnableOnPageErrorDisplaySingleBox();-->
-<!-- 		frmvalidator.EnableMsgsTogether();	-->
-<!--		frmvalidator.addValidation("sms-config-retry-count","minlen=1", "Please enter a number for Maximum retry count");-->
-<!--		frmvalidator.addValidation("sms-config-retry-count","num", "Please enter a number for Maximum retry count");-->
-<!--		frmvalidator.addValidation("sms-config-task-max-lifetime","minlen=1", "Please enter a number for Maximum task lifetime");-->
-<!--		frmvalidator.addValidation("sms-config-task-max-lifetime","num", "Please enter a number for Maximum task lifetime");-->
-<!--		frmvalidator.addValidation("sms-config-retry-interval","minlen=1", "Please enter a number for Retry schedule interval");-->
-<!--		frmvalidator.addValidation("sms-config-retry-interval","num", "Please enter a number for Retry schedule interval");-->
-<!--		frmvalidator.addValidation("sms-config-paging-size","minlen=1", "Please enter a number for Paging size");-->
-<!--		frmvalidator.addValidation("sms-config-paging-size","num", "Please enter a number for Paging size");-->
-<!--	</script>-->
-<!--    -->
 </div>
 </body>
 </html>

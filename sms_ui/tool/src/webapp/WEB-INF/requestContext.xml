@@ -56,7 +56,9 @@
  	<property name="smsTaskLocator" ref="SmsTaskLocator" />
   </bean>
   
-  <bean class="org.sakaiproject.sms.producers.SmsSiteConfigProducer"/>
+  <bean class="org.sakaiproject.sms.producers.SmsSiteConfigProducer">
+  	<property name="messageFixupHelper" ref="messageFixupHelper" />
+  </bean>
   
   <bean class="org.sakaiproject.sms.producers.SmsSystemConfigProducer">
 	<property name="messageFixupHelper" ref="messageFixupHelper" />

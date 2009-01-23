@@ -24,6 +24,7 @@ import java.util.List;
 import org.sakaiproject.sms.beans.ActionResults;
 import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
 import org.sakaiproject.sms.otp.SmsConfigLocator;
+import org.sakaiproject.sms.util.MessageFixupHelper;
 
 import uk.org.ponder.rsf.components.ELReference;
 import uk.org.ponder.rsf.components.UIBoundList;
@@ -49,24 +50,38 @@ public class SmsSiteConfigProducer implements ViewComponentProducer,
 
 	public static final String VIEW_ID = "SmsSiteConfig";
 
+	private MessageFixupHelper messageFixupHelper;
+
 	public String getViewID() {
 		return VIEW_ID;
 	}
 
+	public void setMessageFixupHelper(MessageFixupHelper messageFixupHelper) {
+		this.messageFixupHelper = messageFixupHelper;
+	}
+
+	public void init() {
+		messageFixupHelper.fixupMessages("sms-config-retry-count",
+				"sms-config-task-max-lifetime", "sms-config-retry-interval",
+				"sms-config-paging-size");
+	}
+
 	public void fillComponents(UIContainer tofill, ViewParameters viewparams,
 			ComponentChecker checker) {
+		init();
 
 		String smsConfigOTP = SmsConfigLocator.LOCATOR_NAME + "."
 				+ SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_SITE_ID;
-		
-		UIInternalLink.make(tofill, "system-settings", new SimpleViewParameters(
-				SmsSystemConfigProducer.VIEW_ID));
+
+		UIInternalLink.make(tofill, "system-settings",
+				new SimpleViewParameters(SmsSystemConfigProducer.VIEW_ID));
 
 		UIMessage.make(tofill, "page-title", "sms.site.config.title");
 		UIForm smsSiteConfigform = UIForm.make(tofill, "sms-site-config-form");
 		UIMessage.make(tofill, "page-heading", "sms.site.config.title");
 
-		UIMessage.make(smsSiteConfigform, "sms-enabled", "sms.site.config.enabled");
+		UIMessage.make(smsSiteConfigform, "sms-enabled",
+				"sms.site.config.enabled");
 		UISelect combo = UISelect.make(smsSiteConfigform, "sms-config-enabled");
 		combo.selection = new UIInput();
 		combo.selection.valuebinding = new ELReference(smsConfigOTP
@@ -84,9 +99,8 @@ public class SmsSiteConfigProducer implements ViewComponentProducer,
 				"sms-config-notification-email", smsConfigOTP
 						+ ".notificationEmail");
 
-
-		UIMessage
-				.make(smsSiteConfigform, "max-retry-count", "sms.site.config.max.retry");
+		UIMessage.make(smsSiteConfigform, "max-retry-count",
+				"sms.site.config.max.retry");
 		UIInput retryCountInput = UIInput.make(smsSiteConfigform,
 				"sms-config-retry-count", smsConfigOTP + ".smsRetryMaxCount");
 		retryCountInput.decorators = new DecoratorList(new UITooltipDecorator(
@@ -110,13 +124,15 @@ public class SmsSiteConfigProducer implements ViewComponentProducer,
 				new UITooltipDecorator(UIMessage
 						.make("sms.site.config.retry.schedule-tooltip")));
 
-		UIMessage.make(smsSiteConfigform, "paging-size", "sms.site.config.paging.size");
+		UIMessage.make(smsSiteConfigform, "paging-size",
+				"sms.site.config.paging.size");
 		UIInput pagingSizeInput = UIInput.make(smsSiteConfigform,
 				"sms-config-paging-size", smsConfigOTP + ".pagingSize");
 		pagingSizeInput.decorators = new DecoratorList(new UITooltipDecorator(
 				UIMessage.make("sms.site.config.paging.size-tooltip")));
 
-		UICommand.make(smsSiteConfigform, "save", "#{smsSiteConfigActionBean.save}");
+		UICommand.make(smsSiteConfigform, "save",
+				"#{smsSiteConfigActionBean.save}");
 		UICommand.make(smsSiteConfigform, "cancel", "#");
 	}
 

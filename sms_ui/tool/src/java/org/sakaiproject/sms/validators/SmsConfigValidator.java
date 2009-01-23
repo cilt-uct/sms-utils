@@ -69,13 +69,17 @@ public class SmsConfigValidator implements Validator {
 				StringTokenizer stringTokenizer = new StringTokenizer(smsConfig
 						.getNotificationEmail(), ",");
 
+				boolean invalidEmail = false;
 				while (stringTokenizer.hasMoreElements()) {
 					String address = stringTokenizer.nextToken();
 
 					if (!emailValidator.isValid(address)) {
-						err.rejectValue("notificationEmail",
-								"sms.errors.email.invalid");
+						invalidEmail = true;
 					}
+				}
+				if (invalidEmail) {
+					err.rejectValue("notificationEmail",
+							"sms.errors.email.invalid");
 				}
 			}
 		}
