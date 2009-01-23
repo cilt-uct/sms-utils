@@ -38,7 +38,7 @@ public class DebitAccountValidatorTest extends TestCase{
 		debitAccountBean.setAmountToDebit(-10f);
 		validator.validate(debitAccountBean, bindException);
 		assertTrue(bindException.hasErrors());
-		assertEquals("sms.debit.account.errors.debit.amount", bindException.getFieldError().getCode());
+		assertEquals("sms.errors.amountToDebit.empty", bindException.getFieldError().getCode());
 	}
 	
 	public void testValidationPasses() throws Exception {

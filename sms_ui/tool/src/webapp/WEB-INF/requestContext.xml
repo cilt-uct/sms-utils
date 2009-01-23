@@ -45,7 +45,9 @@
   </bean>
 
   <!--  Producers -->
-  <bean class="org.sakaiproject.sms.producers.DebitAccountProducer"/>
+  <bean class="org.sakaiproject.sms.producers.DebitAccountProducer">
+	<property name="messageFixupHelper" ref="messageFixupHelper" />
+  </bean>
 
   <bean class="org.sakaiproject.sms.producers.SmsTestProducer" >
 	<property name="accountHelper" ref="accountHelper" />
@@ -104,6 +106,7 @@
   <bean id="debitAccountActionBean" class="org.sakaiproject.sms.beans.DebitAccountActionBean">
   	<property name="debitAccountBean" ref="debitAccountBean"/>
   	<property name="smsBilling" ref="org.sakaiproject.sms.api.SmsBilling"/>
+  	<property name="messages" ref="targettedMessageList"/>
   </bean>
   
   

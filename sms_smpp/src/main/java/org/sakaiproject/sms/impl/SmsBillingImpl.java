@@ -51,17 +51,16 @@ public class SmsBillingImpl implements SmsBilling {
 	 * @param amountToDebit
 	 */
 	public void debitAccount(Long accountId, Float amountToDebit) {
-
-		if (amountToDebit < 0) {
-			throw new RuntimeException(
-					"The amount supplied to debit an account be my be positive");
+		
+		if(amountToDebit < 0){
+			throw new RuntimeException("The amount supplied to debit an account must be positive");
 		}
 
 		SmsAccount account = HibernateLogicFactory.getAccountLogic()
 				.getSmsAccount(accountId);
 
 		SmsTransaction smsTransaction = new SmsTransaction();
-		smsTransaction.setTransactionAmount(amountToDebit);
+		smsTransaction.setTransactionAmount(amountToDebit*-1);
 		smsTransaction.setSakaiUserId(account.getSakaiUserId());
 		smsTransaction.setSmsAccount(account);
 		smsTransaction.setTransactionCredits(0);

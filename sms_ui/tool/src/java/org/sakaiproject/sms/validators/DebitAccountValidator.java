@@ -2,8 +2,8 @@ package org.sakaiproject.sms.validators;
 
 import org.sakaiproject.sms.beans.DebitAccountBean;
 import org.sakaiproject.sms.hibernate.logic.SmsAccountLogic;
-import org.sakaiproject.sms.hibernate.logic.impl.HibernateLogicFactory;
 import org.sakaiproject.sms.hibernate.model.SmsAccount;
+import org.sakaiproject.sms.util.MessageFixupHelper;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
@@ -26,15 +26,26 @@ public class DebitAccountValidator implements Validator{
 	public void validate(Object target, Errors errors) {
 		DebitAccountBean account = (DebitAccountBean) target;
 		
-		//check account exsists
-		SmsAccount smsAccount = smsAccountLogic.getSmsAccount(account.getAccountId());
-		
-		if(smsAccount == null){
-			errors.reject("sms.debit.account.errors.no.account");
+		if(account.getAccountId() != null){
+			//check account exists
+			SmsAccount smsAccount = smsAccountLogic.getSmsAccount(account.getAccountId());
+			
+			if(smsAccount == null){
+				errors.reject("sms.debit.account.errors.no.account");
+			}
+		}
+		else{
+			errors.reject("sms.errors.accountId.empty");
 		}
 		
-		if(account.getAmountToDebit() < 0){
-			errors.rejectValue("amountToDebit", "sms.debit.account.errors.debit.amount");
+		if(account.getAmountToDebit() == null){
+			errors.reject("sms.errors.amountToDebit.invalid");
+		}
+		else if(account.getAmountToDebit() < 0){
+			errors.rejectValue("amountToDebit", "sms.errors.amountToDebit.empty");
+		}
+		else{
+			
 		}
 		
 	}

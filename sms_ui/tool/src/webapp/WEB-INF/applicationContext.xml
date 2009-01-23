@@ -46,6 +46,7 @@
     <property name="copyPreservingBeans" value="searchTaskList, searchTransactionLog, searchMessageLog"/>
   </bean>
     
+   <!--  Validators -->
   <bean id="smsMessageGuard" parent="writeGuardParent">
      <property name="guardedPath" value="SmsMessageLocator.*"/>
 	 <property name="guard"> 
@@ -67,12 +68,38 @@
  	<property name="guardedPath" value="SmsTaskLocator.*" />
  	<property name="guard"><bean class="org.sakaiproject.sms.validators.SmsTaskValidator" /></property>
   </bean> 
+  
   <bean id="debitAccoutGaurd" parent="writeGuardParent">
- 	<property name="guardedPath" value="DebitAccountActionBean.*" />
- 	<property name="guard"><bean class="org.sakaiproject.sms.validators.DebitAccountValidator" /></property>
-  </bean> 
+ 	<property name="guardedPath" value="debitAccountBean"/>
+ 	<property name="guard">
+ 		<bean class="org.sakaiproject.sms.validators.DebitAccountValidator">
+ 		<property name="smsAccountLogic" ref="SmsAccountLogic"/>
+   		</bean>
+   </property>
+  </bean>
   
   <!-- Data Converters for Float values -->  
+  <bean class="uk.org.ponder.mapping.DataConverter">
+	<property name="targetPath" value="debitAccountBean.amountToDebit" />
+	<property name="converter">
+		<bean class="org.sakaiproject.sms.util.NumberEditorFactory">
+			<property name="field" value="amountToDebit" />
+			<property name="numberClass" value="java.lang.Float" />
+		</bean>
+	</property>
+  </bean>
+  
+  <bean class="uk.org.ponder.mapping.DataConverter">
+	<property name="targetPath" value="debitAccountBean.accountId" />
+	<property name="converter">
+		<bean class="org.sakaiproject.sms.util.NumberEditorFactory">
+			<property name="field" value="accountId" />
+			<property name="numberClass" value="java.lang.Long" />
+		</bean>
+	</property>
+  </bean>
+  
+  
   <bean class="uk.org.ponder.mapping.DataConverter">
 	<property name="targetPath" value="SmsAccountLocator.*.balance" />
 	<property name="converter">

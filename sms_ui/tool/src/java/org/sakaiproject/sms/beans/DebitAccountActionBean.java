@@ -1,12 +1,25 @@
 package org.sakaiproject.sms.beans;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.sakaiproject.sms.api.SmsBilling;
+
+import uk.org.ponder.messageutil.TargettedMessage;
+import uk.org.ponder.messageutil.TargettedMessageList;
 
 public class DebitAccountActionBean {
 
+	private static Log LOG = LogFactory.getLog(DebitAccountActionBean.class);
+	
 	private DebitAccountBean debitAccountBean;
 	private SmsBilling smsBilling;
+	private TargettedMessageList messages;;
+	
 		
+	public void setMessages(TargettedMessageList messages) {
+		this.messages = messages;
+	}
+
 	public void setDebitAccountBean(DebitAccountBean debitAccountBean) {
 		this.debitAccountBean = debitAccountBean;
 	}
@@ -16,6 +29,20 @@ public class DebitAccountActionBean {
 	}
 
 	public void debitAccount(){
-		smsBilling.debitAccount(debitAccountBean.getAccountId(), debitAccountBean.getAmountToDebit());		
+		try{			
+			smsBilling.debitAccount(debitAccountBean.getAccountId(), debitAccountBean.getAmountToDebit());
+		}
+		catch (Exception e) {
+			
+			LOG.error(e);
+			
+			messages.addMessage(new TargettedMessage(
+					"GeneralActionError", null,
+					TargettedMessage.SEVERITY_INFO));
+			
+		}
+		messages.addMessage(new TargettedMessage(
+				"sms.debit.account.success", null,
+				TargettedMessage.SEVERITY_INFO));
 	}
 }

@@ -1,5 +1,7 @@
 package org.sakaiproject.sms.producers;
 
+import org.sakaiproject.sms.util.MessageFixupHelper;
+
 import uk.org.ponder.rsf.components.UICommand;
 import uk.org.ponder.rsf.components.UIContainer;
 import uk.org.ponder.rsf.components.UIForm;
@@ -12,6 +14,18 @@ import uk.org.ponder.rsf.viewstate.ViewParameters;
 public class DebitAccountProducer implements ViewComponentProducer{
 
 	public static final String VIEW_ID = "debit_account";
+	
+	private MessageFixupHelper messageFixupHelper;
+
+	public void setMessageFixupHelper(MessageFixupHelper messageFixupHelper) {
+		this.messageFixupHelper = messageFixupHelper;
+	}
+
+	public void init() {
+		messageFixupHelper.fixupMessages("account-id-input",
+				"account-amount-input");
+	}
+
 
 	public String getViewID() {
 		return VIEW_ID;
@@ -19,6 +33,8 @@ public class DebitAccountProducer implements ViewComponentProducer{
 
 	public void fillComponents(UIContainer tofill, ViewParameters viewparams,
 			ComponentChecker checker) {
+		
+		init();
 		
 		UIMessage.make(tofill, "page-title", "sms.debit.account.title");
 		UIMessage.make(tofill, "sms-debit-account-heading", "sms.debit.account.title");
