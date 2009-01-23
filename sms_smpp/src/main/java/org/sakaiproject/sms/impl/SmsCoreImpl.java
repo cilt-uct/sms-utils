@@ -464,6 +464,7 @@ public class SmsCoreImpl implements SmsCore {
 				.checkAndSetTasksCompleted();
 
 		for (SmsTask smsTask : smsTasks) {
+			smsBilling.settleCreditDifference(smsTask);
 			sendTaskNotification(smsTask,
 					SmsHibernateConstants.TASK_NOTIFICATION_COMPLETED);
 		}
