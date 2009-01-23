@@ -229,17 +229,11 @@ public class SmsCoreImpl implements SmsCore {
 	}
 
 	public synchronized SmsTask insertTask(SmsTask smsTask) {
+		// we set the date again dew to time laps between getPreliminaryTask and
+		// insertask
 		smsTask.setDateCreated(DateUtil.getCurrentDate());
 		HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask);
-		try {
-			smsTask.setSmsAccountId(smsBilling.getAccountID(smsTask
-					.getSakaiSiteId(), smsTask.getSenderUserName(), 1));
-			smsBilling.reserveCredits(smsTask);
-		} catch (MoreThanOneAccountFoundException e) {
-			// TODO HANDLE THIS EXCEPTION
-			e.printStackTrace();
-		}
-
+		smsBilling.reserveCredits(smsTask);
 		tryProcessTaskRealTime(smsTask);
 		return smsTask;
 	}
