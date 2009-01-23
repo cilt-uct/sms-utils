@@ -112,6 +112,16 @@ public interface SmsTransactionLogic {
 	public void insertDebitTransaction(SmsTransaction smsTransaction);
 
 	/**
+	 * Insert debit transaction with status TRANS_SETTLE_DIFFERENCE.
+	 * <p>
+	 * This will also update the related account balance.
+	 * 
+	 * @param smsTransaction
+	 *            the sms transaction
+	 */
+	public void insertSettleDebitTransaction(SmsTransaction smsTransaction);
+
+	/**
 	 * Insert credit transaction.
 	 * <p>
 	 * This will also update the related account balance.
@@ -120,6 +130,16 @@ public interface SmsTransactionLogic {
 	 *            the sms transaction
 	 */
 	public void insertCreditTransaction(SmsTransaction smsTransaction);
+
+	/**
+	 * Insert credit transaction with status TRANS_SETTLE_DIFFERENCE.
+	 * <p>
+	 * This will also update the related account balance.
+	 * 
+	 * @param smsTransaction
+	 *            the sms transaction
+	 */
+	public void insertSettleCreditTransaction(SmsTransaction smsTransaction);
 
 	/**
 	 * Gets all the related transaction for the specified account id.

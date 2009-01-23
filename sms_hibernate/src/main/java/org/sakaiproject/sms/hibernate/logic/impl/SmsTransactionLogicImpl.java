@@ -255,6 +255,31 @@ public class SmsTransactionLogicImpl extends SmsDao implements
 	}
 
 	/**
+	 * Insert credit transaction with status TRANS_SETTLE_DIFFERENCE.
+	 * <p>
+	 * This will also update the related account balance.
+	 * 
+	 * @param smsTransaction
+	 *            the sms transaction
+	 */
+	public void insertSettleCreditTransaction(SmsTransaction smsTransaction) {
+		SmsAccount account = HibernateLogicFactory.getAccountLogic()
+				.getSmsAccount(smsTransaction.getSmsAccount().getId());
+		smsTransaction
+				.setTransactionTypeCode(SmsConst_Billing.TRANS_SETTLE_DIFFERENCE);
+		// Update the account balance
+		account.setBalance(account.getBalance()
+				- smsTransaction.getTransactionAmount());
+		HibernateLogicFactory.getAccountLogic().persistSmsAccount(account);
+
+		// Change to negative value
+		smsTransaction.setTransactionAmount(smsTransaction
+				.getTransactionAmount()
+				* -1);
+		persist(smsTransaction);
+	}
+
+	/**
 	 * Insert debit transaction.
 	 * <p>
 	 * This will also update the related account balance.
@@ -275,6 +300,28 @@ public class SmsTransactionLogicImpl extends SmsDao implements
 
 		persist(smsTransaction);
 
+	}
+
+	/**
+	 * Insert debit transaction with status TRANS_SETTLE_DIFFERENCE.
+	 * <p>
+	 * This will also update the related account balance.
+	 * 
+	 * @param smsTransaction
+	 *            the sms transaction
+	 */
+	public void insertSettleDebitTransaction(SmsTransaction smsTransaction) {
+		SmsAccount account = HibernateLogicFactory.getAccountLogic()
+				.getSmsAccount(smsTransaction.getSmsAccount().getId());
+		smsTransaction
+				.setTransactionTypeCode(SmsConst_Billing.TRANS_SETTLE_DIFFERENCE);
+		// Update the account balance
+		account.setBalance(account.getBalance()
+				+ smsTransaction.getTransactionAmount());
+		smsTransaction.setBalance(account.getBalance());
+		HibernateLogicFactory.getAccountLogic().persistSmsAccount(account);
+
+		persist(smsTransaction);
 	}
 
 	/**

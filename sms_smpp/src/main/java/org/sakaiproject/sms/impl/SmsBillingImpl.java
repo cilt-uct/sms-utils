@@ -481,15 +481,15 @@ public class SmsBillingImpl implements SmsBilling {
 		if (transactionAmount >= 0) {
 			// Insert debit transaction
 			smsTransaction.setTransactionAmount(transactionAmount);
-			HibernateLogicFactory.getTransactionLogic().insertDebitTransaction(
-					smsTransaction);
+			HibernateLogicFactory.getTransactionLogic()
+					.insertSettleDebitTransaction(smsTransaction);
 		} else {
 			// Insert credit transaction and make sure the transaction amount
 			// gets passed as a positive value. The insert credit transaction
 			// will handle that
 			smsTransaction.setTransactionAmount((transactionAmount * -1));
 			HibernateLogicFactory.getTransactionLogic()
-					.insertCreditTransaction(smsTransaction);
+					.insertSettleCreditTransaction(smsTransaction);
 		}
 		return true;
 	}
