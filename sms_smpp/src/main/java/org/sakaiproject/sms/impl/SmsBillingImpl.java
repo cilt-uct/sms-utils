@@ -60,7 +60,7 @@ public class SmsBillingImpl implements SmsBilling {
 				.getSmsAccount(accountId);
 
 		SmsTransaction smsTransaction = new SmsTransaction();
-		smsTransaction.setTransactionAmount(amountToDebit*-1);
+		smsTransaction.setTransactionAmount(amountToDebit);
 		smsTransaction.setSakaiUserId(account.getSakaiUserId());
 		smsTransaction.setSmsAccount(account);
 		smsTransaction.setTransactionCredits(0);

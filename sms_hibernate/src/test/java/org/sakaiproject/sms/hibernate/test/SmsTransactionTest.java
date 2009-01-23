@@ -85,7 +85,7 @@ public class SmsTransactionTest extends AbstractBaseTestCase {
 		smsAccount.setSakaiSiteId("1");
 		smsAccount.setMessageTypeCode("12345");
 		smsAccount.setOverdraftLimit(10000.00f);
-		smsAccount.setBalance(0f);
+		smsAccount.setBalance(2000f);
 		smsAccount.setAccountName("accountname");
 		smsAccount.setAccountEnabled(true);
 
@@ -109,7 +109,7 @@ public class SmsTransactionTest extends AbstractBaseTestCase {
 		SmsAccount theNewAccount = HibernateLogicFactory.getAccountLogic()
 				.getSmsAccount(smsAccount.getId());
 		assertNotNull(theNewAccount);
-		// Check updated account balance with positive value
+		// Check updated account balance with smaller positive value
 		assertTrue(theNewAccount.getBalance() == 1000f);
 	}
 
@@ -147,8 +147,8 @@ public class SmsTransactionTest extends AbstractBaseTestCase {
 		SmsAccount theNewAccount = HibernateLogicFactory.getAccountLogic()
 				.getSmsAccount(smsAccount.getId());
 		assertNotNull(theNewAccount);
-		// Check updated account balance with negative value
-		assertTrue(theNewAccount.getBalance() == -1000f);
+		// Check updated account balance with positive value
+		assertTrue(theNewAccount.getBalance() == 1000f);
 	}
 
 	/**

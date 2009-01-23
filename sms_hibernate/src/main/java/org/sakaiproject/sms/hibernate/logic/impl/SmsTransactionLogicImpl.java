@@ -244,7 +244,7 @@ public class SmsTransactionLogicImpl extends SmsDao implements
 
 		// Update the account balance
 		account.setBalance(account.getBalance()
-				- smsTransaction.getTransactionAmount());
+				+ smsTransaction.getTransactionAmount());
 		HibernateLogicFactory.getAccountLogic().persistSmsAccount(account);
 
 		// Change to negative value
@@ -269,7 +269,7 @@ public class SmsTransactionLogicImpl extends SmsDao implements
 				.setTransactionTypeCode(SmsConst_Billing.TRANS_SETTLE_DIFFERENCE);
 		// Update the account balance
 		account.setBalance(account.getBalance()
-				- smsTransaction.getTransactionAmount());
+				+ smsTransaction.getTransactionAmount());
 		HibernateLogicFactory.getAccountLogic().persistSmsAccount(account);
 
 		// Change to negative value
@@ -294,7 +294,7 @@ public class SmsTransactionLogicImpl extends SmsDao implements
 				.setTransactionTypeCode(SmsConst_Billing.TRANS_DEBIT_ACCOUNT);
 		// Update the account balance
 		account.setBalance(account.getBalance()
-				+ smsTransaction.getTransactionAmount());
+				- smsTransaction.getTransactionAmount());
 		smsTransaction.setBalance(account.getBalance());
 		HibernateLogicFactory.getAccountLogic().persistSmsAccount(account);
 
