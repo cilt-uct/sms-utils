@@ -25,10 +25,10 @@ import org.sakaiproject.sms.hibernate.bean.SearchFilterBean;
 
 import uk.org.ponder.rsf.viewstate.SimpleViewParameters;
 
-public class DownloadReportViewParams extends SimpleViewParameters{
-	
+public class DownloadReportViewParams extends SimpleViewParameters {
+
 	public String sourceView;
-	
+
 	public String number;
 	public String status;
 	public String dateFrom;
@@ -40,11 +40,12 @@ public class DownloadReportViewParams extends SimpleViewParameters{
 	public String transactionType;
 	public String sortDirection;
 
-	public DownloadReportViewParams() {}
+	public DownloadReportViewParams() {
+	}
 
-	public DownloadReportViewParams(String viewID, String sourceView, String dateFrom, String dateTo,
-			String number,  String orderBy, String sender,
-			String sortDirection, String status,
+	public DownloadReportViewParams(String viewID, String sourceView,
+			String dateFrom, String dateTo, String number, String orderBy,
+			String sender, String sortDirection, String status,
 			String toolName, String transactionType) {
 		super();
 		this.viewID = viewID;
@@ -59,19 +60,24 @@ public class DownloadReportViewParams extends SimpleViewParameters{
 		this.toolName = toolName;
 		this.transactionType = transactionType;
 	}
-	
-	public SearchFilterBean extractSearchFilter(SimpleDateFormat dateFormat){
-		
+
+	public SearchFilterBean extractSearchFilter(SimpleDateFormat dateFormat) {
+
 		Date dateFromDate = null;
 		Date dateToDate = null;
 		try {
-			dateFromDate = dateFormat.parse(dateFrom);
-			dateToDate = dateFormat.parse(dateTo);
+			if (!"".equals(dateFrom)) {
+				dateFromDate = dateFormat.parse(dateFrom);
+			}
+			if (!"".equals(dateTo)) {
+				dateToDate = dateFormat.parse(dateTo);
+			}
 		} catch (ParseException e) {
 			throw new RuntimeException("Failed to parse date string");
 		}
-			
-		return new SearchFilterBean(number, status, dateFromDate, dateToDate, toolName, sender, new Integer(1), orderBy, sortDirection);
+
+		return new SearchFilterBean(number, status, dateFromDate, dateToDate,
+				toolName, sender, new Integer(1), orderBy, sortDirection);
 	}
-	
+
 }
