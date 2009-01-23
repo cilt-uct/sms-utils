@@ -17,6 +17,7 @@
  **********************************************************************************/
 package org.sakaiproject.sms.impl;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
@@ -28,7 +29,6 @@ import org.sakaiproject.sms.api.SmsBilling;
 import org.sakaiproject.sms.api.SmsCore;
 import org.sakaiproject.sms.api.SmsSmpp;
 import org.sakaiproject.sms.hibernate.logic.impl.HibernateLogicFactory;
-import org.sakaiproject.sms.hibernate.logic.impl.exception.MoreThanOneAccountFoundException;
 import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsAccountNotFoundException;
 import org.sakaiproject.sms.hibernate.model.SmsAccount;
 import org.sakaiproject.sms.hibernate.model.SmsConfig;
@@ -38,6 +38,7 @@ import org.sakaiproject.sms.hibernate.model.constants.SmsConst_DeliveryStatus;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_SmscDeliveryStatus;
 import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
 import org.sakaiproject.sms.hibernate.util.DateUtil;
+import org.sakaiproject.sms.impl.validate.TaskValidator;
 import org.sakaiproject.sms.smpp.util.MessageCatelog;
 
 /**
@@ -176,10 +177,6 @@ public class SmsCoreImpl implements SmsCore {
 		try {
 			smsTask.setSmsAccountId(smsBilling.getAccountID(sakaiSiteID,
 					sakaiSenderID));
-		} catch (MoreThanOneAccountFoundException e) {
-			e.printStackTrace();
-			return null;
-
 		} catch (SmsAccountNotFoundException e) {
 			e.printStackTrace();
 			return null;
@@ -228,10 +225,39 @@ public class SmsCoreImpl implements SmsCore {
 
 	}
 
-	public synchronized SmsTask insertTask(SmsTask smsTask) {
+	public synchronized SmsTask insertTask(SmsTask smsTask)
+			throws SmsTaskValidationException {
+
+		ArrayList<String> errors = new ArrayList<String>();
+		errors.addAll(TaskValidator.validateInsertTask(smsTask));
+		if (errors.size() > 0) {
+			// Do not presist, just throw exception
+			SmsTaskValidationException validationException = new SmsTaskValidationException(
+					errors, "Task validation failed.");
+			LOG.error(validationException.getErrorMessagesAsBlock());
+			throw validationException;
+		}
+
 		// we set the date again dew to time laps between getPreliminaryTask and
 		// insertask
 		smsTask.setDateCreated(DateUtil.getCurrentDate());
+
+		// We do this becuase if there the invalid values in the task then the
+		// checkSufficientCredits() will throw unexpected exceptions. Check for
+		// sufficient credit only if the task is valid
+		errors.clear();
+		errors.addAll(TaskValidator.checkSufficientCredits(smsTask));
+		if (errors.size() > 0) {
+			smsTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_FAIL);
+			smsTask
+					.setFailReason(SmsHibernateConstants.INSUFFICIENT_CREDIT_MESSAGE);
+			HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask);
+			SmsTaskValidationException validationException = new SmsTaskValidationException(
+					errors, SmsHibernateConstants.INSUFFICIENT_CREDIT_MESSAGE);
+			LOG.error(validationException.getErrorMessagesAsBlock());
+			throw validationException;
+		}
+
 		HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask);
 		smsBilling.reserveCredits(smsTask);
 		tryProcessTaskRealTime(smsTask);

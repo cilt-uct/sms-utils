@@ -35,6 +35,7 @@ import org.sakaiproject.sms.hibernate.util.HibernateUtil;
 import org.sakaiproject.sms.impl.SmsBillingImpl;
 import org.sakaiproject.sms.impl.SmsCoreImpl;
 import org.sakaiproject.sms.impl.SmsSmppImpl;
+import org.sakaiproject.sms.impl.SmsTaskValidationException;
 
 /**
  * This test also send messages to the smpp simulator but it check the specific
@@ -350,7 +351,11 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 		statusUpdateTask
 				.setMessageTypeId(SmsHibernateConstants.SMS_TASK_TYPE_PROCESS_NOW);
 		smsCoreImpl.calculateEstimatedGroupSize(statusUpdateTask);
-		smsCoreImpl.insertTask(statusUpdateTask);
+		try {
+			smsCoreImpl.insertTask(statusUpdateTask);
+		} catch (SmsTaskValidationException e1) {
+			fail(e1.getErrorMessagesAsBlock());
+		}
 		smsSmppImpl.sendMessagesToGateway(statusUpdateTask.getSmsMessages());
 
 		assertEquals(true, statusUpdateTask.getMessagesWithStatus(
@@ -366,7 +371,11 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 				.generateSmsMessages(timeOutTask));
 		timeOutTask.setSmsAccountId(smsAccount.getId());
 		smsCoreImpl.calculateEstimatedGroupSize(timeOutTask);
-		smsCoreImpl.insertTask(timeOutTask);
+		try {
+			smsCoreImpl.insertTask(timeOutTask);
+		} catch (SmsTaskValidationException e1) {
+			fail(e1.getErrorMessagesAsBlock());
+		}
 		smsCoreImpl.processNextTask();
 
 		try {
@@ -455,4 +464,84 @@ public class SmsCoreTest extends AbstractBaseTestCase {
 
 	}
 
+	/**
+	 * Test insert task for validation errors.
+	 */
+	public void testInsertTask_ValidationErrors() {
+		SmsAccount account = new SmsAccount();
+		account.setSakaiSiteId("sakSitId");
+		account.setMessageTypeCode("12345");
+		account.setOverdraftLimit(0f);
+		account.setBalance(0f);
+		account.setAccountName("accountName");
+		account.setAccountEnabled(true);
+		HibernateLogicFactory.getAccountLogic().persistSmsAccount(account);
+
+		SmsTask insertTask = new SmsTask();
+		insertTask
+				.setSakaiSiteId(SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_SITE_ID);
+		insertTask
+				.setSenderUserName(SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID);
+		insertTask
+				.setSakaiToolId(SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_TOOL_ID);
+		insertTask.setSmsAccountId(account.getId());
+		insertTask.setDateCreated(new Date(System.currentTimeMillis()));
+		insertTask.setDateToSend(new Date(System.currentTimeMillis()));
+		insertTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
+		insertTask.setAttemptCount(2);
+		insertTask.setMessageBody("messageBody");
+		insertTask.setSenderUserName("senderUserName");
+		insertTask.setMaxTimeToLive(60);
+		insertTask.setDelReportTimeoutDuration(60);
+
+		try {
+			smsCoreImpl.insertTask(insertTask);
+			fail("Excpected validation exception");
+		} catch (SmsTaskValidationException e1) {
+			assertTrue(e1.getErrorMessages().size() > 0);
+			LOG.debug(e1.getErrorMessagesAsBlock());
+		}
+	}
+
+	/**
+	 * Test insert task for validation errors.
+	 */
+	public void testInsertTask_InsuficientCredit() {
+		SmsAccount account = new SmsAccount();
+		account.setSakaiSiteId("1");
+		account.setMessageTypeCode("1");
+		account.setOverdraftLimit(10000.00f);
+		account.setBalance(5000.00f);
+		account.setAccountName("accountName");
+		account.setAccountEnabled(true);
+		HibernateLogicFactory.getAccountLogic().persistSmsAccount(account);
+
+		SmsTask insertTask = new SmsTask();
+		insertTask
+				.setSakaiSiteId(SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_SITE_ID);
+		insertTask
+				.setSenderUserName(SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID);
+		insertTask
+				.setSakaiToolId(SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_TOOL_ID);
+		insertTask.setSmsAccountId(account.getId());
+		insertTask.setDateCreated(new Date(System.currentTimeMillis()));
+		insertTask.setDateToSend(new Date(System.currentTimeMillis()));
+		insertTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
+		insertTask.setAttemptCount(2);
+		insertTask.setMessageBody("messageBody");
+		insertTask.setSenderUserName("senderUserName");
+		insertTask.setMaxTimeToLive(60);
+		insertTask.setDelReportTimeoutDuration(60);
+		insertTask.setDeliveryGroupId("delgrpid");
+
+		try {
+			smsCoreImpl.insertTask(insertTask);
+			fail("Excpected validation exception");
+		} catch (SmsTaskValidationException e1) {
+			assertTrue(e1.getErrorMessages().size() > 0);
+			assertTrue(e1.getMessage().equals(
+					SmsHibernateConstants.INSUFFICIENT_CREDIT_MESSAGE));
+			LOG.debug(e1.getErrorMessagesAsBlock());
+		}
+	}
 }

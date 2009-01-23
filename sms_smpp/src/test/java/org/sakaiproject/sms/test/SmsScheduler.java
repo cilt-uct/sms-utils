@@ -14,6 +14,7 @@ import org.sakaiproject.sms.impl.SmsBillingImpl;
 import org.sakaiproject.sms.impl.SmsCoreImpl;
 import org.sakaiproject.sms.impl.SmsSchedulerImpl;
 import org.sakaiproject.sms.impl.SmsSmppImpl;
+import org.sakaiproject.sms.impl.SmsTaskValidationException;
 
 /**
  * SmsScheduler Junit.This class will test various scheduling related scenarios.
@@ -70,7 +71,11 @@ public class SmsScheduler extends AbstractBaseTestCase {
 
 		smsTask3.setSmsAccountId(smsAccount.getId());
 		smsCoreImpl.calculateEstimatedGroupSize(smsTask3);
-		smsCoreImpl.insertTask(smsTask3);
+		try {
+			smsCoreImpl.insertTask(smsTask3);
+		} catch (SmsTaskValidationException e1) {
+			fail(e1.getMessage());
+		}
 
 		now.add(Calendar.MINUTE, -1);
 		SmsTask smsTask2 = smsCoreImpl.getPreliminaryTask("smsTask2", new Date(
@@ -79,7 +84,11 @@ public class SmsScheduler extends AbstractBaseTestCase {
 				SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID);
 		smsTask2.setSmsAccountId(smsAccount.getId());
 		smsCoreImpl.calculateEstimatedGroupSize(smsTask2);
-		smsCoreImpl.insertTask(smsTask2);
+		try {
+			smsCoreImpl.insertTask(smsTask2);
+		} catch (SmsTaskValidationException e1) {
+			fail(e1.getMessage());
+		}
 
 		now.add(Calendar.MINUTE, -3);
 		SmsTask smsTask1 = smsCoreImpl.getPreliminaryTask("smsTask1", new Date(
@@ -88,7 +97,11 @@ public class SmsScheduler extends AbstractBaseTestCase {
 				SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID);
 		smsTask1.setSmsAccountId(smsAccount.getId());
 		smsCoreImpl.calculateEstimatedGroupSize(smsTask1);
-		smsCoreImpl.insertTask(smsTask1);
+		try {
+			smsCoreImpl.insertTask(smsTask1);
+		} catch (SmsTaskValidationException e1) {
+			fail(e1.getMessage());
+		}
 
 		try {
 			Thread.sleep(60000);

@@ -23,7 +23,6 @@ import java.util.Set;
 
 import org.sakaiproject.sms.api.SmsBilling;
 import org.sakaiproject.sms.hibernate.logic.impl.HibernateLogicFactory;
-import org.sakaiproject.sms.hibernate.logic.impl.exception.MoreThanOneAccountFoundException;
 import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsAccountNotFoundException;
 import org.sakaiproject.sms.hibernate.model.SmsAccount;
 import org.sakaiproject.sms.hibernate.model.SmsConfig;
@@ -109,12 +108,14 @@ public class SmsBillingImpl implements SmsBilling {
 	 * 
 	 * @return true, if sufficient credits
 	 */
-	public boolean checkSufficientCredits(Long accountID, int creditsRequired) {
+	public boolean checkSufficientCredits(Long accountID,
+			Integer creditsRequired) {
 		SmsAccount account = HibernateLogicFactory.getAccountLogic()
 				.getSmsAccount(accountID);
 
 		// Account is null or disabled
-		if (account == null || !account.getAccountEnabled()) {
+		if (account == null || !account.getAccountEnabled()
+				|| creditsRequired == null || creditsRequired < 0) {
 			return false;
 		}
 
@@ -194,15 +195,14 @@ public class SmsBillingImpl implements SmsBilling {
 	 *            (e.g. !admin)
 	 * @param sakaiUserID
 	 *            the sakai user id
-	 * @param accountType
-	 *            the account type
 	 * 
 	 * @return the account id
-	 * @throws MoreThanOneAccountFoundException
+	 * 
+	 * @throws SmsAccountNotFoundException
+	 *             the sms account not found exception
 	 */
 	public Long getAccountID(String sakaiSiteID, String sakaiUserID)
-			throws MoreThanOneAccountFoundException,
-			SmsAccountNotFoundException {
+			throws SmsAccountNotFoundException {
 		SmsAccount account = HibernateLogicFactory.getAccountLogic()
 				.getSmsAccount(sakaiSiteID, sakaiUserID);
 		if (account != null) {
@@ -234,7 +234,7 @@ public class SmsBillingImpl implements SmsBilling {
 		smsAccount.setMessageTypeCode("3");
 		smsAccount.setOverdraftLimit(10000.00f);
 		smsAccount.setBalance(1000f);
-		smsAccount.setAccountName("TestAccountName");
+		smsAccount.setAccountName("accountname");
 		smsAccount.setAccountEnabled(true);
 		try {
 			HibernateLogicFactory.getAccountLogic().persistSmsAccount(

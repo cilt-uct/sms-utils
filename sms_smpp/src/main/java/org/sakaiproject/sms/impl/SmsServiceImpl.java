@@ -25,7 +25,6 @@ import java.util.Set;
 import org.sakaiproject.sms.api.SmsBilling;
 import org.sakaiproject.sms.api.SmsCore;
 import org.sakaiproject.sms.api.SmsService;
-import org.sakaiproject.sms.hibernate.logic.impl.exception.MoreThanOneAccountFoundException;
 import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsAccountNotFoundException;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.impl.validate.TaskValidator;
@@ -137,15 +136,17 @@ public class SmsServiceImpl implements SmsService {
 	 * @param sakaiSiteID
 	 *            , (e.g. "!admin")
 	 * @param sakaiUserID
+	 *            the sakai user id
+	 * @param creditsRequired
+	 *            the credits required
+	 * 
+	 * @return true, if check sufficient credits
 	 */
 	public boolean checkSufficientCredits(String sakaiSiteID,
 			String sakaiUserID, int creditsRequired) {
 		Long smsAcountId;
 		try {
 			smsAcountId = smsBilling.getAccountID(sakaiSiteID, sakaiUserID);
-		} catch (MoreThanOneAccountFoundException e) {
-			e.printStackTrace();
-			return false;
 		} catch (SmsAccountNotFoundException e) {
 			e.printStackTrace();
 			return false;
