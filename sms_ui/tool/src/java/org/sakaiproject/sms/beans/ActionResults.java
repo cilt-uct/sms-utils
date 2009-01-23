@@ -25,4 +25,5 @@ public class ActionResults {
 	public static final String CANCEL = "cancel";
 	public static final String CONTINUE = "continue";
 	public static final String ERROR = "error";
+	public static final String RESET = "reset";
 }

@@ -17,8 +17,6 @@
  **********************************************************************************/
 package org.sakaiproject.sms.producers;
 
-import java.text.SimpleDateFormat;
-
 import org.sakaiproject.sms.hibernate.bean.SearchFilterBean;
 import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
 import org.sakaiproject.sms.params.DownloadReportViewParams;
@@ -34,20 +32,21 @@ import uk.org.ponder.rsf.components.UIContainer;
 import uk.org.ponder.rsf.components.UIInternalLink;
 import uk.org.ponder.rsf.components.UIJointContainer;
 import uk.org.ponder.rsf.components.UIMessage;
+import uk.org.ponder.rsf.flow.jsfnav.NavigationCaseReporter;
 import uk.org.ponder.rsf.view.ComponentChecker;
 import uk.org.ponder.rsf.view.ViewComponentProducer;
 import uk.org.ponder.rsf.viewstate.ViewParameters;
 import uk.org.ponder.rsf.viewstate.ViewParamsReporter;
 
 public abstract class AbstractSearchListProducer implements
-		ViewComponentProducer, ViewParamsReporter {
+		ViewComponentProducer, ViewParamsReporter, NavigationCaseReporter {
 
 	private SearchCriteriaRenderer searchCriteriaRenderer;
-	
+
 	private SearchResultsRenderer searchResultsRenderer;
-	
+
 	private TablePagerRenderer tablePagerRenderer;
-	
+
 	private SakaiDateFormat sakaiDateFormat;
 
 	private SearchFilterBean searchFilterBean;
@@ -61,7 +60,7 @@ public abstract class AbstractSearchListProducer implements
 	public void setSearchFilterBean(SearchFilterBean searchFilterBean) {
 		this.searchFilterBean = searchFilterBean;
 	}
-	
+
 	public void setSakaiDateFormat(SakaiDateFormat sakaiDateFormat) {
 		this.sakaiDateFormat = sakaiDateFormat;
 	}
@@ -105,7 +104,8 @@ public abstract class AbstractSearchListProducer implements
 				getViewID());
 
 		tablePagerRenderer.createPager(tofill, "searchPager:", sortParams,
-				getViewID(), searchResultsRenderer.getTotalNumberOfRowsReturned());
+				getViewID(), searchResultsRenderer
+						.getTotalNumberOfRowsReturned());
 		UIBranchContainer branchContainer = exportToCSV(tofill);
 		addAddtionalButtons(branchContainer);
 	}
@@ -116,21 +116,26 @@ public abstract class AbstractSearchListProducer implements
 	 * @param tofill
 	 */
 	protected void addAddtionalButtons(UIBranchContainer branch) {
-		
+
 	}
 
 	private UIBranchContainer exportToCSV(UIContainer tofill) {
 		UIBranchContainer branchContainer = UIJointContainer.make(tofill,
 				"export:", "search-results:");
-		
-		//Search criteria set as parameter since beans are not available when the handler hook intercepts
-		DownloadReportViewParams downloadReportViewParams = new DownloadReportViewParams("downloadCsv", getViewID(),
-				sakaiDateFormat.formatDate(searchFilterBean.getDateFrom()), sakaiDateFormat.formatDate(searchFilterBean.getDateTo()),
-				searchFilterBean.getNumber(),  searchFilterBean.getOrderBy(), searchFilterBean.getSender(),
-				searchFilterBean.getSortDirection(), searchFilterBean.getStatus(),
-				searchFilterBean.getToolName(), searchFilterBean.getTransactionType());
-		UIInternalLink.make(tofill, "export-to-csv", downloadReportViewParams);		
-		
+
+		// Search criteria set as parameter since beans are not available when
+		// the handler hook intercepts
+		DownloadReportViewParams downloadReportViewParams = new DownloadReportViewParams(
+				"downloadCsv", getViewID(), sakaiDateFormat
+						.formatDate(searchFilterBean.getDateFrom()),
+				sakaiDateFormat.formatDate(searchFilterBean.getDateTo()),
+				searchFilterBean.getNumber(), searchFilterBean.getOrderBy(),
+				searchFilterBean.getSender(), searchFilterBean
+						.getSortDirection(), searchFilterBean.getStatus(),
+				searchFilterBean.getToolName(), searchFilterBean
+						.getTransactionType());
+		UIInternalLink.make(tofill, "export-to-csv", downloadReportViewParams);
+
 		return branchContainer;
 	}
 

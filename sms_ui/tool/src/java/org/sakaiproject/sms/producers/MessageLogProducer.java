@@ -18,10 +18,18 @@
 
 package org.sakaiproject.sms.producers;
 
-public class MessageLogProducer extends AbstractSearchListProducer{
+import java.util.ArrayList;
+import java.util.List;
+
+import org.sakaiproject.sms.beans.ActionResults;
+
+import uk.org.ponder.rsf.flow.jsfnav.NavigationCase;
+import uk.org.ponder.rsf.viewstate.SimpleViewParameters;
+
+public class MessageLogProducer extends AbstractSearchListProducer {
 
 	public static final String VIEW_ID = "MessageLog";
-	
+
 	@Override
 	public String getTitleMessage() {
 		return "sms.view-results-message-log.name";
@@ -35,6 +43,13 @@ public class MessageLogProducer extends AbstractSearchListProducer{
 	@Override
 	public String getDefaultSortColumn() {
 		return "dateDelivered";
+	}
+
+	public List reportNavigationCases() {
+		List<NavigationCase> list = new ArrayList<NavigationCase>();
+		list.add(new NavigationCase(ActionResults.RESET,
+				new SimpleViewParameters(MessageLogProducer.VIEW_ID)));
+		return list;
 	}
 
 }

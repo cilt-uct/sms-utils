@@ -17,6 +17,14 @@
  **********************************************************************************/
 package org.sakaiproject.sms.producers;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.sakaiproject.sms.beans.ActionResults;
+
+import uk.org.ponder.rsf.flow.jsfnav.NavigationCase;
+import uk.org.ponder.rsf.viewstate.SimpleViewParameters;
+
 public class TransactionLogProducer extends AbstractSearchListProducer {
 
 	public static final String VIEW_ID = "TransactionLog";
@@ -34,6 +42,13 @@ public class TransactionLogProducer extends AbstractSearchListProducer {
 	@Override
 	public String getDefaultSortColumn() {
 		return "transactionDate";
+	}
+
+	public List reportNavigationCases() {
+		List<NavigationCase> list = new ArrayList<NavigationCase>();
+		list.add(new NavigationCase(ActionResults.RESET,
+				new SimpleViewParameters(TransactionLogProducer.VIEW_ID)));
+		return list;
 	}
 
 }
