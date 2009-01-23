@@ -74,14 +74,12 @@ public class SmsSchedulerThread extends TestRunnable {
 		smsSmppImpl.setLogLevel(Level.WARN);
 		smsSchedulerImpl.init();
 		smsAccount = new SmsAccount();
-		smsAccount
-				.setSakaiUserId(SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID);
-		smsAccount
-				.setSakaiSiteId(SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_SITE_ID);
+		smsAccount.setSakaiUserId("Username" + Math.random());
+		smsAccount.setSakaiSiteId("smsSiteId" + Math.random());
 		smsAccount.setMessageTypeCode("3");
 		smsAccount.setOverdraftLimit(10000.00f);
 		smsAccount.setBalance(1000f);
-		smsAccount.setAccountName("accountname");
+		smsAccount.setAccountName("accountnamej");
 		smsAccount.setAccountEnabled(true);
 		HibernateLogicFactory.getAccountLogic().persistSmsAccount(smsAccount);
 	}
@@ -100,7 +98,11 @@ public class SmsSchedulerThread extends TestRunnable {
 				"-ThreadingTest-SmsTask3MessageBody",
 				SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_SITE_ID, null,
 				SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID);
+
 		smsTask3.setSmsAccountId(smsAccount.getId());
+		smsTask3.setSakaiSiteId(smsAccount.getSakaiSiteId());
+		smsTask3.setDeliveryUserId(smsAccount.getSakaiUserId());
+		smsCoreImpl.calculateEstimatedGroupSize(smsTask3);
 		smsCoreImpl.insertTask(smsTask3);
 
 		now.add(Calendar.MINUTE, -1);
@@ -110,6 +112,11 @@ public class SmsSchedulerThread extends TestRunnable {
 				SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_SITE_ID, null,
 				SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID);
 		smsTask2.setSmsAccountId(smsAccount.getId());
+		smsTask2.setSakaiSiteId(smsAccount.getSakaiSiteId());
+		smsTask2.setDeliveryUserId(smsAccount.getSakaiUserId());
+		smsTask2.setSmsAccountId(smsAccount.getId());
+
+		smsCoreImpl.calculateEstimatedGroupSize(smsTask2);
 		smsCoreImpl.insertTask(smsTask2);
 
 		now.add(Calendar.MINUTE, -3);
@@ -119,7 +126,10 @@ public class SmsSchedulerThread extends TestRunnable {
 				"ThreadingTest-SmsTask1MessageBody",
 				SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_SITE_ID, null,
 				SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID);
-
+		smsCoreImpl.calculateEstimatedGroupSize(smsTask1);
+		smsTask1.setSmsAccountId(smsAccount.getId());
+		smsTask1.setSakaiSiteId(smsAccount.getSakaiSiteId());
+		smsTask1.setDeliveryUserId(smsAccount.getSakaiUserId());
 		smsTask1.setSmsAccountId(smsAccount.getId());
 		smsCoreImpl.insertTask(smsTask1);
 
