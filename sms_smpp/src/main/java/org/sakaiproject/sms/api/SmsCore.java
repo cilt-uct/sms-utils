@@ -24,6 +24,7 @@ import java.util.Set;
 
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
+import org.sakaiproject.sms.impl.SmsTaskValidationException;
 
 /**
  * The SMS service will handle all logic regarding the queueing, sending and
@@ -64,9 +65,15 @@ public interface SmsCore {
 	 * that the preliminary values are supplied.
 	 * 
 	 * @param smsTask
-	 * @return
+	 *            the sms task
+	 * 
+	 * @return the sms task
+	 * 
+	 * @throws SmsTaskValidationException
+	 *             the sms task validation exception
 	 */
-	public SmsTask insertTask(SmsTask smsTask);
+	public SmsTask insertTask(SmsTask smsTask)
+			throws SmsTaskValidationException;
 
 	/**
 	 * Add a new task to the sms task list, that contains a list of delivery
