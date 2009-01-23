@@ -30,6 +30,7 @@ import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.hibernate.model.SmsTransaction;
 import org.sakaiproject.sms.hibernate.model.constants.SmsConst_Billing;
+import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -190,8 +191,37 @@ public class SmsBillingImpl implements SmsBilling {
 				.getSmsAccount(sakaiSiteID, sakaiUserID);
 		if (account != null) {
 			return account.getId();
+		} else {
+			if (SmsHibernateConstants.SMS_DEV_MODE) {
+				return (insertTestSmsAccount(sakaiSiteID, sakaiUserID).getId());
+			} else {
+				return null;
+			}
 		}
-		return null;
+
+	}
+
+	/**
+	 * This is a test method to insert a sms account.It is only used during
+	 * development.
+	 * 
+	 * @param sakaiSiteID
+	 * @param sakaiUserID
+	 * @return
+	 */
+	private SmsAccount insertTestSmsAccount(String sakaiSiteID,
+			String sakaiUserID) {
+
+		SmsAccount smsAccount = new SmsAccount();
+		smsAccount.setSakaiUserId(sakaiUserID);
+		smsAccount.setSakaiSiteId(sakaiSiteID);
+		smsAccount.setMessageTypeCode("3");
+		smsAccount.setOverdraftLimit(10000.00f);
+		smsAccount.setBalance(1000f);
+		smsAccount.setAccountName("accountname");
+		smsAccount.setAccountEnabled(true);
+		HibernateLogicFactory.getAccountLogic().persistSmsAccount(smsAccount);
+		return smsAccount;
 	}
 
 	/**
