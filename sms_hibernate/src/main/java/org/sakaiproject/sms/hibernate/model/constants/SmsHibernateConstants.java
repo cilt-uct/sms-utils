@@ -158,10 +158,12 @@ public class SmsHibernateConstants {
 	/** The smsc_id is used to uniquely identify the smsc. */
 	public static final String SMSC_ID = "1";
 
-	/** The Constant for cost of credit. */
 	public static final Float COST_OF_CREDIT = 1.5f;
 
 	/** The default max time to live */
 	public static final Integer DEFAULT_MAX_TIME_TO_LIVE = 1;
+
+	/** The Constant INSUFFICIENT_CREDIT_MESSAGE. */
+	public static final String INSUFFICIENT_CREDIT_MESSAGE = "Insufficient credit.";
 
 }
