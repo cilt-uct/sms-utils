@@ -135,8 +135,8 @@ public interface SmsBilling {
 	 * @throws MoreThanOneAccountFoundException
 	 * @throws SmsAccountNotFoundException
 	 */
-	public Long getAccountID(String sakaiSiteID, String sakaiUserID,
-			Integer accountType) throws MoreThanOneAccountFoundException,
+	public Long getAccountID(String sakaiSiteID, String sakaiUserID)
+			throws MoreThanOneAccountFoundException,
 			SmsAccountNotFoundException;
 
 	/**

@@ -22,8 +22,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import org.sakaiproject.sms.api.SmsBilling;
 import org.sakaiproject.sms.api.SmsCore;
 import org.sakaiproject.sms.api.SmsService;
+import org.sakaiproject.sms.hibernate.logic.impl.exception.MoreThanOneAccountFoundException;
+import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsAccountNotFoundException;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.impl.validate.TaskValidator;
 
@@ -38,6 +41,16 @@ import org.sakaiproject.sms.impl.validate.TaskValidator;
 public class SmsServiceImpl implements SmsService {
 
 	public SmsCore smsCore = null;
+
+	public SmsBilling smsBilling = null;
+
+	public SmsBilling getSmsBilling() {
+		return smsBilling;
+	}
+
+	public void setSmsBilling(SmsBilling smsBilling) {
+		this.smsBilling = smsBilling;
+	}
 
 	public SmsCore getSmsCore() {
 		return smsCore;
@@ -127,8 +140,18 @@ public class SmsServiceImpl implements SmsService {
 	 */
 	public boolean checkSufficientCredits(String sakaiSiteID,
 			String sakaiUserID, int creditsRequired) {
-		// TODO Will be completed with the billing service
-		return true;
+		Long smsAcountId;
+		try {
+			smsAcountId = smsBilling.getAccountID(sakaiSiteID, sakaiUserID);
+		} catch (MoreThanOneAccountFoundException e) {
+			e.printStackTrace();
+			return false;
+		} catch (SmsAccountNotFoundException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return smsBilling.checkSufficientCredits(smsAcountId, creditsRequired);
+
 	}
 
 	/**
@@ -151,5 +174,16 @@ public class SmsServiceImpl implements SmsService {
 	 */
 	public ArrayList<String> validateTask(SmsTask smsTask) {
 		return TaskValidator.validateInsertTask(smsTask);
+	}
+
+	/**
+	 * Return true of the account has the required credits available to send the
+	 * messages. The account number is calculated using either the Sakai site or
+	 * the Sakai user. If this returns false, then the UI must not allow the
+	 * user to proceed. If not handled by the UI, then the sms service will fail
+	 * the sending of the message anyway.
+	 */
+	public boolean checkSufficientCredits(SmsTask smsTask) {
+		return smsBilling.checkSufficientCredits(smsTask);
 	}
 }

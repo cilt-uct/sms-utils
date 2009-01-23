@@ -200,8 +200,8 @@ public class SmsBillingImpl implements SmsBilling {
 	 * @return the account id
 	 * @throws MoreThanOneAccountFoundException
 	 */
-	public Long getAccountID(String sakaiSiteID, String sakaiUserID,
-			Integer accountType) throws MoreThanOneAccountFoundException,
+	public Long getAccountID(String sakaiSiteID, String sakaiUserID)
+			throws MoreThanOneAccountFoundException,
 			SmsAccountNotFoundException {
 		SmsAccount account = HibernateLogicFactory.getAccountLogic()
 				.getSmsAccount(sakaiSiteID, sakaiUserID);

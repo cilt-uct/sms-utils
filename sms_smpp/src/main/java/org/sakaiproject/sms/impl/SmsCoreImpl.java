@@ -175,7 +175,7 @@ public class SmsCoreImpl implements SmsCore {
 		SmsTask smsTask = new SmsTask();
 		try {
 			smsTask.setSmsAccountId(smsBilling.getAccountID(sakaiSiteID,
-					sakaiSenderID, 1));
+					sakaiSenderID));
 		} catch (MoreThanOneAccountFoundException e) {
 			e.printStackTrace();
 			return null;

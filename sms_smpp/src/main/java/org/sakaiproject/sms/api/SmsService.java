@@ -118,6 +118,16 @@ public interface SmsService {
 			String sakaiUserID, int creditsRequired);
 
 	/**
+	 * 
+	 * Return true of the account has the required credits available. Take into
+	 * account overdraft limits, if applicable.
+	 * 
+	 * @param smsTask
+	 * @return
+	 */
+	public boolean checkSufficientCredits(SmsTask smsTask);
+
+	/**
 	 * Calculate the estimated group size. If this is not set on the task, the
 	 * Persistence of the task will fail. Make sure to set ONLY ONE of
 	 * deliveryEntityList, deliveryMobileNumbers, sakaiGroupId or sakaiUserIds
