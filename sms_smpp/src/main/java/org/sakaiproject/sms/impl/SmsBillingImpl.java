@@ -86,6 +86,19 @@ public class SmsBillingImpl implements SmsBilling {
 	}
 
 	/**
+	 * 
+	 * Return true of the account has the required credits available. Take into
+	 * account overdraft limits, if applicable.
+	 * 
+	 * @param smsTask
+	 * @return
+	 */
+	public boolean checkSufficientCredits(SmsTask smsTask) {
+		return this.checkSufficientCredits(smsTask.getSmsAccountId(), smsTask
+				.getCreditEstimate());
+	}
+
+	/**
 	 * Return true of the account has the required credits available. Take into
 	 * account overdraft limits, if applicable.
 	 * 
@@ -481,15 +494,15 @@ public class SmsBillingImpl implements SmsBilling {
 		if (transactionAmount >= 0) {
 			// Insert debit transaction
 			smsTransaction.setTransactionAmount(transactionAmount);
-			HibernateLogicFactory.getTransactionLogic()
-					.insertSettleDebitTransaction(smsTransaction);
+			HibernateLogicFactory.getTransactionLogic().insertDebitTransaction(
+					smsTransaction);
 		} else {
 			// Insert credit transaction and make sure the transaction amount
 			// gets passed as a positive value. The insert credit transaction
 			// will handle that
 			smsTransaction.setTransactionAmount((transactionAmount * -1));
 			HibernateLogicFactory.getTransactionLogic()
-					.insertSettleCreditTransaction(smsTransaction);
+					.insertCreditTransaction(smsTransaction);
 		}
 		return true;
 	}

@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.Set;
 
 import org.sakaiproject.sms.hibernate.logic.impl.exception.MoreThanOneAccountFoundException;
+import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsAccountNotFoundException;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 
@@ -36,7 +37,6 @@ import org.sakaiproject.sms.hibernate.model.SmsTask;
  */
 public interface SmsBilling {
 
-	
 	/**
 	 * Debit an acccont by the supplied amount
 	 * 
@@ -44,8 +44,7 @@ public interface SmsBilling {
 	 * @param amountToDebit
 	 */
 	public void debitAccount(Long accountId, Float amountToDebit);
-	
-	
+
 	/**
 	 * Add extra credits to the specific account by making an entry into
 	 * SMS_TRANSACTION Also update the available credits on the account.
@@ -69,6 +68,16 @@ public interface SmsBilling {
 	 * @return true, if check sufficient credits
 	 */
 	public boolean checkSufficientCredits(Long accountID, int creditsRequired);
+
+	/**
+	 * 
+	 * Return true of the account has the required credits available. Take into
+	 * account overdraft limits, if applicable.
+	 * 
+	 * @param smsTask
+	 * @return
+	 */
+	public boolean checkSufficientCredits(SmsTask smsTask);
 
 	/**
 	 * Convert amount to credits.
@@ -124,9 +133,11 @@ public interface SmsBilling {
 	 * 
 	 * @return the account id
 	 * @throws MoreThanOneAccountFoundException
+	 * @throws SmsAccountNotFoundException
 	 */
 	public Long getAccountID(String sakaiSiteID, String sakaiUserID,
-			Integer accountType) throws MoreThanOneAccountFoundException;
+			Integer accountType) throws MoreThanOneAccountFoundException,
+			SmsAccountNotFoundException;
 
 	/**
 	 * Return a list of all transactions between startDate and endDate for the
@@ -197,7 +208,6 @@ public interface SmsBilling {
 	 *            the account id
 	 */
 	public void recalculateAccountBalance(Long accountId);
-
 
 	/**
 	 * Cancel pending request.
