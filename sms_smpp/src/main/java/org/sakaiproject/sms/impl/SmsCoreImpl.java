@@ -68,7 +68,7 @@ public class SmsCoreImpl implements SmsCore {
 		return smsTask;
 	}
 
-	/**
+	/*
 	 * Enables or disables the debug Information
 	 * 
 	 * @param debug
@@ -79,8 +79,8 @@ public class SmsCoreImpl implements SmsCore {
 	}
 
 	/**
-	 * For now we just generate the list. Will get it from Sakai later on. So we
-	 * generate a random number of users with random mobile numbers.
+	 * /** For now we just generate the list. Will get it from Sakai later on.
+	 * So we generate a random number of users with random mobile numbers.
 	 * 
 	 * @param smsTask
 	 * @return
@@ -116,10 +116,9 @@ public class SmsCoreImpl implements SmsCore {
 	}
 
 	/**
-	 * Get the group list from Sakai
+	 * Get the group list from Sakai, dummy data for now.
 	 */
-	// TODO Why pass three args when they can all come from the SmsTask?? Only 1
-	// arg needed.. smsTask
+
 	public Set<SmsMessage> generateSmsMessages(SmsTask smsTask) {
 		return generateDummySmsMessages(smsTask);
 		// TODO must make a Sakai call here
@@ -226,19 +225,6 @@ public class SmsCoreImpl implements SmsCore {
 
 	}
 
-	/**
-	 * Add a new task to the sms task list, for eg. send message to all
-	 * administrators at 10:00, or get latest announcements and send to mobile
-	 * numbers of Sakai group x (phase II).
-	 * 
-	 * @param deliverGroupId
-	 * @param mobileNumbers
-	 * @param sakaiUserIds
-	 * @param dateToSend
-	 * @param messageBody
-	 * @param sakaiToolId
-	 * @return
-	 */
 	public synchronized SmsTask insertTask(SmsTask smsTask) {
 		smsTask.setDateCreated(DateUtil.getCurrentDate());
 		HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask);
@@ -259,10 +245,6 @@ public class SmsCoreImpl implements SmsCore {
 		// TODO For phase 2
 	}
 
-	/**
-	 * Get the next task to process. Based on specific criteria like status and
-	 * date to sent.
-	 */
 	public synchronized void processNextTask() {
 		SmsTask smsTask = HibernateLogicFactory.getTaskLogic().getNextSmsTask();
 		if (smsTask != null) {
@@ -454,10 +436,6 @@ public class SmsCoreImpl implements SmsCore {
 		}
 	}
 
-	/**
-	 * Checks for tasks that can be marked as complete. If the total messages
-	 * processed equals the actual group size the task is marked as complete.
-	 */
 	public void checkAndSetTasksCompleted() {
 
 		List<SmsTask> smsTasks = HibernateLogicFactory.getTaskLogic()
@@ -471,12 +449,6 @@ public class SmsCoreImpl implements SmsCore {
 
 	}
 
-	/**
-	 * If we did not receive gateway delivery reports for messages that was sent
-	 * out, then we mark those messages as time out after a predefined period as
-	 * determined by DEL_REPORT_TIMEOUT_DURATION on the task. These messages are
-	 * not billable.
-	 */
 	public void processVeryLateDeliveryReports() {
 		List<SmsMessage> messages = HibernateLogicFactory.getMessageLogic()
 				.getSmsMessagesWithStatus(null,
