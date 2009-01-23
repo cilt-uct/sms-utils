@@ -103,4 +103,8 @@ public class SmsBillingStub implements SmsBilling {
 		return false;
 	}
 
+	public boolean checkSufficientCredits(SmsTask smsTask) {
+		return false;
+	}
+
 }
