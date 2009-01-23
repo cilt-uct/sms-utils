@@ -113,6 +113,11 @@ public interface SmsService {
 	 * @param sakaiSiteID
 	 *            , (e.g. "!admin")
 	 * @param sakaiUserID
+	 *            the sakai user id
+	 * @param creditsRequired
+	 *            the credits required
+	 * 
+	 * @return true, if check sufficient credits
 	 */
 	public boolean checkSufficientCredits(String sakaiSiteID,
 			String sakaiUserID, int creditsRequired);
