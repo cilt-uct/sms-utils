@@ -461,9 +461,6 @@ public class SmsCoreImpl implements SmsCore {
 				smsMessage
 						.setStatusCode(SmsConst_DeliveryStatus.STATUS_DELIVERED);
 			}
-
-			HibernateLogicFactory.getTaskLogic().incrementMessagesProcessed(
-					smsMessage.getSmsTask());
 			HibernateLogicFactory.getMessageLogic().persistSmsMessage(
 					smsMessage);
 		}
