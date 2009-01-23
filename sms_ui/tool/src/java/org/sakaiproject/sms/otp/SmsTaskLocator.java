@@ -76,7 +76,7 @@ public class SmsTaskLocator implements BeanLocator {
 								"deliveryGroup",
 								dateToProcess,
 								"",
-								SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_TOOL_ID,
+								SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_SITE_ID,
 								"",
 								SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID);
 			} else {

@@ -234,7 +234,7 @@ public class SmsBillingImpl implements SmsBilling {
 		smsAccount.setMessageTypeCode("3");
 		smsAccount.setOverdraftLimit(10000.00f);
 		smsAccount.setBalance(1000f);
-		smsAccount.setAccountName("accountname");
+		smsAccount.setAccountName("TestAccountName");
 		smsAccount.setAccountEnabled(true);
 		HibernateLogicFactory.getAccountLogic().persistSmsAccount(smsAccount);
 		return smsAccount;
