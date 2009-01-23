@@ -29,6 +29,7 @@ import org.sakaiproject.sms.api.SmsCore;
 import org.sakaiproject.sms.api.SmsSmpp;
 import org.sakaiproject.sms.hibernate.logic.impl.HibernateLogicFactory;
 import org.sakaiproject.sms.hibernate.logic.impl.exception.MoreThanOneAccountFoundException;
+import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsAccountNotFoundException;
 import org.sakaiproject.sms.hibernate.model.SmsAccount;
 import org.sakaiproject.sms.hibernate.model.SmsConfig;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
@@ -176,10 +177,12 @@ public class SmsCoreImpl implements SmsCore {
 			smsTask.setSmsAccountId(smsBilling.getAccountID(sakaiSiteID,
 					sakaiSenderID, 1));
 		} catch (MoreThanOneAccountFoundException e) {
-			// TODO HANDLE THIS EXCPTION
 			e.printStackTrace();
-			smsTask.setSmsAccountId(1l); // Just setting this so helper window
-			// can work
+			return null;
+
+		} catch (SmsAccountNotFoundException e) {
+			e.printStackTrace();
+			return null;
 		}
 		smsTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
 		smsTask.setSakaiSiteId(sakaiSiteID);

@@ -24,6 +24,7 @@ import java.util.Set;
 import org.sakaiproject.sms.api.SmsBilling;
 import org.sakaiproject.sms.hibernate.logic.impl.HibernateLogicFactory;
 import org.sakaiproject.sms.hibernate.logic.impl.exception.MoreThanOneAccountFoundException;
+import org.sakaiproject.sms.hibernate.logic.impl.exception.SmsAccountNotFoundException;
 import org.sakaiproject.sms.hibernate.model.SmsAccount;
 import org.sakaiproject.sms.hibernate.model.SmsConfig;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
@@ -50,25 +51,26 @@ public class SmsBillingImpl implements SmsBilling {
 	 * @param amountToDebit
 	 */
 	public void debitAccount(Long accountId, Float amountToDebit) {
-		
-		if(amountToDebit < 0){
-			throw new RuntimeException("The amount supplied to debit an account be my be positive");
+
+		if (amountToDebit < 0) {
+			throw new RuntimeException(
+					"The amount supplied to debit an account be my be positive");
 		}
-		
+
 		SmsAccount account = HibernateLogicFactory.getAccountLogic()
-		.getSmsAccount(accountId);
-		
+				.getSmsAccount(accountId);
+
 		SmsTransaction smsTransaction = new SmsTransaction();
 		smsTransaction.setTransactionAmount(amountToDebit);
 		smsTransaction.setSakaiUserId(account.getSakaiUserId());
 		smsTransaction.setSmsAccount(account);
 		smsTransaction.setTransactionCredits(0);
-		//TODO : Find out how task id is going to handled 
+		// TODO : Find out how task id is going to handled
 		smsTransaction.setSmsTaskId(1L);
-		HibernateLogicFactory.getTransactionLogic()
-			.insertDebitTransaction(smsTransaction);
-	}		
-	
+		HibernateLogicFactory.getTransactionLogic().insertDebitTransaction(
+				smsTransaction);
+	}
+
 	/**
 	 * Add extra credits to the specific account by making an entry into
 	 * SMS_TRANSACTION Also update the available credits on the account.
@@ -186,7 +188,8 @@ public class SmsBillingImpl implements SmsBilling {
 	 * @throws MoreThanOneAccountFoundException
 	 */
 	public Long getAccountID(String sakaiSiteID, String sakaiUserID,
-			Integer accountType) throws MoreThanOneAccountFoundException {
+			Integer accountType) throws MoreThanOneAccountFoundException,
+			SmsAccountNotFoundException {
 		SmsAccount account = HibernateLogicFactory.getAccountLogic()
 				.getSmsAccount(sakaiSiteID, sakaiUserID);
 		if (account != null) {
@@ -195,7 +198,7 @@ public class SmsBillingImpl implements SmsBilling {
 			if (SmsHibernateConstants.SMS_DEV_MODE) {
 				return (insertTestSmsAccount(sakaiSiteID, sakaiUserID).getId());
 			} else {
-				return null;
+				throw new SmsAccountNotFoundException();
 			}
 		}
 
@@ -277,8 +280,7 @@ public class SmsBillingImpl implements SmsBilling {
 	 * @param transCodeID
 	 *            the trans code id
 	 * @param creditAmount
-	 * @return true, if insert transaction
-	 *            the credit amount
+	 * @return true, if insert transaction the credit amount
 	 * 
 	 */
 	public Boolean insertTransaction(Long accountID, int transCodeID,
@@ -403,8 +405,7 @@ public class SmsBillingImpl implements SmsBilling {
 			recalculateAccountBalance(account);
 		}
 	}
-	
-	
+
 	/**
 	 * Cancel pending request.
 	 * 
