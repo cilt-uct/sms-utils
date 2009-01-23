@@ -314,4 +314,36 @@ public class SmsTransactionLogicImpl extends SmsDao implements
 		HibernateUtil.closeSession();
 		return transactions;
 	}
+
+	/**
+	 * Gets transaction that will be used to create to populate a new
+	 * transaction to cancel this one.
+	 * 
+	 * @param taskId
+	 *            the task id
+	 * 
+	 * @return the cancel sms transaction for task
+	 */
+	public SmsTransaction getCancelSmsTransactionForTask(Long taskId) {
+		Session s = HibernateUtil.getSession();
+
+		StringBuilder hql = new StringBuilder();
+		hql
+				.append(" from SmsTransaction transaction where transaction.smsTaskId = :taskId ");
+		hql
+				.append(" and transaction.transactionTypeCode = :transactionTypeCode ");
+		hql.append(" order by transaction.transactionDate desc ");
+
+		Query query = s.createQuery(hql.toString());
+		query.setParameter("taskId", taskId);
+		query.setParameter("transactionTypeCode",
+				SmsConst_Billing.TRANS_RESERVE_CREDITS);
+		List<SmsTransaction> transactions = query.list();
+		HibernateUtil.closeSession();
+
+		if (transactions != null && transactions.size() > 0) {
+			return transactions.get(0);
+		}
+		return null;
+	}
 }

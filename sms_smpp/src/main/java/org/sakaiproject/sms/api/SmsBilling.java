@@ -198,6 +198,17 @@ public interface SmsBilling {
 	 */
 	public void recalculateAccountBalance(Long accountId);
 
+
+	/**
+	 * Cancel pending request.
+	 * 
+	 * @param smsTaskId
+	 *            the sms task id
+	 * 
+	 * @return true, if successful
+	 */
+	public boolean cancelPendingRequest(Long smsTaskId);
+
 	/**
 	 * Recalculate balances for all existing accounts.
 	 * 

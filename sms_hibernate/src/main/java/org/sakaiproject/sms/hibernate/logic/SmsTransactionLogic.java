@@ -140,4 +140,15 @@ public interface SmsTransactionLogic {
 	 * @return the sms transactions for account id
 	 */
 	public List<SmsTransaction> getSmsTransactionsForTaskId(Long taskId);
+
+	/**
+	 * Gets transaction that will be used to create to populate a new
+	 * transaction to cancel this one.
+	 * 
+	 * @param taskId
+	 *            the task id
+	 * 
+	 * @return the cancel sms transaction for task
+	 */
+	public SmsTransaction getCancelSmsTransactionForTask(Long taskId);
 }

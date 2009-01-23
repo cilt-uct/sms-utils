@@ -8,6 +8,7 @@ import org.sakaiproject.sms.hibernate.bean.SearchResultContainer;
 import org.sakaiproject.sms.hibernate.logic.impl.HibernateLogicFactory;
 import org.sakaiproject.sms.hibernate.model.SmsAccount;
 import org.sakaiproject.sms.hibernate.model.SmsTransaction;
+import org.sakaiproject.sms.hibernate.model.constants.SmsConst_Billing;
 import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
 import org.sakaiproject.sms.hibernate.util.AbstractBaseTestCase;
 import org.sakaiproject.sms.hibernate.util.HibernateUtil;
@@ -476,5 +477,35 @@ public class SmsTransactionTest extends AbstractBaseTestCase {
 			assertNotNull(smsTransaction.getSmsAccount());
 			assertTrue(smsTransaction.getSmsTaskId().equals(smsTaskId));
 		}
+	}
+
+	public void testGetSmsCancelTransactionForTask() {
+		SmsAccount smsAccount = new SmsAccount();
+		smsAccount.setSakaiUserId("9");
+		smsAccount.setSakaiSiteId("9");
+		smsAccount.setMessageTypeCode("12345");
+		smsAccount.setOverdraftLimit(10000.00f);
+		smsAccount.setBalance(5000.00f);
+		smsAccount.setAccountName("accountName");
+		smsAccount.setAccountEnabled(true);
+		HibernateLogicFactory.getAccountLogic().persistSmsAccount(smsAccount);
+
+		SmsTransaction smsTransaction = new SmsTransaction();
+		smsTransaction.setBalance(5000.00f);
+		smsTransaction.setSakaiUserId("sakaiUserId");
+		smsTransaction.setTransactionDate(new Date(System.currentTimeMillis()));
+		smsTransaction
+				.setTransactionTypeCode(SmsConst_Billing.TRANS_RESERVE_CREDITS);
+		smsTransaction.setTransactionCredits(100);
+		smsTransaction.setTransactionAmount(1000.00f);
+		smsTransaction.setSmsTaskId(123L);
+		smsTransaction.setSmsAccount(smsAccount);
+		HibernateLogicFactory.getTransactionLogic().insertCreditTransaction(
+				smsTransaction);
+
+		SmsTransaction cancelTransaction = HibernateLogicFactory
+				.getTransactionLogic().getCancelSmsTransactionForTask(123L);
+		assertNotNull(cancelTransaction);
+		assertEquals(cancelTransaction, smsTransaction);
 	}
 }

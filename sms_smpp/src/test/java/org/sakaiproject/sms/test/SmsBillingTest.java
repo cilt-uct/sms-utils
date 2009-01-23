@@ -391,4 +391,52 @@ public class SmsBillingTest extends AbstractBaseTestCase {
 		}
 	}
 
+	/**
+	 * Test cancel pending request.
+	 */
+	public void testCancelPendingRequest() {
+		float origionalAccountBalance = 1000f;
+		int creditEstimate = 100;
+
+		SmsAccount smsAccount = new SmsAccount();
+		smsAccount.setSakaiUserId("4");
+		smsAccount.setSakaiSiteId("4");
+		smsAccount.setMessageTypeCode("12345");
+		smsAccount.setOverdraftLimit(10000.00f);
+		smsAccount.setBalance(1000f);
+		smsAccount.setAccountName("accountName");
+		smsAccount.setAccountEnabled(true);
+		HibernateLogicFactory.getAccountLogic().persistSmsAccount(smsAccount);
+
+		SmsTask smsTask = new SmsTask();
+		smsTask.setSakaiSiteId("sakaiSiteId");
+		smsTask.setSenderUserName("sakaiUserId");
+		smsTask.setSmsAccountId(smsAccount.getId());
+		smsTask.setDateCreated(new Timestamp(System.currentTimeMillis()));
+		smsTask.setDateToSend(new Timestamp(System.currentTimeMillis()));
+		smsTask.setStatusCode(SmsConst_DeliveryStatus.STATUS_PENDING);
+		smsTask.setAttemptCount(2);
+		smsTask.setMessageBody("messageBody");
+		smsTask.setSenderUserName("senderUserName");
+		smsTask.setMaxTimeToLive(1);
+		smsTask.setDelReportTimeoutDuration(1);
+		smsTask.setCreditEstimate(creditEstimate);
+		HibernateLogicFactory.getTaskLogic().persistSmsTask(smsTask);
+
+		smsBillingImpl.reserveCredits(smsTask);
+
+		// Check the credits have been reserved.
+		SmsAccount retAccount = HibernateLogicFactory.getAccountLogic()
+				.getSmsAccount(smsAccount.getId());
+		assertNotNull(retAccount);
+		assertTrue(retAccount.getBalance() < origionalAccountBalance);
+
+		smsBillingImpl.cancelPendingRequest(smsTask.getId());
+		// Check the credits have been reserved.
+		retAccount = HibernateLogicFactory.getAccountLogic().getSmsAccount(
+				smsAccount.getId());
+		assertNotNull(retAccount);
+		assertTrue(retAccount.getBalance().equals(origionalAccountBalance));
+	}
+
 }

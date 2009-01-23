@@ -373,6 +373,46 @@ public class SmsBillingImpl implements SmsBilling {
 			recalculateAccountBalance(account);
 		}
 	}
+	
+	
+	/**
+	 * Cancel pending request.
+	 * 
+	 * @param smsTaskId
+	 *            the sms task id
+	 * 
+	 * @return true, if successful
+	 */
+	public boolean cancelPendingRequest(Long smsTaskId) {
+
+		SmsTask smsTask = HibernateLogicFactory.getTaskLogic().getSmsTask(
+				smsTaskId);
+		SmsAccount smsAccount = HibernateLogicFactory.getAccountLogic()
+				.getSmsAccount(smsTask.getSmsAccountId());
+		SmsTransaction origionalTransaction = HibernateLogicFactory
+				.getTransactionLogic()
+				.getCancelSmsTransactionForTask(smsTaskId);
+
+		SmsTransaction smsTransaction = new SmsTransaction();
+		smsTransaction.setBalance(smsAccount.getBalance()
+				+ convertCreditsToAmount(origionalTransaction
+						.getTransactionCredits()));
+		smsTransaction.setSakaiUserId(smsTask.getSenderUserName());
+		smsTransaction.setTransactionDate(new Date(System.currentTimeMillis()));
+		smsTransaction
+				.setTransactionTypeCode(SmsConst_Billing.TRANS_CANCEL_RESERVE);
+		smsTransaction.setTransactionCredits(smsTask.getCreditEstimate());
+		smsTransaction.setTransactionAmount(convertCreditsToAmount(smsTask
+				.getCreditEstimate()));
+		smsTransaction.setSmsAccount(smsAccount);
+		smsTransaction.setSmsTaskId(smsTask.getId());
+
+		// Insert debit transaction
+		HibernateLogicFactory.getTransactionLogic().insertDebitTransaction(
+				smsTransaction);
+
+		return false;
+	}
 
 	/**
 	 * Settle credit difference.
