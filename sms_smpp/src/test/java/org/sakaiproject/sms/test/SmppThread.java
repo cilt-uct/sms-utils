@@ -60,10 +60,8 @@ public class SmppThread extends TestRunnable {
 	static {
 		HibernateUtil.createSchema();
 		smsAccount = new SmsAccount();
-		smsAccount
-				.setSakaiUserId(SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_USER_ID);
-		smsAccount
-				.setSakaiSiteId(SmsHibernateConstants.SMS_DEV_DEFAULT_SAKAI_SITE_ID);
+		smsAccount.setSakaiUserId("Username" + Math.random());
+		smsAccount.setSakaiSiteId("smsSiteId" + Math.random());
 		smsAccount.setMessageTypeCode("3");
 		smsAccount.setOverdraftLimit(10000.00f);
 		smsAccount.setBalance(1000f);
@@ -101,7 +99,9 @@ public class SmppThread extends TestRunnable {
 	public SmsTask insertNewTask(String sakaiID, String status,
 			Date dateToSend, int attemptCount) {
 		SmsTask insertTask = new SmsTask();
-		insertTask.setSakaiSiteId(sakaiID);
+
+		insertTask.setSakaiSiteId(smsAccount.getSakaiSiteId());
+		insertTask.setDeliveryUserId(smsAccount.getSakaiUserId());
 
 		insertTask.setDateCreated(new Date(System.currentTimeMillis()));
 		insertTask.setDateToSend(dateToSend);
