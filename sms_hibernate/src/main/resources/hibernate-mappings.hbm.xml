@@ -54,12 +54,14 @@
 			not-null="true" />
 		<property name="costEstimate" type="double" column="COST_ESTIMATE"
 			not-null="false" />
-		<property name="delReportTimeoutDuration" type="integer"  column="DEL_REPORT_TIMEOUT_DURATION" 
-			not-null="true" />
-		<property name="deliveryMobileNumbers" type="string" column="DELIVERY_MOBILE_NUMBERS"
-			 not-null="false" length="1024"/>
+		<property name="delReportTimeoutDuration" type="integer"
+			column="DEL_REPORT_TIMEOUT_DURATION" not-null="true" />
+		<property name="deliveryMobileNumbers" type="string"
+			column="DELIVERY_MOBILE_NUMBERS" not-null="false" length="1024" />
 		<property name="deliveryEntities" type="string" column="DELIVERY_ENTITY_LIST"
-			 not-null="false" length="1024"/>
+			not-null="false" length="1024" />
+		<property name="failReason" type="string" column="FAIL_REASON"
+			not-null="false" length="200" />
 		<set name="smsMessages" lazy="false" inverse="true" cascade="all-delete-orphan">
 			<key column="TASK_ID" not-null="true" />
 			<one-to-many class="org.sakaiproject.sms.hibernate.model.SmsMessage"
@@ -99,9 +101,9 @@
 			<generator class="native" />
 		</id>
 		<property name="sakaiUserId" type="string" column="SAKAI_USER_ID"
-			not-null="false" length="99" unique="true"/>
+			not-null="false" length="99" unique="true" />
 		<property name="sakaiSiteId" type="string" column="SAKAI_SITE_ID"
-			not-null="false" length="99" unique="true"/>
+			not-null="false" length="99" unique="true" />
 		<property name="messageTypeCode" type="string" column="MESSAGE_TYPE_CODE"
 			not-null="true" length="5" />
 		<property name="overdraftLimit" type="float" column="OVERDRAFT_LIMIT"

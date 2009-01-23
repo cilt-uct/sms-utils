@@ -119,6 +119,9 @@ public class SmsTask extends BaseModel {
 	 */
 	private int messagesProcessed;
 
+	/** The reason for a task failing */
+	private String failReason;
+
 	public int getMessagesProcessed() {
 		return messagesProcessed;
 	}
@@ -149,17 +152,15 @@ public class SmsTask extends BaseModel {
 	 */
 	private Integer delReportTimeoutDuration;
 
-	
 	/**
 	 * A comma separated list of mobile numbers the internal representation
 	 */
 	private String deliveryMobileNumbers;
-	
+
 	/**
 	 * A comma separated list of delivery group ids
 	 */
 	private String deliveryEntities;
-
 
 	/**
 	 * Instantiates a new sms task.
@@ -211,7 +212,8 @@ public class SmsTask extends BaseModel {
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		 return EqualsBuilder.reflectionEquals(this, obj, false, SmsTask.class, new String[]{"smsMessages"});
+		return EqualsBuilder.reflectionEquals(this, obj, false, SmsTask.class,
+				new String[] { "smsMessages" });
 	}
 
 	/**
@@ -493,7 +495,8 @@ public class SmsTask extends BaseModel {
 	 */
 	@Override
 	public int hashCode() {
-		return HashCodeBuilder.reflectionHashCode(17,37, this, false, SmsTask.class, new String[]{"smsMessages"});		
+		return HashCodeBuilder.reflectionHashCode(17, 37, this, false,
+				SmsTask.class, new String[] { "smsMessages" });
 	}
 
 	/**
@@ -781,97 +784,109 @@ public class SmsTask extends BaseModel {
 
 	/**
 	 * Get the delivery mobile numbers internal method for hibernate
+	 * 
 	 * @return
 	 */
-	String getDeliveryMobileNumbers() {		
+	String getDeliveryMobileNumbers() {
 		return deliveryMobileNumbers;
 	}
-	
+
 	/**
 	 * Sets the delivery mobile numbers internal method for hibernate
+	 * 
 	 * @param deliveryMobileNumbers
 	 */
 	void setDeliveryMobileNumbers(String deliveryMobileNumbers) {
 		this.deliveryMobileNumbers = deliveryMobileNumbers;
 	}
-	
+
 	/**
 	 * @return A set of delivery mobile numbers
 	 */
-	public Set<String> getDeliveryMobileNumbersSet(){
+	public Set<String> getDeliveryMobileNumbersSet() {
 		Set<String> deliveryMobileNumbersSet = new HashSet<String>();
-		StringTokenizer stringTokenizer = new StringTokenizer(deliveryMobileNumbers, ",");
-		
-		while(stringTokenizer.hasMoreTokens()){
+		StringTokenizer stringTokenizer = new StringTokenizer(
+				deliveryMobileNumbers, ",");
+
+		while (stringTokenizer.hasMoreTokens()) {
 			deliveryMobileNumbersSet.add(stringTokenizer.nextToken());
 		}
-		
-		return deliveryMobileNumbersSet;	
+
+		return deliveryMobileNumbersSet;
 	}
-	
+
 	/**
 	 * set the mobile numbers set
 	 */
 	public void setDeliveryMobileNumbersSet(Set<String> mobileNumbers) {
-		if(mobileNumbers != null){
+		if (mobileNumbers != null) {
 			StringBuffer buffer = new StringBuffer();
 			int number = 1;
 			for (String mobileNumber : mobileNumbers) {
 
 				buffer.append(mobileNumber);
-				if(number < mobileNumbers.size())
+				if (number < mobileNumbers.size())
 					buffer.append(",");
 
 				number++;
 			}
-			deliveryMobileNumbers =  buffer.toString();
+			deliveryMobileNumbers = buffer.toString();
 		}
 	}
-	
+
 	/**
 	 * Get the delivery group IDs internal method for hibernate
 	 */
 	String getDeliveryEntities() {
 		return deliveryEntities;
 	}
-	
+
 	/**
 	 * Set the delivery group IDs internal method for hibernate
 	 */
 	void setDeliveryEntities(String deliveryEntites) {
 		this.deliveryEntities = deliveryEntites;
 	}
-	
+
 	/**
 	 * Set the delivery group IDs
 	 */
-	public void setDeliveryEntityList(List<String> delieryEntityList){
-		if(delieryEntityList != null){
+	public void setDeliveryEntityList(List<String> delieryEntityList) {
+		if (delieryEntityList != null) {
 			StringBuffer buffer = new StringBuffer();
 			int number = 1;
 			for (String deliveryIds : delieryEntityList) {
 
 				buffer.append(deliveryIds);
-				if(number < delieryEntityList.size())
+				if (number < delieryEntityList.size())
 					buffer.append(",");
 
 				number++;
 			}
-			deliveryEntities =  buffer.toString();
+			deliveryEntities = buffer.toString();
 		}
-		
+
 	}
-	
+
 	/**
 	 * Get the delivery group IDs
 	 */
-	public List<String> getDeliveryEntityList(){
+	public List<String> getDeliveryEntityList() {
 		List<String> deliveryEntityList = new ArrayList<String>();
-		StringTokenizer stringTokenizer = new StringTokenizer(deliveryEntities, ",");
-		
-		while(stringTokenizer.hasMoreTokens()){
+		StringTokenizer stringTokenizer = new StringTokenizer(deliveryEntities,
+				",");
+
+		while (stringTokenizer.hasMoreTokens()) {
 			deliveryEntityList.add(stringTokenizer.nextToken());
 		}
 		return deliveryEntityList;
+	}
+
+	public void setFailReason(String failReason) {
+		this.failReason = failReason;
+	}
+
+	public String getFailReason() {
+		return failReason;
 	}
 }
