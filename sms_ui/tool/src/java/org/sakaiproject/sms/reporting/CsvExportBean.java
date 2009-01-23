@@ -37,12 +37,17 @@ import org.sakaiproject.sms.producers.MessageLogProducer;
 import org.sakaiproject.sms.producers.TaskListProducer;
 import org.sakaiproject.sms.producers.TransactionLogProducer;
 import org.sakaiproject.sms.util.BeanToCSVReflector;
+import org.sakaiproject.sms.util.SakaiDateFormat;
 
 public class CsvExportBean {
 
 	private static Log log = LogFactory.getLog(CsvExportBean.class);
 	private Map<String, CsvExportStrategy> csvExporters = new TreeMap<String, CsvExportStrategy>();
+	private SakaiDateFormat sakaiDateFormat;
 	
+	public void setSakaiDateFormat(SakaiDateFormat dateFormat) {
+		this.sakaiDateFormat = dateFormat;
+	}
 
 	public CsvExportBean() {
 		csvExporters.put(TaskListProducer.VIEW_ID, new SmsTaskExportStrategy());
@@ -68,7 +73,7 @@ public class CsvExportBean {
 	private void createResponse(HttpServletResponse response, DownloadReportViewParams viewparams)
 			throws IOException {
 		
-		SearchFilterBean searchFilterBean = viewparams.extractSearchFilter();
+		SearchFilterBean searchFilterBean = viewparams.extractSearchFilter(sakaiDateFormat.getSakaiDateFormat());
 		csvExporters.get(viewparams.sourceView).createCsvResponse(response, searchFilterBean);
 	}
 

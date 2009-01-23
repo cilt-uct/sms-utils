@@ -107,7 +107,9 @@
   </bean>
   
   
-  <bean id="csvExportBean" class="org.sakaiproject.sms.reporting.CsvExportBean"/>
+  <bean id="csvExportBean" class="org.sakaiproject.sms.reporting.CsvExportBean">
+  	<property name="sakaiDateFormat" ref="sakaiDateFormat"/>
+  </bean>
 
   <bean id="SmsTestActionBean" class="org.sakaiproject.sms.beans.SmsTestActionBean">
   	<property name="smsSmpp" ref="org.sakaiproject.sms.api.SmsSmpp" />

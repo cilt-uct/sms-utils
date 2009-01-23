@@ -60,14 +60,13 @@ public class DownloadReportViewParams extends SimpleViewParameters{
 		this.transactionType = transactionType;
 	}
 	
-	public SearchFilterBean extractSearchFilter(){
+	public SearchFilterBean extractSearchFilter(SimpleDateFormat dateFormat){
 		
-		SimpleDateFormat sdf = new SimpleDateFormat();
 		Date dateFromDate = null;
 		Date dateToDate = null;
 		try {
-			dateFromDate = sdf.parse(dateFrom);
-			dateToDate = sdf.parse(dateTo);
+			dateFromDate = dateFormat.parse(dateFrom);
+			dateToDate = dateFormat.parse(dateTo);
 		} catch (ParseException e) {
 			throw new RuntimeException("Failed to parse date string");
 		}
