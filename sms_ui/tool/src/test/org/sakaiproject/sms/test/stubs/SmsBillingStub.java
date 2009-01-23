@@ -5,15 +5,16 @@ import java.util.Set;
 
 import org.sakaiproject.sms.api.SmsBilling;
 import org.sakaiproject.sms.hibernate.logic.impl.exception.MoreThanOneAccountFoundException;
+import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 
-public class SmsBillingStub implements SmsBilling{
+public class SmsBillingStub implements SmsBilling {
 
 	public boolean sufficientCredits = false;
-	
+
 	public void allocateCredits(Long arg0, int arg1) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public boolean checkSufficientCredits(Long arg0, int arg1) {
@@ -33,7 +34,7 @@ public class SmsBillingStub implements SmsBilling{
 
 	public void debitAccount(Long arg0, Float arg1) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public Set getAccTransactions(Long arg0, Date arg1, Date arg2) {
@@ -74,12 +75,12 @@ public class SmsBillingStub implements SmsBilling{
 
 	public void recalculateAccountBalance(Long arg0) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public void recalculateAccountBalances() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	public boolean reserveCredits(SmsTask arg0) {
@@ -88,6 +89,11 @@ public class SmsBillingStub implements SmsBilling{
 	}
 
 	public boolean settleCreditDifference(SmsTask arg0) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public boolean creditLateMessage(SmsMessage smsMessage) {
 		// TODO Auto-generated method stub
 		return false;
 	}
