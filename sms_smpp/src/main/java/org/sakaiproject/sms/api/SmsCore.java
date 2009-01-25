@@ -47,6 +47,8 @@ public interface SmsCore {
 	/**
 	 * Find the next sms task to process from the task queue. Determine tasks
 	 * with highest priority. Priority is based on message age and type.
+	 * 
+	 * @return SmsTask
 	 */
 	public SmsTask getNextSmsTask();
 
@@ -84,7 +86,7 @@ public interface SmsCore {
 	 * @param sakaiSiteID
 	 * @param sakaiToolId
 	 * @param sakaiSenderID
-	 * @param deliveryMobileNumbers
+	 * @param deliveryEntityList
 	 * @return
 	 */
 	public SmsTask getPreliminaryTask(Date dateToSend, String messageBody,
@@ -113,7 +115,9 @@ public interface SmsCore {
 	 * @param sakaiUserIds
 	 * @param dateToSend
 	 * @param messageBody
+	 * @param sakaiSiteID
 	 * @param sakaiToolId
+	 * @param sakaiSenderID
 	 * @return
 	 */
 	public SmsTask getPreliminaryTask(Set<String> sakaiUserIds,
@@ -122,6 +126,14 @@ public interface SmsCore {
 
 	/**
 	 * Get a new sms task object with default values. This step is required.
+	 * 
+	 * @param deliverGroupId
+	 * @param dateToSend
+	 * @param messageBody
+	 * @param sakaiSiteID
+	 * @param sakaiToolId
+	 * @param sakaiSenderID
+	 * @return
 	 */
 	public SmsTask getPreliminaryTask(String deliverGroupId, Date dateToSend,
 			String messageBody, String sakaiSiteID, String sakaiToolId,
@@ -167,6 +179,8 @@ public interface SmsCore {
 	 * 
 	 * The task will also expire if it cannot be processed in a specified time.
 	 * See http://jira.sakaiproject.org/jira/browse/SMS-9
+	 * 
+	 * @param smsTask
 	 */
 	public void processTask(SmsTask smsTask);
 
