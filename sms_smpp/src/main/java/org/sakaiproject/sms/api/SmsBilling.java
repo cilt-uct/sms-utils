@@ -37,7 +37,7 @@ import org.sakaiproject.sms.hibernate.model.SmsTask;
 public interface SmsBilling {
 
 	/**
-	 * Debit an acccont by the supplied amount
+	 * Debit an account by the supplied amount
 	 * 
 	 * @param accountId
 	 * @param amountToDebit
@@ -46,7 +46,7 @@ public interface SmsBilling {
 
 	/**
 	 * Add extra credits to the specific account by making an entry into
-	 * SMS_TRANSACTION Also update the available credits on the account.
+	 * SMS_TRANSACTION . Also update the available credits on the account.
 	 * 
 	 * @param accountID
 	 *            the account id
@@ -238,8 +238,8 @@ public interface SmsBilling {
 	/**
 	 * Credits account for a message that came in late.
 	 * 
-	 * @param smsTask
-	 * @return true, if successful
+	 * @param smsMessage
+	 * @return
 	 */
 	public boolean creditLateMessage(SmsMessage smsMessage);
 
