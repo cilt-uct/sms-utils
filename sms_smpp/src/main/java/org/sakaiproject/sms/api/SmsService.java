@@ -53,7 +53,7 @@ public interface SmsService {
 	 * @param sakaiSiteID
 	 * @param sakaiToolId
 	 * @param sakaiSenderID
-	 * @param deliveryMobileNumbers
+	 * @param deliveryEntityList
 	 * @return
 	 */
 	public SmsTask getPreliminaryTask(Date dateToSend, String messageBody,
@@ -83,7 +83,9 @@ public interface SmsService {
 	 * @param sakaiGroupId
 	 * @param dateToSend
 	 * @param messageBody
+	 * @param sakaiSiteId
 	 * @param sakaiToolId
+	 * @param sakaiSenderID
 	 * @return
 	 */
 	public SmsTask getPreliminaryTask(String sakaiGroupId, Date dateToSend,
@@ -97,7 +99,9 @@ public interface SmsService {
 	 * @param sakaiUserIds
 	 * @param dateToSend
 	 * @param messageBody
+	 * @param sakaiSiteId
 	 * @param sakaiToolId
+	 * @param sakaiSenderID
 	 * @return
 	 */
 	public SmsTask getPreliminaryTask(Set<String> sakaiUserIds,
