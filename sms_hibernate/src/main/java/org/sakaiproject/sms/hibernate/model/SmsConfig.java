@@ -68,7 +68,7 @@ public class SmsConfig extends BaseModel {
 	private Integer pagingSize;
 
 	/** Sets the interval for the scheduler. */
-	private Integer schedulerInterval = 60000;
+	private Integer schedulerInterval;
 
 	/**
 	 * The maximum amount of minutes to wait for a delivery report for each
