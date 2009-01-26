@@ -87,6 +87,32 @@ public class SmsSystemConfigProducer implements ViewComponentProducer {
 				new UITooltipDecorator(UIMessage
 						.make("sms.system.config.gateway.timeout-tooltip")));
 
+		UIMessage.make(smsSystemForm, "max-retry-count",
+				"sms.site.config.max.retry");
+		UIInput retryCountInput = UIInput.make(smsSystemForm,
+				"sms-config-retry-count", smsSystemConfigOTP
+						+ ".smsRetryMaxCount");
+		retryCountInput.decorators = new DecoratorList(new UITooltipDecorator(
+				UIMessage.make("sms.site.config.max.retry-tooltip")));
+
+		UIMessage.make(smsSystemForm, "max-task-lifetime",
+				"sms.site.config.task.lifetime");
+		UIInput maxTaskLifetimeInput = UIInput.make(smsSystemForm,
+				"sms-config-task-max-lifetime", smsSystemConfigOTP
+						+ ".smsTaskMaxLifeTime");
+		maxTaskLifetimeInput.decorators = new DecoratorList(
+				new UITooltipDecorator(UIMessage
+						.make("sms.site.config.task.lifetime-tooltip")));
+
+		UIMessage.make(smsSystemForm, "retry-schedule-interval",
+				"sms.site.config.retry.schedule");
+		UIInput retryIntervalInput = UIInput.make(smsSystemForm,
+				"sms-config-retry-interval", smsSystemConfigOTP
+						+ ".smsRetryScheduleInterval");
+		retryIntervalInput.decorators = new DecoratorList(
+				new UITooltipDecorator(UIMessage
+						.make("sms.site.config.retry.schedule-tooltip")));
+
 		UIMessage.make(smsSystemForm, "sms-credit-cost",
 				"sms.system.config.sms.credit.cost");
 		UIInput smsCreditCost = UIInput.make(smsSystemForm,

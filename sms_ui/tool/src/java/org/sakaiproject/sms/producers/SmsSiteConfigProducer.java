@@ -95,34 +95,8 @@ public class SmsSiteConfigProducer implements ViewComponentProducer,
 
 		UIMessage.make(smsSiteConfigform, "notification-email",
 				"sms.site.config.notification.email");
-		UIInput make = UIInput.make(smsSiteConfigform,
-				"sms-config-notification-email", smsConfigOTP
-						+ ".notificationEmail");
-
-		UIMessage.make(smsSiteConfigform, "max-retry-count",
-				"sms.site.config.max.retry");
-		UIInput retryCountInput = UIInput.make(smsSiteConfigform,
-				"sms-config-retry-count", smsConfigOTP + ".smsRetryMaxCount");
-		retryCountInput.decorators = new DecoratorList(new UITooltipDecorator(
-				UIMessage.make("sms.site.config.max.retry-tooltip")));
-
-		UIMessage.make(smsSiteConfigform, "max-task-lifetime",
-				"sms.site.config.task.lifetime");
-		UIInput maxTaskLifetimeInput = UIInput.make(smsSiteConfigform,
-				"sms-config-task-max-lifetime", smsConfigOTP
-						+ ".smsTaskMaxLifeTime");
-		maxTaskLifetimeInput.decorators = new DecoratorList(
-				new UITooltipDecorator(UIMessage
-						.make("sms.site.config.task.lifetime-tooltip")));
-
-		UIMessage.make(smsSiteConfigform, "retry-schedule-interval",
-				"sms.site.config.retry.schedule");
-		UIInput retryIntervalInput = UIInput.make(smsSiteConfigform,
-				"sms-config-retry-interval", smsConfigOTP
-						+ ".smsRetryScheduleInterval");
-		retryIntervalInput.decorators = new DecoratorList(
-				new UITooltipDecorator(UIMessage
-						.make("sms.site.config.retry.schedule-tooltip")));
+		UIInput.make(smsSiteConfigform, "sms-config-notification-email",
+				smsConfigOTP + ".notificationEmail");
 
 		UIMessage.make(smsSiteConfigform, "paging-size",
 				"sms.site.config.paging.size");

@@ -39,22 +39,6 @@ public class SmsConfigValidator implements Validator {
 	public void validate(Object obj, Errors err) {
 		SmsConfig smsConfig = (SmsConfig) obj;
 
-		if (smsConfig.getSakaiSiteId() == null
-				|| smsConfig.getSakaiSiteId().equals("")) {
-
-			if (smsConfig.getSmsRetryMaxCount() == null)
-				err
-						.rejectValue("smsRetryMaxCount",
-								"sms.errors.maxretry.empty");
-			if (smsConfig.getSmsTaskMaxLifeTime() == null)
-				err.rejectValue("smsTaskMaxLifeTime",
-						"sms.errors.tasklifetime.empty");
-			if (smsConfig.getSmsRetryScheduleInterval() == null)
-				err.rejectValue("smsRetryScheduleInterval",
-						"sms.errors.retryschedule.empty");
-
-		}
-
 		if (smsConfig.getPagingSize() == null)
 			err.rejectValue("pagingSize", "sms.errors.paging.empty");
 
