@@ -18,7 +18,6 @@
 
 package org.sakaiproject.sms.api;
 
-import java.util.Date;
 
 /**
  * Use Quartz to run at predefined intervals to process the SMS task queue. The
@@ -39,27 +38,6 @@ public interface SmsScheduler {
 	 * Stops the SmsScheduler.
 	 */
 	public void stopSmsScheduler();
-
-	/**
-	 * Get the time of the last run. For diagnostic purposes.
-	 */
-	public Date getLastProcessTime();
-
-	/**
-	 * Get the current status of the scheduler.
-	 */
-	public int getStatus();
-
-	/**
-	 * Fire on timer to process the task queue. Apply row locking (software) on
-	 * message queue. Use the SmsCore service to do the actual work.
-	 */
-	public void processQueue();
-
-	/**
-	 * Force a immediate process of the sms task list (queue).
-	 */
-	public void processQueueNow();
 
 	/**
 	 * Set the interval of the scheduler.

@@ -18,8 +18,6 @@
 
 package org.sakaiproject.sms.impl;
 
-import java.util.Date;
-
 import org.sakaiproject.sms.api.SmsCore;
 import org.sakaiproject.sms.api.SmsScheduler;
 import org.sakaiproject.sms.hibernate.logic.impl.HibernateLogicFactory;
@@ -89,28 +87,6 @@ public class SmsSchedulerImpl implements SmsScheduler {
 			}
 
 		}
-	}
-
-	public Date getLastProcessTime() {
-
-		return null;
-	}
-
-	public int getStatus() {
-
-		return 0;
-	}
-
-	public void insertIntoDebugLog() {
-
-	}
-
-	public void processQueue() {
-
-	}
-
-	public void processQueueNow() {
-
 	}
 
 	public void setInterval(int seconds) {
