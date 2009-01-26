@@ -86,7 +86,7 @@ public class SmppThread extends TestRunnable {
 		smsSmppImpl.init();
 		smsSmppImpl.setLogLevel(Level.INFO);
 		smsCoreImpl.setSmsSmpp(smsSmppImpl);
-		smsCoreImpl.setLoggingLevel(Level.INFO);
+		// smsCoreImpl.setLoggingLevel(Level.INFO);
 		LOG.setLevel(Level.INFO);
 		this.message_count = messageCount;
 		this.delay_between_messages = messageDelay;

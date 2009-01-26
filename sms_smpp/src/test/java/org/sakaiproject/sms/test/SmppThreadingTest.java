@@ -67,11 +67,11 @@ public class SmppThreadingTest extends AbstractBaseTestCase {
 	static {
 		HibernateUtil.createSchema();
 	}
-	private int delay_between_messages = 100; // ms
+	private int delay_between_messages = 1; // ms
 
-	private int session1_message_count = 300;
+	private int session1_message_count = 200;
 
-	private int session2_message_count = 300;
+	private int session2_message_count = 200;
 
 	/**
 	 * You use the MultiThreadedTestRunner in your test cases. The MTTR takes an
