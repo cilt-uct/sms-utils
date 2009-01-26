@@ -29,7 +29,6 @@ import org.sakaiproject.sms.hibernate.model.SmsConfig;
 import org.sakaiproject.sms.hibernate.model.SmsMessage;
 import org.sakaiproject.sms.hibernate.model.SmsTask;
 import org.sakaiproject.sms.hibernate.model.SmsTransaction;
-import org.sakaiproject.sms.hibernate.model.constants.SmsConst_Billing;
 import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
 
 // TODO: Auto-generated Javadoc
@@ -60,14 +59,17 @@ public class SmsBillingImpl implements SmsBilling {
 				.getSmsAccount(accountId);
 
 		SmsTransaction smsTransaction = new SmsTransaction();
+		smsTransaction.setTransactionCredits(0);
+		smsTransaction.setBalance(account.getBalance() + amountToDebit);
 		smsTransaction.setTransactionAmount(amountToDebit);
+
 		smsTransaction.setSakaiUserId(account.getSakaiUserId());
 		smsTransaction.setSmsAccount(account);
-		smsTransaction.setTransactionCredits(0);
-		// TODO : Find out how task id is going to handled
+		// TODO : Find out how task id is going to be handled
 		smsTransaction.setSmsTaskId(1L);
-		HibernateLogicFactory.getTransactionLogic().insertDebitTransaction(
-				smsTransaction);
+
+		HibernateLogicFactory.getTransactionLogic()
+				.insertDebitAccountTransaction(smsTransaction);
 	}
 
 	/**
@@ -125,10 +127,10 @@ public class SmsBillingImpl implements SmsBilling {
 
 		boolean sufficientCredit = false;
 		if (account.getOverdraftLimit() != null) {
-			if ((account.getBalance() + account.getOverdraftLimit()) >= creditsRequired) {
+			if ((account.getBalance() + account.getOverdraftLimit()) >= convertCreditsToAmount(creditsRequired)) {
 				sufficientCredit = true;
 			}
-		} else if (account.getBalance() >= creditsRequired) {
+		} else if (account.getBalance() >= convertCreditsToAmount(creditsRequired)) {
 			sufficientCredit = true;
 		}
 
@@ -331,20 +333,21 @@ public class SmsBillingImpl implements SmsBilling {
 		}
 
 		SmsTransaction smsTransaction = new SmsTransaction();
-		smsTransaction.setBalance(account.getBalance()
-				+ convertCreditsToAmount(smsTask.getCreditEstimate()));
+
+		// Set transaction credit and amount to negative number because we are
+		// reserving.
+		int credits = smsTask.getCreditEstimate() * -1;
+		float amount = convertCreditsToAmount(credits);
+		smsTransaction.setBalance(account.getBalance() - amount);
+		smsTransaction.setTransactionCredits(credits);
+		smsTransaction.setTransactionAmount(amount);
+
 		smsTransaction.setSakaiUserId(smsTask.getSenderUserName());
-		smsTransaction.setTransactionDate(new Date(System.currentTimeMillis()));
-		smsTransaction
-				.setTransactionTypeCode(SmsConst_Billing.TRANS_RESERVE_CREDITS);
-		smsTransaction.setTransactionCredits(smsTask.getCreditEstimate());
-		smsTransaction.setTransactionAmount(convertCreditsToAmount(smsTask
-				.getCreditEstimate()));
 		smsTransaction.setSmsAccount(account);
 		smsTransaction.setSmsTaskId(smsTask.getId());
 
 		// Insert credit transaction
-		HibernateLogicFactory.getTransactionLogic().insertCreditTransaction(
+		HibernateLogicFactory.getTransactionLogic().insertReserveTransaction(
 				smsTransaction);
 		return true;
 
@@ -364,22 +367,22 @@ public class SmsBillingImpl implements SmsBilling {
 			// Account does not exist
 			return false;
 		}
+
 		SmsTransaction smsTransaction = new SmsTransaction();
-		smsTransaction.setBalance(account.getBalance()
-				+ convertCreditsToAmount(1));
-		smsTransaction.setSakaiUserId(smsTask.getSenderUserName());
-		smsTransaction.setTransactionDate(new Date(System.currentTimeMillis()));
-		smsTransaction
-				.setTransactionTypeCode(SmsConst_Billing.TRANS_CREDIT_LATE_MESSAGE);
+
+		// The juicy bits
+		float transactionAmount = convertCreditsToAmount(-1);
+		smsTransaction.setBalance(account.getBalance() + transactionAmount);
 		smsTransaction.setTransactionCredits(1);
-		smsTransaction.setTransactionAmount(convertCreditsToAmount(smsTask
-				.getCreditEstimate()));
+		smsTransaction.setTransactionAmount(transactionAmount);
+
+		smsTransaction.setSakaiUserId(smsTask.getSenderUserName());
 		smsTransaction.setSmsAccount(account);
 		smsTransaction.setSmsTaskId(smsTask.getId());
 
-		// Insert credit transaction
-		HibernateLogicFactory.getTransactionLogic().insertCreditTransaction(
-				smsTransaction);
+		HibernateLogicFactory.getTransactionLogic()
+				.insertLateMessageTransaction(smsTransaction);
+
 		return true;
 
 	}
@@ -428,6 +431,14 @@ public class SmsBillingImpl implements SmsBilling {
 		}
 	}
 
+	/**
+	 * Cancel pending request.
+	 * 
+	 * @param smsTaskId
+	 *            the sms task id
+	 * 
+	 * @return true, if successful
+	 */
 	public boolean cancelPendingRequest(Long smsTaskId) {
 
 		SmsTask smsTask = HibernateLogicFactory.getTaskLogic().getSmsTask(
@@ -439,22 +450,21 @@ public class SmsBillingImpl implements SmsBilling {
 				.getCancelSmsTransactionForTask(smsTaskId);
 
 		SmsTransaction smsTransaction = new SmsTransaction();
-		smsTransaction.setBalance(smsAccount.getBalance()
-				+ convertCreditsToAmount(origionalTransaction
-						.getTransactionCredits()));
+
+		// The juicy bits
+		int transactionCredits = origionalTransaction.getTransactionCredits()
+				* -1;// Reverse the sign cause we are deducting from the account
+		float transactionAmount = convertCreditsToAmount(transactionCredits);
+		smsTransaction.setTransactionCredits(transactionCredits);
+		smsTransaction.setTransactionAmount(transactionAmount);
+		smsTransaction.setBalance(smsAccount.getBalance() + transactionAmount);
+
 		smsTransaction.setSakaiUserId(smsTask.getSenderUserName());
-		smsTransaction.setTransactionDate(new Date(System.currentTimeMillis()));
-		smsTransaction
-				.setTransactionTypeCode(SmsConst_Billing.TRANS_CANCEL_RESERVE);
-		smsTransaction.setTransactionCredits(smsTask.getCreditEstimate());
-		smsTransaction.setTransactionAmount(convertCreditsToAmount(smsTask
-				.getCreditEstimate()));
 		smsTransaction.setSmsAccount(smsAccount);
 		smsTransaction.setSmsTaskId(smsTask.getId());
 
-		// Insert debit transaction
 		HibernateLogicFactory.getTransactionLogic()
-				.insertSettleDebitTransaction(smsTransaction);
+				.insertCancelPendingRequestTransaction(smsTransaction);
 
 		return false;
 	}
@@ -478,35 +488,24 @@ public class SmsBillingImpl implements SmsBilling {
 			return false;
 		}
 
+		SmsTransaction smsTransaction = new SmsTransaction();
+
+		// The juicy bits
 		int creditEstimate = smsTask.getCreditEstimateInt();
 		int actualCreditsUsed = smsTask.getGroupSizeActual();
-		int creditDifference = creditEstimate - actualCreditsUsed;
+		int transactionCredits = creditEstimate - actualCreditsUsed;
+		float transactionAmount = convertCreditsToAmount(transactionCredits);
+		smsTransaction.setTransactionAmount(transactionAmount);
+		smsTransaction.setBalance(account.getBalance() + transactionAmount);
+		smsTransaction.setTransactionCredits(transactionCredits);
 
-		SmsTransaction smsTransaction = new SmsTransaction();
-		smsTransaction.setBalance(account.getBalance()
-				+ convertCreditsToAmount(smsTask.getCreditEstimate()));
 		smsTransaction.setSakaiUserId(smsTask.getSenderUserName());
-		smsTransaction.setTransactionDate(new Date(System.currentTimeMillis()));
-		smsTransaction
-				.setTransactionTypeCode(SmsConst_Billing.TRANS_SETTLE_DIFFERENCE);
-		smsTransaction.setTransactionCredits(creditDifference);
-
 		smsTransaction.setSmsAccount(account);
 		smsTransaction.setSmsTaskId(smsTask.getId());
-		float transactionAmount = convertCreditsToAmount(creditDifference);
-		if (transactionAmount >= 0) {
-			// Insert debit transaction
-			smsTransaction.setTransactionAmount(transactionAmount);
-			HibernateLogicFactory.getTransactionLogic().insertDebitTransaction(
-					smsTransaction);
-		} else {
-			// Insert credit transaction and make sure the transaction amount
-			// gets passed as a positive value. The insert credit transaction
-			// will handle that
-			smsTransaction.setTransactionAmount((transactionAmount * -1));
-			HibernateLogicFactory.getTransactionLogic()
-					.insertCreditTransaction(smsTransaction);
-		}
+
+		HibernateLogicFactory.getTransactionLogic().insertSettleTransaction(
+				smsTransaction);
+
 		return true;
 	}
 
