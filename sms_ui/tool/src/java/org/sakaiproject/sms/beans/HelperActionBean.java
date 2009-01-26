@@ -86,8 +86,13 @@ public class HelperActionBean {
 				try {
 					smsCore.insertTask(smsTask);
 				} catch (SmsTaskValidationException e) {
-					// TODO Handle exception here
-					e.printStackTrace();
+
+					for (String errorMsg : e.getErrorMessages()) {
+						messages.addMessage(new TargettedMessage(errorMsg,
+								null, TargettedMessage.SEVERITY_ERROR));
+					}
+
+					return ActionResults.ERROR;
 				}
 				messages.addMessage(new TargettedMessage(
 						"sms.helper.task-success", null,
