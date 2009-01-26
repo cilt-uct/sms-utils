@@ -114,9 +114,12 @@ public class SmsBillingImpl implements SmsBilling {
 				.getSmsAccount(accountID);
 
 		// Account is null or disabled
-		if (account == null || !account.getAccountEnabled()
-				|| creditsRequired == null || creditsRequired < 0
-				|| account.getEnddate().before(new Date())) {
+		if (account == null
+				|| !account.getAccountEnabled()
+				|| creditsRequired == null
+				|| creditsRequired < 0
+				|| (account.getEnddate() != null && account.getEnddate()
+						.before(new Date()))) {
 			return false;
 		}
 
