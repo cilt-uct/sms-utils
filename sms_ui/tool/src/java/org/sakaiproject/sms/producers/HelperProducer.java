@@ -101,7 +101,7 @@ public class HelperProducer implements ViewComponentProducer,
 		UIMessage.make(form, "estimated-cost-label",
 				"sms.helper.estimated-cost");
 		UIInput estimatedCost = UIInput.make(form, "estimated-cost", smsTaskOTP
-				+ ".creditEstimate");
+				+ ".costEstimate");
 		estimatedCost.decorate(new UIDisabledDecorator());
 		estimatedCost.fossilize = false;
 
