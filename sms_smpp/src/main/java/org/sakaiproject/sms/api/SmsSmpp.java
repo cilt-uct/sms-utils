@@ -49,11 +49,17 @@ public interface SmsSmpp {
 	 * Send a list of messages to the gateway. Abort if the gateway connection
 	 * is down or gateway returns an error and mark relevant messages as failed.
 	 * Return message statuses back to caller.
+	 * 
+	 * @param messages
+	 * @return
 	 */
 	public String sendMessagesToGateway(Set<SmsMessage> messages);
 
 	/**
 	 * Send one message to the SMS gateway. Return result code to caller.
+	 * 
+	 * @param message
+	 * @return
 	 */
 	public SmsMessage sendMessageToGateway(SmsMessage message);
 
