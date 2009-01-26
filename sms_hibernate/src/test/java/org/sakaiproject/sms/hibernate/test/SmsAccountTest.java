@@ -155,7 +155,8 @@ public class SmsAccountTest extends AbstractBaseTestCase {
 	 */
 	public void testGetSmsAccount_sakaiUserId() {
 		SmsAccount account = new SmsAccount();
-		account.setSakaiUserId("sakUsrId");
+		account.setSakaiUserId("testGetSmsAccount_sakaiUserId");
+		account.setSakaiSiteId("testGetSmsAccount_sakaiSiteId");
 		account.setMessageTypeCode("12345");
 		account.setOverdraftLimit(10000.00f);
 		account.setBalance(5000.00f);
@@ -163,7 +164,8 @@ public class SmsAccountTest extends AbstractBaseTestCase {
 		account.setAccountEnabled(true);
 		HibernateLogicFactory.getAccountLogic().persistSmsAccount(account);
 		SmsAccount retAccount = HibernateLogicFactory.getAccountLogic()
-				.getSmsAccount("", account.getSakaiUserId());
+				.getSmsAccount("testGetSmsAccount_sakaiSiteId",
+						account.getSakaiUserId());
 		assertNotNull(retAccount);
 		assertEquals(retAccount, account);
 	}
