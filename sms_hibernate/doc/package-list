@@ -5,6 +5,7 @@ org.sakaiproject.sms.hibernate.logic.impl
 org.sakaiproject.sms.hibernate.logic.impl.exception
 org.sakaiproject.sms.hibernate.model
 org.sakaiproject.sms.hibernate.model.constants
+org.sakaiproject.sms.hibernate.model.factory
 org.sakaiproject.sms.hibernate.test
 org.sakaiproject.sms.hibernate.test.dataload
 org.sakaiproject.sms.hibernate.util
