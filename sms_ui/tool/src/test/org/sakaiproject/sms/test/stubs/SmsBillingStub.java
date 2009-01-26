@@ -94,13 +94,11 @@ public class SmsBillingStub implements SmsBilling {
 	}
 
 	public boolean checkSufficientCredits(SmsTask arg0) {
-		// TODO Auto-generated method stub
-		return false;
+		return sufficientCredits;
 	}
 
 	public boolean checkSufficientCredits(Long arg0, Integer arg1) {
-		// TODO Auto-generated method stub
-		return false;
+		return sufficientCredits;
 	}
 
 	public boolean creditLateMessage(SmsMessage smsMessage) {
