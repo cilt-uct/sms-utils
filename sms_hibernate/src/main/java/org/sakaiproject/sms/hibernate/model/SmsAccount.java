@@ -97,7 +97,7 @@ public class SmsAccount extends BaseModel {
 	 */
 	public SmsAccount() {
 		this.startdate = new Date(System.currentTimeMillis());
-		this.enddate = new Date(System.currentTimeMillis());
+
 	}
 
 	/**
