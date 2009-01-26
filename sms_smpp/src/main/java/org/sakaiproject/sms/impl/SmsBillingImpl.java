@@ -232,9 +232,9 @@ public class SmsBillingImpl implements SmsBilling {
 		smsAccount.setSakaiUserId(sakaiUserID);
 		smsAccount.setSakaiSiteId(sakaiSiteID);
 		smsAccount.setMessageTypeCode("3");
-		smsAccount.setOverdraftLimit(10000.00f);
-		smsAccount.setBalance(1000f);
-		smsAccount.setAccountName("accountname");
+		smsAccount.setOverdraftLimit(0f);
+		smsAccount.setBalance(100f);
+		smsAccount.setAccountName("TestAccountName");
 		smsAccount.setAccountEnabled(true);
 		try {
 			HibernateLogicFactory.getAccountLogic().persistSmsAccount(
