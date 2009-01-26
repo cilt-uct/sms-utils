@@ -22,6 +22,7 @@ import java.util.Map;
 
 import org.sakaiproject.sms.beans.ActionResults;
 import org.sakaiproject.sms.hibernate.logic.SmsAccountLogic;
+import org.sakaiproject.sms.hibernate.logic.impl.exception.DuplicateUniqueFieldException;
 import org.sakaiproject.sms.hibernate.model.SmsAccount;
 import org.sakaiproject.sms.hibernate.model.constants.SmsHibernateConstants;
 
@@ -64,7 +65,15 @@ public class SmsAccountLocator implements BeanLocator {
 
 	public String saveAll() {
 		for (SmsAccount account : delivered.values()) {
-			smsAccountLogic.persistSmsAccount(account);
+			try {
+				smsAccountLogic.persistSmsAccount(account);
+			} catch (DuplicateUniqueFieldException e) {
+				messages.addMessage(new TargettedMessage("sms.errors."
+						+ e.getField() + ".duplicate", null,
+						TargettedMessage.SEVERITY_ERROR));
+				return ActionResults.ERROR;
+			}
+
 			messages.addMessage(new TargettedMessage("sms.sms-account.saved",
 					null, TargettedMessage.SEVERITY_INFO));
 		}

@@ -28,6 +28,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.sakaiproject.sms.hibernate.dao.SmsDao;
 import org.sakaiproject.sms.hibernate.logic.SmsAccountLogic;
+import org.sakaiproject.sms.hibernate.logic.impl.exception.DuplicateUniqueFieldException;
 import org.sakaiproject.sms.hibernate.model.SmsAccount;
 import org.sakaiproject.sms.hibernate.model.SmsTransaction;
 import org.sakaiproject.sms.hibernate.model.constants.SmsPropertyConstants;
@@ -96,7 +97,48 @@ public class SmsAccountLogicImpl extends SmsDao implements SmsAccountLogic {
 	 *            account to be persisted
 	 */
 	public void persistSmsAccount(SmsAccount smsAccount) {
+		if (!hasUniqueSakaiSiteId(smsAccount)) {
+			throw new DuplicateUniqueFieldException("sakaiSiteId");
+		}
+		if (!hasUniqueSakaiUserId(smsAccount)) {
+			throw new DuplicateUniqueFieldException("sakaiUserId");
+		}
+
 		persist(smsAccount);
+	}
+
+	/**
+	 * Checks if account has unique Sakai site id
+	 * 
+	 * @param smsAccount
+	 * @return
+	 */
+	private boolean hasUniqueSakaiSiteId(SmsAccount smsAccount) {
+		SmsAccount accBySite = getAccountBySakaiSiteId(smsAccount
+				.getSakaiSiteId());
+
+		if (accBySite != null && !accBySite.getId().equals(smsAccount.getId())) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Checks if account has unique Sakai user id
+	 * 
+	 * @param smsAccount
+	 * @return
+	 */
+	private boolean hasUniqueSakaiUserId(SmsAccount smsAccount) {
+		SmsAccount accByUser = getAccountBySakaiUserId(smsAccount
+				.getSakaiUserId());
+
+		if (accByUser != null && !accByUser.getId().equals(smsAccount.getId())) {
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
@@ -191,8 +233,8 @@ public class SmsAccountLogicImpl extends SmsDao implements SmsAccountLogic {
 		SmsAccount account = null;
 		StringBuilder hql = new StringBuilder();
 		hql
-				.append(" from SmsAccount account where account.enddate is null or account.enddate > :today ");
-		hql.append(" and account.sakaiUserId = :sakaiUserId");
+				.append(" from SmsAccount account where (account.enddate is null or account.enddate > :today) ");
+		hql.append(" and (account.sakaiUserId = :sakaiUserId)");
 		List<SmsAccount> accounts = new ArrayList<SmsAccount>();
 		Session s = HibernateUtil.getSession();
 		Query query = s.createQuery(hql.toString());

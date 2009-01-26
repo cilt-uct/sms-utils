@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.sakaiproject.sms.hibernate.logic.impl.HibernateLogicFactory;
+import org.sakaiproject.sms.hibernate.logic.impl.exception.DuplicateUniqueFieldException;
 import org.sakaiproject.sms.hibernate.model.SmsAccount;
 import org.sakaiproject.sms.hibernate.model.SmsTransaction;
 import org.sakaiproject.sms.hibernate.util.AbstractBaseTestCase;
@@ -82,6 +83,48 @@ public class SmsAccountTest extends AbstractBaseTestCase {
 				insertSmsAccount);
 		// Check the record was created on the DB... an id will be assigned.
 		assertTrue("Object not persisted", insertSmsAccount.exists());
+	}
+
+	/**
+	 * Test insertion of account with duplicate site id
+	 */
+	public void testInsertSmsAccountDuplicateSiteId() {
+		HibernateLogicFactory.getAccountLogic().persistSmsAccount(
+				insertSmsAccount);
+		// Check the record was created on the DB... an id will be assigned.
+		assertTrue("Object not persisted", insertSmsAccount.exists());
+
+		SmsAccount newSmsAccount = new SmsAccount();
+		newSmsAccount.setSakaiSiteId("1");
+
+		try {
+			HibernateLogicFactory.getAccountLogic().persistSmsAccount(
+					newSmsAccount);
+			fail("DuplicateUniqueFieldException should be caught");
+		} catch (DuplicateUniqueFieldException due) {
+			assertEquals("sakaiSiteId", due.getField());
+		}
+	}
+
+	/**
+	 * Test insertion of account with duplicate user id
+	 */
+	public void testInsertSmsAccountDuplicateUserId() {
+		HibernateLogicFactory.getAccountLogic().persistSmsAccount(
+				insertSmsAccount);
+		// Check the record was created on the DB... an id will be assigned.
+		assertTrue("Object not persisted", insertSmsAccount.exists());
+
+		SmsAccount newSmsAccount = new SmsAccount();
+		newSmsAccount.setSakaiUserId("1");
+
+		try {
+			HibernateLogicFactory.getAccountLogic().persistSmsAccount(
+					newSmsAccount);
+			fail("DuplicateUniqueFieldException should be caught");
+		} catch (DuplicateUniqueFieldException due) {
+			assertEquals("sakaiUserId", due.getField());
+		}
 	}
 
 	/**
