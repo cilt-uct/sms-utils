@@ -1,0 +1,12 @@
+org.sakaiproject.sms.beans
+org.sakaiproject.sms.constants
+org.sakaiproject.sms.otp
+org.sakaiproject.sms.params
+org.sakaiproject.sms.producers
+org.sakaiproject.sms.renderers
+org.sakaiproject.sms.reporting
+org.sakaiproject.sms.rsf
+org.sakaiproject.sms.test
+org.sakaiproject.sms.test.stubs
+org.sakaiproject.sms.util
+org.sakaiproject.sms.validators
