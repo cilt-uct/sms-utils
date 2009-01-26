@@ -231,100 +231,6 @@ public class SmsTransactionLogicImpl extends SmsDao implements
 	}
 
 	/**
-	 * Insert credit transaction.
-	 * <p>
-	 * This will also update the related account balance.
-	 * 
-	 * @param smsTransaction
-	 *            the sms transaction
-	 */
-	public void insertCreditTransaction(SmsTransaction smsTransaction) {
-		SmsAccount account = HibernateLogicFactory.getAccountLogic()
-				.getSmsAccount(smsTransaction.getSmsAccount().getId());
-
-		// Update the account balance
-		account.setBalance(account.getBalance()
-				+ smsTransaction.getTransactionAmount());
-		HibernateLogicFactory.getAccountLogic().persistSmsAccount(account);
-
-		// Change to negative value
-		smsTransaction.setTransactionAmount(smsTransaction
-				.getTransactionAmount()
-				* -1);
-		persist(smsTransaction);
-	}
-
-	/**
-	 * Insert credit transaction with status TRANS_SETTLE_DIFFERENCE.
-	 * <p>
-	 * This will also update the related account balance.
-	 * 
-	 * @param smsTransaction
-	 *            the sms transaction
-	 */
-	public void insertSettleCreditTransaction(SmsTransaction smsTransaction) {
-		SmsAccount account = HibernateLogicFactory.getAccountLogic()
-				.getSmsAccount(smsTransaction.getSmsAccount().getId());
-		smsTransaction
-				.setTransactionTypeCode(SmsConst_Billing.TRANS_SETTLE_DIFFERENCE);
-		// Update the account balance
-		account.setBalance(account.getBalance()
-				+ smsTransaction.getTransactionAmount());
-		HibernateLogicFactory.getAccountLogic().persistSmsAccount(account);
-
-		// Change to negative value
-		smsTransaction.setTransactionAmount(smsTransaction
-				.getTransactionAmount()
-				* -1);
-		persist(smsTransaction);
-	}
-
-	/**
-	 * Insert debit transaction.
-	 * <p>
-	 * This will also update the related account balance.
-	 * 
-	 * @param smsTransaction
-	 *            the sms transaction
-	 */
-	public void insertDebitTransaction(SmsTransaction smsTransaction) {
-		SmsAccount account = HibernateLogicFactory.getAccountLogic()
-				.getSmsAccount(smsTransaction.getSmsAccount().getId());
-		smsTransaction
-				.setTransactionTypeCode(SmsConst_Billing.TRANS_DEBIT_ACCOUNT);
-		// Update the account balance
-		account.setBalance(account.getBalance()
-				- smsTransaction.getTransactionAmount());
-		smsTransaction.setBalance(account.getBalance());
-		HibernateLogicFactory.getAccountLogic().persistSmsAccount(account);
-
-		persist(smsTransaction);
-
-	}
-
-	/**
-	 * Insert debit transaction with status TRANS_SETTLE_DIFFERENCE.
-	 * <p>
-	 * This will also update the related account balance.
-	 * 
-	 * @param smsTransaction
-	 *            the sms transaction
-	 */
-	public void insertSettleDebitTransaction(SmsTransaction smsTransaction) {
-		SmsAccount account = HibernateLogicFactory.getAccountLogic()
-				.getSmsAccount(smsTransaction.getSmsAccount().getId());
-		smsTransaction
-				.setTransactionTypeCode(SmsConst_Billing.TRANS_SETTLE_DIFFERENCE);
-		// Update the account balance
-		account.setBalance(account.getBalance()
-				+ smsTransaction.getTransactionAmount());
-		smsTransaction.setBalance(account.getBalance());
-		HibernateLogicFactory.getAccountLogic().persistSmsAccount(account);
-
-		persist(smsTransaction);
-	}
-
-	/**
 	 * Gets all the related transaction for the specified account id.
 	 * 
 	 * @param accountId
@@ -393,4 +299,92 @@ public class SmsTransactionLogicImpl extends SmsDao implements
 		}
 		return null;
 	}
+
+	/**
+	 * Insert reserve transaction.
+	 * <p>
+	 * This will also update the related account balance.
+	 * 
+	 * @param smsTransaction
+	 *            the sms transaction
+	 */
+	public void insertReserveTransaction(SmsTransaction smsTransaction) {
+		insertTransaction(smsTransaction,
+				SmsConst_Billing.TRANS_RESERVE_CREDITS);
+	}
+
+	/**
+	 * Insert settle transaction.
+	 * <p>
+	 * This will also update the related account balance.
+	 * 
+	 * @param smsTransaction
+	 *            the sms transaction
+	 */
+	public void insertSettleTransaction(SmsTransaction smsTransaction) {
+		insertTransaction(smsTransaction,
+				SmsConst_Billing.TRANS_SETTLE_DIFFERENCE);
+	}
+
+	/**
+	 * Insert cancel pending request transaction.
+	 * <p>
+	 * This will also update the related account balance.
+	 * 
+	 * @param smsTransaction
+	 *            the sms transaction
+	 */
+	public void insertCancelPendingRequestTransaction(
+			SmsTransaction smsTransaction) {
+		insertTransaction(smsTransaction, SmsConst_Billing.TRANS_CANCEL_RESERVE);
+	}
+
+	/**
+	 * Insert transaction for a late message.
+	 * <p>
+	 * This will also update the related account balance.
+	 * 
+	 * @param smsTransaction
+	 *            the sms transaction
+	 */
+	public void insertLateMessageTransaction(SmsTransaction smsTransaction) {
+		insertTransaction(smsTransaction,
+				SmsConst_Billing.TRANS_CREDIT_LATE_MESSAGE);
+	}
+
+	/**
+	 * Insert transaction to debit an account
+	 * <p>
+	 * This will also update the related account balance.
+	 * 
+	 * @param smsTransaction
+	 *            the sms transaction
+	 */
+	public void insertDebitAccountTransaction(SmsTransaction smsTransaction) {
+		insertTransaction(smsTransaction, SmsConst_Billing.TRANS_DEBIT_ACCOUNT);
+	}
+
+	/**
+	 * Insert transaction.
+	 * 
+	 * @param smsTransaction
+	 *            the sms transaction
+	 * @param transactionType
+	 *            the transaction type
+	 */
+	private void insertTransaction(SmsTransaction smsTransaction,
+			String transactionType) {
+		SmsAccount account = HibernateLogicFactory.getAccountLogic()
+				.getSmsAccount(smsTransaction.getSmsAccount().getId());
+		smsTransaction.setTransactionTypeCode(transactionType);
+		smsTransaction.setTransactionDate(new Date(System.currentTimeMillis()));
+		// Update the account balance
+		account.setBalance(account.getBalance()
+				+ smsTransaction.getTransactionAmount());
+		smsTransaction.setBalance(account.getBalance());
+		HibernateLogicFactory.getAccountLogic().persistSmsAccount(account);
+
+		persist(smsTransaction);
+	}
+
 }

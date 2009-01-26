@@ -102,44 +102,55 @@ public interface SmsTransactionLogic {
 			SearchFilterBean searchBean) throws SmsSearchException;
 
 	/**
-	 * Insert debit transaction.
+	 * Insert reserve transaction.
 	 * <p>
 	 * This will also update the related account balance.
 	 * 
 	 * @param smsTransaction
 	 *            the sms transaction
 	 */
-	public void insertDebitTransaction(SmsTransaction smsTransaction);
+	public void insertReserveTransaction(SmsTransaction smsTransaction);
 
 	/**
-	 * Insert debit transaction with status TRANS_SETTLE_DIFFERENCE.
+	 * Insert settle transaction.
 	 * <p>
 	 * This will also update the related account balance.
 	 * 
 	 * @param smsTransaction
 	 *            the sms transaction
 	 */
-	public void insertSettleDebitTransaction(SmsTransaction smsTransaction);
+	public void insertSettleTransaction(SmsTransaction smsTransaction);
 
 	/**
-	 * Insert credit transaction.
+	 * Insert cancel pending request transaction.
 	 * <p>
 	 * This will also update the related account balance.
 	 * 
 	 * @param smsTransaction
 	 *            the sms transaction
 	 */
-	public void insertCreditTransaction(SmsTransaction smsTransaction);
+	public void insertCancelPendingRequestTransaction(
+			SmsTransaction smsTransaction);
 
 	/**
-	 * Insert credit transaction with status TRANS_SETTLE_DIFFERENCE.
+	 * Insert transaction for a late message.
 	 * <p>
 	 * This will also update the related account balance.
 	 * 
 	 * @param smsTransaction
 	 *            the sms transaction
 	 */
-	public void insertSettleCreditTransaction(SmsTransaction smsTransaction);
+	public void insertLateMessageTransaction(SmsTransaction smsTransaction);
+
+	/**
+	 * Insert transaction to debit an account
+	 * <p>
+	 * This will also update the related account balance.
+	 * 
+	 * @param smsTransaction
+	 *            the sms transaction
+	 */
+	public void insertDebitAccountTransaction(SmsTransaction smsTransaction);
 
 	/**
 	 * Gets all the related transaction for the specified account id.

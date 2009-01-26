@@ -84,7 +84,7 @@ public class SmsSampleDataLoad {
 
 				smsTransaction.setSmsAccount(persistedSmsAccounts.get(0));
 				smsTransaction.setSmsTaskId(new Long(index + 1));
-				smsTransactionLogic.insertDebitTransaction(smsTransaction);
+				smsTransactionLogic.insertReserveTransaction(smsTransaction);
 				index++;
 			}
 			testSMSTransactionFactory.refreshList();
