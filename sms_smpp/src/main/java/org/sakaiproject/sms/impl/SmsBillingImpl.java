@@ -65,8 +65,7 @@ public class SmsBillingImpl implements SmsBilling {
 
 		smsTransaction.setSakaiUserId(account.getSakaiUserId());
 		smsTransaction.setSmsAccount(account);
-		// TODO : Find out how task id is going to be handled
-		smsTransaction.setSmsTaskId(1L);
+		smsTransaction.setSmsTaskId(0L);
 
 		HibernateLogicFactory.getTransactionLogic()
 				.insertDebitAccountTransaction(smsTransaction);
