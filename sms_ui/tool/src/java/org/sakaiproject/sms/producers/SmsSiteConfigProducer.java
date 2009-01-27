@@ -61,9 +61,7 @@ public class SmsSiteConfigProducer implements ViewComponentProducer,
 	}
 
 	public void init() {
-		messageFixupHelper.fixupMessages("sms-config-retry-count",
-				"sms-config-task-max-lifetime", "sms-config-retry-interval",
-				"sms-config-paging-size");
+		messageFixupHelper.fixupMessages("sms-config-paging-size");
 	}
 
 	public void fillComponents(UIContainer tofill, ViewParameters viewparams,

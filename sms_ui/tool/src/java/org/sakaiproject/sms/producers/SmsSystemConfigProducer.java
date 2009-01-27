@@ -42,8 +42,10 @@ public class SmsSystemConfigProducer implements ViewComponentProducer {
 	private MessageFixupHelper messageFixupHelper;
 
 	public void init() {
-		messageFixupHelper.fixupMessages("sms-config-sms-credit-cost",
-				"sms-config-scheduler-interval", "sms-config-report-timeout");
+		messageFixupHelper.fixupMessages("sms-config-retry-count",
+				"sms-config-task-max-lifetime", "sms-config-retry-interval",
+				"sms-config-sms-credit-cost", "sms-config-scheduler-interval",
+				"sms-config-report-timeout");
 	}
 
 	public String getViewID() {
