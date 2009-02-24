@@ -1,6 +1,0 @@
-org.sakaiproject.sms.api
-org.sakaiproject.sms.impl
-org.sakaiproject.sms.impl.validate
-org.sakaiproject.sms.model
-org.sakaiproject.sms.smpp.util
-org.sakaiproject.sms.test
