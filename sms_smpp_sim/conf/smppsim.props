@@ -71,7 +71,7 @@ OUTBIND_ESME_PASSWORD=password
 
 
 # MO SERVICE
-DELIVERY_MESSAGES_PER_MINUTE=0
+DELIVERY_MESSAGES_PER_MINUTE=5
 DELIVER_MESSAGES_FILE=deliver_messages.csv
 
 # LOOPBACK
@@ -79,8 +79,8 @@ LOOPBACK=FALSE
 
 # QUEUES
 # Maximum size parameters are expressed as max number of objects the queue can hold
-OUTBOUND_QUEUE_MAX_SIZE=1000
-INBOUND_QUEUE_MAX_SIZE=1000
+OUTBOUND_QUEUE_MAX_SIZE=10000
+INBOUND_QUEUE_MAX_SIZE=10000
 
 # LOGGING
 # See logging.properties for configuration of the logging system as a whole
