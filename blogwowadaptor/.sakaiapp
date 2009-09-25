@@ -1,0 +1,13 @@
+This project initially constructed by Sakai App Builder Plugin
+Used the following settings:
+Project Name: BlogWowSMSAdaptor
+Project Key: blogwowsmsadaptor
+Project CamelCase Key: Blogwowsmsadaptor
+Project lowerCamelCase Key: blogwowsmsadaptor
+Project Type: RSF
+Maven version: Maven2
+Sakai version: K1
+Project Impl: DIRS
+
+Sakai App Builder by Aaron Zeckoski (aaronz@vt.edu)
+Wicket and K1 support by Steve Swisnburg (steve.swinsburg@gmail.com)
