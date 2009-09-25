@@ -24,54 +24,39 @@
     	<version>2.6.0</version>
         <relativePath>../master/pom.xml</relativePath>
     </parent>
-
-    <profiles>
-        <profile>
-            <id>full</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <modules>
-                <module>api</module>
-                <module>impl</module>
-                <module>pack</module>
-                <module>tool</module>
-            </modules>
-        </profile>
-        <profile>
-            <id>tool</id>
-            <modules>
-                <module>tool</module>
-            </modules>
-        </profile>
-        <profile>
-            <id>api</id>
-            <modules>
-                <module>api</module>
-            </modules>
-        </profile>
-        <profile>
-            <id>ddl</id>
-            <modules>
-                <module>impl/src/ddl</module>
-            </modules>
-        </profile>
-    </profiles>
+	<profiles>
+		<profile>
+			<id>full</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<modules>
+				<module>impl</module>
+				<module>pack</module>
+			</modules>
+		</profile>
+	</profiles>
 
     <!-- handles the management of all related dependencies -->
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>org.sakaiproject.blogwowsmsadaptor</groupId>
-                <artifactId>blogwowsmsadaptor-api</artifactId>
-                <version>0.1</version><!--Blogwowsmsadaptor.version-->
-                <scope>provided</scope>
+                <artifactId>blogwowsmsadaptor-impl</artifactId>
+                <version>0.1-SNAPSHOT</version><!--Blogwowsmsadaptor.version-->
             </dependency>
             <dependency>
-                <groupId>org.sakaiproject.blogwowsmsadaptor</groupId>
-                <artifactId>blogwowsmsadaptor-impl</artifactId>
-                <version>0.1</version><!--Blogwowsmsadaptor.version-->
+            	<groupId>org.sakaiproject.sms</groupId>
+            	<artifactId>sms-api</artifactId>
+            	<version>0.12-SNAPSHOT</version>
             </dependency>
+            <dependency>
+            	<groupId>org.sakaiproject</groupId>
+            	<artifactId>sakai-blogwow-api</artifactId>
+            	<version>0.9.9-SNAPSHOT</version>
+            </dependency>
+            
+            
 <!-- 
             <dependency>
                 <groupId>org.sakaiproject.entitybroker</groupId>
