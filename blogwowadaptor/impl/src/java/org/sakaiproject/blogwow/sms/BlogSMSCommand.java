@@ -5,6 +5,7 @@ import java.util.Date;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.sakaiproject.blogwow.constants.BlogConstants;
 import org.sakaiproject.blogwow.logic.BlogLogic;
 import org.sakaiproject.blogwow.logic.EntryLogic;
 import org.sakaiproject.blogwow.model.BlogWowBlog;
@@ -18,7 +19,7 @@ public class BlogSMSCommand implements SmsCommand {
 	//The command
 	private static final String BLOG_COMMAND = "BLOG";
 	private static final String BLOG_COMMAND_ALIAS = "B";
-	private static final String SMS_BUNDLE = null;
+	private static final String SMS_BUNDLE = "org.sakaiproject.blogwow.sms.bundle.sms";
 	
 	
 	private BlogLogic blogLogic;
@@ -51,6 +52,7 @@ public class BlogSMSCommand implements SmsCommand {
 		entry.setBlog(blog);
 		entry.setText(body[0]);
 		entry.setTitle(getTitle(body[0]));
+		entry.setPrivacySetting(BlogConstants.PRIVACY_PUBLIC);
 		
 		entryLogic.saveEntry(entry, locationReference);
 		log.info("blog entry: " + entry.getId() + " saved");
