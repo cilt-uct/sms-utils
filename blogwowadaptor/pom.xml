@@ -13,7 +13,7 @@
     </organization>
     <inceptionYear>2008</inceptionYear>
     <packaging>pom</packaging>
-    <version>0.1</version><!--Blogwowsmsadaptor.version-->
+    <version>0.1-SNAPSHOT</version><!--Blogwowsmsadaptor.version-->
 
     <!-- Sakai master pom is the parent -->
     <parent>

@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.sakaiproject</groupId>
         <artifactId>blogwowsmsadaptor</artifactId>
-        <version>0.1</version><!--Blogwowsmsadaptor.version-->
+        <version>0.1-SNAPSHOT</version><!--Blogwowsmsadaptor.version-->
     </parent>
 
     <dependencies>
