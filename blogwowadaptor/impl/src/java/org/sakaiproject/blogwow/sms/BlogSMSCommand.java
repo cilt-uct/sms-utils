@@ -3,6 +3,8 @@ package org.sakaiproject.blogwow.sms;
 import java.util.Date;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.sakaiproject.blogwow.logic.BlogLogic;
 import org.sakaiproject.blogwow.logic.EntryLogic;
 import org.sakaiproject.blogwow.model.BlogWowBlog;
@@ -11,7 +13,8 @@ import org.sakaiproject.sms.logic.incoming.SmsCommand;
 import org.sakaiproject.util.ResourceLoader;
 
 public class BlogSMSCommand implements SmsCommand {
-
+	private static Log log = LogFactory.getLog(BlogSMSCommand.class);
+			
 	//The command
 	private static final String BLOG_COMMAND = "BLOG";
 	private static final String BLOG_COMMAND_ALIAS = "B";
@@ -36,8 +39,7 @@ public class BlogSMSCommand implements SmsCommand {
 		//can the user blog in this location?
 		String locationReference = "/site/" + siteId;
 		if (! blogLogic.canWriteBlog(null, locationReference, userId)) {
-			//TODO get this from a bundle
-			
+			log.warn(userId + " cant blog in " + locationReference);
 			return getResourceString("sms.notAllowed", new Object[]{siteId});
 		}
 		BlogWowBlog blog = blogLogic.makeBlogByLocationAndUser(locationReference, userId);
@@ -51,6 +53,7 @@ public class BlogSMSCommand implements SmsCommand {
 		entry.setTitle(getTitle(body[0]));
 		
 		entryLogic.saveEntry(entry, locationReference);
+		log.info("blog entry: " + entry.getId() + " saved");
 		
 		return getResourceString("sms.success");
 	}
