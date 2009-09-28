@@ -10,21 +10,21 @@ import org.sakaiproject.blogwow.logic.BlogLogic;
 import org.sakaiproject.blogwow.logic.EntryLogic;
 import org.sakaiproject.blogwow.model.BlogWowBlog;
 import org.sakaiproject.blogwow.model.BlogWowEntry;
+import org.sakaiproject.sms.logic.incoming.ParsedMessage;
 import org.sakaiproject.sms.logic.incoming.SmsCommand;
 import org.sakaiproject.util.ResourceLoader;
 
 public class BlogSMSCommand implements SmsCommand {
+	
 	private static Log log = LogFactory.getLog(BlogSMSCommand.class);
 			
-	//The command
+	//The command 
 	private static final String BLOG_COMMAND = "BLOG";
 	private static final String BLOG_COMMAND_ALIAS = "B";
 	private static final String SMS_BUNDLE = "org.sakaiproject.blogwow.sms.bundle.sms";
 	
-	
 	private BlogLogic blogLogic;
 	private EntryLogic entryLogic;
-	
 	
 	public void setBlogLogic(BlogLogic blogLogic) {
 		this.blogLogic = blogLogic;
@@ -33,18 +33,28 @@ public class BlogSMSCommand implements SmsCommand {
 	public void setEntryLogic(EntryLogic entryLogic) {
 		this.entryLogic = entryLogic;
 	}
-
 	
-	public String execute(String siteId, String userId, String mobileNr, String... body) {
+	public String execute(ParsedMessage message, String mobileNumber) {
 		
-		//can the user blog in this location?
+		String[] body = message.getBodyParameters();
+		
+		// can the user blog in this location?
+		String userId = message.getIncomingUserId();
+		String siteId = message.getSite();
+		
 		String locationReference = "/site/" + siteId;
+		
 		if (! blogLogic.canWriteBlog(null, locationReference, userId)) {
-			log.warn(userId + " cant blog in " + locationReference);
+			log.debug(userId + " can't blog in " + locationReference);
 			return getResourceString("sms.notAllowed", new Object[]{siteId});
 		}
+		
 		BlogWowBlog blog = blogLogic.makeBlogByLocationAndUser(locationReference, userId);
 		
+		if (blog == null) {
+			log.debug(userId + " can't create blog in " + locationReference);
+			return getResourceString("sms.notAllowed", new Object[]{siteId});		
+		}
 		
 		BlogWowEntry entry = new BlogWowEntry();
 		entry.setDateCreated(new Date());
@@ -55,7 +65,7 @@ public class BlogSMSCommand implements SmsCommand {
 		entry.setPrivacySetting(BlogConstants.PRIVACY_PUBLIC);
 		
 		entryLogic.saveEntry(entry, locationReference);
-		log.info("blog entry: " + entry.getId() + " saved");
+		log.info("Posted blog entry from SMS: " + entry.getId());
 		
 		return getResourceString("sms.success");
 	}
@@ -71,7 +81,6 @@ public class BlogSMSCommand implements SmsCommand {
 
 	
 	public int getBodyParameterCount() {
-		// TODO Auto-generated method stub
 		return 1;
 	}
 
