@@ -41,19 +41,20 @@ public class BlogSMSCommand implements ShortMessageCommand {
 		// can the user blog in this location?
 		String userId = message.getIncomingUserId();
 		String siteId = message.getSite();
+		String siteTitle = message.getSiteTitle() != null ? message.getSiteTitle() : message.getSite();
 		
 		String locationReference = "/site/" + siteId;
 		
 		if (! blogLogic.canWriteBlog(null, locationReference, userId)) {
 			log.debug(userId + " can't blog in " + locationReference);
-			return getResourceString("sms.notAllowed", new Object[]{siteId});
+			return getResourceString("sms.notAllowed", new Object[]{ siteTitle });
 		}
 		
 		BlogWowBlog blog = blogLogic.makeBlogByLocationAndUser(locationReference, userId);
-		
+				
 		if (blog == null) {
 			log.debug(userId + " can't create blog in " + locationReference);
-			return getResourceString("sms.notAllowed", new Object[]{siteId});		
+			return getResourceString("sms.notAllowed", new Object[]{ siteTitle });		
 		}
 		
 		BlogWowEntry entry = new BlogWowEntry();
@@ -67,7 +68,8 @@ public class BlogSMSCommand implements ShortMessageCommand {
 		entryLogic.saveEntry(entry, locationReference);
 		log.info("Posted blog entry from SMS: " + entry.getId());
 		
-		return getResourceString("sms.success");
+		return getResourceString("sms.success", 
+				new Object[]{ siteTitle } );
 	}
 
 	private String getTitle(String string) {
@@ -106,6 +108,10 @@ public class BlogSMSCommand implements ShortMessageCommand {
 
 	
 	public boolean requiresSiteId() {
+		return true;
+	}
+
+	public boolean requiresUserId() {
 		return true;
 	}
 
