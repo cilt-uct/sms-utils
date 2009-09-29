@@ -11,10 +11,10 @@ import org.sakaiproject.blogwow.logic.EntryLogic;
 import org.sakaiproject.blogwow.model.BlogWowBlog;
 import org.sakaiproject.blogwow.model.BlogWowEntry;
 import org.sakaiproject.sms.logic.incoming.ParsedMessage;
-import org.sakaiproject.sms.logic.incoming.SmsCommand;
+import org.sakaiproject.sms.logic.incoming.ShortMessageCommand;
 import org.sakaiproject.util.ResourceLoader;
 
-public class BlogSMSCommand implements SmsCommand {
+public class BlogSMSCommand implements ShortMessageCommand {
 	
 	private static Log log = LogFactory.getLog(BlogSMSCommand.class);
 			
@@ -34,7 +34,7 @@ public class BlogSMSCommand implements SmsCommand {
 		this.entryLogic = entryLogic;
 	}
 	
-	public String execute(ParsedMessage message, String mobileNumber) {
+	public String execute(ParsedMessage message, String messageType, String mobileNumber) {
 		
 		String[] body = message.getBodyParameters();
 		
@@ -90,7 +90,7 @@ public class BlogSMSCommand implements SmsCommand {
 	}
 
 	
-	public String getHelpMessage() {
+	public String getHelpMessage(String messageType) {
 		return getResourceString("sms.help");
 	}
 
@@ -120,5 +120,9 @@ public class BlogSMSCommand implements SmsCommand {
 		final ResourceLoader rb = new ResourceLoader(SMS_BUNDLE);
 		return rb.getFormattedMessage(key, replacementValues);
 		
+	}
+
+	public boolean canExecute(ParsedMessage message) {
+		return true;
 	}
 }
