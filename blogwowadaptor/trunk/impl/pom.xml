@@ -47,7 +47,7 @@
         </dependency>
 
 	<dependency>
-		<groupId>org.sakaiproject</groupId>
+		<groupId>org.sakaiproject.blogwow</groupId>
 		<artifactId>sakai-blogwow-api</artifactId>
 	</dependency>
 	<dependency>
