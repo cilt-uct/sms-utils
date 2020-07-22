@@ -2,9 +2,7 @@ package org.sakaiproject.blogwow.sms;
 
 import java.util.Date;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.lang3.StringUtils;
 import org.sakaiproject.blogwow.constants.BlogConstants;
 import org.sakaiproject.blogwow.logic.BlogLogic;
 import org.sakaiproject.blogwow.logic.EntryLogic;
@@ -14,9 +12,10 @@ import org.sakaiproject.sms.logic.incoming.ParsedMessage;
 import org.sakaiproject.sms.logic.incoming.ShortMessageCommand;
 import org.sakaiproject.util.ResourceLoader;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class BlogSMSCommand implements ShortMessageCommand {
-	
-	private static Log log = LogFactory.getLog(BlogSMSCommand.class);
 			
 	//The command 
 	private static final String BLOG_COMMAND = "BLOG";
