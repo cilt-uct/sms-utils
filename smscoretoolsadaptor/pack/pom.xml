@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.sakaiproject</groupId>
         <artifactId>smscoretoolsadaptor</artifactId>
-        <version>0.1-SNAPSHOT</version>
+        <version>20-SNAPSHOT</version>
     </parent>
 
     <dependencies>

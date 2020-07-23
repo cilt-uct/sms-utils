@@ -13,27 +13,27 @@
     </organization>
     <inceptionYear>2008</inceptionYear>
     <packaging>pom</packaging>
-    <version>0.1-SNAPSHOT</version><!--Blogwowsmsadaptor.version-->
+    <version>20-SNAPSHOT</version><!--Blogwowsmsadaptor.version-->
 
     <!-- Sakai master pom is the parent -->
     <parent>
         <artifactId>master</artifactId>
         <groupId>org.sakaiproject</groupId>
-    	<version>10-SNAPSHOT</version>
+        <version>20-SNAPSHOT</version>
         <relativePath>../master/pom.xml</relativePath>
     </parent>
-	<profiles>
-		<profile>
-			<id>full</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<modules>
-				<module>impl</module>
-				<module>pack</module>
-			</modules>
-		</profile>
-	</profiles>
+  <profiles>
+    <profile>
+      <id>full</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <modules>
+        <module>impl</module>
+        <module>pack</module>
+      </modules>
+    </profile>
+  </profiles>
 
     <!-- handles the management of all related dependencies -->
     <dependencyManagement>
@@ -41,32 +41,23 @@
             <dependency>
                 <groupId>org.sakaiproject.blogwowsmsadaptor</groupId>
                 <artifactId>blogwowsmsadaptor-impl</artifactId>
-                <version>0.1-SNAPSHOT</version><!--Blogwowsmsadaptor.version-->
+                <version>${project.version}</version><!--Blogwowsmsadaptor.version-->
             </dependency>
             <dependency>
-            	<groupId>org.sakaiproject.sms</groupId>
-            	<artifactId>sms-api</artifactId>
-            	<version>2.0-SNAPSHOT</version>
+              <groupId>org.sakaiproject.sms</groupId>
+              <artifactId>sms-api</artifactId>
+              <version>${project.version}</version>
+              <scope>provided</scope>
             </dependency>
             <dependency>
-            	<groupId>org.sakaiproject.blogwow</groupId>
-            	<artifactId>sakai-blogwow-api</artifactId>
-            	<version>1.1.0-SNAPSHOT</version>
+              <groupId>org.sakaiproject.blogwow</groupId>
+              <artifactId>sakai-blogwow-api</artifactId>
+              <version>${project.version}</version>
+              <scope>provided</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
 
-    <!-- ensure master jars can be found -->
-    <repositories>
-        <repository>
-            <id>sakai-maven</id>
-            <name>Sakai Maven Repo</name>
-            <layout>default</layout>
-            <url>http://source.sakaiproject.org/maven2</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
+
 
 </project>
