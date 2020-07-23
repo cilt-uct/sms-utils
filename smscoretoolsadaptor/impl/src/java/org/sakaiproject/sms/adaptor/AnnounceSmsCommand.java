@@ -1,13 +1,26 @@
+/**
+ * Copyright (c) 2008-2020 The Apereo Foundation
+ *
+ * Licensed under the Educational Community License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *             http://opensource.org/licenses/ecl2
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.sakaiproject.sms.adaptor;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.sakaiproject.authz.cover.SecurityService;
+import org.apache.commons.lang3.StringUtils;
 import org.sakaiproject.announcement.api.AnnouncementChannel;
 import org.sakaiproject.announcement.api.AnnouncementMessageEdit;
 import org.sakaiproject.announcement.api.AnnouncementMessageHeaderEdit;
 import org.sakaiproject.announcement.cover.AnnouncementService;
+import org.sakaiproject.authz.cover.SecurityService;
 import org.sakaiproject.event.api.NotificationService;
 import org.sakaiproject.exception.IdUnusedException;
 import org.sakaiproject.exception.PermissionException;
@@ -16,13 +29,16 @@ import org.sakaiproject.sms.logic.incoming.ParsedMessage;
 import org.sakaiproject.sms.logic.incoming.ShortMessageCommand;
 import org.sakaiproject.user.api.UserNotDefinedException;
 import org.sakaiproject.user.cover.UserDirectoryService;
-import org.sakaiproject.util.FormattedText;
 import org.sakaiproject.util.ResourceLoader;
+import org.sakaiproject.util.api.FormattedText;
 
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class AnnounceSmsCommand implements ShortMessageCommand {
 	
-	private static Log log = LogFactory.getLog(AnnounceSmsCommand.class);
-			
+	@Setter private FormattedText formattedText;
 	//The command 
 	private static final String ANNOUNCE_COMMAND = "ANNOUNCE";
 	private static final String ANNOUNCE_COMMAND_ALIAS = "A";
@@ -64,7 +80,7 @@ public class AnnounceSmsCommand implements ShortMessageCommand {
 		}
 
 		int noti =  NotificationService.NOTI_NONE;
-		msg.setBody(FormattedText.convertPlaintextToFormattedText(body[0].trim()));
+		msg.setBody(formattedText.convertPlaintextToFormattedText(body[0].trim()));
 		
 	     AnnouncementMessageHeaderEdit header = msg.getAnnouncementHeaderEdit();
          header.setSubject(getTitle(body[0]));

@@ -47,11 +47,13 @@
               <groupId>org.sakaiproject.sms</groupId>
               <artifactId>sms-api</artifactId>
               <version>${project.version}</version>
+              <scope>provided</scope>
             </dependency>
             <dependency>
               <groupId>org.sakaiproject.blogwow</groupId>
               <artifactId>sakai-blogwow-api</artifactId>
               <version>${project.version}</version>
+              <scope>provided</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>

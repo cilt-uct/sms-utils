@@ -24,14 +24,7 @@
         <version>20-SNAPSHOT</version><!--Blogwowsmsadaptor.version-->
     </parent>
 
-    <dependencies>
-
-
-        <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-        </dependency>
-       
+    <dependencies>       
        <!-- Sakai dependencies -->
     	<dependency>
             <groupId>org.sakaiproject.kernel</groupId>
@@ -54,9 +47,6 @@
 		<groupId>org.sakaiproject.sms</groupId>
 		<artifactId>sms-api</artifactId>
 	</dependency>
-	
-	
-	
 	<dependency>
 		<groupId>org.apache.commons</groupId>
 		<artifactId>commons-lang3</artifactId>
